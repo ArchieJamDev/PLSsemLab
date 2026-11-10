@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: "PLSsemLab: A jamovi Module for Partial Least Squares Structural Equation Modeling"
+message: >
+  If you use PLSsemLab in your research, please cite the software using the
+  metadata below, and cite cSEM and the methods it implements as listed in
+  docs/Bibliography.md.
+type: software
+authors:
+  - family-names: "Chacón Chacón"
+    given-names: "Arquímedes De León"
+    affiliation: "Universidad Católica Andrés Bello (UCAB), Caracas, Venezuela"
+    orcid: "https://orcid.org/0000-0002-7014-7513"
+repository-code: "https://github.com/ArchieJamDev/PLSsemLab"
+license: "GPL-3.0-or-later"
+version: "0.0.0.9000"
+abstract: >
+  PLSsemLab is an open-source jamovi module, in design stage, that brings
+  partial least squares structural equation modeling (PLS-SEM) to jamovi with
+  the cSEM R package, pairing every result with evidence-based methodological
+  guidance, interpretation and educational support in English and Spanish.
+keywords:
+  - jamovi
+  - PLS-SEM
+  - Partial Least Squares
+  - Structural Equation Modeling
+  - Composite-based SEM
+  - cSEM
+  - Open Science
+language: en

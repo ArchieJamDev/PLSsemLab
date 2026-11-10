@@ -1,0 +1,15 @@
+{
+  "title": "PLSsemLab: A jamovi Module for Partial Least Squares Structural Equation Modeling",
+  "creators": [
+    {
+      "name": "Chacón Chacón, Arquímedes De León",
+      "orcid": "0000-0002-7014-7513",
+      "affiliation": "Universidad Católica Andrés Bello (UCAB), Caracas, Venezuela"
+    }
+  ],
+  "description": "An open-source jamovi module that brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM R package: measurement and structural model evaluation with bootstrap inference (reliability, AVE, HTMT, VIF, f², effects), a bootstrap test of overall model fit, higher-order constructs and interactions, prediction (PLSpredict, CVPAT), mediation, importance-performance map analysis and multigroup comparison with MICOM, pairing every result with evidence-based methodological guidance, interpretation and educational support in English and Spanish.",
+  "keywords": ["jamovi", "PLS-SEM", "Partial Least Squares", "Structural Equation Modeling", "Composite-based SEM", "cSEM", "Open Science"],
+  "license": "gpl-3.0",
+  "upload_type": "software",
+  "version": "0.0.0.9000"
+}

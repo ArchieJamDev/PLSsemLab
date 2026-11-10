@@ -36,7 +36,9 @@ PLS-SEM literature (Hair et al.) calls Mode A constructs "reflective" while
 estimating them as composites. PLSsemLab must therefore separate two choices
 the user makes: the measurement model (reflective / formative, as taught) and
 the estimator (PLS, composites in Mode A/B; or PLSc, common factors). The
-mapping to cSEM syntax is done by the module and explained in the report.
+mapping to cSEM syntax is done by the module and explained in the report. With plain PLS, `=~` and `<~` in Mode A
+give identical paths, weights and loadings (difference 0, checked in E6), but
+only the composite form clears IPMA's "common factor" warning.
 
 ### Data trap found on the reference data
 

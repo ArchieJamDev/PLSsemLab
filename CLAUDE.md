@@ -12,7 +12,10 @@ first): D2 HTMT/VIF with bootstrap CI · D3 higher-order constructs and
 interactions · D4 bootstrap speed/robustness · D5 syntax errors and help ·
 D1 wrong (ML) overall fit test · D6 f², Q²/PLSpredict, CVPAT, mediation,
 IPMA, MICOM. Engine: cSEM (same as JASP; lets results be checked against
-JASP). Evidence for each fix: `experiments/design-v1/` (see its README).
+JASP). Design: `docs/DESIGN.md`. Evidence for each fix:
+`experiments/design-v1/` (see its README). Suite rules: `ARCHITECTURE.md`,
+`DEVELOPER_GUIDE.md`, `CODE_STYLE.md` (adopted from MokkenLab, the most
+recent module after jamovi's review; helper prefix `.pl_`).
 
 ## Non-negotiable philosophy
 

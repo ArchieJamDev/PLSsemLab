@@ -1,0 +1,9 @@
+bibentry(
+    bibtype = "Manual",
+    title = "PLSsemLab",
+    author = person("A.", "Chacon"),
+    year = "2026",
+    note = "Version 0.0.0.9000 [jamovi module, in development]",
+    url = "https://github.com/ArchieJamDev/PLSsemLab",
+    textVersion = "Chacon, A. (2026). PLSsemLab (Version 0.0.0.9000) [jamovi module, in development]. https://github.com/ArchieJamDev/PLSsemLab"
+)

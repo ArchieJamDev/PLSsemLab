@@ -91,3 +91,17 @@ if (mg$ok) {
                    p_Henseler = round(mg$value$Henseler$P_value$none$`1_2`[names(ch$Test_statistic$`1_2`)], 3)),
         row.names = FALSE)
 }
+
+# 7. "Reflective" as cSEM common factor (=~) vs Mode A composite (<~):
+# same PLS numbers, but IPMA/MICOM only trust composites. The builder
+# therefore writes <~ with Mode A when the estimator is plain PLS.
+# ES: 7. "Reflectivo" como factor común de cSEM (=~) vs compuesto de Modo A
+# (<~): mismos números en PLS, pero IPMA/MICOM solo confían en compuestos.
+m_modeA <- gsub("=~", "<~", model_extended)
+modes <- list(COMP = "modeA", LIKE = "modeA", CUSA = "modeA", CUSL = "modeA")
+fA <- csem(corp_meanrep, m_modeA, .PLS_modes = modes, .disattenuate = FALSE)
+cat(sprintf("Max |difference| =~ vs <~ Mode A: paths %.2g, weights %.2g, loadings %.2g\n",
+            max(abs(fit$Estimates$Path_estimates - fA$Estimates$Path_estimates)),
+            max(abs(fit$Estimates$Weight_estimates - fA$Estimates$Weight_estimates)),
+            max(abs(fit$Estimates$Loading_estimates - fA$Estimates$Loading_estimates))))
+run_case("doIPMA with Mode A composites", invisible(doIPMA(fA)))

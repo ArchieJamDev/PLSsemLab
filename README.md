@@ -8,6 +8,13 @@ EGAnetLab and MokkenLab.
 
 ## What is here now
 
+- `docs/DESIGN.md` — the design of version 1 (in Spanish): the six
+  shortcomings of JASP's PLS-SEM it fixes, the engine, the interface, the
+  architecture, validation and open decisions.
+- `ARCHITECTURE.md`, `DEVELOPER_GUIDE.md`, `CODE_STYLE.md`, `CONTRIBUTING.md`
+  — the suite's rules, adopted from MokkenLab, EGAnetLab and AssumptionsLab
+  and adapted to PLS-SEM with cSEM.
+- `docs/Bibliography.md` — APA 7th edition references.
 - `experiments/design-v1/` — reproducible R scripts that check, with cSEM,
   that each shortcoming documented for JASP's PLS-SEM can be solved in the
   first version. See its README for the findings.
@@ -27,6 +34,13 @@ AssumptionsLab, EGAnetLab y MokkenLab.
 
 ## Qué hay ahora
 
+- `docs/DESIGN.md` — el diseño de la versión 1: las seis deficiencias del
+  PLS-SEM de JASP que corrige, el motor, la interfaz, la arquitectura, la
+  validación y las decisiones abiertas.
+- `ARCHITECTURE.md`, `DEVELOPER_GUIDE.md`, `CODE_STYLE.md`, `CONTRIBUTING.md`
+  — las reglas de la suite, adoptadas de MokkenLab, EGAnetLab y
+  AssumptionsLab y adaptadas a PLS-SEM con cSEM.
+- `docs/Bibliography.md` — referencias en APA 7.ª edición.
 - `experiments/design-v1/` — scripts de R reproducibles que comprueban, con
   cSEM, que cada deficiencia documentada del PLS-SEM de JASP se puede resolver
   en la primera versión. Su README resume los hallazgos.

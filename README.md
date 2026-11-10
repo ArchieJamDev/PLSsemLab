@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo/plssemlab-logo-dark.svg">
+    <img src="docs/logo/plssemlab-logo.svg" alt="PLSsemLab" width="560">
+  </picture>
+</p>
+
 # PLSsemLab
 
 A jamovi module for partial least squares structural equation modeling

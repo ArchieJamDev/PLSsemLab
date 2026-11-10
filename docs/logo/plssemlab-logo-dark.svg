@@ -39,6 +39,6 @@
   <circle cx="172" cy="96" r="21" fill="#E69F00" stroke="#0D1117" stroke-width="3.5"/>
   <circle cx="128" cy="178" r="21" fill="#009E73" stroke="#0D1117" stroke-width="3.5"/>
   </g>
-  <text x="250" y="128" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="94" font-weight="700" fill="#F2F5FA" letter-spacing="-1"><tspan fill="#F2B94D">PLSsem</tspan>Lab</text>
+  <text x="250" y="128" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="94" font-weight="700" fill="#F2F5FA" letter-spacing="-1"><tspan fill="#ABA8F7">PLSsem</tspan>Lab</text>
   <text x="254" y="172" font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" font-size="25" fill="#AEB9CC" letter-spacing="0.5">Partial least squares SEM for jamovi</text>
 </svg>

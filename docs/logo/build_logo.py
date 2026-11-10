@@ -25,9 +25,9 @@ BLUE, ORANGE, GREEN = "#0072B2", "#E69F00", "#009E73"
 GREY = "#8A94A6"
 THEMES = {
     "light": dict(ring="#FFFFFF", path="#1F4E79", text="#1F2A44",
-                  accent="#9A6200", tagline="#5B6B85"),
+                  accent="#4B47B5", tagline="#5B6B85"),
     "dark":  dict(ring="#0D1117", path="#7FB2E5", text="#F2F5FA",
-                  accent="#F2B94D", tagline="#AEB9CC"),
+                  accent="#ABA8F7", tagline="#AEB9CC"),
 }
 R = 21          # construct radius
 S = 16          # indicator square side

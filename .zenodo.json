@@ -11,5 +11,5 @@
   "keywords": ["jamovi", "PLS-SEM", "Partial Least Squares", "Structural Equation Modeling", "Composite-based SEM", "cSEM", "Open Science"],
   "license": "gpl-3.0",
   "upload_type": "software",
-  "version": "0.0.0.9000"
+  "version": "0.0.0"
 }

@@ -1,0 +1,193 @@
+# -----------------------------------------------------------------------------
+# PLSsemLab
+# A jamovi module for partial least squares structural equation modeling and
+# evidence-based methodological decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of PLSsemLab.
+#
+# PLSsemLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# PLSsemLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PLSsemLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: plssem
+title: PLS-SEM
+jrs: '1.1'
+
+items:
+  - name: intro
+    title: PLS-SEM
+    type: Html
+
+  - name: keySummary
+    title: Key findings
+    type: Html
+    visible: (showKeySummary)
+
+  - name: choicesGuide
+    title: About your choices
+    type: Html
+    visible: (showChoicesGuide)
+
+  - name: modelGuide
+    title: How to read the model summary
+    type: Html
+    visible: (showGuides)
+
+  # One row per construct defined in the boxes (rows laid out in .init()).
+  # ES: Una fila por constructo definido en las cajas (filas en .init()).
+  - name: model
+    title: Model summary
+    type: Table
+    rows: 0
+    refs:
+      - csem_pkg
+      - hair_2021
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+      - name: measurement
+        title: Measurement model
+        type: text
+      - name: indicators
+        title: Indicators
+        type: integer
+      - name: role
+        title: Role
+        type: text
+      - name: predictors
+        title: Predicted by
+        type: text
+
+  - name: measurementGuide
+    title: How to read loadings and weights
+    type: Html
+    visible: (showGuides)
+
+  # One row per indicator (rows laid out in .init()).
+  # ES: Una fila por indicador (filas en .init()).
+  - name: measurement
+    title: Loadings and weights
+    type: Table
+    rows: 0
+    refs:
+      - tenenhaus_2005
+      - hair_2019
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+        combineBelow: true
+      - name: indicator
+        title: Indicator
+        type: text
+      - name: loading
+        title: Loading
+        type: number
+      - name: weight
+        title: Weight
+        type: number
+
+  - name: pathsGuide
+    title: How to read the path coefficients
+    type: Html
+    visible: (showGuides)
+
+  # One row per structural path (rows laid out in .init()).
+  # ES: Una fila por ruta estructural (filas en .init()).
+  - name: paths
+    title: Path coefficients
+    type: Table
+    rows: 0
+    refs:
+      - hair_2019
+      - dijkstra_2015
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: from
+        title: Predictor
+        type: text
+      - name: arrow
+        title: ''
+        type: text
+      - name: to
+        title: Outcome
+        type: text
+      - name: estimate
+        title: Coefficient
+        type: number
+
+  # One row per endogenous construct (rows laid out in .init()).
+  # ES: Una fila por constructo endógeno (filas en .init()).
+  - name: r2
+    title: Explained variance
+    type: Table
+    rows: 0
+    refs:
+      - hair_2019
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+      - name: r2
+        title: R²
+        type: number
+      - name: r2adj
+        title: Adjusted R²
+        type: number
+
+  - name: interpretation
+    title: Applied interpretation
+    type: Html
+
+  - name: reproducibility
+    title: Reproducibility
+    type: Html
+    visible: (showRepro)
+
+  - name: reproducibilityCode
+    title: Equivalent R code
+    type: Preformatted
+    visible: (showRepro)
+...

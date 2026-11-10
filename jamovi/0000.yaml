@@ -1,0 +1,48 @@
+---
+name: PLSsemLab
+title: PLS-SEM Lab
+version: 0.0.0
+jms: '1.0'
+authors:
+  - Arquímedes De León Chacón Chacón
+maintainer: Arquímedes De León Chacón Chacón <arquimedeschacon@gmail.com>
+date: '2026-11-10'
+type: R
+description: >
+  PLSsemLab brings partial least squares structural equation modeling (PLS-SEM)
+  to jamovi with the cSEM package and pairs every result with evidence-based
+  methodological guidance, interpretation and educational support. The model is
+  built from boxes, never typed: reflective and formative constructs with their
+  indicators, and for each construct the constructs that predict it. The model
+  is checked before estimation, with messages that name the construct or
+  indicator at fault. In development.
+usesNative: false
+minApp: 1.0.8
+icon: assets/plssemlab-icon.png
+analyses:
+  - title: PLS-SEM
+    name: plssem
+    ns: PLSsemLab
+    menuGroup: PLS-SEM Lab
+    menuTitle: PLS-SEM
+    description: >
+      Partial least squares structural equation modeling: reflective and
+      formative constructs built from boxes, model validation before estimation,
+      loadings, weights, paths and explained variance, with plain-language
+      interpretation.
+    category: analyses
+datasets:
+  - name: Corporate reputation (n=344)
+    path: plssemlab_corp_rep.csv
+    description: >-
+      Corporate reputation, satisfaction and loyalty of 344 mobile phone
+      customers, the example of the PLS-SEM primer of Hair et al., with missing
+      answers as empty cells, from the cSEM package - see data/README.md
+  - name: Customer satisfaction index ECSI (n=250)
+    path: plssemlab_satisfaction.csv
+    description: >-
+      European Customer Satisfaction Index for the mobile phone industry: image,
+      expectation, quality, value, satisfaction and loyalty, from the cSEM
+      package - see data/README.md
+
+...

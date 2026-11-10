@@ -1,0 +1,196 @@
+# -----------------------------------------------------------------------------
+# PLSsemLab
+# A jamovi module for partial least squares structural equation modeling and
+# evidence-based methodological decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of PLSsemLab.
+#
+# PLSsemLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# PLSsemLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PLSsemLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+---
+name: plssem
+title: PLS-SEM
+menuGroup: PLS-SEM Lab
+menuTitle: PLS-SEM
+version: '0.0.0'
+jas: '1.2'
+
+description:
+    main: >
+      Partial least squares structural equation modeling: reflective and
+      formative constructs built from boxes, model validation before
+      estimation, loadings, weights, paths and explained variance, with
+      plain-language interpretation.
+
+options:
+  - name: data
+    type: Data
+
+  # Reflective constructs: each item of the box is a named construct with the
+  # indicators dragged into it. "Reflective" is the measurement model as it
+  # is taught (the construct causes its indicators); the estimator option
+  # decides how cSEM estimates it (ARCHITECTURE.md §16).
+  # ES: Constructos reflectivos: cada ítem de la caja es un constructo con
+  # nombre y los indicadores arrastrados a él. "Reflectivo" es el modelo de
+  # medida tal como se enseña (el constructo causa sus indicadores); la
+  # opción de estimador decide cómo lo estima cSEM (ARCHITECTURE.md §16).
+  - name: reflective
+    title: Reflective Constructs
+    type: Array
+    default:
+      - label: Construct 1
+        vars: []
+    template:
+      type: Group
+      elements:
+        - name: label
+          type: String
+        - name: vars
+          type: Variables
+          suggested:
+            - continuous
+            - ordinal
+          permitted:
+            - numeric
+
+  # Formative constructs: the indicators form the construct (Mode B weights).
+  # ES: Constructos formativos: los indicadores forman el constructo (pesos
+  # de Modo B).
+  - name: formative
+    title: Formative Constructs
+    type: Array
+    default: []
+    template:
+      type: Group
+      elements:
+        - name: label
+          type: String
+        - name: vars
+          type: Variables
+          suggested:
+            - continuous
+            - ordinal
+          permitted:
+            - numeric
+
+  # Structural model: one row per construct, kept in step with the two boxes
+  # above by jamovi/js/plssem.events.js. `label` is the construct (the
+  # outcome) and `predictors` the constructs dragged into its row; a row with
+  # no predictors is an exogenous construct. The row carries its own label,
+  # so the R side never depends on the order of the rows.
+  # ES: Modelo estructural: una fila por constructo, sincronizada con las dos
+  # cajas de arriba por jamovi/js/plssem.events.js. `label` es el constructo
+  # (el resultado) y `predictors` los constructos arrastrados a su fila; una
+  # fila sin predictores es un constructo exógeno. La fila lleva su propia
+  # etiqueta, así que el lado R nunca depende del orden de las filas.
+  - name: structural
+    title: Structural Model
+    type: Array
+    default: []
+    template:
+      type: Group
+      elements:
+        - name: label
+          type: String
+        - name: predictors
+          type: Terms
+
+  # PLS (composite-based; reflective constructs as Mode A composites) or
+  # consistent PLS (reflective constructs as common factors, corrected for
+  # measurement error; Dijkstra & Henseler, 2015).
+  # ES: PLS (basado en compuestos; reflectivos como compuestos de Modo A) o
+  # PLS consistente (reflectivos como factores comunes, corregidos por error
+  # de medida; Dijkstra y Henseler, 2015).
+  - name: estimator
+    title: Estimator
+    type: List
+    options:
+      - title: PLS
+        name: pls
+      - title: Consistent PLS (PLSc)
+        name: plsc
+    default: pls
+
+  # Inner weighting scheme of the PLS algorithm (path is cSEM's and SmartPLS'
+  # default).
+  # ES: Esquema de ponderación interna del algoritmo PLS (path es el valor
+  # por defecto de cSEM y SmartPLS).
+  - name: innerScheme
+    title: Inner weighting scheme
+    type: List
+    options:
+      - title: Path
+        name: path
+      - title: Centroid
+        name: centroid
+      - title: Factorial
+        name: factorial
+    default: path
+
+  # PLS needs complete data. Listwise deletion is the default because it adds
+  # no information; mean replacement is offered because the PLS-SEM primer
+  # uses it with few missing values, and the report says what it costs.
+  # ES: PLS necesita datos completos. La eliminación por lista es el valor por
+  # defecto porque no añade información; el reemplazo por la media se ofrece
+  # porque el primer de PLS-SEM lo usa con pocos perdidos, y el informe dice
+  # lo que cuesta.
+  - name: missing
+    title: Missing values
+    type: List
+    options:
+      - title: Exclude cases listwise
+        name: listwise
+      - title: Replace by the indicator mean
+        name: mean
+    default: listwise
+
+  # ---------------------------------------------------------------------------
+  # Report content.
+  # ES: Contenido del informe.
+  # ---------------------------------------------------------------------------
+
+  # Key findings summary at the top of the report.
+  # ES: Resumen de hallazgos clave al inicio del informe.
+  - name: showKeySummary
+    title: Key findings
+    type: Bool
+    default: true
+
+  # Explains every choice currently selected and when another fits better.
+  # ES: Explica cada elección seleccionada y cuándo conviene otra.
+  - name: showChoicesGuide
+    title: About your choices
+    type: Bool
+    default: true
+
+  # "How to read" block before each table (off by default, as MokkenLab
+  # after jamovi's review, so the output stays compact).
+  # ES: Bloque "Cómo leer" antes de cada tabla (desactivado por defecto,
+  # como MokkenLab tras la revisión de jamovi, para una salida compacta).
+  - name: showGuides
+    title: How to read each table
+    type: Bool
+    default: false
+
+  # Versions and the equivalent R code of this run.
+  # ES: Versiones y el código R equivalente de esta ejecución.
+  - name: showRepro
+    title: Reproducibility record
+    type: Bool
+    default: true
+...

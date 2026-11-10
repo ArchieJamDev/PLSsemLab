@@ -1,0 +1,373 @@
+{
+    "code": "es",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "es",
+                "plural_forms": "nplurals=2; plural=(n!=1);"
+            },
+            " × ": [
+                " × "
+            ],
+            "—": [
+                "—"
+            ],
+            "'%s' appears in the structural model but is not defined as a construct with indicators.": [
+                "'%s' aparece en el modelo estructural, pero no está definido como un constructo con indicadores."
+            ],
+            "'%s' cannot predict itself.": [
+                "'%s' no puede predecirse a sí mismo."
+            ],
+            "'%s' has %d value(s) of %s, far outside the range of its other values (%s to %s). If this is a missing-data code, declare it as missing in jamovi's data view (Setup > Missing values) and run the analysis again.": [
+                "'%s' tiene %d valor(es) de %s, muy fuera del rango de sus demás valores (%s a %s). Si es un código de dato perdido, declárelo como perdido en la vista de datos de jamovi (Configuración > Valores perdidos) y vuelva a ejecutar el análisis."
+            ],
+            "'%s' has a single indicator: its loading is fixed at 1 and its measurement quality cannot be evaluated.": [
+                "'%s' tiene un solo indicador: su carga vale 1 por definición y la calidad de su medición no puede evaluarse."
+            ],
+            "'%s' has no indicators yet and was left out of the model.": [
+                "'%s' todavía no tiene indicadores y se dejó fuera del modelo."
+            ],
+            "'%s' has the same value for every case, so it carries no information. Remove it from its construct.": [
+                "'%s' tiene el mismo valor en todos los casos, así que no aporta información. Quítelo de su constructo."
+            ],
+            "'%s' is an indicator of more than one construct. In PLS-SEM each indicator belongs to one construct only; keep it in one of them.": [
+                "'%s' es indicador de más de un constructo. En PLS-SEM cada indicador pertenece a un solo constructo; déjelo en uno de ellos."
+            ],
+            "'%s' is not connected to any other construct. Drag it into the row of the construct it predicts, or drag its predictors into its row, or remove it.": [
+                "'%s' no está conectado con ningún otro constructo. Arrástrelo a la fila del constructo que predice, arrastre sus predictores a su fila o quítelo."
+            ],
+            "'%s' is not numeric. Indicators must be numeric variables.": [
+                "'%s' no es numérica. Los indicadores deben ser variables numéricas."
+            ],
+            "%d case(s) with missing values were excluded; %d case(s) remain.": [
+                "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
+            ],
+            "%d missing value(s) were replaced by the mean of their indicator (%d case(s) affected).": [
+                "Se reemplazaron %d valor(es) perdido(s) por la media de su indicador (%d caso(s) afectado(s))."
+            ],
+            "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them improves the reliability and validity of their construct, which will be assessed in the next version; indicators below 0.40 are candidates for removal.": [
+                "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos mejore la fiabilidad y la validez de su constructo, que se evaluarán en la próxima versión; los indicadores por debajo de 0.40 son candidatos a eliminarse."
+            ],
+            "%s: R² = %s (%s).": [
+                "%s: R² = %s (%s)."
+            ],
+            "About your choices": [
+                "Acerca de sus elecciones"
+            ],
+            "Add New Construct": [
+                "Agregar constructo"
+            ],
+            "Add the structural model: drag at least one predictor into the row of a construct.": [
+                "Agregue el modelo estructural: arrastre al menos un predictor a la fila de un constructo."
+            ],
+            "Adjusted R²": [
+                "R² ajustado"
+            ],
+            "All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators.": [
+                "Los %d indicadores de constructos reflectivos tienen una carga de 0.708 o más: cada constructo explica al menos la mitad de la varianza de sus indicadores."
+            ],
+            "All weights of the formative constructs are positive.": [
+                "Todos los pesos de los constructos formativos son positivos."
+            ],
+            "Applied interpretation": [
+                "Interpretación aplicada"
+            ],
+            "As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as substantial, moderate and weak (Hair et al., 2019, see references), but what counts as high depends on the field: in consumer behaviour an R² of 0.20 can be high.": [
+                "Como guía aproximada, valores de R² de 0.75, 0.50 y 0.25 se describen como sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero lo que cuenta como alto depende del campo: en comportamiento del consumidor un R² de 0.20 puede ser alto."
+            ],
+            "Centroid": [
+                "Centroide"
+            ],
+            "Coefficient": [
+                "Coeficiente"
+            ],
+            "Consistent PLS (PLSc)": [
+                "PLS consistente (PLSc)"
+            ],
+            "Construct": [
+                "Constructo"
+            ],
+            "Construct 1": [
+                "Construct 1"
+            ],
+            "Constructs": [
+                "Constructos"
+            ],
+            "Corporate reputation (n=344)": [
+                "Reputación corporativa (n=344)"
+            ],
+            "Corporate reputation, satisfaction and loyalty of 344 mobile phone customers, the example of the PLS-SEM primer of Hair et al., with missing answers as empty cells, from the cSEM package - see data/README.md": [
+                "Reputación corporativa, satisfacción y lealtad de 344 clientes de telefonía móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
+            ],
+            "cSEM could not estimate the model: %s": [
+                "cSEM no pudo estimar el modelo: %s"
+            ],
+            "Customer satisfaction index ECSI (n=250)": [
+                "Índice de satisfacción del cliente ECSI (n=250)"
+            ],
+            "Define at least two constructs, each with at least one indicator.": [
+                "Defina al menos dos constructos, cada uno con al menos un indicador."
+            ],
+            "Define each construct in Reflective Constructs or Formative Constructs: give it a name and drag its indicators into it. Reflective: the construct causes its indicators, which should correlate highly. Formative: the indicators together form the construct and need not correlate.": [
+                "Defina cada constructo en Constructos reflectivos o Constructos formativos: póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo causa sus indicadores, que deberían correlacionar alto. Formativo: los indicadores en conjunto forman el constructo y no necesitan correlacionar."
+            ],
+            "drag indicators here": [
+                "arrastre los indicadores aquí"
+            ],
+            "drag predictors here": [
+                "arrastre los predictores aquí"
+            ],
+            "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a coefficient as significant. This version reports estimates only; significance needs bootstrap confidence intervals, which arrive in a later version.": [
+                "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. R² es la proporción de la varianza del resultado que explican sus predictores. Lectura errónea frecuente: tratar un coeficiente como significativo. Esta versión solo informa estimaciones; la significación necesita intervalos de confianza bootstrap, que llegan en una versión posterior."
+            ],
+            "Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number.": [
+                "Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos indicadores tiene y su papel en el modelo estructural. Los constructos exógenos solo son predictores; los endógenos son predichos por al menos otro constructo. Compruebe que esta tabla describe el modelo que quería antes de leer cualquier número."
+            ],
+            "Endogenous": [
+                "Endógeno"
+            ],
+            "Equivalent R code": [
+                "Código R equivalente"
+            ],
+            "Estimation": [
+                "Estimación"
+            ],
+            "Estimator": [
+                "Estimador"
+            ],
+            "Estimator: consistent PLS (PLSc). Reflective constructs are treated as common factors and their estimates are corrected for measurement error (Dijkstra & Henseler, 2015, see references); formative constructs stay composites. PLSc can produce inadmissible solutions in small samples; the report warns when that happens.": [
+                "Estimador: PLS consistente (PLSc). Los constructos reflectivos se tratan como factores comunes y sus estimaciones se corrigen por el error de medida (Dijkstra y Henseler, 2015, ver referencias); los formativos siguen siendo compuestos. PLSc puede dar soluciones inadmisibles en muestras pequeñas; el informe avisa cuando ocurre."
+            ],
+            "Estimator: PLS. Every construct is estimated as a weighted combination of its indicators (a composite): Mode A weights for reflective constructs and Mode B for formative ones. This is the PLS-SEM of the primer of Hair et al. Choose consistent PLS when your reflective constructs are meant as common factors and you want estimates corrected for measurement error.": [
+                "Estimador: PLS. Cada constructo se estima como una combinación ponderada de sus indicadores (un compuesto): pesos de Modo A para los reflectivos y de Modo B para los formativos. Es el PLS-SEM del manual de Hair et al. Elija PLS consistente cuando sus constructos reflectivos se entiendan como factores comunes y quiera estimaciones corregidas por el error de medida."
+            ],
+            "European Customer Satisfaction Index for the mobile phone industry: image, expectation, quality, value, satisfaction and loyalty, from the cSEM package - see data/README.md": [
+                "Índice Europeo de Satisfacción del Cliente para la telefonía móvil: imagen, expectativas, calidad, valor, satisfacción y lealtad, del paquete cSEM - ver data/README.md"
+            ],
+            "Every construct needs a name: one of the constructs has indicators but an empty name.": [
+                "Cada constructo necesita un nombre: uno de los constructos tiene indicadores pero no tiene nombre."
+            ],
+            "Exclude cases listwise": [
+                "Excluir casos por lista"
+            ],
+            "Exogenous": [
+                "Exógeno"
+            ],
+            "Explained variance": [
+                "Varianza explicada"
+            ],
+            "Factorial": [
+                "Factorial"
+            ],
+            "Formative": [
+                "Formativo"
+            ],
+            "Formative Constructs": [
+                "Constructos formativos"
+            ],
+            "Formative constructs with negative weights: %s. A negative weight often reflects collinearity among the indicators of the construct; collinearity (VIF) and the significance of the weights will be assessed in later versions before any indicator is removed.": [
+                "Constructos formativos con pesos negativos: %s. Un peso negativo suele reflejar colinealidad entre los indicadores del constructo; la colinealidad (VIF) y la significación de los pesos se evaluarán en versiones posteriores, antes de quitar cualquier indicador."
+            ],
+            "How to read each table": [
+                "Cómo leer cada tabla"
+            ],
+            "How to read loadings and weights": [
+                "Cómo leer las cargas y los pesos"
+            ],
+            "How to read the model summary": [
+                "Cómo leer el resumen del modelo"
+            ],
+            "How to read the path coefficients": [
+                "Cómo leer los coeficientes de ruta"
+            ],
+            "Indicator": [
+                "Indicador"
+            ],
+            "Indicators": [
+                "Indicadores"
+            ],
+            "Inner weighting scheme": [
+                "Esquema de ponderación interna"
+            ],
+            "Inner weighting scheme: %s. The scheme decides how neighbouring constructs inform each other while the weights are estimated; the path scheme is the usual default and the results rarely depend much on this choice.": [
+                "Esquema de ponderación interna: %s. El esquema decide cómo se informan entre sí los constructos vecinos mientras se estiman los pesos; el esquema path es el habitual y los resultados rara vez dependen mucho de esta elección."
+            ],
+            "Key findings": [
+                "Hallazgos clave"
+            ],
+            "Loading": [
+                "Carga"
+            ],
+            "Loadings and weights": [
+                "Cargas y pesos"
+            ],
+            "Loadings are the correlations between each indicator and its construct; weights are the contribution of each indicator to the construct score. For reflective constructs read the loadings: values of 0.708 or more mean the construct explains at least half of the indicator's variance (Hair et al., 2019, see references). For formative constructs read the weights: they show the relative contribution of each indicator, and a small or negative weight is not by itself a reason to remove an indicator. Common misreading: judging formative indicators by their loadings as if they were reflective.": [
+                "Las cargas son las correlaciones entre cada indicador y su constructo; los pesos son la contribución de cada indicador a la puntuación del constructo. En los constructos reflectivos lea las cargas: valores de 0.708 o más significan que el constructo explica al menos la mitad de la varianza del indicador (Hair et al., 2019, ver referencias). En los formativos lea los pesos: muestran la contribución relativa de cada indicador, y un peso pequeño o negativo no es por sí solo motivo para quitar un indicador. Lectura errónea frecuente: juzgar los indicadores formativos por sus cargas como si fueran reflectivos."
+            ],
+            "Main findings": [
+                "Hallazgos principales"
+            ],
+            "Measurement model": [
+                "Modelo de medida"
+            ],
+            "Measurement model: %d of %d reflective indicators load 0.708 or more.": [
+                "Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
+            ],
+            "Missing values": [
+                "Valores perdidos"
+            ],
+            "Missing values: cases with a missing value on any indicator are excluded (%d of %d cases used). This adds no information to the data; if many cases are lost, consider why the values are missing.": [
+                "Valores perdidos: se excluyen los casos con un valor perdido en cualquier indicador (se usan %d de %d casos). Esto no añade información a los datos; si se pierden muchos casos, conviene pensar por qué faltan los valores."
+            ],
+            "Missing values: each missing value is replaced by the mean of its indicator (%d value(s) replaced). This keeps every case but shrinks the variance of the indicator; use it only when few values are missing.": [
+                "Valores perdidos: cada valor perdido se reemplaza por la media de su indicador (%d valor(es) reemplazado(s)). Así se conservan todos los casos, pero se reduce la varianza del indicador; úselo solo cuando falten pocos valores."
+            ],
+            "Model summary": [
+                "Resumen del modelo"
+            ],
+            "Model: %d construct(s) (%d reflective, %d formative), %d indicator(s), %d structural path(s), %d case(s), estimated with %s.": [
+                "Modelo: %d constructo(s) (%d reflectivo(s), %d formativo(s)), %d indicador(es), %d ruta(s) estructural(es), %d caso(s), estimado con %s."
+            ],
+            "moderate": [
+                "moderado"
+            ],
+            "No significance or confidence intervals yet: this version reports estimates only.": [
+                "Todavía sin significación ni intervalos de confianza: esta versión solo informa estimaciones."
+            ],
+            "None.": [
+                "Ninguno."
+            ],
+            "Only %d cases have complete data on the indicators, too few to estimate the model. Check the missing values or use mean replacement.": [
+                "Solo %d casos tienen datos completos en los indicadores, muy pocos para estimar el modelo. Revise los valores perdidos o use el reemplazo por la media."
+            ],
+            "Open Structural Model: every construct has a row. Drag into a construct's row the constructs that predict it. A construct whose row stays empty is exogenous (only a predictor).": [
+                "Abra Modelo estructural: cada constructo tiene una fila. Arrastre a la fila de un constructo los constructos que lo predicen. Un constructo cuya fila queda vacía es exógeno (solo predictor)."
+            ],
+            "Outcome": [
+                "Resultado"
+            ],
+            "Partial least squares structural equation modeling: reflective and formative constructs built from boxes, model validation before estimation, loadings, weights, paths and explained variance, with plain-language interpretation.": [
+                "Modelos de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas, pesos, rutas y varianza explicada, con interpretación en lenguaje claro."
+            ],
+            "Path": [
+                "Path"
+            ],
+            "Path coefficients": [
+                "Coeficientes de ruta"
+            ],
+            "PLS": [
+                "PLS"
+            ],
+            "PLS-SEM": [
+                "PLS-SEM"
+            ],
+            "PLS-SEM estimates relationships between constructs (concepts measured by several indicators) and how well each construct is measured. It builds each construct as a weighted combination of its indicators and is oriented to explaining and predicting the outcomes of the model.": [
+                "PLS-SEM estima las relaciones entre constructos (conceptos medidos por varios indicadores) y qué tan bien se mide cada constructo. Construye cada constructo como una combinación ponderada de sus indicadores y está orientado a explicar y predecir los resultados del modelo."
+            ],
+            "PLS-SEM Lab": [
+                "PLS-SEM Lab"
+            ],
+            "PLSsemLab %s, cSEM %s, %s; run on %s.": [
+                "PLSsemLab %s, cSEM %s, %s; ejecutado el %s."
+            ],
+            "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault. In development.": [
+                "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas. En desarrollo."
+            ],
+            "Predicted by": [
+                "Predicho por"
+            ],
+            "Predictor": [
+                "Predictor"
+            ],
+            "Predictors of each construct": [
+                "Predictores de cada constructo"
+            ],
+            "R²": [
+                "R²"
+            ],
+            "Read the loadings and weights before the paths: a construct that is poorly measured makes its paths hard to interpret. The next versions of PLSsemLab add reliability, convergent and discriminant validity, collinearity and bootstrap significance; until then, treat these estimates as descriptive.": [
+                "Lea las cargas y los pesos antes que las rutas: un constructo mal medido hace difícil interpretar sus rutas. Las próximas versiones de PLSsemLab añaden fiabilidad, validez convergente y discriminante, colinealidad y significación por bootstrap; mientras tanto, trate estas estimaciones como descriptivas."
+            ],
+            "Reflective": [
+                "Reflectivo"
+            ],
+            "Reflective Constructs": [
+                "Constructos reflectivos"
+            ],
+            "Replace by the indicator mean": [
+                "Reemplazar por la media del indicador"
+            ],
+            "Report Content": [
+                "Contenido del informe"
+            ],
+            "Reproducibility": [
+                "Reproducibilidad"
+            ],
+            "Reproducibility record": [
+                "Registro de reproducibilidad"
+            ],
+            "Role": [
+                "Papel"
+            ],
+            "Structural model": [
+                "Modelo estructural"
+            ],
+            "Structural Model": [
+                "Modelo estructural"
+            ],
+            "Structural model: the highest R² is %s for %s.": [
+                "Modelo estructural: el R² más alto es %s, para %s."
+            ],
+            "substantial": [
+                "sustancial"
+            ],
+            "The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples.": [
+                "Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no deben interpretarse hasta corregir la causa: revise indicadores con correlaciones muy bajas o negativas, o muestras muy pequeñas."
+            ],
+            "The estimates are not admissible; do not interpret them until the cause is fixed.": [
+                "Las estimaciones no son admisibles; no las interprete hasta corregir la causa."
+            ],
+            "The largest path is %s → %s (%s).": [
+                "La ruta más grande es %s → %s (%s)."
+            ],
+            "The model has no reflective constructs, so loadings are not used to judge indicator quality.": [
+                "El modelo no tiene constructos reflectivos, así que las cargas no se usan para juzgar la calidad de los indicadores."
+            ],
+            "The model is checked before estimation; if something is missing or inconsistent, the message names the construct or indicator at fault.": [
+                "El modelo se revisa antes de estimar; si falta algo o hay una inconsistencia, el mensaje nombra el constructo o indicador con problemas."
+            ],
+            "The name '%s' is used for more than one construct. Give each construct a different name.": [
+                "El nombre '%s' se usa en más de un constructo. Dé a cada constructo un nombre distinto."
+            ],
+            "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
+                "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
+            ],
+            "The structural model has a loop (%s). PLS-SEM estimates recursive models only, in which no construct predicts itself through others: remove one path of the loop.": [
+                "El modelo estructural tiene un ciclo (%s). PLS-SEM solo estima modelos recursivos, en los que ningún constructo se predice a sí mismo a través de otros: quite una ruta del ciclo."
+            ],
+            "The structural model includes an interaction (%s). Interactions between constructs will be available in a later version of PLSsemLab; remove it for now.": [
+                "El modelo estructural incluye una interacción (%s). Las interacciones entre constructos estarán disponibles en una versión posterior de PLSsemLab; quítela por ahora."
+            ],
+            "Uncertainties": [
+                "Incertidumbres"
+            ],
+            "very weak": [
+                "muy débil"
+            ],
+            "Warnings": [
+                "Advertencias"
+            ],
+            "weak": [
+                "débil"
+            ],
+            "Weight": [
+                "Peso"
+            ],
+            "What to do now": [
+                "Qué hacer ahora"
+            ]
+        }
+    }
+}

@@ -11,7 +11,8 @@ A jamovi module for partial least squares structural equation modeling
 (PLS-SEM), with guided interpretation in the style of AssumptionsLab,
 EGAnetLab and MokkenLab.
 
-**Status:** design stage. No analysis is available in jamovi yet.
+**Status:** in development (phase 1 of 10). Not yet in the jamovi Library;
+it can be built from source for testing.
 
 ## What is here now
 
@@ -29,12 +30,24 @@ EGAnetLab and MokkenLab.
   machines (Actions tab → *design-experiments* → *Run workflow*); results are
   attached to the run as an artifact.
 
+## Try it (development version)
+
+With jamovi installed, clone this repository and, in R, from its folder:
+
+```r
+install.packages("jmvtools", repos = c("https://repo.jamovi.org", "https://cloud.r-project.org"))
+jmvtools::install()
+```
+
+Then open the bundled *Corporate reputation* data in jamovi (Open > Data
+Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
+
 ## Roadmap
 
 | Phase | Content | Status |
 |---|---|---|
 | 0 | Design, experiments with cSEM for every JASP shortcoming, suite documents, logo | ✅ Done |
-| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 In progress |
+| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 In progress — awaiting test in jamovi |
 | 2 | Measurement model: reliability, AVE, HTMT, VIF | 🗓 Planned |
 | 3 | Structural model, bootstrap in blocks, path diagram | 🗓 Planned |
 | 4 | Higher-order constructs and interactions | 🗓 Planned |
@@ -55,7 +68,8 @@ Un módulo de jamovi para modelos de ecuaciones estructurales por mínimos
 cuadrados parciales (PLS-SEM), con interpretación guiada al estilo de
 AssumptionsLab, EGAnetLab y MokkenLab.
 
-**Estado:** fase de diseño. Todavía no hay ningún análisis disponible en jamovi.
+**Estado:** en desarrollo (fase 1 de 10). Todavía no está en la biblioteca
+de jamovi; se puede compilar desde el código fuente para probarlo.
 
 ## Qué hay ahora
 

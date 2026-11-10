@@ -1,0 +1,84 @@
+# -----------------------------------------------------------------------------
+# PLSsemLab
+# A jamovi module for partial least squares structural equation modeling and
+# evidence-based methodological decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of PLSsemLab.
+#
+# PLSsemLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# PLSsemLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PLSsemLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+
+# -----------------------------------------------------------------------------
+# Native jamovi citations (refs:). Rendered only under Table results, in
+# jamovi's own numbered format (CODE_STYLE.md §21). The complete APA 7th
+# edition list lives in docs/Bibliography.md.
+# ES: Citas nativas de jamovi (refs:). Solo se muestran bajo resultados
+# Table, en el formato numerado propio de jamovi (CODE_STYLE.md §21). La
+# lista completa en APA 7.ª edición vive en docs/Bibliography.md.
+# -----------------------------------------------------------------------------
+---
+refs:
+    csem_pkg:
+        type: 'software'
+        author: 'Rademaker, M. E., & Schuberth, F.'
+        year: 2020
+        title: 'cSEM: Composite-based structural equation modeling'
+        publisher: '[R package]. Retrieved from https://floschuberth.github.io/cSEM/'
+        url: https://floschuberth.github.io/cSEM/
+
+    hair_2021:
+        type: 'book'
+        author: 'Hair, J. F., Jr., Hult, G. T. M., Ringle, C. M., Sarstedt, M., Danks, N. P., & Ray, S.'
+        year: 2021
+        title: 'Partial least squares structural equation modeling (PLS-SEM) using R: A workbook'
+        publisher: 'Springer'
+        url: https://doi.org/10.1007/978-3-030-80519-7
+
+    hair_2019:
+        type: 'article'
+        author: 'Hair, J. F., Risher, J. J., Sarstedt, M., & Ringle, C. M.'
+        year: 2019
+        title: 'When to use and how to report the results of PLS-SEM'
+        publisher: 'European Business Review'
+        volume: '31'
+        issue: '1'
+        pages: '2-24'
+        url: https://doi.org/10.1108/EBR-11-2018-0203
+
+    tenenhaus_2005:
+        type: 'article'
+        author: 'Tenenhaus, M., Esposito Vinzi, V., Chatelin, Y.-M., & Lauro, C.'
+        year: 2005
+        title: 'PLS path modeling'
+        publisher: 'Computational Statistics & Data Analysis'
+        volume: '48'
+        issue: '1'
+        pages: '159-205'
+        url: https://doi.org/10.1016/j.csda.2004.03.005
+
+    dijkstra_2015:
+        type: 'article'
+        author: 'Dijkstra, T. K., & Henseler, J.'
+        year: 2015
+        title: 'Consistent partial least squares path modeling'
+        publisher: 'MIS Quarterly'
+        volume: '39'
+        issue: '2'
+        pages: '297-316'
+        url: https://doi.org/10.25300/MISQ/2015/39.2.02
+...

@@ -1,0 +1,765 @@
+#
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-07-26 12:08:06+01000\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: R/texts.R
+msgid " × "
+msgstr " × "
+
+#: R/texts.R
+msgid "—"
+msgstr "—"
+
+#: R/texts.R
+msgid ""
+"'%s' appears in the structural model but is not defined as a construct with "
+"indicators."
+msgstr ""
+"'%s' aparece en el modelo estructural, pero no está definido como un "
+"constructo con indicadores."
+
+#: R/texts.R
+msgid "'%s' cannot predict itself."
+msgstr "'%s' no puede predecirse a sí mismo."
+
+#: R/texts.R
+msgid ""
+"'%s' has %d value(s) of %s, far outside the range of its other values (%s to"
+" %s). If this is a missing-data code, declare it as missing in jamovi's data"
+" view (Setup > Missing values) and run the analysis again."
+msgstr ""
+"'%s' tiene %d valor(es) de %s, muy fuera del rango de sus demás valores (%s "
+"a %s). Si es un código de dato perdido, declárelo como perdido en la vista "
+"de datos de jamovi (Configuración > Valores perdidos) y vuelva a ejecutar el"
+" análisis."
+
+#: R/texts.R
+msgid ""
+"'%s' has a single indicator: its loading is fixed at 1 and its measurement "
+"quality cannot be evaluated."
+msgstr ""
+"'%s' tiene un solo indicador: su carga vale 1 por definición y la calidad de"
+" su medición no puede evaluarse."
+
+#: R/texts.R
+msgid "'%s' has no indicators yet and was left out of the model."
+msgstr "'%s' todavía no tiene indicadores y se dejó fuera del modelo."
+
+#: R/texts.R
+msgid ""
+"'%s' has the same value for every case, so it carries no information. Remove"
+" it from its construct."
+msgstr ""
+"'%s' tiene el mismo valor en todos los casos, así que no aporta información."
+" Quítelo de su constructo."
+
+#: R/texts.R
+msgid ""
+"'%s' is an indicator of more than one construct. In PLS-SEM each indicator "
+"belongs to one construct only; keep it in one of them."
+msgstr ""
+"'%s' es indicador de más de un constructo. En PLS-SEM cada indicador "
+"pertenece a un solo constructo; déjelo en uno de ellos."
+
+#: R/texts.R
+msgid ""
+"'%s' is not connected to any other construct. Drag it into the row of the "
+"construct it predicts, or drag its predictors into its row, or remove it."
+msgstr ""
+"'%s' no está conectado con ningún otro constructo. Arrástrelo a la fila del "
+"constructo que predice, arrastre sus predictores a su fila o quítelo."
+
+#: R/texts.R
+msgid "'%s' is not numeric. Indicators must be numeric variables."
+msgstr "'%s' no es numérica. Los indicadores deben ser variables numéricas."
+
+#: R/texts.R
+msgid "%d case(s) with missing values were excluded; %d case(s) remain."
+msgstr "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
+
+#: R/texts.R
+msgid ""
+"%d missing value(s) were replaced by the mean of their indicator (%d case(s)"
+" affected)."
+msgstr ""
+"Se reemplazaron %d valor(es) perdido(s) por la media de su indicador (%d "
+"caso(s) afectado(s))."
+
+#: R/texts.R
+msgid ""
+"%d of %d indicators of reflective constructs have a loading below 0.708 "
+"(%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless"
+" removing them improves the reliability and validity of their construct, "
+"which will be assessed in the next version; indicators below 0.40 are "
+"candidates for removal."
+msgstr ""
+"%d de %d indicadores de constructos reflectivos tienen una carga menor de "
+"0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse,"
+" salvo que quitarlos mejore la fiabilidad y la validez de su constructo, que"
+" se evaluarán en la próxima versión; los indicadores por debajo de 0.40 son "
+"candidatos a eliminarse."
+
+#: R/texts.R
+msgid "%s: R² = %s (%s)."
+msgstr "%s: R² = %s (%s)."
+
+#: plssem/options/showChoicesGuide.title plssem/results/choicesGuide.title
+msgid "About your choices"
+msgstr "Acerca de sus elecciones"
+
+#: plssem/ui[0][0]/reflective.addButton plssem/ui[0][1]/formative.addButton
+msgid "Add New Construct"
+msgstr "Agregar constructo"
+
+#: R/texts.R
+msgid ""
+"Add the structural model: drag at least one predictor into the row of a "
+"construct."
+msgstr ""
+"Agregue el modelo estructural: arrastre al menos un predictor a la fila de "
+"un constructo."
+
+#: plssem/results/r2.columns.title
+msgid "Adjusted R²"
+msgstr "R² ajustado"
+
+#: R/texts.R
+msgid ""
+"All %d indicators of reflective constructs have a loading of 0.708 or more: "
+"each construct explains at least half of the variance of its indicators."
+msgstr ""
+"Los %d indicadores de constructos reflectivos tienen una carga de 0.708 o "
+"más: cada constructo explica al menos la mitad de la varianza de sus "
+"indicadores."
+
+#: R/texts.R
+msgid "All weights of the formative constructs are positive."
+msgstr "Todos los pesos de los constructos formativos son positivos."
+
+#: plssem/results/interpretation.title
+msgid "Applied interpretation"
+msgstr "Interpretación aplicada"
+
+#: R/texts.R
+msgid ""
+"As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as "
+"substantial, moderate and weak (Hair et al., 2019, see references), but what"
+" counts as high depends on the field: in consumer behaviour an R² of 0.20 "
+"can be high."
+msgstr ""
+"Como guía aproximada, valores de R² de 0.75, 0.50 y 0.25 se describen como "
+"sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero"
+" lo que cuenta como alto depende del campo: en comportamiento del consumidor"
+" un R² de 0.20 puede ser alto."
+
+#: plssem/options/innerScheme/centroid.title
+msgid "Centroid"
+msgstr "Centroide"
+
+#: plssem/results/paths.columns.title
+msgid "Coefficient"
+msgstr "Coeficiente"
+
+#: plssem/options/estimator/plsc.title
+msgid "Consistent PLS (PLSc)"
+msgstr "PLS consistente (PLSc)"
+
+#: plssem/results/model.columns.title plssem/results/measurement.columns.title
+#: plssem/results/r2.columns.title
+msgid "Construct"
+msgstr "Constructo"
+
+#: plssem/options/reflective.default[0].label
+msgid "Construct 1"
+msgstr "Construct 1"
+
+#: plssem/ui[1]/constructSupplier.label
+msgid "Constructs"
+msgstr "Constructos"
+
+#: package/datasets/Corporatereputation(n=344).name
+msgid "Corporate reputation (n=344)"
+msgstr "Reputación corporativa (n=344)"
+
+#: package/datasets/Corporatereputation(n=344).description
+msgid ""
+"Corporate reputation, satisfaction and loyalty of 344 mobile phone "
+"customers, the example of the PLS-SEM primer of Hair et al., with missing "
+"answers as empty cells, from the cSEM package - see data/README.md"
+msgstr ""
+"Reputación corporativa, satisfacción y lealtad de 344 clientes de telefonía "
+"móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas "
+"faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
+
+#: R/texts.R
+msgid "cSEM could not estimate the model: %s"
+msgstr "cSEM no pudo estimar el modelo: %s"
+
+#: package/datasets/CustomersatisfactionindexECSI(n=250).name
+msgid "Customer satisfaction index ECSI (n=250)"
+msgstr "Índice de satisfacción del cliente ECSI (n=250)"
+
+#: R/texts.R
+msgid "Define at least two constructs, each with at least one indicator."
+msgstr "Defina al menos dos constructos, cada uno con al menos un indicador."
+
+#: R/texts.R
+msgid ""
+"Define each construct in Reflective Constructs or Formative Constructs: give"
+" it a name and drag its indicators into it. Reflective: the construct causes"
+" its indicators, which should correlate highly. Formative: the indicators "
+"together form the construct and need not correlate."
+msgstr ""
+"Defina cada constructo en Constructos reflectivos o Constructos formativos: "
+"póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo "
+"causa sus indicadores, que deberían correlacionar alto. Formativo: los "
+"indicadores en conjunto forman el constructo y no necesitan correlacionar."
+
+#: plssem/ui[0][0]/reflective.template/reflectiveVars.ghostText
+#: plssem/ui[0][1]/formative.template/formativeVars.ghostText
+msgid "drag indicators here"
+msgstr "arrastre los indicadores aquí"
+
+#: plssem/ui[1]/constructSupplier[0]/structural.template/predictorList.ghostText
+msgid "drag predictors here"
+msgstr "arrastre los predictores aquí"
+
+#: R/texts.R
+msgid ""
+"Each coefficient is the change in the outcome construct, in standard "
+"deviations, when the predictor increases by one standard deviation and the "
+"other predictors of the same outcome stay constant. R² is the share of the "
+"outcome's variance explained by its predictors. Common misreading: treating "
+"a coefficient as significant. This version reports estimates only; "
+"significance needs bootstrap confidence intervals, which arrive in a later "
+"version."
+msgstr ""
+"Cada coeficiente es el cambio del constructo resultado, en desviaciones "
+"estándar, cuando el predictor aumenta una desviación estándar y los demás "
+"predictores del mismo resultado se mantienen constantes. R² es la proporción"
+" de la varianza del resultado que explican sus predictores. Lectura errónea "
+"frecuente: tratar un coeficiente como significativo. Esta versión solo "
+"informa estimaciones; la significación necesita intervalos de confianza "
+"bootstrap, que llegan en una versión posterior."
+
+#: R/texts.R
+msgid ""
+"Each row is one construct: how it is measured (reflective or formative), how"
+" many indicators it has, and its role in the structural model. Exogenous "
+"constructs are only predictors; endogenous constructs are predicted by at "
+"least one other construct. Check that this table describes the model you "
+"intended before reading any number."
+msgstr ""
+"Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos "
+"indicadores tiene y su papel en el modelo estructural. Los constructos "
+"exógenos solo son predictores; los endógenos son predichos por al menos otro"
+" constructo. Compruebe que esta tabla describe el modelo que quería antes de"
+" leer cualquier número."
+
+#: R/texts.R
+msgid "Endogenous"
+msgstr "Endógeno"
+
+#: plssem/results/reproducibilityCode.title
+msgid "Equivalent R code"
+msgstr "Código R equivalente"
+
+#: plssem/ui[2].label
+msgid "Estimation"
+msgstr "Estimación"
+
+#: plssem/options/estimator.title
+msgid "Estimator"
+msgstr "Estimador"
+
+#: R/texts.R
+msgid ""
+"Estimator: consistent PLS (PLSc). Reflective constructs are treated as "
+"common factors and their estimates are corrected for measurement error "
+"(Dijkstra & Henseler, 2015, see references); formative constructs stay "
+"composites. PLSc can produce inadmissible solutions in small samples; the "
+"report warns when that happens."
+msgstr ""
+"Estimador: PLS consistente (PLSc). Los constructos reflectivos se tratan "
+"como factores comunes y sus estimaciones se corrigen por el error de medida "
+"(Dijkstra y Henseler, 2015, ver referencias); los formativos siguen siendo "
+"compuestos. PLSc puede dar soluciones inadmisibles en muestras pequeñas; el "
+"informe avisa cuando ocurre."
+
+#: R/texts.R
+msgid ""
+"Estimator: PLS. Every construct is estimated as a weighted combination of "
+"its indicators (a composite): Mode A weights for reflective constructs and "
+"Mode B for formative ones. This is the PLS-SEM of the primer of Hair et al. "
+"Choose consistent PLS when your reflective constructs are meant as common "
+"factors and you want estimates corrected for measurement error."
+msgstr ""
+"Estimador: PLS. Cada constructo se estima como una combinación ponderada de "
+"sus indicadores (un compuesto): pesos de Modo A para los reflectivos y de "
+"Modo B para los formativos. Es el PLS-SEM del manual de Hair et al. Elija "
+"PLS consistente cuando sus constructos reflectivos se entiendan como "
+"factores comunes y quiera estimaciones corregidas por el error de medida."
+
+#: package/datasets/CustomersatisfactionindexECSI(n=250).description
+msgid ""
+"European Customer Satisfaction Index for the mobile phone industry: image, "
+"expectation, quality, value, satisfaction and loyalty, from the cSEM package"
+" - see data/README.md"
+msgstr ""
+"Índice Europeo de Satisfacción del Cliente para la telefonía móvil: imagen, "
+"expectativas, calidad, valor, satisfacción y lealtad, del paquete cSEM - ver"
+" data/README.md"
+
+#: R/texts.R
+msgid ""
+"Every construct needs a name: one of the constructs has indicators but an "
+"empty name."
+msgstr ""
+"Cada constructo necesita un nombre: uno de los constructos tiene indicadores"
+" pero no tiene nombre."
+
+#: plssem/options/missing/listwise.title
+msgid "Exclude cases listwise"
+msgstr "Excluir casos por lista"
+
+#: R/texts.R
+msgid "Exogenous"
+msgstr "Exógeno"
+
+#: plssem/results/r2.title
+msgid "Explained variance"
+msgstr "Varianza explicada"
+
+#: plssem/options/innerScheme/factorial.title
+msgid "Factorial"
+msgstr "Factorial"
+
+#: R/texts.R
+msgid "Formative"
+msgstr "Formativo"
+
+#: plssem/options/formative.title plssem/ui[0][1].label
+msgid "Formative Constructs"
+msgstr "Constructos formativos"
+
+#: R/texts.R
+msgid ""
+"Formative constructs with negative weights: %s. A negative weight often "
+"reflects collinearity among the indicators of the construct; collinearity "
+"(VIF) and the significance of the weights will be assessed in later versions"
+" before any indicator is removed."
+msgstr ""
+"Constructos formativos con pesos negativos: %s. Un peso negativo suele "
+"reflejar colinealidad entre los indicadores del constructo; la colinealidad "
+"(VIF) y la significación de los pesos se evaluarán en versiones posteriores,"
+" antes de quitar cualquier indicador."
+
+#: plssem/options/showGuides.title
+msgid "How to read each table"
+msgstr "Cómo leer cada tabla"
+
+#: plssem/results/measurementGuide.title
+msgid "How to read loadings and weights"
+msgstr "Cómo leer las cargas y los pesos"
+
+#: plssem/results/modelGuide.title
+msgid "How to read the model summary"
+msgstr "Cómo leer el resumen del modelo"
+
+#: plssem/results/pathsGuide.title
+msgid "How to read the path coefficients"
+msgstr "Cómo leer los coeficientes de ruta"
+
+#: plssem/results/measurement.columns.title
+msgid "Indicator"
+msgstr "Indicador"
+
+#: plssem/results/model.columns.title
+msgid "Indicators"
+msgstr "Indicadores"
+
+#: plssem/options/innerScheme.title
+msgid "Inner weighting scheme"
+msgstr "Esquema de ponderación interna"
+
+#: R/texts.R
+msgid ""
+"Inner weighting scheme: %s. The scheme decides how neighbouring constructs "
+"inform each other while the weights are estimated; the path scheme is the "
+"usual default and the results rarely depend much on this choice."
+msgstr ""
+"Esquema de ponderación interna: %s. El esquema decide cómo se informan entre"
+" sí los constructos vecinos mientras se estiman los pesos; el esquema path "
+"es el habitual y los resultados rara vez dependen mucho de esta elección."
+
+#: plssem/options/showKeySummary.title plssem/results/keySummary.title
+msgid "Key findings"
+msgstr "Hallazgos clave"
+
+#: plssem/results/measurement.columns.title
+msgid "Loading"
+msgstr "Carga"
+
+#: plssem/results/measurement.title
+msgid "Loadings and weights"
+msgstr "Cargas y pesos"
+
+#: R/texts.R
+msgid ""
+"Loadings are the correlations between each indicator and its construct; "
+"weights are the contribution of each indicator to the construct score. For "
+"reflective constructs read the loadings: values of 0.708 or more mean the "
+"construct explains at least half of the indicator's variance (Hair et al., "
+"2019, see references). For formative constructs read the weights: they show "
+"the relative contribution of each indicator, and a small or negative weight "
+"is not by itself a reason to remove an indicator. Common misreading: judging"
+" formative indicators by their loadings as if they were reflective."
+msgstr ""
+"Las cargas son las correlaciones entre cada indicador y su constructo; los "
+"pesos son la contribución de cada indicador a la puntuación del constructo. "
+"En los constructos reflectivos lea las cargas: valores de 0.708 o más "
+"significan que el constructo explica al menos la mitad de la varianza del "
+"indicador (Hair et al., 2019, ver referencias). En los formativos lea los "
+"pesos: muestran la contribución relativa de cada indicador, y un peso "
+"pequeño o negativo no es por sí solo motivo para quitar un indicador. "
+"Lectura errónea frecuente: juzgar los indicadores formativos por sus cargas "
+"como si fueran reflectivos."
+
+#: R/texts.R
+msgid "Main findings"
+msgstr "Hallazgos principales"
+
+#: R/texts.R plssem/results/model.columns.title
+msgid "Measurement model"
+msgstr "Modelo de medida"
+
+#: R/texts.R
+msgid "Measurement model: %d of %d reflective indicators load 0.708 or more."
+msgstr ""
+"Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
+
+#: plssem/options/missing.title
+msgid "Missing values"
+msgstr "Valores perdidos"
+
+#: R/texts.R
+msgid ""
+"Missing values: cases with a missing value on any indicator are excluded (%d"
+" of %d cases used). This adds no information to the data; if many cases are "
+"lost, consider why the values are missing."
+msgstr ""
+"Valores perdidos: se excluyen los casos con un valor perdido en cualquier "
+"indicador (se usan %d de %d casos). Esto no añade información a los datos; "
+"si se pierden muchos casos, conviene pensar por qué faltan los valores."
+
+#: R/texts.R
+msgid ""
+"Missing values: each missing value is replaced by the mean of its indicator "
+"(%d value(s) replaced). This keeps every case but shrinks the variance of "
+"the indicator; use it only when few values are missing."
+msgstr ""
+"Valores perdidos: cada valor perdido se reemplaza por la media de su "
+"indicador (%d valor(es) reemplazado(s)). Así se conservan todos los casos, "
+"pero se reduce la varianza del indicador; úselo solo cuando falten pocos "
+"valores."
+
+#: plssem/results/model.title
+msgid "Model summary"
+msgstr "Resumen del modelo"
+
+#: R/texts.R
+msgid ""
+"Model: %d construct(s) (%d reflective, %d formative), %d indicator(s), %d "
+"structural path(s), %d case(s), estimated with %s."
+msgstr ""
+"Modelo: %d constructo(s) (%d reflectivo(s), %d formativo(s)), %d "
+"indicador(es), %d ruta(s) estructural(es), %d caso(s), estimado con %s."
+
+#: R/texts.R
+msgid "moderate"
+msgstr "moderado"
+
+#: R/texts.R
+msgid ""
+"No significance or confidence intervals yet: this version reports estimates "
+"only."
+msgstr ""
+"Todavía sin significación ni intervalos de confianza: esta versión solo "
+"informa estimaciones."
+
+#: R/texts.R
+msgid "None."
+msgstr "Ninguno."
+
+#: R/texts.R
+msgid ""
+"Only %d cases have complete data on the indicators, too few to estimate the "
+"model. Check the missing values or use mean replacement."
+msgstr ""
+"Solo %d casos tienen datos completos en los indicadores, muy pocos para "
+"estimar el modelo. Revise los valores perdidos o use el reemplazo por la "
+"media."
+
+#: R/texts.R
+msgid ""
+"Open Structural Model: every construct has a row. Drag into a construct's "
+"row the constructs that predict it. A construct whose row stays empty is "
+"exogenous (only a predictor)."
+msgstr ""
+"Abra Modelo estructural: cada constructo tiene una fila. Arrastre a la fila "
+"de un constructo los constructos que lo predicen. Un constructo cuya fila "
+"queda vacía es exógeno (solo predictor)."
+
+#: plssem/results/paths.columns.title
+msgid "Outcome"
+msgstr "Resultado"
+
+#: package/analyses/plssem.description plssem/options.description.main
+msgid ""
+"Partial least squares structural equation modeling: reflective and formative"
+" constructs built from boxes, model validation before estimation, loadings, "
+"weights, paths and explained variance, with plain-language interpretation."
+msgstr ""
+"Modelos de ecuaciones estructurales por mínimos cuadrados parciales: "
+"constructos reflectivos y formativos armados con cajas, validación del "
+"modelo antes de estimar, cargas, pesos, rutas y varianza explicada, con "
+"interpretación en lenguaje claro."
+
+#: plssem/options/innerScheme/path.title
+msgid "Path"
+msgstr "Path"
+
+#: plssem/results/paths.title
+msgid "Path coefficients"
+msgstr "Coeficientes de ruta"
+
+#: plssem/options/estimator/pls.title
+msgid "PLS"
+msgstr "PLS"
+
+#: package/analyses/plssem.title package/analyses/plssem.menuTitle
+#: plssem/options.title plssem/options.menuTitle plssem/ui.title
+#: plssem/results.title plssem/results/intro.title
+msgid "PLS-SEM"
+msgstr "PLS-SEM"
+
+#: R/texts.R
+msgid ""
+"PLS-SEM estimates relationships between constructs (concepts measured by "
+"several indicators) and how well each construct is measured. It builds each "
+"construct as a weighted combination of its indicators and is oriented to "
+"explaining and predicting the outcomes of the model."
+msgstr ""
+"PLS-SEM estima las relaciones entre constructos (conceptos medidos por "
+"varios indicadores) y qué tan bien se mide cada constructo. Construye cada "
+"constructo como una combinación ponderada de sus indicadores y está "
+"orientado a explicar y predecir los resultados del modelo."
+
+#: package.title package/analyses/plssem.menuGroup plssem/options.menuGroup
+msgid "PLS-SEM Lab"
+msgstr "PLS-SEM Lab"
+
+#: R/texts.R
+msgid "PLSsemLab %s, cSEM %s, %s; run on %s."
+msgstr "PLSsemLab %s, cSEM %s, %s; ejecutado el %s."
+
+#: package.description
+msgid ""
+"PLSsemLab brings partial least squares structural equation modeling (PLS-"
+"SEM) to jamovi with the cSEM package and pairs every result with evidence-"
+"based methodological guidance, interpretation and educational support. The "
+"model is built from boxes, never typed: reflective and formative constructs "
+"with their indicators, and for each construct the constructs that predict "
+"it. The model is checked before estimation, with messages that name the "
+"construct or indicator at fault. In development."
+msgstr ""
+"PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos "
+"cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada "
+"resultado con orientación metodológica basada en evidencia, interpretación y"
+" apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: "
+"constructos reflectivos y formativos con sus indicadores y, para cada "
+"constructo, los constructos que lo predicen. El modelo se revisa antes de "
+"estimar, con mensajes que nombran el constructo o indicador con problemas. "
+"En desarrollo."
+
+#: plssem/results/model.columns.title
+msgid "Predicted by"
+msgstr "Predicho por"
+
+#: plssem/results/paths.columns.title
+msgid "Predictor"
+msgstr "Predictor"
+
+#: plssem/ui[1]/constructSupplier[0].label
+msgid "Predictors of each construct"
+msgstr "Predictores de cada constructo"
+
+#: plssem/results/r2.columns.title
+msgid "R²"
+msgstr "R²"
+
+#: R/texts.R
+msgid ""
+"Read the loadings and weights before the paths: a construct that is poorly "
+"measured makes its paths hard to interpret. The next versions of PLSsemLab "
+"add reliability, convergent and discriminant validity, collinearity and "
+"bootstrap significance; until then, treat these estimates as descriptive."
+msgstr ""
+"Lea las cargas y los pesos antes que las rutas: un constructo mal medido "
+"hace difícil interpretar sus rutas. Las próximas versiones de PLSsemLab "
+"añaden fiabilidad, validez convergente y discriminante, colinealidad y "
+"significación por bootstrap; mientras tanto, trate estas estimaciones como "
+"descriptivas."
+
+#: R/texts.R
+msgid "Reflective"
+msgstr "Reflectivo"
+
+#: plssem/options/reflective.title plssem/ui[0][0].label
+msgid "Reflective Constructs"
+msgstr "Constructos reflectivos"
+
+#: plssem/options/missing/mean.title
+msgid "Replace by the indicator mean"
+msgstr "Reemplazar por la media del indicador"
+
+#: plssem/ui[3].label
+msgid "Report Content"
+msgstr "Contenido del informe"
+
+#: plssem/results/reproducibility.title
+msgid "Reproducibility"
+msgstr "Reproducibilidad"
+
+#: plssem/options/showRepro.title
+msgid "Reproducibility record"
+msgstr "Registro de reproducibilidad"
+
+#: plssem/results/model.columns.title
+msgid "Role"
+msgstr "Papel"
+
+#: R/texts.R
+msgid "Structural model"
+msgstr "Modelo estructural"
+
+#: plssem/options/structural.title plssem/ui[1].label
+msgid "Structural Model"
+msgstr "Modelo estructural"
+
+#: R/texts.R
+msgid "Structural model: the highest R² is %s for %s."
+msgstr "Modelo estructural: el R² más alto es %s, para %s."
+
+#: R/texts.R
+msgid "substantial"
+msgstr "sustancial"
+
+#: R/texts.R
+msgid ""
+"The estimates are not admissible (%s). Results are shown, but should not be "
+"interpreted until the cause is fixed: check indicators with very low or "
+"negative correlations, or very small samples."
+msgstr ""
+"Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no"
+" deben interpretarse hasta corregir la causa: revise indicadores con "
+"correlaciones muy bajas o negativas, o muestras muy pequeñas."
+
+#: R/texts.R
+msgid ""
+"The estimates are not admissible; do not interpret them until the cause is "
+"fixed."
+msgstr ""
+"Las estimaciones no son admisibles; no las interprete hasta corregir la "
+"causa."
+
+#: R/texts.R
+msgid "The largest path is %s → %s (%s)."
+msgstr "La ruta más grande es %s → %s (%s)."
+
+#: R/texts.R
+msgid ""
+"The model has no reflective constructs, so loadings are not used to judge "
+"indicator quality."
+msgstr ""
+"El modelo no tiene constructos reflectivos, así que las cargas no se usan "
+"para juzgar la calidad de los indicadores."
+
+#: R/texts.R
+msgid ""
+"The model is checked before estimation; if something is missing or "
+"inconsistent, the message names the construct or indicator at fault."
+msgstr ""
+"El modelo se revisa antes de estimar; si falta algo o hay una "
+"inconsistencia, el mensaje nombra el constructo o indicador con problemas."
+
+#: R/texts.R
+msgid ""
+"The name '%s' is used for more than one construct. Give each construct a "
+"different name."
+msgstr ""
+"El nombre '%s' se usa en más de un constructo. Dé a cada constructo un "
+"nombre distinto."
+
+#: R/texts.R
+msgid ""
+"The R code below reproduces this analysis with cSEM directly, from the data "
+"set loaded in jamovi (called data). Constructs and indicators get internal "
+"names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or "
+"accents in names; the comments map them back to the names used in jamovi."
+msgstr ""
+"El código R de abajo reproduce este análisis directamente con cSEM, a partir"
+" del conjunto de datos cargado en jamovi (llamado data). Los constructos e "
+"indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM"
+" falla con espacios o acentos en los nombres; los comentarios los traducen a"
+" los nombres usados en jamovi."
+
+#: R/texts.R
+msgid ""
+"The structural model has a loop (%s). PLS-SEM estimates recursive models "
+"only, in which no construct predicts itself through others: remove one path "
+"of the loop."
+msgstr ""
+"El modelo estructural tiene un ciclo (%s). PLS-SEM solo estima modelos "
+"recursivos, en los que ningún constructo se predice a sí mismo a través de "
+"otros: quite una ruta del ciclo."
+
+#: R/texts.R
+msgid ""
+"The structural model includes an interaction (%s). Interactions between "
+"constructs will be available in a later version of PLSsemLab; remove it for "
+"now."
+msgstr ""
+"El modelo estructural incluye una interacción (%s). Las interacciones entre "
+"constructos estarán disponibles en una versión posterior de PLSsemLab; "
+"quítela por ahora."
+
+#: R/texts.R
+msgid "Uncertainties"
+msgstr "Incertidumbres"
+
+#: R/texts.R
+msgid "very weak"
+msgstr "muy débil"
+
+#: R/texts.R
+msgid "Warnings"
+msgstr "Advertencias"
+
+#: R/texts.R
+msgid "weak"
+msgstr "débil"
+
+#: plssem/results/measurement.columns.title
+msgid "Weight"
+msgstr "Peso"
+
+#: R/texts.R
+msgid "What to do now"
+msgstr "Qué hacer ahora"

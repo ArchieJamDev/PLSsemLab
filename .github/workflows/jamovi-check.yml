@@ -1,0 +1,93 @@
+# Validates the jamovi module on every push: jmvtools::check(), the test
+# suite (validation of the model, equivalence with cSEM, language) on Linux,
+# Windows and macOS. Adapted from MokkenLab's workflow.
+# ES: Valida el módulo de jamovi en cada push: jmvtools::check() y la suite de
+# pruebas (validación del modelo, equivalencia con cSEM, idioma) en Linux,
+# Windows y macOS. Adaptado del flujo de MokkenLab.
+name: Validate jamovi module
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - "experiments/**"
+      - "docs/**"
+      - "*.md"
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  jamovi-check:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      # cSEM imports about 76 packages; TruncatedNormal, spacefillr and qrng
+      # compile C++ code, and the graphics stack needs these libraries.
+      # ES: cSEM importa unos 76 paquetes; TruncatedNormal, spacefillr y qrng
+      # compilan C++, y la pila gráfica necesita estas bibliotecas.
+      - name: Install Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+
+      - name: Install tools and check the jamovi module
+        run: |
+          Rscript -e "install.packages(c('remotes', 'rcmdcheck'), repos = 'https://cloud.r-project.org')"
+          Rscript -e "install.packages('jmvtools', repos = c('https://repo.jamovi.org', 'https://cloud.r-project.org'))"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, upgrade = 'never')"
+          Rscript -e "jmvtools::check()"
+
+      # jmvtools::check() never runs tests/, so this step installs PLSsemLab
+      # as a plain R package and runs the suite explicitly.
+      # ES: jmvtools::check() nunca ejecuta tests/, así que este paso instala
+      # PLSsemLab como paquete de R normal y ejecuta la suite.
+      - name: Install PLSsemLab and run the test suite
+        run: |
+          if ! R CMD INSTALL --no-multiarch --with-keep.source . > install.log 2>&1; then
+            cat install.log
+            echo "::error title=R CMD INSTALL failed::$(tail -n 40 install.log | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')"
+            exit 1
+          fi
+          Rscript .github/scripts/run-tests.R
+
+  cross-platform-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - name: Install dependencies
+        run: |
+          Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')"
+          Rscript -e "remotes::install_deps(dependencies = TRUE, upgrade = 'never')"
+
+      - name: Install PLSsemLab and run the test suite
+        shell: bash
+        run: |
+          R CMD INSTALL --no-multiarch .
+          Rscript .github/scripts/run-tests.R

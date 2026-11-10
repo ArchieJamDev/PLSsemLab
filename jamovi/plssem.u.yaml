@@ -1,0 +1,189 @@
+# -----------------------------------------------------------------------------
+# PLSsemLab
+# A jamovi module for partial least squares structural equation modeling and
+# evidence-based methodological decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of PLSsemLab.
+#
+# PLSsemLab is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or (at your option) any later version.
+#
+# PLSsemLab is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PLSsemLab.
+# If not, see https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+# Layout: the two construct boxes take the indicators from the data (as
+# EGAnetLab's Theoretical structure and jamovi's CFA); the structural model
+# takes constructs from a Supplier that jamovi/js/plssem.events.js fills with
+# the names defined above (SEMLj's pattern). Option boxes use Title Case.
+# ES: Disposición: las dos cajas de constructos toman los indicadores de los
+# datos (como la Estructura teórica de EGAnetLab y el CFA de jamovi); el
+# modelo estructural toma constructos de un Supplier que llena
+# jamovi/js/plssem.events.js con los nombres definidos arriba (patrón de
+# SEMLj). Las cajas de opciones van en Title Case.
+title: PLS-SEM
+name: plssem
+jus: '3.0'
+stage: 0
+compilerMode: tame
+events:
+  update: './plssem.events::update'
+children:
+  - type: VariableSupplier
+    persistentItems: true
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Reflective Constructs
+        children:
+          - type: ListBox
+            name: reflective
+            height: large
+            addButton: Add New Construct
+            events:
+              listItemAdded: './plssem.events::onConstructsChanged'
+              listItemRemoved: './plssem.events::onConstructsChanged'
+            templateName: linreg-block-template
+            template:
+              type: LayoutBox
+              margin: normal
+              children:
+                - type: TextBox
+                  valueKey:
+                    - label
+                  borderless: true
+                  name: reflectiveName
+                  stretchFactor: 1
+                  margin: normal
+                  events:
+                    change: './plssem.events::onConstructsChanged'
+                - type: VariablesListBox
+                  valueFilter: unique
+                  valueKey:
+                    - vars
+                  name: reflectiveVars
+                  isTarget: true
+                  height: auto
+                  ghostText: drag indicators here
+                  events:
+                    change: './plssem.events::onConstructsChanged'
+      - type: TargetLayoutBox
+        label: Formative Constructs
+        children:
+          - type: ListBox
+            name: formative
+            height: normal
+            addButton: Add New Construct
+            events:
+              listItemAdded: './plssem.events::onConstructsChanged'
+              listItemRemoved: './plssem.events::onConstructsChanged'
+            templateName: linreg-block-template
+            template:
+              type: LayoutBox
+              margin: normal
+              children:
+                - type: TextBox
+                  valueKey:
+                    - label
+                  borderless: true
+                  name: formativeName
+                  stretchFactor: 1
+                  margin: normal
+                  events:
+                    change: './plssem.events::onConstructsChanged'
+                - type: VariablesListBox
+                  valueFilter: unique
+                  valueKey:
+                    - vars
+                  name: formativeVars
+                  isTarget: true
+                  height: auto
+                  ghostText: drag indicators here
+                  events:
+                    change: './plssem.events::onConstructsChanged'
+  - type: CollapseBox
+    label: Structural Model
+    collapsed: false
+    stretchFactor: 1
+    children:
+      - type: Supplier
+        label: Constructs
+        name: constructSupplier
+        format: term
+        persistentItems: true
+        stretchFactor: 1
+        children:
+          - type: TargetLayoutBox
+            label: Predictors of each construct
+            transferAction: interactions
+            children:
+              - type: ListBox
+                name: structural
+                height: large
+                selectable: true
+                templateName: linreg-block-template
+                template:
+                  type: LayoutBox
+                  margin: normal
+                  targetArea: true
+                  children:
+                    - type: TextBox
+                      valueKey:
+                        - label
+                      borderless: true
+                      name: outcomeName
+                      enable: false
+                      stretchFactor: 1
+                      margin: normal
+                    - type: ListBox
+                      name: predictorList
+                      valueKey:
+                        - predictors
+                      isTarget: true
+                      valueFilter: unique
+                      height: auto
+                      ghostText: drag predictors here
+                      events:
+                        change: './plssem.events::onPredictorsChanged'
+                      template:
+                        type: TermLabel
+  - type: CollapseBox
+    label: Estimation
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: ComboBox
+            name: estimator
+          - type: ComboBox
+            name: innerScheme
+          - type: ComboBox
+            name: missing
+  - type: CollapseBox
+    label: Report Content
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: showKeySummary
+          - type: CheckBox
+            name: showChoicesGuide
+          - type: CheckBox
+            name: showGuides
+          - type: CheckBox
+            name: showRepro

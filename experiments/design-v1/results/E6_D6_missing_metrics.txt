@@ -1,0 +1,199 @@
+[f2] OK (0.02 s)
+           path    f2
+1  QUAL -> COMP 0.143
+2  QUAL -> LIKE 0.094
+3  PERF -> COMP 0.082
+4  PERF -> LIKE 0.011
+5  CSOR -> COMP 0.005
+6  CSOR -> LIKE 0.035
+7  ATTR -> COMP 0.009
+8  ATTR -> LIKE 0.030
+9  COMP -> CUSA 0.018
+10 COMP -> CUSL 0.000
+11 LIKE -> CUSA 0.159
+12 LIKE -> CUSL 0.138
+13 CUSA -> CUSL 0.412
+[predict with .r = 10 and a seed] ERROR: Setting a seed is possible for one repetition. (0.00 s)
+[predict (10 folds, 10 repetitions, set.seed outside)] OK (2.35 s)
+    warning x1: The following warning occured in the `predict()` function: Disattenuation is not applicable to benchmark `lm` and ignored.
+  columns: Name, MAE_target, MAE_benchmark, RMSE_target, RMSE_benchmark, Q2_predict, MER_target, MER_benchmark, MAPE_target, MAPE_benchmark, MSE2_target, MSE2_benchmark, U1_target, U1_benchmark, U2_target, U2_benchmark, UM_target, UM_benchmark, UR_target, UR_benchmark, UD_target, UD_benchmark 
+     Name MAE_target MAE_benchmark RMSE_target RMSE_benchmark Q2_predict
+1  comp_1  0.7989800     0.8055713    1.044773       1.062843  0.4727839
+2  comp_2  0.8844805     0.8849659    1.101846       1.133844  0.3611171
+3  comp_3  0.8991164     0.8646245    1.137094       1.128418  0.3959003
+4  like_1  0.8569032     0.8836850    1.127746       1.152123  0.4737109
+5  like_2  1.1479410     1.1950134    1.480726       1.549562  0.3625268
+6  like_3  1.1685316     1.2595347    1.508384       1.596613  0.3552028
+7    cusa  0.7907940     0.8892829    1.021544       1.125132  0.2458194
+8  cusl_1  0.9883658     0.9904164    1.300166       1.330726  0.2601767
+9  cusl_2  1.1741233     1.1644822    1.522113       1.544676  0.2339680
+10 cusl_3  1.1540824     1.2166088    1.530013       1.628803  0.1428735
+   MER_target MER_benchmark MAPE_target MAPE_benchmark MSE2_target
+1           1             1   0.2295342      0.2257850    1.094744
+2           1             1   0.1968761      0.1933384    1.217613
+3           1             1   0.2287225      0.2187511    1.296759
+4           1             1   0.2811847      0.2859062    1.275522
+5           1             1   0.4804526      0.5016424    2.198953
+6           1             1   0.4445431      0.4817389    2.281859
+7           1             1   0.1830985      0.1845100    1.046598
+8           1             1   0.3111748      0.2927868    1.695362
+9           1             1   0.4116999      0.3819241    2.323591
+10          1             1   0.3848114      0.3639682    2.347772
+   MSE2_benchmark U1_target U1_benchmark U2_target U2_benchmark    UM_target
+1        1.133021 0.2151036    0.2188239 0.2147908    0.2185056 2.779355e-05
+2        1.289472 0.1971896    0.2029155 0.1969028    0.2026209 1.803261e-05
+3        1.277147 0.2100753    0.2084724 0.2097697    0.2081693 2.343835e-05
+4        1.331401 0.2334230    0.2384686 0.2330835    0.2381218 8.804370e-06
+5        2.408291 0.3199799    0.3348549 0.3195145    0.3343680 1.024760e-05
+6        2.556779 0.3111667    0.3293675 0.3107141    0.3288885 1.096665e-05
+7        1.269651 0.1838317    0.2024705 0.1835643    0.2021782 5.628451e-06
+8        1.776107 0.2435764    0.2493009 0.2432221    0.2489390 3.408357e-06
+9        2.393033 0.2744560    0.2785241 0.2740568    0.2781192 3.949794e-06
+10       2.660807 0.2603096    0.2771160 0.2599310    0.2767142 3.533725e-06
+   UM_benchmark   UR_target UR_benchmark UD_target UD_benchmark
+1  2.041904e-04 0.001724865  0.012050129  2.055979     2.034350
+2  1.984098e-03 0.004466599  0.061273896  1.886646     1.775262
+3  4.398699e-04 0.003163961  0.018931991  2.125011     2.090509
+4  6.570578e-05 0.001619601  0.002797280  2.397126     2.394162
+5  4.320837e-04 0.003778406  0.003794193  3.411225     3.409727
+6  3.128719e-04 0.002240087  0.003288604  3.501888     3.497148
+7  7.493022e-03 0.003912131  0.204624023  1.372226     1.085406
+8  1.964645e-03 0.018250324  0.066942749  2.233466     2.118229
+9  5.824236e-04 0.001785568  0.044778804  3.009217     2.877865
+10 3.093099e-03 0.001469248  0.124643696  2.717485     2.373858
+[testCVPAT established vs competing] OK (0.44 s)
+________________________________________________________________________________
+------- Cross validated predictive ability test (Liengaard et al., 2020) -------
+
+Null hypothesis:
+
++----------------------------------------------------------------------------------------+
+|                                                                                        |
+|   H0: Both models perform equally in predicting indicators of endogenous constructs.   |
+|                                                                                        |
++----------------------------------------------------------------------------------------+
+
+Test statistic and p-value: 
+	
+	Test statistic                   = 2.877691
+	P value                          = 0.004256958
+	Degrees of freedom               = 343
+	Testtype                         = twosided
+
+Information:
+	
+	Seed                             : 20261110
+	Sample Size                      : 344[indirect + total effects (R = 999)] OK (0.02 s)
+  columns: Name, Construct_type, Estimate, Std_err, t_stat, p_value, CI_percentile.95%L, CI_percentile.95%U 
+          Name   Estimate    Std_err CI_percentile.95%L CI_percentile.95%U
+1  CUSA ~ QUAL 0.22807204 0.03496020         0.16826035          0.3032964
+9  CUSL ~ COMP 0.07350091 0.03600261         0.00499094          0.1424546
+10 CUSL ~ LIKE 0.22001303 0.03523266         0.15172967          0.2856226
+[doIPMA] OK (0.01 s)
+    warning x1: At least one construct is modeled as common factor, IPMA's results are not trustworthy in this case.
+    warning x1: At least one weight is negative, which makes the performance importance matrix analysis questionable.
+ construct importance_on_CUSL performance_raw performance_0_100
+      QUAL              0.313            4.85              64.2
+      PERF              0.123            4.82              63.6
+      CSOR              0.122            3.97              49.4
+      ATTR              0.119            4.66              61.0
+      COMP              0.095            5.06              67.7
+      LIKE              0.531            4.45              57.5
+      CUSA              0.608            5.44              74.0
+Groups: 1 2 | n per group: 125 / 219 
+________ Test for measurement invariance based on Henseler et al (2016) ________ 
+
+[testMICOM (R = 499)] OK (7.61 s)
+    warning x1: The following warning occured in the `testMICOM()` function: All constructs are modelled as common factors. Test results are only meaningful for composite model
+________________________________________________________________________________
+-------- Test for measurement invariance based on Henseler et al (2016) --------
+======================== Step 1 - Configural invariance ========================
+
+	Configural invariance is a precondition for step 2 and 3.
+	Do not proceed to interpret results unless
+	configural invariance has been established.
+
+======================= Step 2 - Compositional invariance ======================
+
+Null hypothesis:
+
+       +-----------------------------------------------------------------+
+       |                                                                 |
+       |   H0: Compositional measurement invariance of the constructs.   |
+       |                                                                 |
+       +-----------------------------------------------------------------+
+
+Test statistic and p-value: 
+
+  Compared groups: 1_2
+	         	              	 p-value by adjustment
+	Construct	Test statistic	    none
+	COMP     	    0.9931    	  0.1563
+	LIKE     	    0.9996    	  0.6493
+	CUSA     	    1.0000    	  1.0000
+	CUSL     	    0.9999    	  0.7655
+	
+
+================= Step 3 - Equality of the means and variances =================
+
+Null hypothesis:
+
+          +------------------------------------------------------------+
+          |                                                            |
+          |   1. H0: Difference between group means is zero            |
+          |   2. H0: Log of the ratio of the group variances is zero   |
+          |                                                            |
+          +------------------------------------------------------------+
+
+Test statistic and critical values: 
+
+  Compared groups: 1_2
+
+	Mean
+	         	              	 p-value by adjustment
+	Construct	Test statistic	    none
+	COMP     	    0.0575    	  0.5752
+	LIKE     	    -0.0541   	  0.6072
+	CUSA     	    -0.0967   	  0.3387
+	CUSL     	    -0.0597   	  0.5371
+	
+	Var
+	         	              	 p-value by adjustment
+	Construct	Test statistic	    none
+	COMP     	    0.1427    	  0.3567
+	LIKE     	    0.0156    	  0.9078
+	CUSA     	    0.2331    	  0.2124
+	CUSL     	    -0.0662   	  0.7275
+	
+	
+Additional information:
+
+	Out of 499 permutation runs, 499 where admissible.
+	See ?verify() for what constitutes an inadmissible result.
+
+	The seed used was: 20261110
+
+	Number of observations per group:
+
+	Group      No. observations
+	1          125            
+	2          219            
+________________________________________________________________________________
+[testMGD structured output (known failure)] ERROR: Column `CI_type` not found in `.data`. (2.11 s)
+[testMGD Henseler + Chin (R = 499)] OK (29.61 s)
+           path difference p_Chin p_Henseler
+    CUSA ~ COMP      0.093  0.506      0.247
+    CUSA ~ LIKE     -0.102  0.412      0.803
+    CUSL ~ COMP      0.184  0.136      0.052
+    CUSL ~ LIKE     -0.213  0.064      0.975
+    CUSL ~ CUSA      0.159  0.084      0.022
+ COMP =~ comp_1     -0.048  0.280      0.882
+ COMP =~ comp_2      0.090  0.160      0.061
+ COMP =~ comp_3      0.020  0.732      0.364
+ LIKE =~ like_1     -0.043  0.234      0.836
+ LIKE =~ like_2      0.008  0.864      0.409
+ LIKE =~ like_3      0.026  0.550      0.258
+   CUSA =~ cusa      0.000  1.000      0.500
+ CUSL =~ cusl_1     -0.032  0.542      0.689
+ CUSL =~ cusl_2      0.002  0.914      0.451
+ CUSL =~ cusl_3     -0.079  0.076      0.946

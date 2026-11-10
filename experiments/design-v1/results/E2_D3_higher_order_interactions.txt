@@ -1,0 +1,82 @@
+[Estimate 2nd-order model] OK (0.31 s)
+Admissible: TRUE 
+          QUAL SAT_temp LOY_temp
+QUAL     0.000     0.00        0
+SAT_temp 0.897     0.00        0
+LOY_temp 0.419     0.38        0
+
+== second-order == class: cSEMResults, cSEMResults_2ndorder 
+[first_stage / R2] OK (0.00 s)
+[first_stage / f2] OK (0.01 s)
+[first_stage / rhoC] OK (0.00 s)
+[first_stage / alpha] OK (0.00 s)
+[first_stage / AVE] OK (0.00 s)
+[first_stage / HTMT] OK (0.00 s)
+[first_stage / VIF] OK (0.00 s)
+[first_stage / VIFModeB] OK (0.00 s)
+[first_stage / SRMR] OK (0.00 s)
+[first_stage / dG] OK (0.00 s)
+[first_stage / dL] OK (0.00 s)
+[first_stage / effects] OK (0.01 s)
+[first_stage / assess_all] OK (0.28 s)
+[second_stage / R2] OK (0.00 s)
+[second_stage / f2] OK (0.00 s)
+[second_stage / rhoC] OK (0.00 s)
+[second_stage / alpha] OK (0.00 s)
+[second_stage / AVE] OK (0.00 s)
+[second_stage / HTMT] OK (0.00 s)
+[second_stage / VIF] OK (0.00 s)
+[second_stage / VIFModeB] OK (0.00 s)
+[second_stage / SRMR] OK (0.00 s)
+[second_stage / dG] OK (0.00 s)
+[second_stage / dL] OK (0.00 s)
+[second_stage / effects] OK (0.01 s)
+[second_stage / assess_all] OK (0.07 s)
+    warning x2: NaNs produced
+[whole object / assess_all] OK (0.34 s)
+    warning x1: Computation of the Fornell-Larcker criterion not supported for models containing second-order constructs: Argument 'fl_criterion' is ignored.
+    warning x1: Computation of the HTMT not supported for models containing second-order constructs: Argument 'htmt' is ignored.
+    warning x1: Computation of the RMS_theta not supported for models containing second-order constructs: Argument 'rms_theta' is ignored.
+[Bootstrap 2nd-order (R = 199)] OK (9.66 s)
+        Name  Estimate       p_value
+1 SAT ~ QUAL 0.8973697 2.353639e-113
+2 LOY ~ QUAL 0.4190417  1.782581e-01
+3  LOY ~ SAT 0.3798808  2.212538e-01
+[Estimate interaction model] OK (0.04 s)
+      IMAG   SAT LOY IMAG.SAT
+IMAG 0.000 0.000   0    0.000
+SAT  0.000 0.000   0    0.000
+LOY  0.313 0.557   0    0.049
+
+== interaction == class: cSEMResults, cSEMResults_default 
+[model / R2] OK (0.00 s)
+[model / f2] OK (0.03 s)
+[model / rhoC] ERROR: The following error occured while computing the model-implied indicator correlation matrix: `fit()` currently not applicable to nonlinear models. (0.00 s)
+[model / alpha] OK (0.00 s)
+[model / AVE] OK (0.00 s)
+[model / HTMT] OK (0.00 s)
+[model / VIF] ERROR: Currently, `assess()` does not support models containing nonlinear terms.Use the individual `calculateXXX()` functions instead. (0.00 s)
+[model / VIFModeB] OK (0.00 s)
+[model / SRMR] ERROR: The following error occured while computing the model-implied indicator correlation matrix: `fit()` currently not applicable to nonlinear models. (0.00 s)
+[model / dG] ERROR: The following error occured while computing the model-implied indicator correlation matrix: `fit()` currently not applicable to nonlinear models. (0.00 s)
+[model / dL] ERROR: The following error occured while computing the model-implied indicator correlation matrix: `fit()` currently not applicable to nonlinear models. (0.00 s)
+[model / effects] OK (0.00 s)
+[model / assess_all] ERROR: Currently, `assess()` does not support models containing nonlinear terms.Use the individual `calculateXXX()` functions instead. (0.00 s)
+[Bootstrap interaction (R = 199)] OK (5.51 s)
+[doNonlinearEffectsAnalysis (floodlight)] OK (0.18 s)
+  floodlight columns: direct_effect, value_z, lb, ub 
+    direct_effect value_z    lb    ub
+1           0.404  -3.107 0.202 0.655
+26          0.464  -1.897 0.256 0.675
+50          0.521  -0.736 0.300 0.704
+75          0.581   0.474 0.297 0.804
+100         0.640   1.683 0.271 0.928
+  Johnson-Neyman points:
+     x y
+ IMAG   SAT   LOY 
+0.834 0.888 0.809 
+[rhoC with .model_implied = FALSE] OK (0.00 s)
+    IMAG      SAT IMAG.SAT 
+   1.838    1.999    1.274 
+[Structural VIF from construct scores] OK (0.01 s)
+  SRMR, d_G, d_L: no model-implied matrix exists for nonlinear models; the module reports them as 'Not computable' with this reason.

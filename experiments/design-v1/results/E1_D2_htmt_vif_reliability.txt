@@ -1,0 +1,119 @@
+cSEM 0.7.1 
+
+[Raw data with -99 codes] OK (0.30 s)
+  Reliability on RAW data (wrong):
+      rhoC alpha   AVE
+COMP 0.870 0.776 0.691
+LIKE 0.899 0.831 0.747
+CUSA 1.000   NaN 1.000
+CUSL 0.692 0.421 0.530
+  Cases: raw 344 | listwise after -99 -> NA: 336
+
+Admissible (mean replacement, as in Hair et al.): TRUE 
+
+[rho_C / rho_A / alpha / AVE] OK (0.00 s)
+      rhoC alpha   AVE  rhoA rhoA_if_PLS
+COMP 0.869 0.776 0.688 0.786           1
+LIKE 0.899 0.831 0.747 0.836           1
+CUSA 1.000   NaN 1.000 1.000           1
+CUSL 0.899 0.831 0.748 0.839           1
+[HTMT + bootstrap CI (R = 499)] OK (10.74 s)
+        pair  HTMT upper95            verdict
+ LIKE - COMP 0.780   0.835 below .85 (strict)
+ CUSA - COMP 0.465   0.544 below .85 (strict)
+ CUSL - COMP 0.532   0.611 below .85 (strict)
+ CUSA - LIKE 0.577   0.631 below .85 (strict)
+ CUSL - LIKE 0.737   0.790 below .85 (strict)
+ CUSL - CUSA 0.755   0.798 below .85 (strict)
+Admissible bootstrap samples: 499 
+[HTMT2] OK (0.00 s)
+      COMP  LIKE  CUSA CUSL
+COMP 1.000 0.000 0.000    0
+LIKE 0.776 1.000 0.000    0
+CUSA 0.454 0.575 1.000    0
+CUSL 0.523 0.735 0.756    1
+[HTMT including composites] OK (0.00 s)
+      QUAL  PERF  CSOR  ATTR  COMP  LIKE  CUSA CUSL
+QUAL 1.000 0.000 0.000 0.000 0.000 0.000 0.000    0
+PERF 0.918 1.000 0.000 0.000 0.000 0.000 0.000    0
+CSOR 0.809 0.738 1.000 0.000 0.000 0.000 0.000    0
+ATTR 0.896 0.911 0.826 1.000 0.000 0.000 0.000    0
+COMP 0.864 0.946 0.678 0.847 1.000 0.000 0.000    0
+LIKE 0.828 0.790 0.741 0.840 0.780 1.000 0.000    0
+CUSA 0.564 0.479 0.444 0.548 0.465 0.577 1.000    0
+CUSL 0.652 0.591 0.460 0.620 0.532 0.737 0.755    1
+[VIF Mode B (formative indicators)] OK (0.00 s)
+ block variable  VIF
+  ATTR   attr_1 1.27
+  ATTR   attr_2 1.13
+  ATTR   attr_3 1.26
+  CSOR   csor_1 1.56
+  CSOR   csor_2 1.49
+  CSOR   csor_3 1.73
+  CSOR   csor_4 1.56
+  CSOR   csor_5 1.71
+  PERF   perf_1 1.56
+  PERF   perf_2 1.51
+  PERF   perf_3 1.23
+  PERF   perf_4 1.32
+  PERF   perf_5 1.33
+  QUAL   qual_1 1.81
+  QUAL   qual_2 1.63
+  QUAL   qual_3 2.27
+  QUAL   qual_4 1.96
+  QUAL   qual_5 2.20
+  QUAL   qual_6 2.01
+  QUAL   qual_7 1.62
+  QUAL   qual_8 1.36
+[VIF structural (assess)] OK (0.00 s)
+ block variable  VIF
+  COMP     QUAL 3.49
+  COMP     PERF 2.89
+  COMP     CSOR 2.08
+  COMP     ATTR 2.12
+  CUSA     COMP 1.69
+  CUSA     LIKE 1.69
+  CUSL     COMP 1.72
+  CUSL     LIKE 1.95
+  CUSL     CUSA 1.41
+  LIKE     QUAL 3.49
+  LIKE     PERF 2.89
+  LIKE     CSOR 2.08
+  LIKE     ATTR 2.12
+[Bootstrap with user functions (R = 499)] OK (10.53 s)
+
+VIF_struct:
+             estimate  95%L  95%U
+QUAL -> COMP    3.487 2.885 4.182
+QUAL -> LIKE    3.487 2.885 4.182
+PERF -> COMP    2.889 2.393 3.497
+PERF -> LIKE    2.889 2.393 3.497
+CSOR -> COMP    2.083 1.812 2.486
+CSOR -> LIKE    2.083 1.812 2.486
+ATTR -> COMP    2.122 1.804 2.595
+ATTR -> LIKE    2.122 1.804 2.595
+COMP -> CUSA    1.686 1.465 2.011
+COMP -> CUSL    1.716 1.500 2.076
+LIKE -> CUSA    1.686 1.465 2.011
+LIKE -> CUSL    1.954 1.699 2.351
+CUSA -> CUSL    1.412 1.285 1.625
+
+rhoC:
+     estimate  95%L  95%U
+COMP    0.869 0.841 0.893
+LIKE    0.899 0.878 0.919
+CUSA    1.000 1.000 1.000
+CUSL    0.899 0.877 0.920
+
+AVE:
+     estimate  95%L  95%U
+COMP    0.688 0.639 0.736
+LIKE    0.747 0.706 0.790
+CUSA    1.000 1.000 1.000
+CUSL    0.748 0.705 0.793
+[Fornell-Larcker] OK (0.00 s)
+      COMP  LIKE  CUSA  CUSL
+COMP 0.688 0.407 0.179 0.193
+LIKE 0.407 0.747 0.279 0.378
+CUSA 0.179 0.279 1.000 0.475
+CUSL 0.193 0.378 0.475 0.748

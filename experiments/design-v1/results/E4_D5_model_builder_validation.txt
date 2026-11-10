@@ -1,0 +1,60 @@
+== A1: raw data (with -99 codes)
+[1] "'cusa' has 1 value(s) of -99, far outside its other values. If this is a missing-data code, declare it as missing in jamovi's data view."  
+[2] "'cusl_1' has 3 value(s) of -99, far outside its other values. If this is a missing-data code, declare it as missing in jamovi's data view."
+[3] "'cusl_2' has 4 value(s) of -99, far outside its other values. If this is a missing-data code, declare it as missing in jamovi's data view."
+[4] "'cusl_3' has 3 value(s) of -99, far outside its other values. If this is a missing-data code, declare it as missing in jamovi's data view."
+
+== A2: cleaned data
+ok: TRUE 
+notes: 'Satisfacción del cliente' has a single indicator: its reliability is fixed at 1 and cannot be evaluated. 
+syntax:
+ C1 =~ V1 + V2 + V3
+C2 =~ V4 + V5 + V6
+C3 =~ V7
+C4 =~ V8 + V9 + V10
+C5 <~ V11 + V12 + V13 + V14 + V15 + V16 + V17 + V18
+C1 ~ C5
+C2 ~ C5
+C3 ~ C1 + C2
+C4 ~ C1 + C2 + C3 
+[csem() on built model] OK (0.29 s)
+                                               path estimate
+                             Calidad -> Competencia    0.764
+                         Calidad -> Simpat\303\255a    0.712
+     Competencia -> Satisfacci\303\263n del cliente    0.148
+                             Competencia -> Lealtad    0.006
+ Simpat\303\255a -> Satisfacci\303\263n del cliente    0.434
+                         Simpat\303\255a -> Lealtad    0.344
+         Satisfacci\303\263n del cliente -> Lealtad    0.505
+
+== empty construct 
+[  cSEM alone] ERROR: <text>:2:0: unexpected end of input 1: ~ ^ (0.02 s)
+  validator: 'Competencia' has no indicators: drag at least one variable into it. 
+
+== indicator twice 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: At least one indicator is connected to several constructs. (0.01 s)
+  validator: 'comp_1' is an indicator of more than one construct. In PLS-SEM each indicator belongs to one block only. 
+
+== duplicated name 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: No measurement equation provided for: `Simpat_a` (0.01 s)
+  validator: The name 'Competencia' is used for more than one construct. | 'Simpatía' appears in the structural model but is not defined as a construct. 
+
+== loop 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: Reordering the structural equations was not succesful. (0.01 s)
+  validator: The structural model has a loop (A -> B -> ... -> A). PLS-SEM estimates recursive models only: remove one path of the loop. 
+
+== isolated construct 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: The following constructs of the measurement model do not appear in the structural model: `Desempe_o` (0.01 s)
+  validator: 'Desempeño' is not connected to any other construct in the structural model. 
+
+== unknown in paths 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: No measurement equation provided for: `Atractivo` (0.01 s)
+  validator: 'Atractivo' appears in the structural model but is not defined as a construct. 
+
+== no structural model 
+[  cSEM alone] ERROR: The following error occured in the `parseModel()` function: All construct correlations must be supplied explicitly using e.g.,: `Competencia ~~ Simpat_a` (0.01 s)
+  validator: The structural model is empty: add at least one outcome with its predictors. 
+[cSEM with a variable named 'competencia 1'] ERROR: The following error occured while processing the data: Unknown indicator(s): `competencia1`. Please verify your model description. (0.01 s)
+[cSEM with an accented construct name (Simpatía)] ERROR: input string 1 is invalid (0.00 s)
+    warning x1: unable to translate 'Competencia=~comp_1+comp_2+comp_3 Simpat<c3><ad>a=~like_1+like_2+like_3 Simpat<c3><ad>a~Competencia' to a wide string
+[Same through the builder (V1..Vp)] OK (0.02 s)

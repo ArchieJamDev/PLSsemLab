@@ -1,0 +1,40 @@
+[R=500 PLSc=FALSE drop] OK (10.37 s)
+[R=2000 PLSc=FALSE drop] OK (39.19 s)
+[R=500 PLSc=TRUE drop] OK (9.56 s)
+[R=2000 PLSc=TRUE drop] OK (38.49 s)
+[R=500 PLSc=FALSE replace] OK (9.40 s)
+[R=2000 PLSc=FALSE replace] OK (39.30 s)
+[R=500 PLSc=TRUE replace] OK (10.59 s)
+[R=2000 PLSc=TRUE replace] OK (39.62 s)
+    R disattenuate  handle  secs admissible runs
+  500        FALSE    drop 10.37        500  500
+ 2000        FALSE    drop 39.19       2000 2000
+  500         TRUE    drop  9.56        500  500
+ 2000         TRUE    drop 38.49       2000 2000
+  500        FALSE replace  9.40        500  500
+ 2000        FALSE replace 39.30       2000 2000
+  500         TRUE replace 10.59        500  500
+ 2000         TRUE replace 39.62       2000 2000
+       AIC.CUSL       AICc.CUSL       AICu.CUSL        BIC.CUSL        FPE.CUSL 
+        -276.96           69.21         -272.94         -261.60            0.45 
+        GM.CUSL         HQ.CUSL        HQc.CUSL Mallows_Cp.CUSL 
+         373.09         -270.85         -270.59           13.72 
+[calculateModelSelectionCriteria on R = 2000 object] OK (0.01 s)
+[summarize on R = 2000 object] OK (0.02 s)
+Chunked 10 x 200: 37.6 s, 2000 draws
+        path single_lo pooled_lo single_hi pooled_hi
+ COMP ~ QUAL     0.307     0.298     0.561     0.553
+ COMP ~ PERF     0.175     0.164     0.424     0.425
+ COMP ~ CSOR    -0.047    -0.044     0.160     0.171
+ COMP ~ ATTR    -0.013    -0.014     0.190     0.193
+ LIKE ~ QUAL     0.264     0.264     0.506     0.522
+ LIKE ~ PERF    -0.006    -0.015     0.253     0.256
+ LIKE ~ CSOR     0.070     0.068     0.282     0.282
+ LIKE ~ ATTR     0.036     0.036     0.284     0.290
+ CUSA ~ COMP     0.010     0.011     0.279     0.274
+ CUSA ~ LIKE     0.317     0.319     0.551     0.555
+ CUSL ~ COMP    -0.096    -0.101     0.112     0.110
+ CUSL ~ LIKE     0.231     0.234     0.454     0.453
+ CUSL ~ CUSA     0.421     0.418     0.582     0.584
+Largest absolute difference between CI bounds: 0.016 
+Identical draws with the same seed: TRUE 

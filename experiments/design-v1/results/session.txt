@@ -1,0 +1,5 @@
+Date: 2026-11-10 23:17 CET
+R: R version 4.3.3 (2024-02-29)
+cSEM: 0.7.1
+lavaan: 0.6.17
+Platform: x86_64-pc-linux-gnu

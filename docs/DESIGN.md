@@ -308,7 +308,29 @@ explica por qué con un aviso nativo.
    espacios y acentos, un solo indicador, modelos casi singulares, idioma
    español-inglés-español en un mismo proceso.
 
-## 8. Riesgos y decisiones abiertas
+## 8. Plan de desarrollo por fases
+
+Cada fase termina con algo que compila en jamovi, con sus pruebas y su
+validación contra cSEM, y con la enseñanza de lo que añade (guías "Cómo
+leer", interpretación, hallazgos clave): la parte didáctica se construye con
+cada tabla, no al final. El orden sigue la prioridad de la sección 2, salvo
+la fase 1, que es la base de todas las demás.
+
+| Fase | Contenido | Deficiencia | Criterio de cierre |
+| --- | --- | --- | --- |
+| 0 | Diseño, experimentos con cSEM, documentos de la suite, logo | — | Hecho |
+| 1 | Plataforma: paquete, `0000.yaml`, catálogo i18n, CI, datasets incluidos (perdidos -99 ya declarados); interfaz de cajas con el Supplier en JS; constructor y validador del modelo; estimación con cargas, pesos y rutas | D5 | El modelo se arma con cajas, los 7 errores del E4 dan su mensaje y los números coinciden con cSEM |
+| 2 | Modelo de medida: estimador PLS/PLSc, fiabilidad (alfa, rho_A, rho_C), AVE, HTMT y HTMT2, VIF de indicadores formativos, Fornell-Larcker | D2 | Valores de COMP del E1 reproducidos; tablas con forma fija desde `.init()` |
+| 3 | Modelo estructural y bootstrap: R², f², VIF estructural, efectos directos, indirectos y totales; bootstrap por bloques con checkpoint, caché y semilla; IC de todas las medidas; diagrama de rutas en ggplot | D2, D4 | 2000 réplicas sin fallo, cancelables; IC iguales a los de cSEM |
+| 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Los dos modelos del E2 corren completos; lo no calculable sale como "No computable" con su razón |
+| 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Resultados del E5 reproducidos; explicación de por qué no hay chi-cuadrado ML |
+| 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Resultados del E6 reproducidos; rango de la escala para IPMA |
+| 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |
+| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
+| 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |
+| 10 | Versión 1.0.0 y envío a la biblioteca de jamovi | — | Revisión de jamovi atendida |
+
+## 9. Riesgos y decisiones abiertas
 
 | Tema | Riesgo o pregunta | Propuesta |
 | --- | --- | --- |
@@ -321,7 +343,7 @@ explica por qué con un aviso nativo.
 | Estado de JASP | Lo de D2 y D6 puede haber cambiado en 0.99 | Revisarlo en JASP antes de cerrar la lista de requisitos |
 | Volumen de la v1 | Cubrir D1–D6 a la vez es mucho | Construir en el orden de prioridad de la sección 2 y validar cada parte antes de la siguiente |
 
-## 9. Fuentes
+## 10. Fuentes
 
 Las referencias metodológicas están en `docs/Bibliography.md`. Reportes de
 JASP usados en este documento:

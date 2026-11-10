@@ -29,6 +29,24 @@ EGAnetLab and MokkenLab.
   machines (Actions tab → *design-experiments* → *Run workflow*); results are
   attached to the run as an artifact.
 
+## Roadmap
+
+| Phase | Content | Status |
+|---|---|---|
+| 0 | Design, experiments with cSEM for every JASP shortcoming, suite documents, logo | ✅ Done |
+| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 In progress |
+| 2 | Measurement model: reliability, AVE, HTMT, VIF | 🗓 Planned |
+| 3 | Structural model, bootstrap in blocks, path diagram | 🗓 Planned |
+| 4 | Higher-order constructs and interactions | 🗓 Planned |
+| 5 | Bootstrap test of overall model fit | 🗓 Planned |
+| 6 | Prediction (PLSpredict, CVPAT), mediation, IPMA | 🗓 Planned |
+| 7 | Multigroup analysis with MICOM | 🗓 Planned |
+| 8 | Validation against cSEM, Hair et al. and JASP; stress tests | 🗓 Planned |
+| 9 | First public release (0.1.0) with Zenodo DOI | 🗓 Planned |
+| 10 | Version 1.0.0 and jamovi Library submission | 🗓 Planned |
+
+Details of each phase and its completion criterion: `docs/DESIGN.md` §8.
+
 ---
 
 # PLSsemLab (ES)

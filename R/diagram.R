@@ -78,9 +78,79 @@
                        exogenous = c(man_exo, !(lab %in% endo)),
                        stringsAsFactors = FALSE)
     lay <- .pl_diagram_layout(blocks, paths, paths, r2, NULL)
-    list(vars = vars, pars = pars, caption = caption,
+    xy <- .pl_sem_coords(lay$nodes, simple, node, pars, vars)
+    list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
+}
+
+# Coordinates for the left-to-right tree (SmartPLS-like): constructs in
+# columns by depth, ordered by the mean position of their predictors;
+# formative indicators and those of exogenous reflective constructs in a
+# column to the left, those of reflective constructs that predict nothing in
+# a column to the right, and those of reflective constructs in the middle in
+# a row above, so no indicator sits on a structural arrow.
+# ES: Coordenadas del árbol de izquierda a derecha (como SmartPLS):
+# constructos en columnas por profundidad; indicadores formativos y de
+# reflectivos exógenos a la izquierda, de reflectivos terminales a la
+# derecha y de reflectivos intermedios en una fila arriba.
+.pl_sem_coords <- function(nodes, simple, node, pars, vars) {
+    gap <- 0.6
+    x <- stats::setNames(rep(0, nrow(vars)), vars$name)
+    y <- x
+    sides <- lapply(nodes$label, function(cl) {
+        nm <- node[[cl]]
+        into <- pars$lhs[pars$rhs == nm & pars$kind == "weight"]
+        outof <- pars$rhs[pars$lhs == nm & pars$kind == "loading"]
+        exo <- !(cl %in% simple$to)
+        term <- !(cl %in% simple$from)
+        list(left = c(into, if (exo) outof), right = if (!exo && term) outof else character(0),
+             top = if (!exo && !term) outof else character(0))
+    })
+    names(sides) <- nodes$label
+    body <- vapply(sides, function(sd) max(1.5, gap * length(sd$left), gap * length(sd$right)), 0)
+    order_y <- stats::setNames(rep(0, nrow(nodes)), nodes$label)
+    for (l in sort(unique(nodes$layer))) {
+        idx <- which(nodes$layer == l)
+        if (l > 0) {
+            key <- vapply(nodes$label[idx], function(cl) {
+                pr <- simple$from[simple$to == cl]
+                if (length(pr)) mean(order_y[pr]) else 0
+            }, 0)
+            idx <- idx[order(-key)]
+        }
+        # the first construct of a column gets its row of indicators above,
+        # the others below, so the rows stay outside the column
+        # ES: el primer constructo de la columna lleva su fila arriba, los
+        # demás abajo
+        row_above <- seq_along(idx) == 1
+        extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) 1.3 else 0, 0)
+        total <- sum(body[nodes$label[idx]] + extra) + 0.8 * (length(idx) - 1)
+        top <- total / 2
+        for (j in seq_along(idx)) {
+            cl <- nodes$label[idx[j]]
+            sd <- sides[[cl]]
+            nm <- node[[cl]]
+            above <- if (row_above[j]) extra[[j]] else 0
+            cy <- top - above - body[[cl]] / 2
+            cx <- 5 * l
+            x[[nm]] <- cx
+            y[[nm]] <- cy
+            order_y[[cl]] <- cy
+            col <- function(v, xx) if (length(v)) {
+                x[v] <<- xx
+                y[v] <<- cy + rev(seq_along(v) - (length(v) + 1) / 2) * gap
+            }
+            col(sd$left, cx - 1.9)
+            col(sd$right, cx + 1.9)
+            if (length(sd$top)) {
+                x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * 1.05
+                y[sd$top] <- cy + if (row_above[j]) 1.25 else -1.25
+            }
+            top <- top - body[[cl]] - extra[[j]] - 0.8
+        }
+    }
+    list(x = unname(x), y = unname(y))
 }
 
 # A semPlotModel from the state; slots are filled by name so that a semPlot
@@ -128,18 +198,19 @@
     # ES: Rutas y pesos no significativos van discontinuos.
     dashed <- !is.na(p$sig) & !p$sig & !isFALSE(opts$nonsigDashed)
     m@Pars$fixed <- dashed
+    xy <- cbind(state$x, state$y)
     layout <- switch(if (is.null(opts$diagramLayout)) "treeLR" else opts$diagramLayout,
-                     treeLR = list("tree2", 2), treeTB = list("tree2", 1),
+                     treeLR = list(xy, 1), treeTB = list(cbind(-xy[, 2], -xy[, 1]), 1),
                      circle = list("circle2", 1), spring = list("spring", 1))
+    if (is.null(state$x)) layout[[1]] <- "tree2"
     by_est <- !identical(opts$edgeWidth, "uniform")
     # Coefficients near the indicator on measurement arrows (where arrows
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
     lab_pos <- ifelse(p$kind == "weight", 0.3, ifelse(p$kind == "loading", 0.7, 0.5))
-    split <- isTRUE(opts$.split) && any(p$kind != "path")
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
-                      layout = layout[[1]], rotation = layout[[2]],
+                      layout = layout[[1]], rotation = layout[[2]], curve = 0,
                       sizeLat = if (is.null(opts$latentSize)) 11 else opts$latentSize,
                       sizeLat2 = 0.62 * (if (is.null(opts$latentSize)) 11 else opts$latentSize),
                       sizeMan = if (is.null(opts$manifestSize)) 6 else opts$manifestSize,
@@ -154,7 +225,6 @@
                       fixedStyle = 2, freeStyle = 1,
                       fade = FALSE, esize = if (by_est) 6 else 1.6, asize = 2.6,
                       edge.label.position = lab_pos,
-                      layoutSplit = split, measurementLayout = if (is.null(opts$.mlayout)) "tree" else opts$.mlayout,
                       curvePivot = TRUE, mar = c(if (!isFALSE(opts$diagramCaption)) 7 else 3, 3, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 3),
                       bg = back, DoNotPlot = FALSE)
     if (nzchar(opts$diagramTitle %or% ""))

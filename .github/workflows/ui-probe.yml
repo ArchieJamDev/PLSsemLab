@@ -1,0 +1,56 @@
+# Opens the PLS-SEM options panel in a real jamovi (official docker image)
+# with a headless browser, to diagnose the panel without a desktop jamovi.
+# ES: Abre el panel de PLS-SEM en un jamovi real (imagen docker oficial) con
+# un navegador sin pantalla, para diagnosticar el panel sin jamovi de
+# escritorio.
+name: UI probe (jamovi docker)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'jamovi docker image'
+        required: false
+        default: 'jamovi/jamovi:28.1'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: List jamovi image tags
+        run: curl -s "https://hub.docker.com/v2/repositories/jamovi/jamovi/tags?page_size=30" | python3 -c "import json,sys; print([t['name'] for t in json.load(sys.stdin)['results']])" || true
+
+      - name: Start jamovi
+        run: |
+          docker run -dit --name jamovi -p 41337:41337 -p 41338:41338 -p 41339:41339 \
+            -e JAMOVI_ALLOW_ARBITRARY_CODE=false -e JAMOVI_HOST_A=127.0.0.1:41337 \
+            -e JAMOVI_HOST_B=127.0.0.1:41338 -e JAMOVI_HOST_C=127.0.0.1:41339 -e JAMOVI_ACCESS_KEY= \
+            "${{ inputs.image }}" /bin/sh -c "/usr/bin/python3 -u -m jamovi.server 41337 --if=* --stdin-slave"
+          sleep 20
+          docker logs jamovi | tail -20
+          docker exec jamovi sh -c 'cat /usr/lib/jamovi/bin/env.conf; which node; node --version' || true
+
+      - name: Build and install PLSsemLab inside the image
+        run: |
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev && cd -
+          node "$RUNNER_TEMP/jmc/index.js" --install . --home docker:jamovi
+          sleep 30
+          docker logs jamovi | tail -30
+
+      - name: Probe the panel with a headless browser
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+          mkdir -p probe-out
+          python tests/ui/probe.py probe-out || true
+          docker logs jamovi > probe-out/jamovi.log 2>&1 || true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-probe
+          path: probe-out

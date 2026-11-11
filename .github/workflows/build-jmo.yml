@@ -150,7 +150,8 @@ jobs:
       # resolvían nombres.
       - name: Build the .jmo in R ${{ inputs.r_version }}
         run: |
-          docker run --rm --network host -v "$PWD:/w" -w /w \
+          cat /etc/resolv.conf; cat /run/systemd/resolve/resolv.conf || true
+          docker run --rm --network host -v /run/systemd/resolve/resolv.conf:/etc/resolv.conf:ro -v "$PWD:/w" -w /w \
             -e APP_VERSION="${{ inputs.app_version }}" \
             rocker/r-ver:${{ inputs.r_version }} bash .github/scripts/build-jmo-r.sh
           ls -la *.jmo

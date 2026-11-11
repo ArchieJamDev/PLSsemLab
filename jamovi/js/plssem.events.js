@@ -48,6 +48,17 @@ const events = {
 
     onPredictorsChanged: function(ui) {
         sync(ui, this);
+    },
+
+    // jamovi requires both handlers on a Supplier: "update" asks for its
+    // items (refilled from the boxes), "change" fires when they change.
+    // ES: jamovi exige ambos manejadores en un Supplier: "update" pide sus
+    // ítems (se vuelven a llenar desde las cajas), "change" avisa del cambio.
+    onUpdateConstructSupplier: function(ui) {
+        sync(ui, this);
+    },
+
+    onChangeConstructSupplier: function(ui) {
     }
 };
 

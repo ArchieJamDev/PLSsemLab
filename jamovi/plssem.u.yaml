@@ -122,6 +122,9 @@ children:
         format: term
         persistentItems: true
         stretchFactor: 1
+        events:
+          update: './plssem.events::onUpdateConstructSupplier'
+          change: './plssem.events::onChangeConstructSupplier'
         children:
           - type: TargetLayoutBox
             label: Predictors of each construct

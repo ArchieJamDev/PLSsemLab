@@ -603,9 +603,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # Size: wider with more layers of constructs, taller with more
             # indicators per layer (left to right) or the reverse.
             # ES: Tamaño según capas de constructos e indicadores.
-            per_layer <- if (st$n_ind) ceiling(st$n_ind / max(1, st$n_layers)) else st$n_rows
-            long <- max(560, 230 * st$n_layers + 120)
-            wide <- max(420, min(1400, 34 * max(per_layer, 2 * st$n_rows) + 140))
+            long <- max(640, 260 * st$n_layers + 240)
+            wide <- if (st$n_ind) max(420, min(1600, 24 * st$n_ind + 140)) else max(360, 130 * st$n_rows + 120)
             if (identical(self$options$diagramLayout, "treeTB")) image$setSize(wide + 140, long - 60)
             else image$setSize(long, wide)
             image$setState(st)

@@ -132,6 +132,12 @@
                      treeLR = list("tree2", 2), treeTB = list("tree2", 1),
                      circle = list("circle2", 1), spring = list("spring", 1))
     by_est <- !identical(opts$edgeWidth, "uniform")
+    # Coefficients near the indicator on measurement arrows (where arrows
+    # converge on the construct the labels would pile up), midway on paths.
+    # ES: Coeficientes cerca del indicador en las flechas de medida, al
+    # medio en las rutas.
+    lab_pos <- ifelse(p$kind == "weight", 0.3, ifelse(p$kind == "loading", 0.7, 0.5))
+    split <- isTRUE(opts$.split) && any(p$kind != "path")
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]],
                       sizeLat = if (is.null(opts$latentSize)) 11 else opts$latentSize,
@@ -147,7 +153,9 @@
                       edge.label.color = ink, edge.label.bg = back,
                       fixedStyle = 2, freeStyle = 1,
                       fade = FALSE, esize = if (by_est) 6 else 1.6, asize = 2.6,
-                      curvePivot = TRUE, mar = c(5, 4, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 4),
+                      edge.label.position = lab_pos,
+                      layoutSplit = split, measurementLayout = if (is.null(opts$.mlayout)) "tree" else opts$.mlayout,
+                      curvePivot = TRUE, mar = c(if (!isFALSE(opts$diagramCaption)) 7 else 3, 3, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 3),
                       bg = back, DoNotPlot = FALSE)
     if (nzchar(opts$diagramTitle %or% ""))
         graphics::title(main = opts$diagramTitle, col.main = ink, font.main = 1, cex.main = 1.1, line = 0.5)

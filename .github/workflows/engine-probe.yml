@@ -1,0 +1,41 @@
+# Runs the module inside jamovi's own R (official docker image) with the
+# dev-build .jmo, to reproduce engine crashes ("the analysis has
+# terminated") that do not happen in a plain R session.
+# ES: Ejecuta el módulo dentro del R de jamovi (imagen docker oficial) con
+# el .jmo de dev-build, para reproducir caídas del motor.
+name: Engine probe (jamovi docker)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: 'jamovi docker image'
+        required: false
+        default: 'jamovi/jamovi:2.7.4'
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Get the dev-build .jmo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download dev-build --pattern '*.jmo' --dir jmo
+          mkdir -p mod out && unzip -q jmo/*.jmo -d mod && ls mod/PLSsemLab mod/PLSsemLab/R | head -50
+      - name: Run the analysis in jamovi's R
+        run: |
+          docker pull "${{ inputs.image }}"
+          docker run -d --name jam --entrypoint sleep -v "$PWD:/w" -v "$PWD/out:/tmp/out" "${{ inputs.image }}" 3600
+          docker exec jam sh -c 'which R Rscript; ls /usr/lib/jamovi 2>/dev/null; find / -maxdepth 7 -name jmvcore -type d 2>/dev/null; find / -maxdepth 6 -name Rscript -type f 2>/dev/null'
+          RS=$(docker exec jam sh -c 'command -v Rscript || find / -maxdepth 6 -name Rscript -type f 2>/dev/null | head -1')
+          LIBS=$(docker exec jam sh -c 'find / -maxdepth 7 -name jmvcore -type d 2>/dev/null | grep -v /w/ | xargs -n1 dirname | sort -u | paste -sd:')
+          echo "Rscript=$RS libs=$LIBS"
+          docker exec -e R_LIBS="/w/mod/PLSsemLab/R:$LIBS" -e PL_DATA=/w/data/plssemlab_bank.csv jam "$RS" /w/tests/engine/run-in-jamovi.R; echo "exit code: $?"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: engine-probe
+          path: out

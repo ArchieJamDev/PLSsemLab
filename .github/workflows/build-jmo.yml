@@ -17,6 +17,10 @@ on:
         description: 'Flatpak commit of org.jamovi.jamovi to build for (flatpak info shows it); empty = latest'
         required: false
         default: ''
+      jamovi_series:
+        description: 'Build for the newest jamovi of this series still on Flathub (e.g. 2.7); empty = latest'
+        required: false
+        default: ''
       tag:
         description: 'Pre-release tag to attach the .jmo to'
         required: false
@@ -51,8 +55,17 @@ jobs:
           # built for the exact jamovi the user has.
           # ES: Un .jmo solo carga en un jamovi con la misma versión de R, así
           # que se puede construir para el jamovi exacto del usuario.
-          if [ -n "${{ inputs.jamovi_commit }}" ]; then
-            sudo flatpak update -y --noninteractive --commit="${{ inputs.jamovi_commit }}" org.jamovi.jamovi
+          COMMIT="${{ inputs.jamovi_commit }}"
+          SERIES="${{ inputs.jamovi_series }}"
+          if [ -z "$COMMIT" ] && [ -n "$SERIES" ]; then
+            for c in $(flatpak remote-info --log flathub org.jamovi.jamovi | awk '/Commit:/ {print $2}'); do
+              v=$(flatpak remote-info --commit="$c" flathub org.jamovi.jamovi 2>/dev/null | awk '/Version:/ {print $2}')
+              echo "commit $c -> version $v"
+              case "$v" in "$SERIES".*) COMMIT="$c"; break ;; esac
+            done
+          fi
+          if [ -n "$COMMIT" ]; then
+            sudo flatpak update -y --noninteractive --commit="$COMMIT" org.jamovi.jamovi
           fi
           RUNTIME=$(flatpak info --show-runtime org.jamovi.jamovi)
           SDK=${RUNTIME/Platform/Sdk}

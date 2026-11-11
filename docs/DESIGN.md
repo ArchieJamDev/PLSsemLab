@@ -309,6 +309,46 @@ explica por qué con un aviso nativo.
   avisos de cSEM pasan a avisos nativos de jamovi.
 - Detalle completo en `ARCHITECTURE.md` §16.
 
+### Prompt para una IA externa (planeado)
+
+Apoyo externo sin integrar ninguna IA en el módulo: el módulo no se conecta
+a ningún servicio ni envía datos. Genera un texto (prompt) que el usuario
+copia y pega en la IA que elija, junto con el informe o los datos que él
+mismo decida adjuntar. Solicitado por Archie el 11 de noviembre de 2026.
+
+Requisitos:
+
+1. **Adaptado a lo pedido en la interfaz.** El prompt se arma con las
+   opciones del análisis: constructos y su modelo de medida, rutas,
+   estimador, esquema de ponderación, tratamiento de los indicadores,
+   perdidos, bootstrap (réplicas, semilla, nivel) y las secciones activas.
+   Una sección apagada no aparece en el prompt.
+2. **Sobre lo hallado.** Incluye los resultados concretos de esa ejecución,
+   con sus valores exactos y su valoración: cargas, fiabilidad, AVE, HTMT y
+   su límite superior, VIF, rutas con intervalo, R², f² y efectos. También
+   incluye las filas "No computable" con su razón y los avisos. La pregunta
+   que se le hace a la IA (interpretar, aconsejar, proponer acciones) parte
+   de esos hallazgos, no de PLS-SEM en general.
+3. **Diseñado contra alucinaciones y por la honestidad.** Instrucciones
+   explícitas para la IA:
+   - responder solo con los datos incluidos o adjuntos;
+   - citar la tabla y la fila de cada número que use;
+   - decir "esto no está en los resultados" en lugar de suponer;
+   - separar lo que los datos muestran de lo que es inferencia o juicio;
+   - no inventar referencias: usar solo las del informe, o marcar como "a
+     verificar" cualquier otra;
+   - señalar la incertidumbre (intervalos, casos límite, p frente a IC);
+   - no recomendar quitar indicadores sin la razón teórica que exige el
+     informe.
+4. **Con adjuntos que pone el usuario.** El prompt indica qué adjuntar y lo
+   nombra: el informe exportado de jamovi (PDF o HTML) y, si se quiere, el
+   archivo de datos. Un aviso recuerda no compartir datos identificables.
+
+Forma prevista: una salida Html opcional (apagada por defecto, en *Report
+Content*) con el prompt listo para copiar. Incluye una lista de
+comprobación de lo que conviene adjuntar. El texto del prompt va por el
+catálogo i18n como el resto del informe, y queda en el idioma de jamovi.
+
 ## 7. Plan de validación
 
 1. `validation/` comprueba que cada número del módulo es idéntico a la
@@ -339,7 +379,7 @@ la fase 1, que es la base de todas las demás.
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Resultados del E5 reproducidos; explicación de por qué no hay chi-cuadrado ML |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Resultados del E6 reproducidos; rango de la escala para IPMA |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |
-| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
+| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
 | 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |
 | 10 | Versión 1.0.0 y envío a la biblioteca de jamovi | — | Revisión de jamovi atendida |
 

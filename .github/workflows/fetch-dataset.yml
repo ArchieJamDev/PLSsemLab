@@ -33,7 +33,7 @@ jobs:
           mkdir -p out
           ID=${{ inputs.dataset }}; V=${{ inputs.version }}
           curl -sL "https://data.mendeley.com/public-api/datasets/$ID?version=$V" -o out/metadata.json
-          python3 -c "import json; d=json.load(open('out/metadata.json')); print(json.dumps({k: d.get(k) for k in ['name','description','licence','license','contributors','publish_date','doi']}, indent=1)[:4000])" || head -c 3000 out/metadata.json
+          python3 -c "import json; d=json.load(open('out/metadata.json')); print(sorted(d.keys())); print({k: v for k, v in d.items() if 'lic' in k.lower() or 'right' in k.lower() or 'term' in k.lower()})" || head -c 3000 out/metadata.json
           curl -sL "https://data.mendeley.com/public-api/datasets/$ID/files?folder_id=root&version=$V" -o out/files.json
           python3 - <<'PY'
           import json, urllib.request, os
@@ -42,7 +42,7 @@ jobs:
               name = f.get('filename'); url = (f.get('content_details') or {}).get('download_url')
               print(name, f.get('size'), url is not None)
               if url and name:
-                  urllib.request.urlretrieve(url, os.path.join('out', name))
+                  os.system(f'curl -sL -A "Mozilla/5.0" -o "out/{name}" "{url}"')
           PY
           ls -la out
           gh release delete dataset-fetch --yes --cleanup-tag || true

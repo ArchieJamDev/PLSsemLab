@@ -148,6 +148,10 @@ jobs:
       # necesita los archivos de Ubuntu, que dejaron de resolver.
       - name: Build the .jmo in R ${{ inputs.r_version }}
         run: |
+          mkdir -p .tools/node .tools/jmc
+          curl -fsSL https://nodejs.org/dist/v20.18.1/node-v20.18.1-linux-x64.tar.xz | tar -xJ -C .tools/node --strip-components=1
+          curl -fsSL https://codeload.github.com/jamovi/jamovi-compiler/tar.gz/refs/heads/main | tar -xz -C .tools/jmc --strip-components=1
+          (cd .tools/jmc && PATH="$PWD/../node/bin:$PATH" npm install --omit=dev --silent)
           docker run --rm -v "$PWD:/w" -w /w -e APP_VERSION="${{ inputs.app_version }}" \
             rocker/r-ver:${{ inputs.r_version }} bash .github/scripts/build-jmo-r.sh
           ls -la *.jmo

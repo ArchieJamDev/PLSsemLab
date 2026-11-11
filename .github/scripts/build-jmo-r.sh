@@ -8,18 +8,17 @@
 set -euo pipefail
 R --version | head -1
 which gcc g++ gfortran make || true
-curl -fsSL https://nodejs.org/dist/v20.18.1/node-v20.18.1-linux-x64.tar.xz | tar -xJ -C /opt
-export PATH=/opt/node-v20.18.1-linux-x64/bin:$PATH
+# Node and the compiler were fetched on the host (the image has no curl).
+# ES: Node y el compilador se bajaron en el host (la imagen no tiene curl).
+export PATH=/w/.tools/node/bin:$PATH
 node --version
 Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/__linux__/noble/2025-05-25'))"
-mkdir -p /tmp/jmc && curl -fsSL https://codeload.github.com/jamovi/jamovi-compiler/tar.gz/refs/heads/main | tar -xz -C /tmp/jmc --strip-components=1
-(cd /tmp/jmc && npm install --omit=dev --silent)
 mkdir -p /tmp/fakejam/bin
 printf '#!/bin/sh\necho %s\n' "$APP_VERSION" > /tmp/fakejam/bin/jamovi
 chmod +x /tmp/fakejam/bin/jamovi
 RHOME=$(R RHOME)
 RLIB=$(Rscript -e "cat(.libPaths()[1])")
-build() { node /tmp/jmc/index.js --build . "$@" --home /tmp/fakejam --rhome "$RHOME" --rlibs "$RLIB" --assume-app-version "$APP_VERSION"; }
+build() { node /w/.tools/jmc/index.js --build . "$@" --home /tmp/fakejam --rhome "$RHOME" --rlibs "$RLIB" --assume-app-version "$APP_VERSION"; }
 build
 Rscript -e "install.packages('cSEM', lib = 'build/R', repos = 'https://cloud.r-project.org', dependencies = FALSE)"
 Rscript -e ".libPaths(c('build/R', .libPaths())); stopifnot(packageVersion('cSEM') >= '0.7.1'); loadNamespace('cSEM'); cat('cSEM', format(packageVersion('cSEM')), 'loads\n')"

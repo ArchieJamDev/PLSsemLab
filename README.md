@@ -32,7 +32,14 @@ it can be built from source for testing.
 
 ## Try it (development version)
 
-With jamovi installed, clone this repository and, in R, from its folder:
+**Linux (jamovi from Flathub):** download `PLSsemLab_0.0.0.jmo` from the
+[dev-build pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build)
+and, in jamovi, open **⋮ › Modules › Install from file**. It is rebuilt by
+the *Build .jmo (Linux)* workflow; a `.jmo` only loads in the jamovi it was
+built for.
+
+**Any system, from source:** with jamovi installed, clone this repository
+and, in R, from its folder:
 
 ```r
 install.packages("jmvtools", repos = c("https://repo.jamovi.org", "https://cloud.r-project.org"))

@@ -137,24 +137,59 @@ jobs:
   build-linux-r:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.r_version != '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - name: Check out the repository
         uses: actions/checkout@v5
 
-      # R from the rocker image of that version, run with the host network:
-      # setup-r hung while downloading R, and job containers could not
-      # resolve names.
-      # ES: R desde la imagen rocker de esa versión, con la red del host:
-      # setup-r se colgó descargando R y los contenedores de trabajo no
-      # resolvían nombres.
-      - name: Build the .jmo in R ${{ inputs.r_version }}
+      - name: Set up R ${{ inputs.r_version }}
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ inputs.r_version }}
+          use-public-rspm: true
+        timeout-minutes: 8
+
+      - name: Install system libraries and the packages jamovi provides
         run: |
-          cat /etc/resolv.conf; cat /run/systemd/resolve/resolv.conf || true
-          docker run --rm --network host -v /run/systemd/resolve/resolv.conf:/etc/resolv.conf:ro -v "$PWD:/w" -w /w \
-            -e APP_VERSION="${{ inputs.app_version }}" \
-            rocker/r-ver:${{ inputs.r_version }} bash .github/scripts/build-jmo-r.sh
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/2025-05-25'))"
+          R --version | head -2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get the jamovi compiler and a stand-in jamovi home
+        run: |
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev
+          mkdir -p "$RUNNER_TEMP/fakejam/bin"
+          printf '#!/bin/sh\necho %s\n' "${{ inputs.app_version }}" > "$RUNNER_TEMP/fakejam/bin/jamovi"
+          chmod +x "$RUNNER_TEMP/fakejam/bin/jamovi"
+
+      - name: Build the .jmo
+        run: |
+          RHOME=$(R RHOME)
+          RLIB=$(Rscript -e "cat(.libPaths()[1])")
+          node "$RUNNER_TEMP/jmc/index.js" --build . --home "$RUNNER_TEMP/fakejam" --rhome "$RHOME" \
+            --rlibs "$RLIB" --assume-app-version "${{ inputs.app_version }}"
+          # The compiler's CRAN snapshot for R 4.5.0 has cSEM 0.6.1; the module
+          # is written and validated against cSEM 0.7.1 (DESCRIPTION), so it is
+          # replaced in the bundled library, checked to load with the bundled
+          # and jamovi-provided packages, and the .jmo is packed again.
+          # ES: La instantánea de CRAN del compilador para R 4.5.0 trae cSEM
+          # 0.6.1; el módulo se valida con cSEM 0.7.1, así que se reemplaza en
+          # la biblioteca incluida, se comprueba que carga y se reempaqueta.
+          Rscript -e "install.packages('cSEM', lib = 'build/R', repos = 'https://cloud.r-project.org', dependencies = FALSE)"
+          Rscript -e ".libPaths(c('build/R', .libPaths())); stopifnot(packageVersion('cSEM') >= '0.7.1'); loadNamespace('cSEM'); cat('cSEM', format(packageVersion('cSEM')), 'loads\n')"
+          rm -f *.jmo
+          node "$RUNNER_TEMP/jmc/index.js" --build . --skip-deps --home "$RUNNER_TEMP/fakejam" --rhome "$RHOME" \
+            --rlibs "$RLIB" --assume-app-version "${{ inputs.app_version }}"
           ls -la *.jmo
+          unzip -p *.jmo PLSsemLab/R/cSEM/DESCRIPTION | grep "^Version"
+          unzip -p *.jmo PLSsemLab/jamovi.yaml | grep rVersion
 
       - name: Keep the .jmo as an artifact
         uses: actions/upload-artifact@v4

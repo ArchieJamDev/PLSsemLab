@@ -1,0 +1,14 @@
+# Which of the hosts the builds need answer from a GitHub runner.
+# ES: Qué servidores que usan las compilaciones responden desde un runner.
+name: Network check
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          for h in cdn.posit.co packagemanager.posit.co cloud.r-project.org repo.jamovi.org archive.ubuntu.com azure.archive.ubuntu.com github.com registry.npmjs.org api.r-hub.io; do
+            t0=$(date +%s.%N); code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' "https://$h/" || echo fail); t1=$(date +%s.%N)
+            echo "$h -> $code ($(echo "$t1 - $t0" | bc) s); dns: $(getent hosts $h | head -1)"
+          done

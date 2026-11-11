@@ -27,10 +27,10 @@ jobs:
         run: |
           docker pull "${{ inputs.image }}"
           docker inspect -f 'CMD={{json .Config.Cmd}} ENTRYPOINT={{json .Config.Entrypoint}} ENV={{json .Config.Env}}' "${{ inputs.image }}"
-          docker run -dit --name jamovi -p 41337:41337 -p 41338:41338 -p 41339:41339 \
+          docker run -di --name jamovi -p 41337:41337 -p 41338:41338 -p 41339:41339 \
             -e JAMOVI_HOST_A=127.0.0.1:41337 -e JAMOVI_HOST_B=127.0.0.1:41338 -e JAMOVI_HOST_C=127.0.0.1:41339 \
             -e JAMOVI_ACCESS_KEY= -e JAMOVI_ALLOW_ARBITRARY_CODE=false "${{ inputs.image }}" \
-            /bin/sh -c "/usr/bin/python3 -m jamovi.server 41337 --if=* --stdin-slave"
+            "/usr/bin/python3 -u -m jamovi.server 41337 --if=* --stdin-slave"
           for i in $(seq 1 60); do
             code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:41337/ || true)
             echo "try $i: $code"; [ "$code" = "200" ] && break; sleep 3

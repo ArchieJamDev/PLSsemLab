@@ -12,7 +12,11 @@ which gcc g++ gfortran make || true
 # ES: Node y el compilador se bajaron en el host (la imagen no tiene curl).
 export PATH=/w/.tools/node/bin:$PATH
 node --version
-Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/__linux__/noble/2025-05-25'))"
+# Runtime libraries of the binary packages below (igraph, XML for semPlot);
+# best effort, as the Ubuntu archives were unreachable once.
+# ES: Bibliotecas de ejecución de los binarios de abajo; sin garantía.
+(apt-get update -qq && apt-get install -y -qq libglpk40 libxml2 libgmp10 >/dev/null) || echo "apt unavailable"
+Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang', 'semPlot'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/__linux__/noble/2025-05-25'))"
 mkdir -p /tmp/fakejam/bin
 printf '#!/bin/sh\necho %s\n' "$APP_VERSION" > /tmp/fakejam/bin/jamovi
 chmod +x /tmp/fakejam/bin/jamovi

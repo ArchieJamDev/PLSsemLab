@@ -12,6 +12,10 @@ on:
         description: 'jamovi docker image'
         required: false
         default: 'jamovi/jamovi:2.7.4'
+      script:
+        description: 'probe script in tests/ui'
+        required: false
+        default: 'probe_structural.py'
 
 permissions:
   contents: write
@@ -61,7 +65,7 @@ jobs:
           pip install playwright
           python -m playwright install --with-deps chromium
           mkdir -p probe-out
-          python tests/ui/probe.py probe-out || true
+          python "tests/ui/${{ inputs.script || 'probe_structural.py' }}" probe-out || true
           docker logs jamovi > probe-out/jamovi.log 2>&1 || true
 
       # Artifacts cannot be fetched from the cloud session, so the

@@ -1,0 +1,77 @@
+# Builds the PLSsemLab .jmo for jamovi on Linux (the flatpak from Flathub),
+# compiling cSEM and its dependencies with jamovi's own R, so the module can
+# be tested without R or jmvtools on the user's computer. The .jmo is
+# attached to the "dev-build" pre-release and kept as a workflow artifact.
+# Install it in jamovi with ⋮ › Modules › Install from file (sideload).
+# ES: Construye el .jmo de PLSsemLab para jamovi en Linux (el flatpak de
+# Flathub), compilando cSEM y sus dependencias con el R del propio jamovi,
+# para probar el módulo sin R ni jmvtools en el computador del usuario. El
+# .jmo se adjunta a la pre-release "dev-build" y queda como artefacto.
+# Se instala en jamovi con ⋮ › Módulos › Instalar desde archivo.
+name: Build .jmo (Linux)
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      # jamovi from Flathub, plus the SDK of its runtime: the compiler runs
+      # jamovi's R with `flatpak run --devel`, which needs the SDK compilers
+      # (cSEM's dependencies TruncatedNormal, spacefillr and qrng are C++).
+      # ES: jamovi desde Flathub y el SDK de su runtime: el compilador corre
+      # el R de jamovi con `flatpak run --devel`, que necesita los
+      # compiladores del SDK.
+      - name: Install jamovi (flatpak) and its SDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak
+          sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          sudo flatpak install -y --noninteractive flathub org.jamovi.jamovi
+          RUNTIME=$(flatpak info --show-runtime org.jamovi.jamovi)
+          SDK=${RUNTIME/Platform/Sdk}
+          echo "jamovi runtime: $RUNTIME -> SDK: $SDK"
+          sudo flatpak install -y --noninteractive flathub "$SDK"
+          flatpak info org.jamovi.jamovi | head -20
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get the jamovi compiler
+        run: |
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev
+
+      - name: Build the .jmo with jamovi's R
+        run: |
+          VERSION=$(flatpak info org.jamovi.jamovi | awk '/Version:/ {print $2}')
+          echo "jamovi version: $VERSION"
+          node "$RUNNER_TEMP/jmc/index.js" --build . --home flatpak --assume-app-version "$VERSION"
+          ls -la *.jmo
+
+      - name: Keep the .jmo as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLSsemLab-linux-jmo
+          path: '*.jmo'
+
+      - name: Attach the .jmo to the dev-build pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete dev-build --yes --cleanup-tag || true
+          gh release create dev-build *.jmo --prerelease --target "$GITHUB_SHA" \
+            --title "Development build (Linux, jamovi flatpak)" \
+            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."

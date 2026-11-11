@@ -53,6 +53,15 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
           cd "$RUNNER_TEMP/jmc" && npm install --omit=dev
+          # The compiler keys its CRAN snapshots by exact R version; when the
+          # flatpak's R is a patch release it does not list, fall back to the
+          # snapshot of the same minor version (or the newest one).
+          # ES: El compilador busca la instantánea de CRAN por la versión
+          # exacta de R; si el R del flatpak es un parche que no lista, usa
+          # la de la misma versión menor (o la más reciente).
+          flatpak run --devel org.jamovi.jamovi -R --version | head -3 || true
+          sed -i "s|let snapshot = snapshots\[rVersion\];|let snapshot = snapshots[rVersion] \|\| snapshots[Object.keys(snapshots).filter(k => k.slice(0, 3) === rVersion.slice(0, 3)).pop()] \|\| snapshots[Object.keys(snapshots).pop()];|" compilerr.js
+          grep -n "let snapshot =" compilerr.js
 
       - name: Build the .jmo with jamovi's R
         run: |

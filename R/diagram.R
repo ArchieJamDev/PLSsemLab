@@ -139,7 +139,7 @@
                       color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
                       border.color = ink, label.color = ink, edge.color = edge_col,
                       edge.label.color = ink, edge.label.bg = back,
-                      fixedStyle = c(edge_col, 2), freeStyle = c(edge_col, 1),
+                      fixedStyle = c(edge_col, "dashed"), freeStyle = c(edge_col, "solid"),
                       fade = FALSE, esize = if (by_est) 6 else 1.6, asize = 2.6,
                       curvePivot = TRUE, mar = c(5, 4, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 4),
                       bg = back, DoNotPlot = FALSE)

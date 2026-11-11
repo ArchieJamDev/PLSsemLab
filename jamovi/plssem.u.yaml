@@ -142,15 +142,18 @@ children:
                   margin: normal
                   targetArea: true
                   children:
-                    # A placeholder label: jamovi only creates the header
-                    # element when the label is set at render time; the JS
-                    # then writes the construct name into it.
-                    # ES: Etiqueta provisional: jamovi solo crea el
-                    # encabezado si la etiqueta existe al dibujar; el JS
-                    # escribe luego el nombre del constructo.
+                    # Row header, as jmv's regression blocks: a Label first
+                    # (item.controls[0]) whose text the JS sets to the
+                    # construct name.
+                    # ES: Encabezado de fila, como los bloques de regresión
+                    # de jmv: un Label cuyo texto pone el JS.
+                    - type: Label
+                      label: ' '
+                      name: predictorHeader
+                      stretchFactor: 1
+                      margin: normal
                     - type: ListBox
                       name: predictorList
-                      label: ' '
                       isTarget: true
                       valueFilter: unique
                       height: auto

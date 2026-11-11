@@ -12,6 +12,10 @@
 // -----------------------------------------------------------------------------
 const assert = require('assert');
 global.FormatDef = { variable: 'variable' };
+// As in jamovi 2.7 for jus 3.0 modules: helpers in the global `utils`, none
+// on the event context (cloneArray / valuesToItems on `this` do not exist).
+// ES: Como en jamovi 2.7 para módulos jus 3.0: utilidades en el global.
+global.utils = { valuesToItems: (vals) => vals.map(v => ({ value: v })) };
 const ev = require('../../jamovi/js/plssem.events.js');
 
 let depth = 0, maxDepth = 0, headers = {};
@@ -33,8 +37,6 @@ const ui = {
 };
 const ctx = {
     workspace: {},
-    cloneArray: (a, d) => a === undefined || a === null ? d : JSON.parse(JSON.stringify(a)),
-    valuesToItems: (vals) => vals.map(v => ({ value: v })),
     setCustomVariables: function() {
         depth++; maxDepth = Math.max(maxDepth, depth);
         if (depth > 5) throw new Error('supplier update loop');

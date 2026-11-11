@@ -37,6 +37,34 @@
 // indicadores escuchan listItemAdded / listItemRemoved y los nombres
 // "change". Una mejora: las filas siguen a su constructo por nombre.
 
+// jus 3.0 modules reach jamovi's helpers through the global `utils` (as
+// jmv's own anova.js does); the event context (`this`) only carries them for
+// jus 2.0 modules such as SEMLj, and cloneArray / valuesToItems on `this`
+// are missing in jamovi 2.7.4 ("context.cloneArray is not a function", seen
+// with a headless browser in the official jamovi 2.7.4 docker image). These
+// two helpers use `utils` when it exists and fall back to plain code.
+// ES: Los módulos jus 3.0 usan las utilidades de jamovi a través del global
+// `utils` (como el anova.js de jmv); el contexto `this` solo las trae para
+// módulos jus 2.0 como SEMLj, y en jamovi 2.7.4 no existen
+// ("context.cloneArray is not a function"). Estos dos ayudantes usan `utils`
+// si existe y si no, código propio.
+const jmvUtils = function() {
+    return typeof utils !== 'undefined' ? utils : null;
+};
+
+const clone = function(value, ifNull) {
+    if (value === undefined || value === null)
+        return ifNull;
+    return JSON.parse(JSON.stringify(value));
+};
+
+const toItems = function(context, values) {
+    let u = jmvUtils();
+    if (u && typeof u.valuesToItems === 'function')
+        return u.valuesToItems(values, FormatDef.variable);
+    return context.valuesToItems(values, FormatDef.variable);
+};
+
 const events = {
 
     update: function(ui) {
@@ -51,7 +79,14 @@ const events = {
         cleanRows(ui, this);
     },
 
+    // The supplier asks for its items: give it the current construct names
+    // (jmv's anova.js fills modelSupplier the same way). No custom variables
+    // here: declaring them refreshes the supplier and would loop.
+    // ES: El supplier pide sus ítems: se le dan los nombres actuales (como el
+    // anova.js de jmv). Sin variables personalizadas aquí: declararlas
+    // refresca el supplier y entraría en bucle.
     onUpdateConstructSupplier: function(ui) {
+        ui.constructSupplier.setValue(toItems(this, constructNames(ui, this)));
     },
 
     onChangeConstructSupplier: function(ui) {
@@ -83,8 +118,8 @@ const defaultNames = function(ui) {
 // un indicador, reflectivos primero y luego formativos, sin nombres
 // repetidos. El lado R aplica la misma regla para leer las filas.
 const constructNames = function(ui, context) {
-    let blocks = context.cloneArray(ui.reflective.value(), [])
-        .concat(context.cloneArray(ui.formative.value(), []));
+    let blocks = clone(ui.reflective.value(), [])
+        .concat(clone(ui.formative.value(), []));
     let names = [];
     for (let block of blocks) {
         if ( ! block || typeof block.label !== 'string')
@@ -152,13 +187,13 @@ const sync = function(ui, context) {
         context.setCustomVariables(names.map(name => (
             { name: name, measureType: 'none', dataType: 'none', levels: [] })));
     }
-    ui.constructSupplier.setValue(context.valuesToItems(names, FormatDef.variable));
+    ui.constructSupplier.setValue(toItems(context, names));
 
     // The stored rows belong to the names of the previous call (or, when the
     // analysis is opened, to the current names, in the same order).
     // ES: Las filas guardadas pertenecen a los nombres de la llamada anterior
     // (o, al abrir el análisis, a los nombres actuales, en el mismo orden).
-    let rows = context.cloneArray(ui.structural.value(), []);
+    let rows = clone(ui.structural.value(), []);
     let previous = context.workspace.constructNames || names;
     let byName = {};
     for (let i = 0; i < previous.length; i++)
@@ -196,7 +231,7 @@ const sync = function(ui, context) {
 // nombres desconocidos y los términos repetidos.
 const cleanRows = function(ui, context) {
     let names = context.workspace.constructNames || constructNames(ui, context);
-    let rows = context.cloneArray(ui.structural.value(), []);
+    let rows = clone(ui.structural.value(), []);
     let newRows = names.map((name, i) => cleanTerms(rows[i], name, names));
     if (JSON.stringify(newRows) !== JSON.stringify(rows))
         ui.structural.setValue(newRows);

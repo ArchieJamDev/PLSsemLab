@@ -61,6 +61,18 @@ jobs:
           python tests/ui/probe.py probe-out || true
           docker logs jamovi > probe-out/jamovi.log 2>&1 || true
 
+      # Artifacts cannot be fetched from the cloud session, so the
+      # screenshots also go to a "ui-probe" pre-release.
+      # ES: Las capturas también van a una pre-release "ui-probe".
+      - name: Publish the probe output
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete ui-probe --yes --cleanup-tag || true
+          gh release create ui-probe probe-out/*.png probe-out/console.txt --prerelease \
+            --title "UI probe output (not a release)" --notes "Screenshots of the PLS-SEM panel in the jamovi docker image." || true
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

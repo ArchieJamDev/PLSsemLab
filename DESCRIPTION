@@ -14,6 +14,7 @@ Imports:
     jmvcore,
     R6,
     cSEM (>= 0.7.1),
+    lavaan,
     stats,
     utils
 Suggests:

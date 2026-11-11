@@ -75,6 +75,14 @@ carry every rule below in full.
   `cSEM::csem()` defaults to `.disattenuate = TRUE`: always pass it.
 - HTMT of a single-indicator construct takes its monotrait correlation as 1
   (lower bound); mixed signs give NaN (reverse-coded items).
+- Ordered-factor indicators make cSEM use polychoric correlations (alpha,
+  HTMT, paths), but `calculateVIFModeB()` regresses the raw codes: compute
+  VIF as `diag(solve(Indicator_VCV[block, block]))` (equal for Pearson).
+- rho_C is omega with the model's loadings: PLS inflates it (~+0.07 on
+  corp_rep); a one-factor lavaan CFA omega ~ rho_C of PLSc.
+- The .jmo must match the user's jamovi R version exactly (`rVersion` in
+  jamovi.yaml vs jamovi's `JAMOVI_R_VERSION`), else "Installed version
+  needs to be updated".
 - `jmc --prepare` deletes `inst/i18n/es.json`; rebuild it with
   `--i18n . --update`, fill `es.po`, then `--build . --skip-deps`.
 

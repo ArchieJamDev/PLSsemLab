@@ -143,6 +143,28 @@ options:
         name: factorial
     default: path
 
+  # How the indicators are correlated. Continuous: Pearson correlations, as
+  # in classic PLS-SEM. Ordinal: polychoric correlations (ordinal PLS;
+  # Schuberth, Henseler & Dijkstra, 2018), which cSEM uses when the
+  # indicators are ordered factors. It changes the whole model, not only the
+  # reliability, so it is an estimation choice; continuous is the default
+  # because it is what the PLS-SEM literature reports.
+  # ES: Cómo se correlacionan los indicadores. Continuos: correlaciones de
+  # Pearson, como en el PLS-SEM clásico. Ordinales: policóricas (PLS
+  # ordinal), que cSEM usa cuando los indicadores son factores ordenados.
+  # Cambia el modelo completo, no solo la fiabilidad, así que es una
+  # elección de estimación; continuos por defecto porque es lo que informa
+  # la literatura de PLS-SEM.
+  - name: indicatorScale
+    title: Indicators
+    type: List
+    options:
+      - title: Continuous (Pearson correlations)
+        name: continuous
+      - title: Ordinal (polychoric correlations)
+        name: ordinal
+    default: continuous
+
   # PLS needs complete data. Listwise deletion is the default because it adds
   # no information; mean replacement is offered because the PLS-SEM primer
   # uses it with few missing values, and the report says what it costs.
@@ -166,6 +188,17 @@ options:
   # revisores aún lo piden, así que es opcional y viene desactivado.
   - name: fornellLarcker
     title: Fornell-Larcker criterion
+    type: Bool
+    default: false
+
+  # McDonald's omega from a one-factor CFA of each reflective construct
+  # (lavaan, the engine of jamovi's own CFA), estimated outside the PLS
+  # model as an independent reference for rho_C. Off by default.
+  # ES: Omega de McDonald de un AFC de un factor por constructo reflectivo
+  # (lavaan, el motor del AFC de jamovi), estimada fuera del modelo PLS como
+  # referencia independiente para rho_C. Desactivada por defecto.
+  - name: omegaCfa
+    title: McDonald's ω (one-factor CFA)
     type: Bool
     default: false
 

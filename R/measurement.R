@@ -93,6 +93,19 @@
         # ES: Un solo indicador no tiene consistencia interna: no se muestran.
         out$reliability[single, c("alpha", "rhoA", "rhoC", "ave")] <- NA_real_
 
+        # McDonald's omega from a one-factor CFA per construct (optional).
+        # ES: Omega de McDonald de un AFC de un factor por constructo.
+        out$reliability$omega <- NA_real_
+        out$reliability$omega_reason <- NA_character_
+        if (isTRUE(options$omegaCfa)) {
+            for (k in which(!single)) {
+                vars <- unname(model$vmap[refl[[k]]$vars])
+                o <- .pl_omega_cfa(data[, vars, drop = FALSE], options$indicatorScale == "ordinal")
+                out$reliability$omega[k] <- o$value
+                out$reliability$omega_reason[k] <- o$reason
+            }
+        }
+
         vcv <- fit$Estimates$Construct_VCV[rint, rint, drop = FALSE]
         dimnames(vcv) <- list(rlab, rlab)
         out$fl <- list(cor = vcv, sqrt_ave = stats::setNames(sqrt(out$reliability$ave), rlab))
@@ -121,12 +134,30 @@
             stringsAsFactors = FALSE)
     }
 
+    # VIF of formative indicators: the diagonal of the inverse of the
+    # indicator correlation matrix of each block, the matrix the model was
+    # estimated with. With continuous indicators it equals
+    # cSEM::calculateVIFModeB() (difference below 1e-15); with ordinal ones
+    # it uses the polychoric correlations, while calculateVIFModeB() would
+    # regress the raw category codes (Pearson), inconsistent with the model.
+    # ES: VIF de los indicadores formativos: la diagonal de la inversa de la
+    # matriz de correlaciones de cada bloque, la misma con que se estimó el
+    # modelo. Con indicadores continuos es igual a calculateVIFModeB(); con
+    # ordinales usa las policóricas, mientras que calculateVIFModeB()
+    # regresaría los códigos crudos (Pearson), inconsistente con el modelo.
     if (length(form)) {
-        v <- grab("vif", cSEM::calculateVIFModeB(fit))
+        S <- fit$Estimates$Indicator_VCV
+        v <- lapply(form, function(b) {
+            if (length(b$vars) < 2) return(NULL)
+            ids <- unname(model$vmap[b$vars])
+            r <- grab("vif", diag(solve(S[ids, ids, drop = FALSE])))
+            if (is.null(r)) NULL else stats::setNames(r, ids)
+        })
+        names(v) <- vapply(form, `[[`, "", "label")
         rows <- list()
         for (b in form) for (x in b$vars) {
-            value <- if (is.null(v) || length(b$vars) == 1) NA_real_
-                     else v[model$cmap[[b$label]], model$vmap[[x]]]
+            vb <- v[[b$label]]
+            value <- if (is.null(vb)) NA_real_ else vb[[model$vmap[[x]]]]
             rows[[length(rows) + 1]] <- data.frame(construct = b$label, indicator = x,
                                                    single = length(b$vars) == 1,
                                                    vif = if (is.finite(value)) value else NA_real_,
@@ -137,6 +168,31 @@
     out$errors <- errors
     out$warnings <- unique(warnings)
     out
+}
+
+# McDonald's omega (total) of a one-factor CFA with lavaan: standardized
+# loadings, omega = (sum l)^2 / ((sum l)^2 + sum(1 - l^2)). Ordinal
+# indicators are declared as ordered (WLSMV on polychoric correlations), so
+# the value refers to the latent continuous responses. Three or more
+# indicators are needed for the one-factor model to be identified.
+# Returns list(value, reason), reason one of NA, "two", "nonconverged",
+# "heywood" or an error message.
+# ES: Omega de McDonald (total) de un AFC de un factor con lavaan, con cargas
+# estandarizadas. Los ordinales se declaran como ordenados (WLSMV sobre
+# policóricas), así que el valor se refiere a las respuestas latentes
+# continuas. Se necesitan tres o más indicadores para identificar el modelo.
+.pl_omega_cfa <- function(x, ordinal) {
+    if (ncol(x) < 3) return(list(value = NA_real_, reason = "two"))
+    spec <- paste("F =~", paste(names(x), collapse = " + "))
+    r <- .pl_capture(lavaan::cfa(spec, data = x, std.lv = TRUE,
+                                 ordered = if (ordinal) names(x) else NULL))
+    if (!is.null(r$error)) return(list(value = NA_real_, reason = r$error))
+    if (!isTRUE(lavaan::lavInspect(r$value, "converged")))
+        return(list(value = NA_real_, reason = "nonconverged"))
+    l <- lavaan::lavInspect(r$value, "std")$lambda[, 1]
+    if (any(!is.finite(l)) || any(abs(l) >= 1))
+        return(list(value = NA_real_, reason = "heywood"))
+    list(value = sum(l)^2 / (sum(l)^2 + sum(1 - l^2)), reason = NA_character_)
 }
 
 # Verbal assessment of each row, with the thresholds of Hair et al. (2019)

@@ -170,6 +170,8 @@ children:
           - type: ComboBox
             name: innerScheme
           - type: ComboBox
+            name: indicatorScale
+          - type: ComboBox
             name: missing
   - type: CollapseBox
     label: Measurement Model
@@ -179,6 +181,8 @@ children:
         margin: large
         stretchFactor: 1
         children:
+          - type: CheckBox
+            name: omegaCfa
           - type: CheckBox
             name: fornellLarcker
   - type: CollapseBox

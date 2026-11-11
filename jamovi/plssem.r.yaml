@@ -62,6 +62,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: construct
@@ -100,6 +101,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: construct
@@ -130,13 +132,18 @@ items:
     refs:
       - hair_2019
       - dijkstra_2015
+      - mcdonald_1999
+      - schuberth_2018
+      - chalmers_2018
     clearWith:
       - reflective
       - formative
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
+      - omegaCfa
     columns:
       - name: construct
         title: Construct
@@ -150,6 +157,10 @@ items:
       - name: rhoC
         title: ρC
         type: number
+      - name: omega
+        title: ω (CFA)
+        type: number
+        visible: (omegaCfa)
       - name: ave
         title: AVE
         type: number
@@ -177,6 +188,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: c1
@@ -215,6 +227,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
       - fornellLarcker
     columns:
@@ -241,6 +254,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: construct
@@ -277,6 +291,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: from
@@ -306,6 +321,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - indicatorScale
       - missing
     columns:
       - name: construct

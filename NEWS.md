@@ -24,7 +24,24 @@
 * Teaching: three new "How to read" guides, interpretation and key findings
   of reliability, AVE, HTMT and VIF; the reproducibility code adds every
   cSEM call.
-* Spanish catalog: 177 strings. Tests: 176 expectations, including equality
+* **McDonald's ω (one-factor CFA)**, optional: a one-factor CFA per
+  reflective construct with lavaan, outside the PLS model, as the
+  psychometric reference for ρC. The guide explains that ρC is an ω
+  computed with the PLS loadings (an upper bound with PLS, close to the CFA
+  ω with PLSc), and the interpretation reports the gap. Two-indicator
+  constructs, non-convergence and Heywood cases are "Not computable" with
+  their reason.
+* **Ordinal indicators** (Estimation > Indicators): polychoric correlations
+  through cSEM (ordinal PLS; Schuberth et al., 2018), for the whole model.
+  The reliability table notes that values refer to the latent responses
+  (Chalmers, 2018); mean replacement is refused with ordinal indicators;
+  notices point out indicators with 5 categories or fewer treated as
+  continuous, and more than 10 treated as ordinal.
+* VIF of formative indicators computed from the indicator correlations the
+  model used: equal to `cSEM::calculateVIFModeB()` with continuous
+  indicators, and with ordinal ones it uses the polychoric correlations
+  (cSEM's function regresses the raw category codes).
+* Spanish catalog: 193 strings. Tests: 193 expectations, including equality
   of every value with direct cSEM calls on the common-factor syntax, the
   values of COMP of experiment E1, and PLSc.
 

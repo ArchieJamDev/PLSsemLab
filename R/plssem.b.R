@@ -100,7 +100,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 pairs <- utils::combn(refl, 2)
                 for (k in seq_len(ncol(pairs)))
                     self$results$htmt$addRow(rowKey = paste(pairs[, k], collapse = "::"),
-                                             values = list(c1 = pairs[1, k], sep = "–", c2 = pairs[2, k]))
+                                             values = list(c1 = pairs[1, k], sep = "\u2013", c2 = pairs[2, k]))
             }
             for (i in seq_along(refl)) {
                 self$results$fornell$addColumn(name = paste0("c", i), title = refl[i], type = "number")
@@ -140,6 +140,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             errors <- .pl_validate_model(blocks, paths, lang)
             if (length(errors))
                 jmvcore::reject(paste(errors, collapse = "\n"))
+            ordinal <- self$options$indicatorScale == "ordinal"
+            if (ordinal && self$options$missing == "mean")
+                jmvcore::reject(txt("errors", "ordinal_mean"))
             vars <- unlist(lapply(blocks, `[[`, "vars"))
             prep <- .pl_prepare_indicators(self$data, vars, self$options$missing, lang)
             if (length(prep$errors))
@@ -150,6 +153,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             model <- .pl_build_syntax(blocks, paths, self$options$estimator)
             d <- prep$data[, names(model$vmap), drop = FALSE]
             names(d) <- unname(model$vmap)
+            # Ordinal indicators go to cSEM as ordered factors, which makes it
+            # use polychoric correlations (ordinal PLS).
+            # ES: Los ordinales van a cSEM como factores ordenados, con lo que
+            # usa correlaciones policóricas (PLS ordinal).
+            categories <- stats::setNames(vapply(d, function(x) length(unique(x)), 0), names(model$vmap))
+            if (ordinal)
+                for (v in names(d)) d[[v]] <- ordered(d[[v]])
             fit <- .pl_capture(cSEM::csem(
                 .data = d, .model = model$syntax,
                 .PLS_modes = if (length(model$modes)) model$modes else NULL,
@@ -190,6 +200,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (prep$n_replaced > 0)
                 info <- c(info, sprintf(txt("notices", "replaced"), prep$n_replaced, prep$n_cases_replaced))
 
+            few <- names(categories)[categories <= 5]
+            many <- names(categories)[categories > 10]
+            if (!ordinal && length(few))
+                info <- c(info, sprintf(txt("notices", "few_categories"), paste(few, collapse = ", ")))
+            if (ordinal && length(many))
+                warn <- c(warn, sprintf(txt("notices", "many_categories"), paste(many, collapse = ", ")))
             types <- vapply(blocks, `[[`, "", "type")
             if (!any(types == "reflective"))
                 info <- c(info, txt("notices", "no_reflective_quality"))
@@ -217,6 +233,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             table <- self$results$reliability
             if (self$options$estimator == "pls")
                 table$setNote("rhoA", txt("footnotes", "rho_a_pls"))
+            if (self$options$indicatorScale == "ordinal")
+                table$setNote("ordinal", txt("footnotes", "ordinal_note"))
             for (k in seq_len(nrow(rel))) {
                 r <- rel[k, ]
                 if (r$single) {
@@ -227,7 +245,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     next
                 }
                 values <- list(construct = r$construct)
-                for (col in c("alpha", "rhoA", "rhoC", "ave"))
+                for (col in c("alpha", "rhoA", "rhoC", "ave", "omega"))
                     if (!is.na(r[[col]])) values[[col]] <- r[[col]]
                 parts <- c(.pl_band_reliability(r$rhoC),
                            if (!is.na(r$ave)) if (r$ave >= 0.50) "ave_ok" else "ave_low")
@@ -243,6 +261,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             txt("footnotes", "failed"), if (is.null(reason)) "NaN" else reason))
                     }
                 }
+                if (self$options$omegaCfa && is.na(r$omega)) {
+                    reason <- r$omega_reason
+                    note <- if (identical(reason, "two")) txt("footnotes", "omega_two")
+                            else if (identical(reason, "nonconverged")) txt("footnotes", "omega_nonconverged")
+                            else if (identical(reason, "heywood")) txt("footnotes", "omega_heywood")
+                            else sprintf(txt("footnotes", "failed"), reason)
+                    table$addFootnote(rowKey = r$construct, col = "omega", note)
+                }
                 if (!is.na(r$alpha) && r$alpha < 0)
                     table$addFootnote(rowKey = r$construct, col = "alpha", txt("footnotes", "alpha_negative"))
             }
@@ -255,7 +281,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(nrow(h))) {
                 key <- paste(h$c1[k], h$c2[k], sep = "::")
                 band <- .pl_band_htmt(h$htmt[k])
-                values <- list(c1 = h$c1[k], sep = "–", c2 = h$c2[k],
+                values <- list(c1 = h$c1[k], sep = "\u2013", c2 = h$c2[k],
                                assessment = if (is.na(band)) txt("labels", "not_computable")
                                             else txt("labels", band))
                 if (!is.na(h$htmt[k])) values$htmt <- h$htmt[k]
@@ -440,9 +466,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                     else sprintf(txt("ave_ok"), nrow(a)))
                 }
             }
+            if (!is.null(rel) && self$options$omegaCfa) {
+                both <- rel[!is.na(rel$rhoC) & !is.na(rel$omega), , drop = FALSE]
+                if (nrow(both)) {
+                    gap <- mean(both$rhoC - both$omega)
+                    meas <- c(meas, sprintf(txt(if (self$options$estimator == "pls") "omega_gap_pls" else "omega_gap_plsc"),
+                                            .pl_fmt(gap)))
+                }
+            }
             h <- quality$htmt
             if (!is.null(h)) {
-                pair <- paste(h$c1, h$c2, sep = "–")
+                pair <- paste(h$c1, h$c2, sep = "\u2013")
                 high <- !is.na(h$htmt) & h$htmt >= 0.85
                 if (any(high)) meas <- c(meas, sprintf(txt("htmt_high"), listed(pair[high], h$htmt[high])))
                 else if (!anyNA(h$htmt)) meas <- c(meas, sprintf(txt("htmt_ok"), length(unique(c(h$c1, h$c2)))))
@@ -524,7 +558,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!self$options$showChoicesGuide) return()
             txt <- function(key) .pl_text(lang, "choices", key)
             scheme <- c(path = "path", centroid = "centroid", factorial = "factorial")[[self$options$innerScheme]]
-            paras <- c(txt(self$options$estimator), sprintf(txt("scheme"), scheme),
+            paras <- c(txt(self$options$estimator), sprintf(txt("scheme"), scheme), txt(self$options$indicatorScale),
                        if (self$options$missing == "mean") sprintf(txt("mean"), prep$n_replaced)
                        else sprintf(txt("listwise"), prep$n_used, prep$n_total))
             self$results$choicesGuide$setContent(.pl_html_block(paras))
@@ -535,7 +569,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             txt <- function(key) .pl_text(lang, "guide", key)
             self$results$modelGuide$setContent(.pl_html_block(txt("model")))
             self$results$measurementGuide$setContent(.pl_html_block(txt("measurement")))
-            self$results$reliabilityGuide$setContent(.pl_html_block(txt("reliability")))
+            self$results$reliabilityGuide$setContent(.pl_html_block(c(txt("reliability"), txt("reliability_omega"))))
             self$results$htmtGuide$setContent(.pl_html_block(txt("htmt")))
             self$results$vifGuide$setContent(.pl_html_block(txt("vif")))
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
@@ -572,6 +606,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sprintf("d <- data[, c(%s)]", paste(q(names(model$vmap)), collapse = ", ")),
                 sprintf("names(d) <- c(%s)", paste(q(unname(model$vmap)), collapse = ", ")),
                 missing_line,
+                if (self$options$indicatorScale == "ordinal")
+                    "for (v in names(d)) d[[v]] <- ordered(d[[v]])  # ordinal: polychoric correlations",
                 "model <- \"",
                 model$syntax,
                 "\"",
@@ -607,8 +643,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (self$options$fornellLarcker)
                     code <- c(code, "fit$Estimates$Construct_VCV  # correlations; diagonal of Fornell-Larcker: sqrt(AVE)")
             }
-            if (any(types == "formative"))
-                code <- c(code, "", "# Collinearity of formative indicators", "cSEM::calculateVIFModeB(fit)")
+            if (any(types == "reflective") && self$options$omegaCfa) {
+                code <- c(code, "",
+                    "# McDonald's omega from a one-factor CFA of each reflective construct (3+ indicators)",
+                    "omega <- function(x, ordinal) {",
+                    "    f <- lavaan::cfa(paste(\"F =~\", paste(names(x), collapse = \" + \")), data = x, std.lv = TRUE,",
+                    "                     ordered = if (ordinal) names(x) else NULL)",
+                    "    l <- lavaan::lavInspect(f, \"std\")$lambda[, 1]",
+                    "    sum(l)^2 / (sum(l)^2 + sum(1 - l^2))",
+                    "}")
+                for (b in blocks) if (b$type == "reflective" && length(b$vars) >= 3)
+                    code <- c(code, sprintf("omega(d[, c(%s)], %s)  # %s", paste(q(unname(model$vmap[b$vars])), collapse = ", "),
+                                            if (self$options$indicatorScale == "ordinal") "TRUE" else "FALSE",
+                                            unname(model$cmap[[b$label]])))
+            }
+            if (any(types == "formative")) {
+                # VIF from the indicator correlations the model used (polychoric
+                # when ordinal); with continuous indicators it equals
+                # cSEM::calculateVIFModeB(fit).
+                # ES: VIF desde las correlaciones que usó el modelo.
+                code <- c(code, "", "# Collinearity of formative indicators: diag(solve(R)) of each block")
+                for (b in blocks) if (b$type == "formative" && length(b$vars) >= 2)
+                    code <- c(code, sprintf("diag(solve(fit$Estimates$Indicator_VCV[c(%1$s), c(%1$s)]))  # %2$s",
+                                            paste(q(unname(model$vmap[b$vars])), collapse = ", "),
+                                            unname(model$cmap[[b$label]])))
+            }
             self$results$reproducibilityCode$setContent(paste(code, collapse = "\n"))
         }
     )

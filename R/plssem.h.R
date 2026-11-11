@@ -12,8 +12,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             structural = list(),
             estimator = "pls",
             innerScheme = "path",
+            indicatorScale = "continuous",
             missing = "listwise",
             fornellLarcker = FALSE,
+            omegaCfa = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
             showGuides = FALSE,
@@ -93,6 +95,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "centroid",
                     "factorial"),
                 default="path")
+            private$..indicatorScale <- jmvcore::OptionList$new(
+                "indicatorScale",
+                indicatorScale,
+                options=list(
+                    "continuous",
+                    "ordinal"),
+                default="continuous")
             private$..missing <- jmvcore::OptionList$new(
                 "missing",
                 missing,
@@ -103,6 +112,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..fornellLarcker <- jmvcore::OptionBool$new(
                 "fornellLarcker",
                 fornellLarcker,
+                default=FALSE)
+            private$..omegaCfa <- jmvcore::OptionBool$new(
+                "omegaCfa",
+                omegaCfa,
                 default=FALSE)
             private$..showKeySummary <- jmvcore::OptionBool$new(
                 "showKeySummary",
@@ -126,8 +139,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..structural)
             self$.addOption(private$..estimator)
             self$.addOption(private$..innerScheme)
+            self$.addOption(private$..indicatorScale)
             self$.addOption(private$..missing)
             self$.addOption(private$..fornellLarcker)
+            self$.addOption(private$..omegaCfa)
             self$.addOption(private$..showKeySummary)
             self$.addOption(private$..showChoicesGuide)
             self$.addOption(private$..showGuides)
@@ -139,8 +154,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         structural = function() private$..structural$value,
         estimator = function() private$..estimator$value,
         innerScheme = function() private$..innerScheme$value,
+        indicatorScale = function() private$..indicatorScale$value,
         missing = function() private$..missing$value,
         fornellLarcker = function() private$..fornellLarcker$value,
+        omegaCfa = function() private$..omegaCfa$value,
         showKeySummary = function() private$..showKeySummary$value,
         showChoicesGuide = function() private$..showChoicesGuide$value,
         showGuides = function() private$..showGuides$value,
@@ -151,8 +168,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..structural = NA,
         ..estimator = NA,
         ..innerScheme = NA,
+        ..indicatorScale = NA,
         ..missing = NA,
         ..fornellLarcker = NA,
+        ..omegaCfa = NA,
         ..showKeySummary = NA,
         ..showChoicesGuide = NA,
         ..showGuides = NA,
@@ -223,6 +242,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -264,6 +284,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -295,14 +316,19 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 rows=0,
                 refs=list(
                     "hair_2019",
-                    "dijkstra_2015"),
+                    "dijkstra_2015",
+                    "mcdonald_1999",
+                    "schuberth_2018",
+                    "chalmers_2018"),
                 clearWith=list(
                     "reflective",
                     "formative",
                     "structural",
                     "estimator",
                     "innerScheme",
-                    "missing"),
+                    "indicatorScale",
+                    "missing",
+                    "omegaCfa"),
                 columns=list(
                     list(
                         `name`="construct", 
@@ -320,6 +346,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="rhoC", 
                         `title`="\u03C1C", 
                         `type`="number"),
+                    list(
+                        `name`="omega", 
+                        `title`="\u03C9 (CFA)", 
+                        `type`="number", 
+                        `visible`="(omegaCfa)"),
                     list(
                         `name`="ave", 
                         `title`="AVE", 
@@ -347,6 +378,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -388,6 +420,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing",
                     "fornellLarcker"),
                 columns=list(
@@ -413,6 +446,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -451,6 +485,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -482,6 +517,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "structural",
                     "estimator",
                     "innerScheme",
+                    "indicatorScale",
                     "missing"),
                 columns=list(
                     list(
@@ -546,8 +582,10 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param structural .
 #' @param estimator .
 #' @param innerScheme .
+#' @param indicatorScale .
 #' @param missing .
 #' @param fornellLarcker .
+#' @param omegaCfa .
 #' @param showKeySummary .
 #' @param showChoicesGuide .
 #' @param showGuides .
@@ -591,8 +629,10 @@ plssem <- function(
     structural = list(),
     estimator = "pls",
     innerScheme = "path",
+    indicatorScale = "continuous",
     missing = "listwise",
     fornellLarcker = FALSE,
+    omegaCfa = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
     showGuides = FALSE,
@@ -612,8 +652,10 @@ plssem <- function(
         structural = structural,
         estimator = estimator,
         innerScheme = innerScheme,
+        indicatorScale = indicatorScale,
         missing = missing,
         fornellLarcker = fornellLarcker,
+        omegaCfa = omegaCfa,
         showKeySummary = showKeySummary,
         showChoicesGuide = showChoicesGuide,
         showGuides = showGuides,

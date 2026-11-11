@@ -162,3 +162,80 @@ test_that("the measurement report is translated", {
     expect_match(a$results$interpretation$content, "Fiabilidad")
     expect_equal(a$results$reliability$asDF$assessment[2], "fiabilidad satisfactoria; AVE adecuada")
 })
+
+# -----------------------------------------------------------------------------
+# McDonald's omega (one-factor CFA) and ordinal indicators.
+# ES: Omega de McDonald (AFC de un factor) e indicadores ordinales.
+# -----------------------------------------------------------------------------
+
+omegaDirect <- function(x, ordinal) {
+    f <- lavaan::cfa(paste("F =~", paste(names(x), collapse = " + ")), data = x, std.lv = TRUE,
+                     ordered = if (ordinal) names(x) else NULL)
+    l <- lavaan::lavInspect(f, "std")$lambda[, 1]
+    sum(l)^2 / (sum(l)^2 + sum(1 - l^2))
+}
+
+test_that("omega equals a direct one-factor CFA, continuous and ordinal", {
+    data <- corpRepData()
+    comp <- data[stats::complete.cases(data[, -c(1, 2)]), paste0("comp_", 1:3)]
+    for (scale in c("continuous", "ordinal")) {
+        a <- runPlssem(data, simpleModel(), omegaCfa = TRUE, indicatorScale = scale)
+        rel <- a$results$reliability$asDF
+        expect_equal(rel$omega[rel$construct == "COMP"], omegaDirect(comp, scale == "ordinal"),
+                     tolerance = 1e-8, info = scale)
+    }
+    # E1 values: omega close to rho_C of consistent PLS, below rho_C of PLS.
+    # ES: omega cerca de rho_C de PLSc y por debajo de rho_C de PLS.
+    a <- runPlssem(data, simpleModel(), omegaCfa = TRUE)
+    rel <- a$results$reliability$asDF
+    expect_equal(round(rel$omega[1], 3), 0.784)
+    expect_true(all(rel$rhoC[-3] > rel$omega[-3]))
+    expect_match(a$results$interpretation$content, "exceeds the")
+})
+
+test_that("omega of a two-indicator construct is not computable, with its reason", {
+    m <- simpleModel()
+    m$reflective[[1]] <- block("COMP", c("comp_1", "comp_2"))
+    a <- runPlssem(corpRepData(), m, omegaCfa = TRUE)
+    rel <- a$results$reliability$asDF
+    expect_true(is.na(rel$omega[1]) || identical(rel$omega[1], ""))
+    expect_true(is.finite(rel$omega[2]))
+})
+
+test_that("ordinal indicators use polychoric correlations in every criterion", {
+    data <- corpRepData()
+    a <- runPlssem(data, extendedModel(), indicatorScale = "ordinal")
+    d <- data[stats::complete.cases(data[, -c(1, 2)]), -c(1, 2)]
+    for (v in names(d)) d[[v]] <- ordered(d[[v]])
+    ref <- cSEM::csem(d, extendedSyntax, .disattenuate = FALSE)
+    expect_equal(ref$Information$Type_of_indicator_correlation, "polychoric")
+    rel <- a$results$reliability$asDF
+    multi <- c("COMP", "LIKE", "CUSL")
+    expect_equal(byRow(rel, "alpha")[multi], cSEM::calculateRhoT(ref)[multi], tolerance = 1e-8)
+    expect_equal(byRow(rel, "rhoC")[multi], cSEM::calculateRhoC(ref)[multi], tolerance = 1e-8)
+    p <- a$results$paths$asDF
+    expect_equal(p$estimate[p$from == "QUAL" & p$to == "COMP"], ref$Estimates$Path_estimates["COMP", "QUAL"],
+                 tolerance = 1e-8)
+    # VIF from the polychoric correlations, not from the raw category codes.
+    # ES: VIF desde las policóricas, no desde los códigos crudos.
+    q <- paste0("qual_", 1:8)
+    v <- a$results$vif$asDF
+    expect_equal(v$vif[v$construct == "QUAL"], unname(diag(solve(ref$Estimates$Indicator_VCV[q, q]))),
+                 tolerance = 1e-8)
+    expect_true(all(v$vif[v$construct == "QUAL"] > cSEM::calculateVIFModeB(ref)["QUAL", q]))
+    expect_match(a$results$reliability$notes$ordinal$note, "polychoric")
+})
+
+test_that("ordinal indicators with mean replacement are refused with the reason", {
+    expect_error(runPlssem(corpRepData(), simpleModel(), indicatorScale = "ordinal", missing = "mean"),
+                 "Mean replacement cannot be used with ordinal indicators")
+})
+
+test_that("few categories treated as continuous are pointed out", {
+    data <- corpRepData()
+    for (v in paste0("comp_", 1:3)) data[[v]] <- cut(data[[v]], c(0, 3, 5, 7), labels = FALSE)
+    a <- runPlssem(data, simpleModel())
+    expect_true(any(grepl("5 categories or fewer.*comp_1, comp_2, comp_3", noticesOf(a))))
+    b <- runPlssem(data, simpleModel(), indicatorScale = "ordinal")
+    expect_false(any(grepl("5 categories or fewer", noticesOf(b))))
+})

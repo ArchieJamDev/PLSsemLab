@@ -105,6 +105,11 @@ para HTMT en unos 10 s.
   su correlación interna (fiabilidad perfecta), lo que lo vuelve un límite
   inferior; el informe lo dice en una nota. Correlaciones con signos mezclados
   dejan el par como "No computable" con una nota que apunta a ítems invertidos.
+- ω de McDonald opcional (AFC de un factor con lavaan, fuera del modelo
+  PLS) como referencia psicométrica de ρC, e indicadores ordinales
+  (policóricas, PLS ordinal) como opción de estimación. El VIF formativo se
+  calcula con las correlaciones del modelo, porque `calculateVIFModeB()` usa
+  los códigos crudos aun con ordinales.
 - Los nombres de las columnas del bootstrap se toman de la misma llamada a
   `which()` que las posiciones; tomarlos de una tabla ordenada las etiqueta
   mal (error que el propio experimento detectó y corrigió).

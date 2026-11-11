@@ -152,7 +152,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev
-          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/2025-05-25'))"
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/2025-05-25'))"
           R --version | head -2
 
       - name: Set up Node

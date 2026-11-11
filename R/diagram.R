@@ -79,7 +79,10 @@
                        stringsAsFactors = FALSE)
     lay <- .pl_diagram_layout(blocks, paths, paths, r2, NULL)
     xy <- .pl_sem_coords(lay$nodes, simple, node, pars, vars)
-    list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y,
+    # top to bottom: indicator boxes side by side need a wider step
+    # ES: de arriba abajo, las cajas lado a lado necesitan más separación
+    tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.25, step = 0.75)
+    list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
 }
@@ -94,8 +97,7 @@
 # constructos en columnas por profundidad; indicadores formativos y de
 # reflectivos exógenos a la izquierda, de reflectivos terminales a la
 # derecha y de reflectivos intermedios en una fila arriba.
-.pl_sem_coords <- function(nodes, simple, node, pars, vars) {
-    gap <- 0.6
+.pl_sem_coords <- function(nodes, simple, node, pars, vars, gap = 0.6, step = 1.2) {
     x <- stats::setNames(rep(0, nrow(vars)), vars$name)
     y <- x
     sides <- lapply(nodes$label, function(cl) {
@@ -133,7 +135,7 @@
             nm <- node[[cl]]
             above <- if (row_above[j]) extra[[j]] else 0
             cy <- top - above - body[[cl]] / 2
-            cx <- 5 * l
+            cx <- 5.8 * l
             x[[nm]] <- cx
             y[[nm]] <- cy
             order_y[[cl]] <- cy
@@ -141,10 +143,10 @@
                 x[v] <<- xx
                 y[v] <<- cy + rev(seq_along(v) - (length(v) + 1) / 2) * gap
             }
-            col(sd$left, cx - 1.9)
-            col(sd$right, cx + 1.9)
+            col(sd$left, cx - 2.3)
+            col(sd$right, cx + 2.3)
             if (length(sd$top)) {
-                x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * 1.05
+                x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * step
                 y[sd$top] <- cy + if (row_above[j]) 1.25 else -1.25
             }
             top <- top - body[[cl]] - extra[[j]] - 0.8
@@ -178,7 +180,7 @@
 # options; theme: jamovi's theme (color[1] ink, fill[1] background, fill[2]
 # soft fill).
 # ES: Dibuja el diagrama (gráficos base, por qgraph).
-.pl_plot_sem <- function(state, opts, theme) {
+.pl_plot_sem <- function(state, opts, theme, width = 900) {
     p <- state$pars
     if (!nrow(p)) return(FALSE)
     ink <- theme$color[1]
@@ -200,21 +202,27 @@
     m@Pars$fixed <- dashed
     xy <- cbind(state$x, state$y)
     layout <- switch(if (is.null(opts$diagramLayout)) "treeLR" else opts$diagramLayout,
-                     treeLR = list(xy, 1), treeTB = list(cbind(-xy[, 2], -xy[, 1]), 1),
+                     treeLR = list(xy, 1), treeTB = list(cbind(state$x_tb, state$y_tb), 1),
                      circle = list("circle2", 1), spring = list("spring", 1))
     if (is.null(state$x)) layout[[1]] <- "tree2"
     by_est <- !identical(opts$edgeWidth, "uniform")
+    # qgraph sizes nodes relative to the device width: the defaults give
+    # boxes of about 70 x 24 px and ellipses of 115 x 56 px at any width;
+    # the size options scale them.
+    # ES: qgraph mide los nodos respecto al ancho del dispositivo: por
+    # defecto, cajas de unos 70 x 24 px y elipses de 115 x 56 px.
+    unit <- width / 132
+    kl <- (if (is.null(opts$latentSize)) 11 else opts$latentSize) / 11
+    km <- (if (is.null(opts$manifestSize)) 6 else opts$manifestSize) / 6
     # Coefficients near the indicator on measurement arrows (where arrows
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
-    lab_pos <- ifelse(p$kind == "weight", 0.3, ifelse(p$kind == "loading", 0.7, 0.5))
+    lab_pos <- ifelse(p$kind == "weight", 0.42, ifelse(p$kind == "loading", 0.58, 0.5))
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
-                      sizeLat = if (is.null(opts$latentSize)) 11 else opts$latentSize,
-                      sizeLat2 = 0.62 * (if (is.null(opts$latentSize)) 11 else opts$latentSize),
-                      sizeMan = if (is.null(opts$manifestSize)) 6 else opts$manifestSize,
-                      sizeMan2 = 0.5 * (if (is.null(opts$manifestSize)) 6 else opts$manifestSize),
+                      sizeLat = 115 * kl / unit, sizeLat2 = 56 * kl / unit,
+                      sizeMan = 70 * km / unit, sizeMan2 = 24 * km / unit,
                       nCharNodes = 0, label.cex = if (is.null(opts$nodeLabelSize)) 1 else opts$nodeLabelSize,
                       label.scale = FALSE,
                       edge.label.cex = if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize,

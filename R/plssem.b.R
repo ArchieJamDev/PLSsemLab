@@ -610,9 +610,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             span_y <- diff(range(st$y)) + 1
             long <- max(560, min(1800, 75 * span_x + 120))
             wide <- max(360, min(1800, 62 * span_y + (if (isTRUE(self$options$diagramCaption)) 170 else 110)))
-            if (identical(self$options$diagramLayout, "treeTB")) image$setSize(max(560, min(1800, 75 * span_y + 120)),
-                                                                                max(360, min(1800, 62 * span_x + 170)))
-            else image$setSize(long, wide)
+            if (identical(self$options$diagramLayout, "treeTB")) {
+                tx <- diff(range(st$x_tb)) + 1.6
+                ty <- diff(range(st$y_tb)) + 1
+                image$setSize(max(560, min(1800, 62 * tx + 120)), max(360, min(1800, 75 * ty + 170)))
+            } else image$setSize(long, wide)
             image$setState(st)
         },
 
@@ -658,7 +660,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotPaths = function(image, ggtheme, theme, ...) {
             if (is.null(image$state) || is.null(image$state$pars)) return(FALSE)
-            .pl_plot_sem(image$state, self$options, theme)
+            .pl_plot_sem(image$state, self$options, theme, width = image$width)
         },
 
         .blocks = function() .pl_constructs(self$options)$blocks,

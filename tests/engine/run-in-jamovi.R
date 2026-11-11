@@ -28,9 +28,12 @@ cat("semPlot", format(utils::packageVersion("semPlot")), find.package("semPlot")
 draw <- function(a, file, ...) {
     st <- a$results$pathDiagram$state
     o <- utils::modifyList(list(diagramLayout = "treeLR", edgeLabels = TRUE, diagramCaption = TRUE, diagramTitle = ""), list(...))
-    sz <- a$results$pathDiagram
+    sz <- list(width = a$results$pathDiagram$width, height = a$results$pathDiagram$height)
+    if (identical(o$diagramLayout, "treeTB"))
+        sz <- list(width = max(560, min(1800, 62 * (diff(range(st$x_tb)) + 1.6) + 120)),
+                   height = max(360, min(1800, 75 * (diff(range(st$y_tb)) + 1) + 170)))
     grDevices::png(file.path("/tmp/out", file), sz$width, sz$height, res = 96)
-    f(".pl_plot_sem")(st, o, theme)
+    f(".pl_plot_sem")(st, o, theme, width = sz$width)
     grDevices::dev.off()
     cat(file, sz$width, "x", sz$height, "\n")
 }

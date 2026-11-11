@@ -87,8 +87,9 @@
     pars <- data.frame(label = "", lhs = p$lhs, edge = rep("->", nrow(p)), rhs = p$rhs, est = p$est,
                        std = p$est, group = "", fixed = FALSE, par = seq_len(nrow(p)),
                        stringsAsFactors = FALSE)
-    slots <- methods::getSlots("semPlotModel")
-    args <- list(Class = "semPlotModel")
+    cl <- methods::getClass("semPlotModel", where = asNamespace("semPlot"))
+    slots <- cl@slots
+    args <- list(Class = cl)
     for (s in names(slots)) {
         args[[s]] <- switch(s,
             Pars = pars, Vars = state$vars, Computed = TRUE,

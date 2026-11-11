@@ -70,6 +70,13 @@ carry every rule below in full.
   composites. Measurement model (reflective/formative) and estimator
   (PLS/PLSc) are separate user choices; the module maps them to syntax.
 - `testMGD(.output_type = "structured")` fails in cSEM 0.7.1; use default.
+- With PLS the reflective constructs are `<~` Mode A composites: call the
+  quality functions with `.only_common_factors = FALSE` (identical values).
+  `cSEM::csem()` defaults to `.disattenuate = TRUE`: always pass it.
+- HTMT of a single-indicator construct takes its monotrait correlation as 1
+  (lower bound); mixed signs give NaN (reverse-coded items).
+- `jmc --prepare` deletes `inst/i18n/es.json`; rebuild it with
+  `--i18n . --update`, fill `es.po`, then `--build . --skip-deps`.
 
 ## Working conventions
 

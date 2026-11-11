@@ -47,11 +47,35 @@
             "%d missing value(s) were replaced by the mean of their indicator (%d case(s) affected).": [
                 "Se reemplazaron %d valor(es) perdido(s) por la media de su indicador (%d caso(s) afectado(s))."
             ],
-            "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them improves the reliability and validity of their construct, which will be assessed in the next version; indicators below 0.40 are candidates for removal.": [
-                "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos mejore la fiabilidad y la validez de su constructo, que se evaluarán en la próxima versión; los indicadores por debajo de 0.40 son candidatos a eliminarse."
+            "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal.": [
+                "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos lleve la fiabilidad compuesta o la AVE de su constructo por encima de su umbral; los indicadores por debajo de 0.40 son candidatos a eliminarse."
+            ],
+            "%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs.": [
+                "%s tiene un solo indicador: cSEM toma su correlación dentro del constructo como 1 (fiabilidad perfecta), así que este HTMT es un límite inferior del solapamiento entre los dos constructos."
             ],
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
+            ],
+            "0.85 to 0.90: acceptable only for conceptually similar constructs": [
+                "0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
+            ],
+            "0.90 or more: discriminant validity in doubt": [
+                "0.90 o más: validez discriminante en duda"
+            ],
+            "3 to 5: possible collinearity": [
+                "3 a 5: posible colinealidad"
+            ],
+            "5 or more: critical collinearity": [
+                "5 o más: colinealidad crítica"
+            ],
+            "A construct with a single indicator has no collinearity among its indicators.": [
+                "Un constructo con un solo indicador no tiene colinealidad entre sus indicadores."
+            ],
+            "A negative alpha means that some indicators of the construct correlate negatively: check for reverse-coded items.": [
+                "Un alfa negativo significa que algunos indicadores del constructo correlacionan negativamente: revise si hay ítems invertidos."
+            ],
+            "A single indicator has no internal consistency to estimate: its reliability and AVE are 1 by definition.": [
+                "Un solo indicador no tiene consistencia interna que estimar: su fiabilidad y su AVE valen 1 por definición."
             ],
             "About your choices": [
                 "Acerca de sus elecciones"
@@ -77,11 +101,41 @@
             "As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as substantial, moderate and weak (Hair et al., 2019, see references), but what counts as high depends on the field: in consumer behaviour an R² of 0.20 can be high.": [
                 "Como guía aproximada, valores de R² de 0.75, 0.50 y 0.25 se describen como sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero lo que cuenta como alto depende del campo: en comportamiento del consumidor un R² de 0.20 puede ser alto."
             ],
+            "Assessment": [
+                "Valoración"
+            ],
+            "Assessment (HTMT)": [
+                "Valoración (HTMT)"
+            ],
+            "AVE": [
+                "AVE"
+            ],
+            "AVE adequate": [
+                "AVE adecuada"
+            ],
+            "AVE below 0.50": [
+                "AVE menor de 0.50"
+            ],
+            "Below 0.85: distinct constructs": [
+                "Menor de 0.85: constructos distintos"
+            ],
+            "Below 3: no collinearity problem": [
+                "Menor de 3: sin problema de colinealidad"
+            ],
             "Centroid": [
                 "Centroide"
             ],
             "Coefficient": [
                 "Coeficiente"
+            ],
+            "Collinearity of formative indicators": [
+                "Colinealidad de los indicadores formativos"
+            ],
+            "Collinearity of formative indicators: every VIF is below 3.": [
+                "Colinealidad de los indicadores formativos: todos los VIF son menores de 3."
+            ],
+            "Collinearity of formative indicators: VIF of 3 or more for %s. Their weights may be unstable; interpret them with care.": [
+                "Colinealidad de los indicadores formativos: VIF de 3 o más en %s. Sus pesos pueden ser inestables; interprételos con cuidado."
             ],
             "Consistent PLS (PLSc)": [
                 "PLS consistente (PLSc)"
@@ -95,11 +149,20 @@
             "Constructs": [
                 "Constructos"
             ],
+            "Convergent validity: the AVE is 0.50 or more in all %d reflective construct(s) with two or more indicators.": [
+                "Validez convergente: la AVE es de 0.50 o más en los %d constructo(s) reflectivo(s) con dos o más indicadores."
+            ],
+            "Convergent validity: the AVE is below 0.50 in %s: each construct explains less than half of the variance of its indicators on average. Removing the indicators with the lowest loadings usually raises the AVE, but check that the construct keeps its content.": [
+                "Validez convergente: la AVE es menor de 0.50 en %s: cada constructo explica, en promedio, menos de la mitad de la varianza de sus indicadores. Quitar los indicadores con las cargas más bajas suele subir la AVE, pero compruebe que el constructo conserve su contenido."
+            ],
             "Corporate reputation (n=344)": [
                 "Reputación corporativa (n=344)"
             ],
             "Corporate reputation, satisfaction and loyalty of 344 mobile phone customers, the example of the PLS-SEM primer of Hair et al., with missing answers as empty cells, from the cSEM package - see data/README.md": [
                 "Reputación corporativa, satisfacción y lealtad de 344 clientes de telefonía móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
+            ],
+            "Cronbach's α": [
+                "α de Cronbach"
             ],
             "cSEM could not estimate the model: %s": [
                 "cSEM no pudo estimar el modelo: %s"
@@ -112,6 +175,27 @@
             ],
             "Define each construct in Reflective Constructs or Formative Constructs: give it a name and drag its indicators into it. Reflective: the construct causes its indicators, which should correlate highly. Formative: the indicators together form the construct and need not correlate.": [
                 "Defina cada constructo en Constructos reflectivos o Constructos formativos: póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo causa sus indicadores, que deberían correlacionar alto. Formativo: los indicadores en conjunto forman el constructo y no necesitan correlacionar."
+            ],
+            "Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation.": [
+                "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
+            ],
+            "Discriminant validity (HTMT)": [
+                "Validez discriminante (HTMT)"
+            ],
+            "Discriminant validity (HTMT) compares pairs of reflective constructs; the model has only one.": [
+                "La validez discriminante (HTMT) compara pares de constructos reflectivos; el modelo tiene solo uno."
+            ],
+            "Discriminant validity: %d of %d pair(s) of reflective constructs have HTMT below 0.85.": [
+                "Validez discriminante: %d de %d par(es) de constructos reflectivos tienen un HTMT menor de 0.85."
+            ],
+            "Discriminant validity: every HTMT is below 0.85, so the data distinguish the %d reflective constructs from each other.": [
+                "Validez discriminante: todos los HTMT son menores de 0.85, así que los datos distinguen entre sí los %d constructos reflectivos."
+            ],
+            "Discriminant validity: HTMT could not be computed for %s (see the footnotes of the HTMT table).": [
+                "Validez discriminante: el HTMT no pudo calcularse para %s (vea las notas al pie de la tabla HTMT)."
+            ],
+            "Discriminant validity: HTMT is 0.85 or more for %s. The data barely distinguish these constructs; ask whether they measure the same concept, whether some indicators belong to both, or whether they should be merged.": [
+                "Validez discriminante: el HTMT es de 0.85 o más en %s. Los datos apenas distinguen estos constructos; pregúntese si miden el mismo concepto, si algunos indicadores pertenecen a ambos o si deberían unirse."
             ],
             "drag indicators here": [
                 "arrastre los indicadores aquí"
@@ -167,8 +251,17 @@
             "Formative Constructs": [
                 "Constructos formativos"
             ],
-            "Formative constructs with negative weights: %s. A negative weight often reflects collinearity among the indicators of the construct; collinearity (VIF) and the significance of the weights will be assessed in later versions before any indicator is removed.": [
-                "Constructos formativos con pesos negativos: %s. Un peso negativo suele reflejar colinealidad entre los indicadores del constructo; la colinealidad (VIF) y la significación de los pesos se evaluarán en versiones posteriores, antes de quitar cualquier indicador."
+            "Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Wait for the significance of the weights (next version) before removing any indicator: a formative indicator carries part of the content of the construct.": [
+                "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Espere la significación de los pesos (próxima versión) antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+            ],
+            "Formative indicators: the largest VIF is %s (%s).": [
+                "Indicadores formativos: el VIF más alto es %s (%s)."
+            ],
+            "Fornell-Larcker criterion": [
+                "Criterio de Fornell-Larcker"
+            ],
+            "How to read discriminant validity": [
+                "Cómo leer la validez discriminante"
             ],
             "How to read each table": [
                 "Cómo leer cada tabla"
@@ -176,11 +269,23 @@
             "How to read loadings and weights": [
                 "Cómo leer las cargas y los pesos"
             ],
+            "How to read reliability and convergent validity": [
+                "Cómo leer la fiabilidad y la validez convergente"
+            ],
+            "How to read the collinearity of formative indicators": [
+                "Cómo leer la colinealidad de los indicadores formativos"
+            ],
             "How to read the model summary": [
                 "Cómo leer el resumen del modelo"
             ],
             "How to read the path coefficients": [
                 "Cómo leer los coeficientes de ruta"
+            ],
+            "HTMT": [
+                "HTMT"
+            ],
+            "HTMT2": [
+                "HTMT2"
             ],
             "Indicator": [
                 "Indicador"
@@ -212,6 +317,9 @@
             "Measurement model": [
                 "Modelo de medida"
             ],
+            "Measurement Model": [
+                "Modelo de medida"
+            ],
             "Measurement model: %d of %d reflective indicators load 0.708 or more.": [
                 "Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
             ],
@@ -233,11 +341,29 @@
             "moderate": [
                 "moderado"
             ],
-            "No significance or confidence intervals yet: this version reports estimates only.": [
-                "Todavía sin significación ni intervalos de confianza: esta versión solo informa estimaciones."
+            "No significance or confidence intervals yet: this version reports estimates only, so the HTMT thresholds are compared with the estimate and not with its upper bound.": [
+                "Todavía no hay significación ni intervalos de confianza: esta versión informa solo estimaciones, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior."
             ],
             "None.": [
                 "Ninguno."
+            ],
+            "Not computable": [
+                "No computable"
+            ],
+            "Not computable: %s": [
+                "No computable: %s"
+            ],
+            "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
+                "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
+            ],
+            "One row per indicator of a formative construct. The variance inflation factor (VIF) measures how much an indicator overlaps with the other indicators of the same construct. Because formative indicators compete to explain the construct, high overlap makes their weights unstable and can turn them negative. VIF of 5 or more is critical; 3 to 5 may be a problem (Hair et al., 2019, see references). Common misreading: removing an indicator only because its VIF is high; a formative indicator carries part of the content of the construct, so first consider merging indicators or building a higher-order construct.": [
+                "Una fila por indicador de un constructo formativo. El factor de inflación de la varianza (VIF) mide cuánto se solapa un indicador con los demás indicadores del mismo constructo. Como los indicadores formativos compiten para explicar el constructo, un solapamiento alto vuelve inestables sus pesos y puede volverlos negativos. Un VIF de 5 o más es crítico; de 3 a 5 puede ser un problema (Hair et al., 2019, vea las referencias). Lectura errónea frecuente: quitar un indicador solo porque su VIF es alto; un indicador formativo lleva parte del contenido del constructo, así que primero considere unir indicadores o construir un constructo de orden superior."
+            ],
+            "One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap confidence interval, which arrives in the next version.": [
+                "Una fila por par de constructos reflectivos. La razón heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los indicadores de dos constructos distintos con las correlaciones dentro de cada constructo (Henseler et al., 2015, vea las referencias). Valores cercanos a 1 significan que los datos no distinguen los dos constructos. Por debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 usa medias geométricas en lugar de aritméticas y es más exacto cuando las cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea frecuente: tratar el HTMT como una correlación entre los constructos; es una razón de correlaciones entre indicadores. Una prueba formal requiere el intervalo de confianza bootstrap, que llega en la próxima versión."
+            ],
+            "One row per reflective construct. Cronbach's alpha is a lower bound of reliability and composite reliability (ρC) an upper bound; ρA usually lies between them and is the most exact of the three (Hair et al., 2019, see references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is acceptable only in exploratory research; above 0.95 the indicators are probably redundant (the same question asked several times). The average variance extracted (AVE) is the share of indicator variance the construct explains on average: 0.50 or more means convergent validity. Common misreading: reading only alpha, which tends to underestimate reliability when loadings differ.": [
+                "Una fila por constructo reflectivo. El alfa de Cronbach es un límite inferior de la fiabilidad y la fiabilidad compuesta (ρC) un límite superior; ρA suele quedar entre ambos y es la más exacta de las tres (Hair et al., 2019, vea las referencias). Los valores entre 0.70 y 0.95 son satisfactorios; de 0.60 a 0.70 es aceptable solo en investigación exploratoria; por encima de 0.95 los indicadores probablemente son redundantes (la misma pregunta hecha varias veces). La varianza extraída media (AVE) es la proporción de la varianza de los indicadores que el constructo explica en promedio: 0.50 o más indica validez convergente. Lectura errónea frecuente: leer solo el alfa, que tiende a subestimar la fiabilidad cuando las cargas difieren."
             ],
             "Only %d cases have complete data on the indicators, too few to estimate the model. Check the missing values or use mean replacement.": [
                 "Solo %d casos tienen datos completos en los indicadores, muy pocos para estimar el modelo. Revise los valores perdidos o use el reemplazo por la media."
@@ -248,8 +374,8 @@
             "Outcome": [
                 "Resultado"
             ],
-            "Partial least squares structural equation modeling: reflective and formative constructs built from boxes, model validation before estimation, loadings, weights, paths and explained variance, with plain-language interpretation.": [
-                "Modelos de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas, pesos, rutas y varianza explicada, con interpretación en lenguaje claro."
+            "Partial least squares structural equation modeling: reflective and formative constructs built from boxes, model validation before estimation, loadings and weights, reliability, convergent and discriminant validity, collinearity of formative indicators, paths and explained variance, with plain-language interpretation.": [
+                "Modelado de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas y pesos, fiabilidad, validez convergente y discriminante, colinealidad de los indicadores formativos, rutas y varianza explicada, con interpretación en lenguaje claro."
             ],
             "Path": [
                 "Path"
@@ -287,14 +413,38 @@
             "R²": [
                 "R²"
             ],
-            "Read the loadings and weights before the paths: a construct that is poorly measured makes its paths hard to interpret. The next versions of PLSsemLab add reliability, convergent and discriminant validity, collinearity and bootstrap significance; until then, treat these estimates as descriptive.": [
-                "Lea las cargas y los pesos antes que las rutas: un constructo mal medido hace difícil interpretar sus rutas. Las próximas versiones de PLSsemLab añaden fiabilidad, validez convergente y discriminante, colinealidad y significación por bootstrap; mientras tanto, trate estas estimaciones como descriptivas."
-            ],
             "Reflective": [
                 "Reflectivo"
             ],
             "Reflective Constructs": [
                 "Constructos reflectivos"
+            ],
+            "reliability acceptable only in exploratory research": [
+                "fiabilidad aceptable solo en investigación exploratoria"
+            ],
+            "Reliability and convergent validity": [
+                "Fiabilidad y validez convergente"
+            ],
+            "Reliability and convergent validity: %d of %d reflective construct(s) have composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 or more.": [
+                "Fiabilidad y validez convergente: %d de %d constructo(s) reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95, y %d de %d tienen una AVE de 0.50 o más."
+            ],
+            "reliability satisfactory": [
+                "fiabilidad satisfactoria"
+            ],
+            "reliability too high: redundant indicators?": [
+                "fiabilidad demasiado alta: ¿indicadores redundantes?"
+            ],
+            "reliability too low": [
+                "fiabilidad demasiado baja"
+            ],
+            "Reliability: composite reliability is above 0.95 in %s. Such high values usually mean the indicators are near copies of each other, which inflates reliability without adding content.": [
+                "Fiabilidad: la fiabilidad compuesta supera 0.95 en %s. Valores tan altos suelen indicar que los indicadores son casi copias unos de otros, lo que infla la fiabilidad sin añadir contenido."
+            ],
+            "Reliability: composite reliability is below 0.70 in %s. These indicators share too little variance to measure the construct consistently; look at the lowest loadings of each construct and at reverse-coded items.": [
+                "Fiabilidad: la fiabilidad compuesta es menor de 0.70 en %s. Estos indicadores comparten muy poca varianza para medir el constructo de forma consistente; revise las cargas más bajas de cada constructo y los ítems invertidos."
+            ],
+            "Reliability: composite reliability is between 0.70 and 0.95 in all %d reflective construct(s) with two or more indicators.": [
+                "Fiabilidad: la fiabilidad compuesta está entre 0.70 y 0.95 en los %d constructo(s) reflectivo(s) con dos o más indicadores."
             ],
             "Replace by the indicator mean": [
                 "Reemplazar por la media del indicador"
@@ -311,6 +461,9 @@
             "Role": [
                 "Papel"
             ],
+            "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. The next version of PLSsemLab adds bootstrap confidence intervals, which turn the HTMT thresholds into a test and give the significance of paths and weights; until then, treat these estimates as descriptive.": [
+                "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. La próxima versión de PLSsemLab añade intervalos de confianza bootstrap, que convierten los umbrales del HTMT en una prueba y dan la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+            ],
             "Structural model": [
                 "Modelo estructural"
             ],
@@ -323,6 +476,9 @@
             "substantial": [
                 "sustancial"
             ],
+            "The correlation with %s exceeds the square root of the AVE of one of the two constructs.": [
+                "La correlación con %s supera la raíz cuadrada de la AVE de uno de los dos constructos."
+            ],
             "The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples.": [
                 "Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no deben interpretarse hasta corregir la causa: revise indicadores con correlaciones muy bajas o negativas, o muestras muy pequeñas."
             ],
@@ -334,6 +490,9 @@
             ],
             "The model has no reflective constructs, so loadings are not used to judge indicator quality.": [
                 "El modelo no tiene constructos reflectivos, así que las cargas no se usan para juzgar la calidad de los indicadores."
+            ],
+            "The model has no reflective constructs, so reliability, convergent validity (AVE) and discriminant validity (HTMT) do not apply. Formative constructs are judged by the collinearity and the weights of their indicators.": [
+                "El modelo no tiene constructos reflectivos, así que la fiabilidad, la validez convergente (AVE) y la validez discriminante (HTMT) no aplican. Los constructos formativos se juzgan por la colinealidad y los pesos de sus indicadores."
             ],
             "The model is checked before estimation; if something is missing or inconsistent, the message names the construct or indicator at fault.": [
                 "El modelo se revisa antes de estimar; si falta algo o hay una inconsistencia, el mensaje nombra el constructo o indicador con problemas."
@@ -356,6 +515,9 @@
             "very weak": [
                 "muy débil"
             ],
+            "VIF": [
+                "VIF"
+            ],
             "Warnings": [
                 "Advertencias"
             ],
@@ -367,6 +529,15 @@
             ],
             "What to do now": [
                 "Qué hacer ahora"
+            ],
+            "ρA": [
+                "ρA"
+            ],
+            "ρA comes from a consistent PLS estimation of the same model (same weights): it is the reliability that consistent PLS uses to correct for measurement error (Dijkstra & Henseler, 2015, see references).": [
+                "ρA sale de una estimación PLS consistente del mismo modelo (mismos pesos): es la fiabilidad que PLS consistente usa para corregir el error de medida (Dijkstra y Henseler, 2015, vea las referencias)."
+            ],
+            "ρC": [
+                "ρC"
             ]
         }
     }

@@ -13,6 +13,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             estimator = "pls",
             innerScheme = "path",
             missing = "listwise",
+            fornellLarcker = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
             showGuides = FALSE,
@@ -99,6 +100,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "listwise",
                     "mean"),
                 default="listwise")
+            private$..fornellLarcker <- jmvcore::OptionBool$new(
+                "fornellLarcker",
+                fornellLarcker,
+                default=FALSE)
             private$..showKeySummary <- jmvcore::OptionBool$new(
                 "showKeySummary",
                 showKeySummary,
@@ -122,6 +127,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..estimator)
             self$.addOption(private$..innerScheme)
             self$.addOption(private$..missing)
+            self$.addOption(private$..fornellLarcker)
             self$.addOption(private$..showKeySummary)
             self$.addOption(private$..showChoicesGuide)
             self$.addOption(private$..showGuides)
@@ -134,6 +140,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         estimator = function() private$..estimator$value,
         innerScheme = function() private$..innerScheme$value,
         missing = function() private$..missing$value,
+        fornellLarcker = function() private$..fornellLarcker$value,
         showKeySummary = function() private$..showKeySummary$value,
         showChoicesGuide = function() private$..showChoicesGuide$value,
         showGuides = function() private$..showGuides$value,
@@ -145,6 +152,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..estimator = NA,
         ..innerScheme = NA,
         ..missing = NA,
+        ..fornellLarcker = NA,
         ..showKeySummary = NA,
         ..showChoicesGuide = NA,
         ..showGuides = NA,
@@ -162,6 +170,13 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         model = function() private$.items[["model"]],
         measurementGuide = function() private$.items[["measurementGuide"]],
         measurement = function() private$.items[["measurement"]],
+        reliabilityGuide = function() private$.items[["reliabilityGuide"]],
+        reliability = function() private$.items[["reliability"]],
+        htmtGuide = function() private$.items[["htmtGuide"]],
+        htmt = function() private$.items[["htmt"]],
+        fornell = function() private$.items[["fornell"]],
+        vifGuide = function() private$.items[["vifGuide"]],
+        vif = function() private$.items[["vif"]],
         pathsGuide = function() private$.items[["pathsGuide"]],
         paths = function() private$.items[["paths"]],
         r2 = function() private$.items[["r2"]],
@@ -270,6 +285,155 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="reliabilityGuide",
+                title="How to read reliability and convergent validity",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="reliability",
+                title="Reliability and convergent validity",
+                rows=0,
+                refs=list(
+                    "hair_2019",
+                    "dijkstra_2015"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "missing"),
+                columns=list(
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="alpha", 
+                        `title`="Cronbach's \u03B1", 
+                        `type`="number"),
+                    list(
+                        `name`="rhoA", 
+                        `title`="\u03C1A", 
+                        `type`="number"),
+                    list(
+                        `name`="rhoC", 
+                        `title`="\u03C1C", 
+                        `type`="number"),
+                    list(
+                        `name`="ave", 
+                        `title`="AVE", 
+                        `type`="number"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="htmtGuide",
+                title="How to read discriminant validity",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="htmt",
+                title="Discriminant validity (HTMT)",
+                rows=0,
+                refs=list(
+                    "henseler_2015",
+                    "roemer_2021"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "missing"),
+                columns=list(
+                    list(
+                        `name`="c1", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="sep", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="c2", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="htmt", 
+                        `title`="HTMT", 
+                        `type`="number"),
+                    list(
+                        `name`="htmt2", 
+                        `title`="HTMT2", 
+                        `type`="number"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment (HTMT)", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="fornell",
+                title="Fornell-Larcker criterion",
+                rows=0,
+                visible="(fornellLarcker)",
+                refs=list(
+                    "fornell_1981",
+                    "henseler_2015"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "missing",
+                    "fornellLarcker"),
+                columns=list(
+                    list(
+                        `name`="construct", 
+                        `title`="", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="vifGuide",
+                title="How to read the collinearity of formative indicators",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="vif",
+                title="Collinearity of formative indicators",
+                rows=0,
+                refs=list(
+                    "hair_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "missing"),
+                columns=list(
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="indicator", 
+                        `title`="Indicator", 
+                        `type`="text"),
+                    list(
+                        `name`="vif", 
+                        `title`="VIF", 
+                        `type`="number"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="pathsGuide",
                 title="How to read the path coefficients",
                 visible="(showGuides)"))
@@ -372,8 +536,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Partial least squares structural equation modeling: reflective and 
 #' formative constructs built from boxes, model validation before estimation, 
-#' loadings, weights, paths and explained variance, with plain-language 
-#' interpretation.
+#' loadings and weights, reliability, convergent and discriminant validity, 
+#' collinearity of formative indicators, paths and explained variance, with 
+#' plain-language interpretation.
 #' 
 #' @param data .
 #' @param reflective .
@@ -382,6 +547,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param estimator .
 #' @param innerScheme .
 #' @param missing .
+#' @param fornellLarcker .
 #' @param showKeySummary .
 #' @param showChoicesGuide .
 #' @param showGuides .
@@ -395,6 +561,13 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$measurementGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$measurement} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$reliabilityGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$reliability} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$htmtGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$htmt} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$fornell} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$vifGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$vif} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pathsGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$paths} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$r2} \tab \tab \tab \tab \tab a table \cr
@@ -419,6 +592,7 @@ plssem <- function(
     estimator = "pls",
     innerScheme = "path",
     missing = "listwise",
+    fornellLarcker = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
     showGuides = FALSE,
@@ -439,6 +613,7 @@ plssem <- function(
         estimator = estimator,
         innerScheme = innerScheme,
         missing = missing,
+        fornellLarcker = fornellLarcker,
         showKeySummary = showKeySummary,
         showChoicesGuide = showChoicesGuide,
         showGuides = showGuides,

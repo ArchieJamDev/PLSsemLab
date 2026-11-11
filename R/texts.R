@@ -90,7 +90,23 @@
             single_reflective = .("'%s' has a single indicator: its loading is fixed at 1 and its measurement quality cannot be evaluated."),
             inadmissible = .("The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples."),
             dropped = .("%d case(s) with missing values were excluded; %d case(s) remain."),
-            replaced = .("%d missing value(s) were replaced by the mean of their indicator (%d case(s) affected).")
+            replaced = .("%d missing value(s) were replaced by the mean of their indicator (%d case(s) affected)."),
+            no_reflective_quality = .("The model has no reflective constructs, so reliability, convergent validity (AVE) and discriminant validity (HTMT) do not apply. Formative constructs are judged by the collinearity and the weights of their indicators."),
+            one_reflective_htmt = .("Discriminant validity (HTMT) compares pairs of reflective constructs; the model has only one.")
+        ),
+
+        # Footnotes of cells that cannot be computed (Category B).
+        # ES: Notas al pie de celdas que no se pueden calcular (Categoría B).
+        footnotes = list(
+            single_reliability = .("A single indicator has no internal consistency to estimate: its reliability and AVE are 1 by definition."),
+            single_vif = .("A construct with a single indicator has no collinearity among its indicators."),
+            htmt_single = .("%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs."),
+            htmt_signs = .("Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis."),
+            failed = .("Not computable: %s"),
+            rho_a_pls = .("\u03c1A comes from a consistent PLS estimation of the same model (same weights): it is the reliability that consistent PLS uses to correct for measurement error (Dijkstra & Henseler, 2015, see references)."),
+            alpha_negative = .("A negative alpha means that some indicators of the construct correlate negatively: check for reverse-coded items."),
+            fl_note = .("Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation."),
+            fl_fails = .("The correlation with %s exceeds the square root of the AVE of one of the two constructs.")
         ),
 
         # Table cells and labels.
@@ -101,7 +117,20 @@
             exogenous = .("Exogenous"),
             endogenous = .("Endogenous"),
             none = .("\u2014"),
-            interaction_sep = .(" \u00d7 ")
+            interaction_sep = .(" \u00d7 "),
+            not_computable = .("Not computable"),
+            rel_too_low = .("reliability too low"),
+            rel_exploratory = .("reliability acceptable only in exploratory research"),
+            rel_ok = .("reliability satisfactory"),
+            rel_too_high = .("reliability too high: redundant indicators?"),
+            ave_ok = .("AVE adequate"),
+            ave_low = .("AVE below 0.50"),
+            htmt_ok = .("Below 0.85: distinct constructs"),
+            htmt_similar = .("0.85 to 0.90: acceptable only for conceptually similar constructs"),
+            htmt_doubt = .("0.90 or more: discriminant validity in doubt"),
+            vif_ok = .("Below 3: no collinearity problem"),
+            vif_possible = .("3 to 5: possible collinearity"),
+            vif_critical = .("5 or more: critical collinearity")
         ),
 
         # "How to read" guides.
@@ -109,6 +138,9 @@
         guide = list(
             model = .("Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number."),
             measurement = .("Loadings are the correlations between each indicator and its construct; weights are the contribution of each indicator to the construct score. For reflective constructs read the loadings: values of 0.708 or more mean the construct explains at least half of the indicator's variance (Hair et al., 2019, see references). For formative constructs read the weights: they show the relative contribution of each indicator, and a small or negative weight is not by itself a reason to remove an indicator. Common misreading: judging formative indicators by their loadings as if they were reflective."),
+            reliability = .("One row per reflective construct. Cronbach's alpha is a lower bound of reliability and composite reliability (\u03c1C) an upper bound; \u03c1A usually lies between them and is the most exact of the three (Hair et al., 2019, see references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is acceptable only in exploratory research; above 0.95 the indicators are probably redundant (the same question asked several times). The average variance extracted (AVE) is the share of indicator variance the construct explains on average: 0.50 or more means convergent validity. Common misreading: reading only alpha, which tends to underestimate reliability when loadings differ."),
+            htmt = .("One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap confidence interval, which arrives in the next version."),
+            vif = .("One row per indicator of a formative construct. The variance inflation factor (VIF) measures how much an indicator overlaps with the other indicators of the same construct. Because formative indicators compete to explain the construct, high overlap makes their weights unstable and can turn them negative. VIF of 5 or more is critical; 3 to 5 may be a problem (Hair et al., 2019, see references). Common misreading: removing an indicator only because its VIF is high; a formative indicator carries part of the content of the construct, so first consider merging indicators or building a higher-order construct."),
             paths = .("Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R\u00b2 is the share of the outcome's variance explained by its predictors. Common misreading: treating a coefficient as significant. This version reports estimates only; significance needs bootstrap confidence intervals, which arrive in a later version.")
         ),
 
@@ -128,11 +160,21 @@
             title_measurement = .("Measurement model"),
             title_structural = .("Structural model"),
             title_next = .("What to do now"),
-            low_loadings = .("%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them improves the reliability and validity of their construct, which will be assessed in the next version; indicators below 0.40 are candidates for removal."),
+            low_loadings = .("%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal."),
             good_loadings = .("All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators."),
             no_reflective = .("The model has no reflective constructs, so loadings are not used to judge indicator quality."),
-            formative_negative = .("Formative constructs with negative weights: %s. A negative weight often reflects collinearity among the indicators of the construct; collinearity (VIF) and the significance of the weights will be assessed in later versions before any indicator is removed."),
+            formative_negative = .("Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Wait for the significance of the weights (next version) before removing any indicator: a formative indicator carries part of the content of the construct."),
             formative_ok = .("All weights of the formative constructs are positive."),
+            reliability_ok = .("Reliability: composite reliability is between 0.70 and 0.95 in all %d reflective construct(s) with two or more indicators."),
+            reliability_low = .("Reliability: composite reliability is below 0.70 in %s. These indicators share too little variance to measure the construct consistently; look at the lowest loadings of each construct and at reverse-coded items."),
+            reliability_high = .("Reliability: composite reliability is above 0.95 in %s. Such high values usually mean the indicators are near copies of each other, which inflates reliability without adding content."),
+            ave_ok = .("Convergent validity: the AVE is 0.50 or more in all %d reflective construct(s) with two or more indicators."),
+            ave_low = .("Convergent validity: the AVE is below 0.50 in %s: each construct explains less than half of the variance of its indicators on average. Removing the indicators with the lowest loadings usually raises the AVE, but check that the construct keeps its content."),
+            htmt_ok = .("Discriminant validity: every HTMT is below 0.85, so the data distinguish the %d reflective constructs from each other."),
+            htmt_high = .("Discriminant validity: HTMT is 0.85 or more for %s. The data barely distinguish these constructs; ask whether they measure the same concept, whether some indicators belong to both, or whether they should be merged."),
+            htmt_na = .("Discriminant validity: HTMT could not be computed for %s (see the footnotes of the HTMT table)."),
+            vif_ok = .("Collinearity of formative indicators: every VIF is below 3."),
+            vif_high = .("Collinearity of formative indicators: VIF of 3 or more for %s. Their weights may be unstable; interpret them with care."),
             strongest = .("The largest path is %s \u2192 %s (%s)."),
             r2_line = .("%s: R\u00b2 = %s (%s)."),
             r2_substantial = .("substantial"),
@@ -140,7 +182,7 @@
             r2_weak = .("weak"),
             r2_very_weak = .("very weak"),
             r2_note = .("As a rough guide, R\u00b2 values of 0.75, 0.50 and 0.25 are described as substantial, moderate and weak (Hair et al., 2019, see references), but what counts as high depends on the field: in consumer behaviour an R\u00b2 of 0.20 can be high."),
-            next_steps = .("Read the loadings and weights before the paths: a construct that is poorly measured makes its paths hard to interpret. The next versions of PLSsemLab add reliability, convergent and discriminant validity, collinearity and bootstrap significance; until then, treat these estimates as descriptive.")
+            next_steps = .("Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. The next version of PLSsemLab adds bootstrap confidence intervals, which turn the HTMT thresholds into a test and give the significance of paths and weights; until then, treat these estimates as descriptive.")
         ),
 
         # Key findings.
@@ -153,7 +195,10 @@
             model = .("Model: %d construct(s) (%d reflective, %d formative), %d indicator(s), %d structural path(s), %d case(s), estimated with %s."),
             loadings = .("Measurement model: %d of %d reflective indicators load 0.708 or more."),
             r2 = .("Structural model: the highest R\u00b2 is %s for %s."),
-            no_inference = .("No significance or confidence intervals yet: this version reports estimates only."),
+            reliability = .("Reliability and convergent validity: %d of %d reflective construct(s) have composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 or more."),
+            htmt = .("Discriminant validity: %d of %d pair(s) of reflective constructs have HTMT below 0.85."),
+            vif = .("Formative indicators: the largest VIF is %s (%s)."),
+            no_inference = .("No significance or confidence intervals yet: this version reports estimates only, so the HTMT thresholds are compared with the estimate and not with its upper bound."),
             admissible_no = .("The estimates are not admissible; do not interpret them until the cause is fixed.")
         ),
 

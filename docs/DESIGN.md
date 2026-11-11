@@ -97,6 +97,14 @@ para HTMT en unos 10 s.
   el límite superior en el superior; el módulo lo despliega en tabla larga.
 - HTMT para compuestos se muestra solo si el usuario lo pide, con la
   advertencia de cSEM: el HTMT está ligado al modelo de factor común.
+- Con PLS el módulo arma los reflectivos como compuestos (`<~`, Modo A), así
+  que llama a cada función con `.only_common_factors = FALSE`; para los
+  reflectivos da exactamente lo mismo que la sintaxis de factor común
+  (diferencia 0, comprobado en la fase 2).
+- Con un constructo de un solo indicador, cSEM calcula el HTMT tomando como 1
+  su correlación interna (fiabilidad perfecta), lo que lo vuelve un límite
+  inferior; el informe lo dice en una nota. Correlaciones con signos mezclados
+  dejan el par como "No computable" con una nota que apunta a ítems invertidos.
 - Los nombres de las columnas del bootstrap se toman de la misma llamada a
   `which()` que las posiciones; tomarlos de una tabla ordenada las etiqueta
   mal (error que el propio experimento detectó y corrigió).

@@ -28,8 +28,9 @@ analyses:
     description: >
       Partial least squares structural equation modeling: reflective and
       formative constructs built from boxes, model validation before estimation,
-      loadings, weights, paths and explained variance, with plain-language
-      interpretation.
+      loadings and weights, reliability, convergent and discriminant validity,
+      collinearity of formative indicators, paths and explained variance, with
+      plain-language interpretation.
     category: analyses
 datasets:
   - name: Corporate reputation (n=344)

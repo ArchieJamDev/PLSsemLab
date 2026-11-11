@@ -1,5 +1,33 @@
 # PLSsemLab 0.0.0 (development)
 
+## Phase 2: quality of the measurement model (D2)
+
+* **Reliability and convergent validity:** Cronbach's alpha, ρA, ρC and
+  AVE for every reflective construct, with a verbal assessment (thresholds
+  of Hair et al., 2019). ρA is computed in both estimators: with PLS it
+  comes from a consistent PLS estimation of the same model, and a table note
+  says so. A negative alpha is flagged as a sign of reverse-coded items.
+* **Discriminant validity:** HTMT and HTMT2 for every pair of reflective
+  constructs, in a long table with the assessment against 0.85 and 0.90.
+  Mixed-sign correlations leave the pair "Not computable" with a footnote
+  that points to reverse-coded items; a pair with a single-indicator
+  construct carries a footnote saying its HTMT is a lower bound.
+* **Fornell-Larcker criterion** (optional, off by default): square table with
+  the square root of the AVE on the diagonal and footnotes on the pairs that
+  fail.
+* **Collinearity of formative indicators:** VIF of every indicator of a
+  formative construct, with the assessment against 3 and 5.
+* Every criterion is computed separately (never `assess()`), each in its own
+  capture: what fails stays as a row with its reason (Category B). Tables
+  keep their shape from `.init()`; a table that does not apply to the model
+  is hidden with its guide and a notice says why.
+* Teaching: three new "How to read" guides, interpretation and key findings
+  of reliability, AVE, HTMT and VIF; the reproducibility code adds every
+  cSEM call.
+* Spanish catalog: 177 strings. Tests: 176 expectations, including equality
+  of every value with direct cSEM calls on the common-factor syntax, the
+  values of COMP of experiment E1, and PLSc.
+
 ## Phase 1: platform and first estimates
 
 * **PLS-SEM analysis** (`plssem`): the model is built from boxes, never typed.

@@ -34,8 +34,9 @@ description:
     main: >
       Partial least squares structural equation modeling: reflective and
       formative constructs built from boxes, model validation before
-      estimation, loadings, weights, paths and explained variance, with
-      plain-language interpretation.
+      estimation, loadings and weights, reliability, convergent and
+      discriminant validity, collinearity of formative indicators, paths and
+      explained variance, with plain-language interpretation.
 
 options:
   - name: data
@@ -158,6 +159,15 @@ options:
       - title: Replace by the indicator mean
         name: mean
     default: listwise
+
+  # Fornell-Larcker criterion: replaced by HTMT (Henseler et al., 2015), but
+  # still requested by reviewers, so it is optional and off by default.
+  # ES: Criterio de Fornell-Larcker: reemplazado por el HTMT, pero los
+  # revisores aún lo piden, así que es opcional y viene desactivado.
+  - name: fornellLarcker
+    title: Fornell-Larcker criterion
+    type: Bool
+    default: false
 
   # ---------------------------------------------------------------------------
   # Report content.

@@ -172,6 +172,16 @@ children:
           - type: ComboBox
             name: missing
   - type: CollapseBox
+    label: Measurement Model
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: fornellLarcker
+  - type: CollapseBox
     label: Report Content
     collapsed: true
     children:

@@ -1,4 +1,3 @@
-#
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2021-07-26 12:08:06+01000\n"
@@ -30,22 +29,22 @@ msgstr "'%s' no puede predecirse a sí mismo."
 
 #: R/texts.R
 msgid ""
-"'%s' has %d value(s) of %s, far outside the range of its other values (%s to"
-" %s). If this is a missing-data code, declare it as missing in jamovi's data"
-" view (Setup > Missing values) and run the analysis again."
+"'%s' has %d value(s) of %s, far outside the range of its other values (%s to "
+"%s). If this is a missing-data code, declare it as missing in jamovi's data "
+"view (Setup > Missing values) and run the analysis again."
 msgstr ""
 "'%s' tiene %d valor(es) de %s, muy fuera del rango de sus demás valores (%s "
 "a %s). Si es un código de dato perdido, declárelo como perdido en la vista "
-"de datos de jamovi (Configuración > Valores perdidos) y vuelva a ejecutar el"
-" análisis."
+"de datos de jamovi (Configuración > Valores perdidos) y vuelva a ejecutar el "
+"análisis."
 
 #: R/texts.R
 msgid ""
 "'%s' has a single indicator: its loading is fixed at 1 and its measurement "
 "quality cannot be evaluated."
 msgstr ""
-"'%s' tiene un solo indicador: su carga vale 1 por definición y la calidad de"
-" su medición no puede evaluarse."
+"'%s' tiene un solo indicador: su carga vale 1 por definición y la calidad de "
+"su medición no puede evaluarse."
 
 #: R/texts.R
 msgid "'%s' has no indicators yet and was left out of the model."
@@ -53,11 +52,11 @@ msgstr "'%s' todavía no tiene indicadores y se dejó fuera del modelo."
 
 #: R/texts.R
 msgid ""
-"'%s' has the same value for every case, so it carries no information. Remove"
-" it from its construct."
+"'%s' has the same value for every case, so it carries no information. Remove "
+"it from its construct."
 msgstr ""
-"'%s' tiene el mismo valor en todos los casos, así que no aporta información."
-" Quítelo de su constructo."
+"'%s' tiene el mismo valor en todos los casos, así que no aporta información. "
+"Quítelo de su constructo."
 
 #: R/texts.R
 msgid ""
@@ -85,8 +84,8 @@ msgstr "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
 
 #: R/texts.R
 msgid ""
-"%d missing value(s) were replaced by the mean of their indicator (%d case(s)"
-" affected)."
+"%d missing value(s) were replaced by the mean of their indicator (%d case(s) "
+"affected)."
 msgstr ""
 "Se reemplazaron %d valor(es) perdido(s) por la media de su indicador (%d "
 "caso(s) afectado(s))."
@@ -94,26 +93,61 @@ msgstr ""
 #: R/texts.R
 msgid ""
 "%d of %d indicators of reflective constructs have a loading below 0.708 "
-"(%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless"
-" removing them improves the reliability and validity of their construct, "
-"which will be assessed in the next version; indicators below 0.40 are "
-"candidates for removal."
-msgstr ""
-"%d de %d indicadores de constructos reflectivos tienen una carga menor de "
-"0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse,"
-" salvo que quitarlos mejore la fiabilidad y la validez de su constructo, que"
-" se evaluarán en la próxima versión; los indicadores por debajo de 0.40 son "
-"candidatos a eliminarse."
+"(%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless "
+"removing them raises the composite reliability or the AVE of their construct "
+"above its threshold; indicators below 0.40 are candidates for removal."
+msgstr "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos lleve la fiabilidad compuesta o la AVE de su constructo por encima de su umbral; los indicadores por debajo de 0.40 son candidatos a eliminarse."
+
+#: R/texts.R
+msgid ""
+"%s has a single indicator: cSEM takes its within-construct correlation as 1 "
+"(perfect reliability), so this HTMT is a lower bound of the overlap between "
+"the two constructs."
+msgstr "%s tiene un solo indicador: cSEM toma su correlación dentro del constructo como 1 (fiabilidad perfecta), así que este HTMT es un límite inferior del solapamiento entre los dos constructos."
 
 #: R/texts.R
 msgid "%s: R² = %s (%s)."
 msgstr "%s: R² = %s (%s)."
 
-#: plssem/options/showChoicesGuide.title plssem/results/choicesGuide.title
+#: R/texts.R
+msgid "0.85 to 0.90: acceptable only for conceptually similar constructs"
+msgstr "0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
+
+#: R/texts.R
+msgid "0.90 or more: discriminant validity in doubt"
+msgstr "0.90 o más: validez discriminante en duda"
+
+#: R/texts.R
+msgid "3 to 5: possible collinearity"
+msgstr "3 a 5: posible colinealidad"
+
+#: R/texts.R
+msgid "5 or more: critical collinearity"
+msgstr "5 o más: colinealidad crítica"
+
+#: R/texts.R
+msgid "A construct with a single indicator has no collinearity among its indicators."
+msgstr "Un constructo con un solo indicador no tiene colinealidad entre sus indicadores."
+
+#: R/texts.R
+msgid ""
+"A negative alpha means that some indicators of the construct correlate "
+"negatively: check for reverse-coded items."
+msgstr "Un alfa negativo significa que algunos indicadores del constructo correlacionan negativamente: revise si hay ítems invertidos."
+
+#: R/texts.R
+msgid ""
+"A single indicator has no internal consistency to estimate: its reliability "
+"and AVE are 1 by definition."
+msgstr "Un solo indicador no tiene consistencia interna que estimar: su fiabilidad y su AVE valen 1 por definición."
+
+#: plssem/options/showChoicesGuide.title
+#: plssem/results/choicesGuide.title
 msgid "About your choices"
 msgstr "Acerca de sus elecciones"
 
-#: plssem/ui[0][0]/reflective.addButton plssem/ui[0][1]/formative.addButton
+#: plssem/ui[0][0]/reflective.addButton
+#: plssem/ui[0][1]/formative.addButton
 msgid "Add New Construct"
 msgstr "Agregar constructo"
 
@@ -149,14 +183,43 @@ msgstr "Interpretación aplicada"
 #: R/texts.R
 msgid ""
 "As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as "
-"substantial, moderate and weak (Hair et al., 2019, see references), but what"
-" counts as high depends on the field: in consumer behaviour an R² of 0.20 "
-"can be high."
+"substantial, moderate and weak (Hair et al., 2019, see references), but what "
+"counts as high depends on the field: in consumer behaviour an R² of 0.20 can "
+"be high."
 msgstr ""
 "Como guía aproximada, valores de R² de 0.75, 0.50 y 0.25 se describen como "
-"sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero"
-" lo que cuenta como alto depende del campo: en comportamiento del consumidor"
-" un R² de 0.20 puede ser alto."
+"sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero "
+"lo que cuenta como alto depende del campo: en comportamiento del consumidor "
+"un R² de 0.20 puede ser alto."
+
+#: plssem/results/reliability.columns.title
+#: plssem/results/vif.columns.title
+msgid "Assessment"
+msgstr "Valoración"
+
+#: plssem/results/htmt.columns.title
+msgid "Assessment (HTMT)"
+msgstr "Valoración (HTMT)"
+
+#: plssem/results/reliability.columns.title
+msgid "AVE"
+msgstr "AVE"
+
+#: R/texts.R
+msgid "AVE adequate"
+msgstr "AVE adecuada"
+
+#: R/texts.R
+msgid "AVE below 0.50"
+msgstr "AVE menor de 0.50"
+
+#: R/texts.R
+msgid "Below 0.85: distinct constructs"
+msgstr "Menor de 0.85: constructos distintos"
+
+#: R/texts.R
+msgid "Below 3: no collinearity problem"
+msgstr "Menor de 3: sin problema de colinealidad"
 
 #: plssem/options/innerScheme/centroid.title
 msgid "Centroid"
@@ -166,11 +229,29 @@ msgstr "Centroide"
 msgid "Coefficient"
 msgstr "Coeficiente"
 
+#: plssem/results/vif.title
+msgid "Collinearity of formative indicators"
+msgstr "Colinealidad de los indicadores formativos"
+
+#: R/texts.R
+msgid "Collinearity of formative indicators: every VIF is below 3."
+msgstr "Colinealidad de los indicadores formativos: todos los VIF son menores de 3."
+
+#: R/texts.R
+msgid ""
+"Collinearity of formative indicators: VIF of 3 or more for %s. Their weights "
+"may be unstable; interpret them with care."
+msgstr "Colinealidad de los indicadores formativos: VIF de 3 o más en %s. Sus pesos pueden ser inestables; interprételos con cuidado."
+
 #: plssem/options/estimator/plsc.title
 msgid "Consistent PLS (PLSc)"
 msgstr "PLS consistente (PLSc)"
 
-#: plssem/results/model.columns.title plssem/results/measurement.columns.title
+#: plssem/results/model.columns.title
+#: plssem/results/measurement.columns.title
+#: plssem/results/reliability.columns.title
+#: plssem/results/htmt.columns.title
+#: plssem/results/vif.columns.title
 #: plssem/results/r2.columns.title
 msgid "Construct"
 msgstr "Constructo"
@@ -182,6 +263,20 @@ msgstr "Construct 1"
 #: plssem/ui[1]/constructSupplier.label
 msgid "Constructs"
 msgstr "Constructos"
+
+#: R/texts.R
+msgid ""
+"Convergent validity: the AVE is 0.50 or more in all %d reflective "
+"construct(s) with two or more indicators."
+msgstr "Validez convergente: la AVE es de 0.50 o más en los %d constructo(s) reflectivo(s) con dos o más indicadores."
+
+#: R/texts.R
+msgid ""
+"Convergent validity: the AVE is below 0.50 in %s: each construct explains "
+"less than half of the variance of its indicators on average. Removing the "
+"indicators with the lowest loadings usually raises the AVE, but check that "
+"the construct keeps its content."
+msgstr "Validez convergente: la AVE es menor de 0.50 en %s: cada constructo explica, en promedio, menos de la mitad de la varianza de sus indicadores. Quitar los indicadores con las cargas más bajas suele subir la AVE, pero compruebe que el constructo conserve su contenido."
 
 #: package/datasets/Corporatereputation(n=344).name
 msgid "Corporate reputation (n=344)"
@@ -197,6 +292,10 @@ msgstr ""
 "móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas "
 "faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
 
+#: plssem/results/reliability.columns.title
+msgid "Cronbach's α"
+msgstr "α de Cronbach"
+
 #: R/texts.R
 msgid "cSEM could not estimate the model: %s"
 msgstr "cSEM no pudo estimar el modelo: %s"
@@ -211,15 +310,57 @@ msgstr "Defina al menos dos constructos, cada uno con al menos un indicador."
 
 #: R/texts.R
 msgid ""
-"Define each construct in Reflective Constructs or Formative Constructs: give"
-" it a name and drag its indicators into it. Reflective: the construct causes"
-" its indicators, which should correlate highly. Formative: the indicators "
+"Define each construct in Reflective Constructs or Formative Constructs: give "
+"it a name and drag its indicators into it. Reflective: the construct causes "
+"its indicators, which should correlate highly. Formative: the indicators "
 "together form the construct and need not correlate."
 msgstr ""
 "Defina cada constructo en Constructos reflectivos o Constructos formativos: "
 "póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo "
 "causa sus indicadores, que deberían correlacionar alto. Formativo: los "
 "indicadores en conjunto forman el constructo y no necesitan correlacionar."
+
+#: R/texts.R
+msgid ""
+"Diagonal: square root of the AVE. Below the diagonal: correlations between "
+"constructs. Discriminant validity holds for a pair when both square roots "
+"exceed their correlation."
+msgstr "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
+
+#: plssem/results/htmt.title
+msgid "Discriminant validity (HTMT)"
+msgstr "Validez discriminante (HTMT)"
+
+#: R/texts.R
+msgid ""
+"Discriminant validity (HTMT) compares pairs of reflective constructs; the "
+"model has only one."
+msgstr "La validez discriminante (HTMT) compara pares de constructos reflectivos; el modelo tiene solo uno."
+
+#: R/texts.R
+msgid ""
+"Discriminant validity: %d of %d pair(s) of reflective constructs have HTMT "
+"below 0.85."
+msgstr "Validez discriminante: %d de %d par(es) de constructos reflectivos tienen un HTMT menor de 0.85."
+
+#: R/texts.R
+msgid ""
+"Discriminant validity: every HTMT is below 0.85, so the data distinguish the "
+"%d reflective constructs from each other."
+msgstr "Validez discriminante: todos los HTMT son menores de 0.85, así que los datos distinguen entre sí los %d constructos reflectivos."
+
+#: R/texts.R
+msgid ""
+"Discriminant validity: HTMT could not be computed for %s (see the footnotes "
+"of the HTMT table)."
+msgstr "Validez discriminante: el HTMT no pudo calcularse para %s (vea las notas al pie de la tabla HTMT)."
+
+#: R/texts.R
+msgid ""
+"Discriminant validity: HTMT is 0.85 or more for %s. The data barely "
+"distinguish these constructs; ask whether they measure the same concept, "
+"whether some indicators belong to both, or whether they should be merged."
+msgstr "Validez discriminante: el HTMT es de 0.85 o más en %s. Los datos apenas distinguen estos constructos; pregúntese si miden el mismo concepto, si algunos indicadores pertenecen a ambos o si deberían unirse."
 
 #: plssem/ui[0][0]/reflective.template/reflectiveVars.ghostText
 #: plssem/ui[0][1]/formative.template/formativeVars.ghostText
@@ -242,25 +383,25 @@ msgid ""
 msgstr ""
 "Cada coeficiente es el cambio del constructo resultado, en desviaciones "
 "estándar, cuando el predictor aumenta una desviación estándar y los demás "
-"predictores del mismo resultado se mantienen constantes. R² es la proporción"
-" de la varianza del resultado que explican sus predictores. Lectura errónea "
+"predictores del mismo resultado se mantienen constantes. R² es la proporción "
+"de la varianza del resultado que explican sus predictores. Lectura errónea "
 "frecuente: tratar un coeficiente como significativo. Esta versión solo "
 "informa estimaciones; la significación necesita intervalos de confianza "
 "bootstrap, que llegan en una versión posterior."
 
 #: R/texts.R
 msgid ""
-"Each row is one construct: how it is measured (reflective or formative), how"
-" many indicators it has, and its role in the structural model. Exogenous "
+"Each row is one construct: how it is measured (reflective or formative), how "
+"many indicators it has, and its role in the structural model. Exogenous "
 "constructs are only predictors; endogenous constructs are predicted by at "
 "least one other construct. Check that this table describes the model you "
 "intended before reading any number."
 msgstr ""
 "Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos "
 "indicadores tiene y su papel en el modelo estructural. Los constructos "
-"exógenos solo son predictores; los endógenos son predichos por al menos otro"
-" constructo. Compruebe que esta tabla describe el modelo que quería antes de"
-" leer cualquier número."
+"exógenos solo son predictores; los endógenos son predichos por al menos otro "
+"constructo. Compruebe que esta tabla describe el modelo que quería antes de "
+"leer cualquier número."
 
 #: R/texts.R
 msgid "Endogenous"
@@ -309,20 +450,20 @@ msgstr ""
 #: package/datasets/CustomersatisfactionindexECSI(n=250).description
 msgid ""
 "European Customer Satisfaction Index for the mobile phone industry: image, "
-"expectation, quality, value, satisfaction and loyalty, from the cSEM package"
-" - see data/README.md"
+"expectation, quality, value, satisfaction and loyalty, from the cSEM package "
+"- see data/README.md"
 msgstr ""
 "Índice Europeo de Satisfacción del Cliente para la telefonía móvil: imagen, "
-"expectativas, calidad, valor, satisfacción y lealtad, del paquete cSEM - ver"
-" data/README.md"
+"expectativas, calidad, valor, satisfacción y lealtad, del paquete cSEM - ver "
+"data/README.md"
 
 #: R/texts.R
 msgid ""
 "Every construct needs a name: one of the constructs has indicators but an "
 "empty name."
 msgstr ""
-"Cada constructo necesita un nombre: uno de los constructos tiene indicadores"
-" pero no tiene nombre."
+"Cada constructo necesita un nombre: uno de los constructos tiene indicadores "
+"pero no tiene nombre."
 
 #: plssem/options/missing/listwise.title
 msgid "Exclude cases listwise"
@@ -344,21 +485,32 @@ msgstr "Factorial"
 msgid "Formative"
 msgstr "Formativo"
 
-#: plssem/options/formative.title plssem/ui[0][1].label
+#: plssem/options/formative.title
+#: plssem/ui[0][1].label
 msgid "Formative Constructs"
 msgstr "Constructos formativos"
 
 #: R/texts.R
 msgid ""
-"Formative constructs with negative weights: %s. A negative weight often "
-"reflects collinearity among the indicators of the construct; collinearity "
-"(VIF) and the significance of the weights will be assessed in later versions"
-" before any indicator is removed."
-msgstr ""
-"Constructos formativos con pesos negativos: %s. Un peso negativo suele "
-"reflejar colinealidad entre los indicadores del constructo; la colinealidad "
-"(VIF) y la significación de los pesos se evaluarán en versiones posteriores,"
-" antes de quitar cualquier indicador."
+"Formative constructs with negative weights: %s. A negative weight can come "
+"from collinearity among the indicators (see their VIF) or from an indicator "
+"that adds little beyond the others of its construct. Wait for the "
+"significance of the weights (next version) before removing any indicator: a "
+"formative indicator carries part of the content of the construct."
+msgstr "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Espere la significación de los pesos (próxima versión) antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+
+#: R/texts.R
+msgid "Formative indicators: the largest VIF is %s (%s)."
+msgstr "Indicadores formativos: el VIF más alto es %s (%s)."
+
+#: plssem/options/fornellLarcker.title
+#: plssem/results/fornell.title
+msgid "Fornell-Larcker criterion"
+msgstr "Criterio de Fornell-Larcker"
+
+#: plssem/results/htmtGuide.title
+msgid "How to read discriminant validity"
+msgstr "Cómo leer la validez discriminante"
 
 #: plssem/options/showGuides.title
 msgid "How to read each table"
@@ -368,6 +520,14 @@ msgstr "Cómo leer cada tabla"
 msgid "How to read loadings and weights"
 msgstr "Cómo leer las cargas y los pesos"
 
+#: plssem/results/reliabilityGuide.title
+msgid "How to read reliability and convergent validity"
+msgstr "Cómo leer la fiabilidad y la validez convergente"
+
+#: plssem/results/vifGuide.title
+msgid "How to read the collinearity of formative indicators"
+msgstr "Cómo leer la colinealidad de los indicadores formativos"
+
 #: plssem/results/modelGuide.title
 msgid "How to read the model summary"
 msgstr "Cómo leer el resumen del modelo"
@@ -376,7 +536,16 @@ msgstr "Cómo leer el resumen del modelo"
 msgid "How to read the path coefficients"
 msgstr "Cómo leer los coeficientes de ruta"
 
+#: plssem/results/htmt.columns.title
+msgid "HTMT"
+msgstr "HTMT"
+
+#: plssem/results/htmt.columns.title
+msgid "HTMT2"
+msgstr "HTMT2"
+
 #: plssem/results/measurement.columns.title
+#: plssem/results/vif.columns.title
 msgid "Indicator"
 msgstr "Indicador"
 
@@ -394,11 +563,12 @@ msgid ""
 "inform each other while the weights are estimated; the path scheme is the "
 "usual default and the results rarely depend much on this choice."
 msgstr ""
-"Esquema de ponderación interna: %s. El esquema decide cómo se informan entre"
-" sí los constructos vecinos mientras se estiman los pesos; el esquema path "
-"es el habitual y los resultados rara vez dependen mucho de esta elección."
+"Esquema de ponderación interna: %s. El esquema decide cómo se informan entre "
+"sí los constructos vecinos mientras se estiman los pesos; el esquema path es "
+"el habitual y los resultados rara vez dependen mucho de esta elección."
 
-#: plssem/options/showKeySummary.title plssem/results/keySummary.title
+#: plssem/options/showKeySummary.title
+#: plssem/results/keySummary.title
 msgid "Key findings"
 msgstr "Hallazgos clave"
 
@@ -418,8 +588,8 @@ msgid ""
 "construct explains at least half of the indicator's variance (Hair et al., "
 "2019, see references). For formative constructs read the weights: they show "
 "the relative contribution of each indicator, and a small or negative weight "
-"is not by itself a reason to remove an indicator. Common misreading: judging"
-" formative indicators by their loadings as if they were reflective."
+"is not by itself a reason to remove an indicator. Common misreading: judging "
+"formative indicators by their loadings as if they were reflective."
 msgstr ""
 "Las cargas son las correlaciones entre cada indicador y su constructo; los "
 "pesos son la contribución de cada indicador a la puntuación del constructo. "
@@ -435,14 +605,18 @@ msgstr ""
 msgid "Main findings"
 msgstr "Hallazgos principales"
 
-#: R/texts.R plssem/results/model.columns.title
+#: R/texts.R
+#: plssem/results/model.columns.title
 msgid "Measurement model"
+msgstr "Modelo de medida"
+
+#: plssem/ui[3].label
+msgid "Measurement Model"
 msgstr "Modelo de medida"
 
 #: R/texts.R
 msgid "Measurement model: %d of %d reflective indicators load 0.708 or more."
-msgstr ""
-"Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
+msgstr "Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
 
 #: plssem/options/missing.title
 msgid "Missing values"
@@ -450,8 +624,8 @@ msgstr "Valores perdidos"
 
 #: R/texts.R
 msgid ""
-"Missing values: cases with a missing value on any indicator are excluded (%d"
-" of %d cases used). This adds no information to the data; if many cases are "
+"Missing values: cases with a missing value on any indicator are excluded (%d "
+"of %d cases used). This adds no information to the data; if many cases are "
 "lost, consider why the values are missing."
 msgstr ""
 "Valores perdidos: se excluyen los casos con un valor perdido en cualquier "
@@ -488,14 +662,69 @@ msgstr "moderado"
 #: R/texts.R
 msgid ""
 "No significance or confidence intervals yet: this version reports estimates "
-"only."
-msgstr ""
-"Todavía sin significación ni intervalos de confianza: esta versión solo "
-"informa estimaciones."
+"only, so the HTMT thresholds are compared with the estimate and not with its "
+"upper bound."
+msgstr "Todavía no hay significación ni intervalos de confianza: esta versión informa solo estimaciones, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior."
 
 #: R/texts.R
 msgid "None."
 msgstr "Ninguno."
+
+#: R/texts.R
+msgid "Not computable"
+msgstr "No computable"
+
+#: R/texts.R
+msgid "Not computable: %s"
+msgstr "No computable: %s"
+
+#: R/texts.R
+msgid ""
+"Not computable: the indicators of these constructs correlate with mixed "
+"signs. Check for reverse-coded items and recode them before the analysis."
+msgstr "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
+
+#: R/texts.R
+msgid ""
+"One row per indicator of a formative construct. The variance inflation "
+"factor (VIF) measures how much an indicator overlaps with the other "
+"indicators of the same construct. Because formative indicators compete to "
+"explain the construct, high overlap makes their weights unstable and can "
+"turn them negative. VIF of 5 or more is critical; 3 to 5 may be a problem "
+"(Hair et al., 2019, see references). Common misreading: removing an "
+"indicator only because its VIF is high; a formative indicator carries part "
+"of the content of the construct, so first consider merging indicators or "
+"building a higher-order construct."
+msgstr "Una fila por indicador de un constructo formativo. El factor de inflación de la varianza (VIF) mide cuánto se solapa un indicador con los demás indicadores del mismo constructo. Como los indicadores formativos compiten para explicar el constructo, un solapamiento alto vuelve inestables sus pesos y puede volverlos negativos. Un VIF de 5 o más es crítico; de 3 a 5 puede ser un problema (Hair et al., 2019, vea las referencias). Lectura errónea frecuente: quitar un indicador solo porque su VIF es alto; un indicador formativo lleva parte del contenido del constructo, así que primero considere unir indicadores o construir un constructo de orden superior."
+
+#: R/texts.R
+msgid ""
+"One row per pair of reflective constructs. The heterotrait-monotrait ratio "
+"(HTMT) compares the correlations between the indicators of two different "
+"constructs with the correlations within each construct (Henseler et al., "
+"2015, see references). Values near 1 mean the two constructs are not "
+"distinguished by the data. Below 0.85 the constructs are distinct; up to "
+"0.90 is acceptable when they are conceptually similar (for example, two "
+"kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and "
+"is more accurate when loadings differ (Roemer et al., 2021, see references). "
+"Common misreading: treating HTMT as a correlation between the constructs; it "
+"is a ratio of indicator correlations. A formal test needs the bootstrap "
+"confidence interval, which arrives in the next version."
+msgstr "Una fila por par de constructos reflectivos. La razón heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los indicadores de dos constructos distintos con las correlaciones dentro de cada constructo (Henseler et al., 2015, vea las referencias). Valores cercanos a 1 significan que los datos no distinguen los dos constructos. Por debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 usa medias geométricas en lugar de aritméticas y es más exacto cuando las cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea frecuente: tratar el HTMT como una correlación entre los constructos; es una razón de correlaciones entre indicadores. Una prueba formal requiere el intervalo de confianza bootstrap, que llega en la próxima versión."
+
+#: R/texts.R
+msgid ""
+"One row per reflective construct. Cronbach's alpha is a lower bound of "
+"reliability and composite reliability (ρC) an upper bound; ρA usually lies "
+"between them and is the most exact of the three (Hair et al., 2019, see "
+"references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is "
+"acceptable only in exploratory research; above 0.95 the indicators are "
+"probably redundant (the same question asked several times). The average "
+"variance extracted (AVE) is the share of indicator variance the construct "
+"explains on average: 0.50 or more means convergent validity. Common "
+"misreading: reading only alpha, which tends to underestimate reliability "
+"when loadings differ."
+msgstr "Una fila por constructo reflectivo. El alfa de Cronbach es un límite inferior de la fiabilidad y la fiabilidad compuesta (ρC) un límite superior; ρA suele quedar entre ambos y es la más exacta de las tres (Hair et al., 2019, vea las referencias). Los valores entre 0.70 y 0.95 son satisfactorios; de 0.60 a 0.70 es aceptable solo en investigación exploratoria; por encima de 0.95 los indicadores probablemente son redundantes (la misma pregunta hecha varias veces). La varianza extraída media (AVE) es la proporción de la varianza de los indicadores que el constructo explica en promedio: 0.50 o más indica validez convergente. Lectura errónea frecuente: leer solo el alfa, que tiende a subestimar la fiabilidad cuando las cargas difieren."
 
 #: R/texts.R
 msgid ""
@@ -520,16 +749,15 @@ msgstr ""
 msgid "Outcome"
 msgstr "Resultado"
 
-#: package/analyses/plssem.description plssem/options.description.main
+#: package/analyses/plssem.description
+#: plssem/options.description.main
 msgid ""
-"Partial least squares structural equation modeling: reflective and formative"
-" constructs built from boxes, model validation before estimation, loadings, "
-"weights, paths and explained variance, with plain-language interpretation."
-msgstr ""
-"Modelos de ecuaciones estructurales por mínimos cuadrados parciales: "
-"constructos reflectivos y formativos armados con cajas, validación del "
-"modelo antes de estimar, cargas, pesos, rutas y varianza explicada, con "
-"interpretación en lenguaje claro."
+"Partial least squares structural equation modeling: reflective and formative "
+"constructs built from boxes, model validation before estimation, loadings "
+"and weights, reliability, convergent and discriminant validity, collinearity "
+"of formative indicators, paths and explained variance, with plain-language "
+"interpretation."
+msgstr "Modelado de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas y pesos, fiabilidad, validez convergente y discriminante, colinealidad de los indicadores formativos, rutas y varianza explicada, con interpretación en lenguaje claro."
 
 #: plssem/options/innerScheme/path.title
 msgid "Path"
@@ -543,9 +771,13 @@ msgstr "Coeficientes de ruta"
 msgid "PLS"
 msgstr "PLS"
 
-#: package/analyses/plssem.title package/analyses/plssem.menuTitle
-#: plssem/options.title plssem/options.menuTitle plssem/ui.title
-#: plssem/results.title plssem/results/intro.title
+#: package/analyses/plssem.title
+#: package/analyses/plssem.menuTitle
+#: plssem/options.title
+#: plssem/options.menuTitle
+#: plssem/ui.title
+#: plssem/results.title
+#: plssem/results/intro.title
 msgid "PLS-SEM"
 msgstr "PLS-SEM"
 
@@ -561,7 +793,9 @@ msgstr ""
 "constructo como una combinación ponderada de sus indicadores y está "
 "orientado a explicar y predecir los resultados del modelo."
 
-#: package.title package/analyses/plssem.menuGroup plssem/options.menuGroup
+#: package.title
+#: package/analyses/plssem.menuGroup
+#: plssem/options.menuGroup
 msgid "PLS-SEM Lab"
 msgstr "PLS-SEM Lab"
 
@@ -571,18 +805,18 @@ msgstr "PLSsemLab %s, cSEM %s, %s; ejecutado el %s."
 
 #: package.description
 msgid ""
-"PLSsemLab brings partial least squares structural equation modeling (PLS-"
-"SEM) to jamovi with the cSEM package and pairs every result with evidence-"
-"based methodological guidance, interpretation and educational support. The "
-"model is built from boxes, never typed: reflective and formative constructs "
-"with their indicators, and for each construct the constructs that predict "
-"it. The model is checked before estimation, with messages that name the "
-"construct or indicator at fault. In development."
+"PLSsemLab brings partial least squares structural equation modeling "
+"(PLS-SEM) to jamovi with the cSEM package and pairs every result with "
+"evidence-based methodological guidance, interpretation and educational "
+"support. The model is built from boxes, never typed: reflective and "
+"formative constructs with their indicators, and for each construct the "
+"constructs that predict it. The model is checked before estimation, with "
+"messages that name the construct or indicator at fault. In development."
 msgstr ""
 "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos "
 "cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada "
-"resultado con orientación metodológica basada en evidencia, interpretación y"
-" apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: "
+"resultado con orientación metodológica basada en evidencia, interpretación y "
+"apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: "
 "constructos reflectivos y formativos con sus indicadores y, para cada "
 "constructo, los constructos que lo predicen. El modelo se revisa antes de "
 "estimar, con mensajes que nombran el constructo o indicador con problemas. "
@@ -605,31 +839,66 @@ msgid "R²"
 msgstr "R²"
 
 #: R/texts.R
-msgid ""
-"Read the loadings and weights before the paths: a construct that is poorly "
-"measured makes its paths hard to interpret. The next versions of PLSsemLab "
-"add reliability, convergent and discriminant validity, collinearity and "
-"bootstrap significance; until then, treat these estimates as descriptive."
-msgstr ""
-"Lea las cargas y los pesos antes que las rutas: un constructo mal medido "
-"hace difícil interpretar sus rutas. Las próximas versiones de PLSsemLab "
-"añaden fiabilidad, validez convergente y discriminante, colinealidad y "
-"significación por bootstrap; mientras tanto, trate estas estimaciones como "
-"descriptivas."
-
-#: R/texts.R
 msgid "Reflective"
 msgstr "Reflectivo"
 
-#: plssem/options/reflective.title plssem/ui[0][0].label
+#: plssem/options/reflective.title
+#: plssem/ui[0][0].label
 msgid "Reflective Constructs"
 msgstr "Constructos reflectivos"
+
+#: R/texts.R
+msgid "reliability acceptable only in exploratory research"
+msgstr "fiabilidad aceptable solo en investigación exploratoria"
+
+#: plssem/results/reliability.title
+msgid "Reliability and convergent validity"
+msgstr "Fiabilidad y validez convergente"
+
+#: R/texts.R
+msgid ""
+"Reliability and convergent validity: %d of %d reflective construct(s) have "
+"composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 "
+"or more."
+msgstr "Fiabilidad y validez convergente: %d de %d constructo(s) reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95, y %d de %d tienen una AVE de 0.50 o más."
+
+#: R/texts.R
+msgid "reliability satisfactory"
+msgstr "fiabilidad satisfactoria"
+
+#: R/texts.R
+msgid "reliability too high: redundant indicators?"
+msgstr "fiabilidad demasiado alta: ¿indicadores redundantes?"
+
+#: R/texts.R
+msgid "reliability too low"
+msgstr "fiabilidad demasiado baja"
+
+#: R/texts.R
+msgid ""
+"Reliability: composite reliability is above 0.95 in %s. Such high values "
+"usually mean the indicators are near copies of each other, which inflates "
+"reliability without adding content."
+msgstr "Fiabilidad: la fiabilidad compuesta supera 0.95 en %s. Valores tan altos suelen indicar que los indicadores son casi copias unos de otros, lo que infla la fiabilidad sin añadir contenido."
+
+#: R/texts.R
+msgid ""
+"Reliability: composite reliability is below 0.70 in %s. These indicators "
+"share too little variance to measure the construct consistently; look at the "
+"lowest loadings of each construct and at reverse-coded items."
+msgstr "Fiabilidad: la fiabilidad compuesta es menor de 0.70 en %s. Estos indicadores comparten muy poca varianza para medir el constructo de forma consistente; revise las cargas más bajas de cada constructo y los ítems invertidos."
+
+#: R/texts.R
+msgid ""
+"Reliability: composite reliability is between 0.70 and 0.95 in all %d "
+"reflective construct(s) with two or more indicators."
+msgstr "Fiabilidad: la fiabilidad compuesta está entre 0.70 y 0.95 en los %d constructo(s) reflectivo(s) con dos o más indicadores."
 
 #: plssem/options/missing/mean.title
 msgid "Replace by the indicator mean"
 msgstr "Reemplazar por la media del indicador"
 
-#: plssem/ui[3].label
+#: plssem/ui[4].label
 msgid "Report Content"
 msgstr "Contenido del informe"
 
@@ -646,10 +915,22 @@ msgid "Role"
 msgstr "Papel"
 
 #: R/texts.R
+msgid ""
+"Settle the measurement model before reading the paths: a construct that is "
+"poorly measured, or not distinct from another, makes its paths hard to "
+"interpret. Any indicator you remove changes every number, so remove one at a "
+"time and run the analysis again. The next version of PLSsemLab adds "
+"bootstrap confidence intervals, which turn the HTMT thresholds into a test "
+"and give the significance of paths and weights; until then, treat these "
+"estimates as descriptive."
+msgstr "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. La próxima versión de PLSsemLab añade intervalos de confianza bootstrap, que convierten los umbrales del HTMT en una prueba y dan la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+
+#: R/texts.R
 msgid "Structural model"
 msgstr "Modelo estructural"
 
-#: plssem/options/structural.title plssem/ui[1].label
+#: plssem/options/structural.title
+#: plssem/ui[1].label
 msgid "Structural Model"
 msgstr "Modelo estructural"
 
@@ -663,12 +944,18 @@ msgstr "sustancial"
 
 #: R/texts.R
 msgid ""
+"The correlation with %s exceeds the square root of the AVE of one of the two "
+"constructs."
+msgstr "La correlación con %s supera la raíz cuadrada de la AVE de uno de los dos constructos."
+
+#: R/texts.R
+msgid ""
 "The estimates are not admissible (%s). Results are shown, but should not be "
 "interpreted until the cause is fixed: check indicators with very low or "
 "negative correlations, or very small samples."
 msgstr ""
-"Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no"
-" deben interpretarse hasta corregir la causa: revise indicadores con "
+"Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no "
+"deben interpretarse hasta corregir la causa: revise indicadores con "
 "correlaciones muy bajas o negativas, o muestras muy pequeñas."
 
 #: R/texts.R
@@ -693,6 +980,13 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"The model has no reflective constructs, so reliability, convergent validity "
+"(AVE) and discriminant validity (HTMT) do not apply. Formative constructs "
+"are judged by the collinearity and the weights of their indicators."
+msgstr "El modelo no tiene constructos reflectivos, así que la fiabilidad, la validez convergente (AVE) y la validez discriminante (HTMT) no aplican. Los constructos formativos se juzgan por la colinealidad y los pesos de sus indicadores."
+
+#: R/texts.R
+msgid ""
 "The model is checked before estimation; if something is missing or "
 "inconsistent, the message names the construct or indicator at fault."
 msgstr ""
@@ -714,11 +1008,11 @@ msgid ""
 "names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or "
 "accents in names; the comments map them back to the names used in jamovi."
 msgstr ""
-"El código R de abajo reproduce este análisis directamente con cSEM, a partir"
-" del conjunto de datos cargado en jamovi (llamado data). Los constructos e "
-"indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM"
-" falla con espacios o acentos en los nombres; los comentarios los traducen a"
-" los nombres usados en jamovi."
+"El código R de abajo reproduce este análisis directamente con cSEM, a partir "
+"del conjunto de datos cargado en jamovi (llamado data). Los constructos e "
+"indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM "
+"falla con espacios o acentos en los nombres; los comentarios los traducen a "
+"los nombres usados en jamovi."
 
 #: R/texts.R
 msgid ""
@@ -748,6 +1042,10 @@ msgstr "Incertidumbres"
 msgid "very weak"
 msgstr "muy débil"
 
+#: plssem/results/vif.columns.title
+msgid "VIF"
+msgstr "VIF"
+
 #: R/texts.R
 msgid "Warnings"
 msgstr "Advertencias"
@@ -763,3 +1061,18 @@ msgstr "Peso"
 #: R/texts.R
 msgid "What to do now"
 msgstr "Qué hacer ahora"
+
+#: plssem/results/reliability.columns.title
+msgid "ρA"
+msgstr "ρA"
+
+#: R/texts.R
+msgid ""
+"ρA comes from a consistent PLS estimation of the same model (same weights): "
+"it is the reliability that consistent PLS uses to correct for measurement "
+"error (Dijkstra & Henseler, 2015, see references)."
+msgstr "ρA sale de una estimación PLS consistente del mismo modelo (mismos pesos): es la fiabilidad que PLS consistente usa para corregir el error de medida (Dijkstra y Henseler, 2015, vea las referencias)."
+
+#: plssem/results/reliability.columns.title
+msgid "ρC"
+msgstr "ρC"

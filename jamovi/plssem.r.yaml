@@ -116,6 +116,147 @@ items:
         title: Weight
         type: number
 
+  - name: reliabilityGuide
+    title: How to read reliability and convergent validity
+    type: Html
+    visible: (showGuides)
+
+  # One row per reflective construct (rows laid out in .init()).
+  # ES: Una fila por constructo reflectivo (filas en .init()).
+  - name: reliability
+    title: Reliability and convergent validity
+    type: Table
+    rows: 0
+    refs:
+      - hair_2019
+      - dijkstra_2015
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+      - name: alpha
+        title: Cronbach's α
+        type: number
+      - name: rhoA
+        title: ρA
+        type: number
+      - name: rhoC
+        title: ρC
+        type: number
+      - name: ave
+        title: AVE
+        type: number
+      - name: assessment
+        title: Assessment
+        type: text
+
+  - name: htmtGuide
+    title: How to read discriminant validity
+    type: Html
+    visible: (showGuides)
+
+  # One row per pair of reflective constructs (rows laid out in .init()).
+  # ES: Una fila por par de constructos reflectivos (filas en .init()).
+  - name: htmt
+    title: Discriminant validity (HTMT)
+    type: Table
+    rows: 0
+    refs:
+      - henseler_2015
+      - roemer_2021
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: c1
+        title: Construct
+        type: text
+      - name: sep
+        title: ''
+        type: text
+      - name: c2
+        title: Construct
+        type: text
+      - name: htmt
+        title: HTMT
+        type: number
+      - name: htmt2
+        title: HTMT2
+        type: number
+      - name: assessment
+        title: Assessment (HTMT)
+        type: text
+
+  # Square table: one row and one column per reflective construct (laid out
+  # in .init()).
+  # ES: Tabla cuadrada: una fila y una columna por constructo reflectivo.
+  - name: fornell
+    title: Fornell-Larcker criterion
+    type: Table
+    rows: 0
+    visible: (fornellLarcker)
+    refs:
+      - fornell_1981
+      - henseler_2015
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+      - fornellLarcker
+    columns:
+      - name: construct
+        title: ''
+        type: text
+
+  - name: vifGuide
+    title: How to read the collinearity of formative indicators
+    type: Html
+    visible: (showGuides)
+
+  # One row per indicator of a formative construct (rows laid out in .init()).
+  # ES: Una fila por indicador de un constructo formativo.
+  - name: vif
+    title: Collinearity of formative indicators
+    type: Table
+    rows: 0
+    refs:
+      - hair_2019
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - missing
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+        combineBelow: true
+      - name: indicator
+        title: Indicator
+        type: text
+      - name: vif
+        title: VIF
+        type: number
+      - name: assessment
+        title: Assessment
+        type: text
+
   - name: pathsGuide
     title: How to read the path coefficients
     type: Html

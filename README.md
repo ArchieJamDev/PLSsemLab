@@ -11,7 +11,7 @@ A jamovi module for partial least squares structural equation modeling
 (PLS-SEM), with guided interpretation in the style of AssumptionsLab,
 EGAnetLab and MokkenLab.
 
-**Status:** in development (phase 1 of 10). Not yet in the jamovi Library;
+**Status:** in development (phase 2 of 10). Not yet in the jamovi Library;
 it can be built from source for testing.
 
 ## What is here now
@@ -47,8 +47,8 @@ Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
 | Phase | Content | Status |
 |---|---|---|
 | 0 | Design, experiments with cSEM for every JASP shortcoming, suite documents, logo | ✅ Done |
-| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 In progress — awaiting test in jamovi |
-| 2 | Measurement model: reliability, AVE, HTMT, VIF | 🗓 Planned |
+| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 Built, CI green — awaiting test in jamovi |
+| 2 | Measurement model: reliability, AVE, HTMT, HTMT2, VIF, Fornell-Larcker | 🔄 Built, CI pending — awaiting test in jamovi |
 | 3 | Structural model, bootstrap in blocks, path diagram | 🗓 Planned |
 | 4 | Higher-order constructs and interactions | 🗓 Planned |
 | 5 | Bootstrap test of overall model fit | 🗓 Planned |

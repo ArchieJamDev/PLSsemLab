@@ -39,6 +39,12 @@
 * Teaching: interpretation and key findings of significance, f², structural
   VIF and HTMT upper bounds. "What to do now" changes once the bootstrap has
   run, and the reproducibility code adds the blocks and their merge.
+* Fixes from the first test in jamovi:
+  * each row of the structural model shows its construct (`Like ←`), and
+    the header stays after predictors are added or removed;
+  * the .jmo bundles cSEM 0.7.1, not the compiler snapshot's 0.6.1;
+  * a bootstrap of the bank model that ended the analysis in jamovi now
+    runs (2000 resamples in about 20-40 s in jamovi's docker image).
 * Tests: the bootstrap is checked against direct cSEM calls to 1e-10, and f²,
   structural VIF and total effects against cSEM. 2000 resamples of the
   extended corporate-reputation model ran in 52 s with all 2000 admissible.

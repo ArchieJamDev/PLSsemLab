@@ -11,7 +11,7 @@ on:
       image:
         description: 'jamovi docker image'
         required: false
-        default: 'jamovi/jamovi:28.1'
+        default: 'jamovi/jamovi:2.7.4'
 
 permissions:
   contents: write

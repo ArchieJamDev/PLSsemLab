@@ -137,22 +137,25 @@ jobs:
   build-linux-r:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.r_version != '' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
+    # R from the rocker image of that version: setup-r hung for over ten
+    # minutes twice while downloading R.
+    # ES: R desde la imagen rocker de esa versión: setup-r se colgó dos veces
+    # descargando R.
+    container: rocker/r-ver:${{ inputs.r_version }}
     steps:
+      - name: Install system libraries and tools
+        run: |
+          apt-get update
+          apt-get install -y git unzip zip curl gh libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev
+
       - name: Check out the repository
         uses: actions/checkout@v5
 
-      - name: Set up R ${{ inputs.r_version }}
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ inputs.r_version }}
-          use-public-rspm: true
-
-      - name: Install system libraries and the packages jamovi provides
+      - name: Install the packages jamovi provides
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev
-          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/2025-05-25'))"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/__linux__/noble/2025-05-25'))"
           R --version | head -2
 
       - name: Set up Node

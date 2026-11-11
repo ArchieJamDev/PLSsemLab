@@ -59,6 +59,17 @@ const events = {
     },
 
     onChangeConstructSupplier: function(ui) {
+    },
+
+    // The same handlers under jamovi's "magic" names (<control>_<event>),
+    // which jamovi binds by name, as a second route to the same events.
+    // ES: Los mismos manejadores con los nombres "mágicos" de jamovi
+    // (<control>_<evento>), que jamovi enlaza por nombre.
+    constructSupplier_updated: function(ui) {
+        sync(ui, this);
+    },
+
+    constructSupplier_changed: function(ui) {
     }
 };
 

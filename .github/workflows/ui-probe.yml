@@ -55,6 +55,7 @@ jobs:
         run: |
           gh release download dev-build --pattern '*.jmo' --dir jmo
           docker cp jmo/*.jmo jamovi:/tmp/PLSsemLab.jmo
+          docker cp data/plssemlab_bank.csv jamovi:/tmp/plssemlab_bank.csv
           docker exec jamovi /bin/sh -c 'echo "install: /tmp/PLSsemLab.jmo" > /proc/1/fd/0'
           sleep 30
           docker logs jamovi 2>&1 | tail -30
@@ -67,6 +68,7 @@ jobs:
           mkdir -p probe-out
           timeout 900 python "tests/ui/${{ inputs.script || 'probe_structural.py' }}" probe-out || true
           docker logs jamovi > probe-out/jamovi.log 2>&1 || true
+          grep -iE "error|crash|terminat|segfault|killed|Traceback" probe-out/jamovi.log | tail -40 || true
 
       # Artifacts cannot be fetched from the cloud session, so the
       # screenshots also go to a "ui-probe" pre-release.
@@ -77,7 +79,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete ui-probe --yes --cleanup-tag || true
-          gh release create ui-probe probe-out/*.png probe-out/console.txt --prerelease \
+          gh release create ui-probe probe-out/*.png probe-out/console.txt probe-out/jamovi.log --prerelease \
             --title "UI probe output (not a release)" --notes "Screenshots of the PLS-SEM panel in the jamovi docker image." || true
 
       - uses: actions/upload-artifact@v4

@@ -25,13 +25,17 @@ jobs:
 
       - name: Start jamovi
         run: |
+          docker pull "${{ inputs.image }}"
+          docker inspect -f 'CMD={{json .Config.Cmd}} ENTRYPOINT={{json .Config.Entrypoint}} ENV={{json .Config.Env}}' "${{ inputs.image }}"
           docker run -dit --name jamovi -p 41337:41337 -p 41338:41338 -p 41339:41339 \
-            -e JAMOVI_ALLOW_ARBITRARY_CODE=false -e JAMOVI_HOST_A=127.0.0.1:41337 \
-            -e JAMOVI_HOST_B=127.0.0.1:41338 -e JAMOVI_HOST_C=127.0.0.1:41339 -e JAMOVI_ACCESS_KEY= \
-            "${{ inputs.image }}" /bin/sh -c "/usr/bin/python3 -u -m jamovi.server 41337 --if=* --stdin-slave"
-          sleep 20
-          docker logs jamovi | tail -20
-          docker exec jamovi sh -c 'cat /usr/lib/jamovi/bin/env.conf; which node; node --version' || true
+            -e JAMOVI_HOST_A=127.0.0.1:41337 -e JAMOVI_HOST_B=127.0.0.1:41338 -e JAMOVI_HOST_C=127.0.0.1:41339 \
+            -e JAMOVI_ACCESS_KEY= -e JAMOVI_ALLOW_ARBITRARY_CODE=false "${{ inputs.image }}"
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:41337/ || true)
+            echo "try $i: $code"; [ "$code" = "200" ] && break; sleep 3
+          done
+          docker logs jamovi 2>&1 | tail -30
+          docker exec jamovi sh -c 'ps aux | head -20; ls /root /root/.jamovi 2>/dev/null' || true
 
       # The same .jmo the user installs (dev-build pre-release, R 4.5.0 for
       # jamovi 2.7), handed to the running jamovi as the compiler does.
@@ -45,7 +49,8 @@ jobs:
           docker cp jmo/*.jmo jamovi:/tmp/PLSsemLab.jmo
           docker exec jamovi /bin/sh -c 'echo "install: /tmp/PLSsemLab.jmo" > /proc/1/fd/0'
           sleep 30
-          docker logs jamovi | tail -30
+          docker logs jamovi 2>&1 | tail -30
+          docker exec jamovi sh -c 'find / -maxdepth 6 -type d -name PLSsemLab 2>/dev/null' || true
 
       - name: Probe the panel with a headless browser
         run: |

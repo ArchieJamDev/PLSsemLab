@@ -12,6 +12,15 @@ name: Build .jmo (Linux)
 
 on:
   workflow_dispatch:
+    inputs:
+      jamovi_commit:
+        description: 'Flatpak commit of org.jamovi.jamovi to build for (flatpak info shows it); empty = latest'
+        required: false
+        default: ''
+      tag:
+        description: 'Pre-release tag to attach the .jmo to'
+        required: false
+        default: 'dev-build'
   push:
     tags: [ 'v*' ]
 
@@ -38,6 +47,13 @@ jobs:
           sudo apt-get install -y flatpak
           sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           sudo flatpak install -y --noninteractive flathub org.jamovi.jamovi
+          # A .jmo only loads in a jamovi with the same R version, so it can be
+          # built for the exact jamovi the user has.
+          # ES: Un .jmo solo carga en un jamovi con la misma versión de R, así
+          # que se puede construir para el jamovi exacto del usuario.
+          if [ -n "${{ inputs.jamovi_commit }}" ]; then
+            sudo flatpak update -y --noninteractive --commit="${{ inputs.jamovi_commit }}" org.jamovi.jamovi
+          fi
           RUNTIME=$(flatpak info --show-runtime org.jamovi.jamovi)
           SDK=${RUNTIME/Platform/Sdk}
           echo "jamovi runtime: $RUNTIME -> SDK: $SDK"
@@ -80,7 +96,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete dev-build --yes --cleanup-tag || true
-          gh release create dev-build *.jmo --prerelease --target "$GITHUB_SHA" \
-            --title "Development build (Linux, jamovi flatpak)" \
+          TAG="${{ inputs.tag }}"; TAG="${TAG:-dev-build}"
+          JV=$(flatpak info org.jamovi.jamovi | awk '/Version:/ {print $2}')
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" *.jmo --prerelease --target "$GITHUB_SHA" \
+            --title "Development build (Linux, jamovi flatpak $JV)" \
             --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."

@@ -163,12 +163,14 @@ const cleanTerms = function(terms, self, names) {
     return out;
 };
 
-// Row headers: the construct name on each row, as SEMLj's labelize.
-// ES: Encabezados de fila, como el labelize de SEMLj.
+// Row headers: the construct name on each row followed by an arrow (the
+// row lists what predicts it), as SEMLj's labelize.
+// ES: Encabezados de fila: el nombre del constructo y una flecha (la fila
+// lista lo que lo predice), como el labelize de SEMLj.
 const labelize = function(ui, names) {
     ui.structural.applyToItems(0, (item, index) => {
         if (index < names.length)
-            item.controls[0].setPropertyValue('label', names[index]);
+            item.controls[0].setPropertyValue('label', names[index] + ' \u2190');
     });
 };
 
@@ -235,6 +237,9 @@ const cleanRows = function(ui, context) {
     let newRows = names.map((name, i) => cleanTerms(rows[i], name, names));
     if (JSON.stringify(newRows) !== JSON.stringify(rows))
         ui.structural.setValue(newRows);
+    // Setting the value rebuilds the rows, which drops their headers.
+    // ES: Fijar el valor reconstruye las filas y borra sus encabezados.
+    labelize(ui, names);
 };
 
 module.exports = events;

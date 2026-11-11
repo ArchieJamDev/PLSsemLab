@@ -28,7 +28,10 @@ def item(opts, text, nth=0):
     return opts.locator(".silky-list-item-value").filter(has_text=re.compile("^" + re.escape(text) + "$")).nth(nth)
 
 def state(opts, page, name):
-    page.screenshot(path=f"{OUT}/{name}.png", full_page=True)
+    try:
+        page.screenshot(path=f"{OUT}/{name}.png", timeout=15000)
+    except Exception as e:
+        log.append(f"screenshot {name} failed: {e.__class__.__name__}")
     info = opts.evaluate("""() => {
         const sm = [...document.querySelectorAll('.silky-control-label, .silky-list-item-value, .silky-option-listbox-ghost-text, [class*=ghost]')]
             .map(e => (e.className.split(' ')[0] + ':' + e.textContent.trim())).filter(s => !s.endsWith(':'));
@@ -39,6 +42,7 @@ def state(opts, page, name):
 with sync_playwright() as p:
     browser = p.chromium.launch()
     page = browser.new_page(viewport={"width": 1500, "height": 1300})
+    page.set_default_timeout(15000)
     page.on("console", lambda m: log.append(f"[console.{m.type}] {m.text[:300]}") if m.type in ("error", "warning") else None)
     page.on("pageerror", lambda e: log.append(f"[pageerror] {e}"))
     page.goto("http://127.0.0.1:41337/", wait_until="load")

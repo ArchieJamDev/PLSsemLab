@@ -65,7 +65,14 @@ ev.onPredictorsChanged.call(ctx, ui);
 ui.reflective.value()[0].label = 'Competence';
 ev.onConstructsChanged.call(ctx, ui);
 assert.deepStrictEqual(rows(), [[], [['Competence']], [['Construct 2'], ['Competence']]], 'rename follows');
-assert.strictEqual(headers[0], 'Competence', 'row header');
+assert.strictEqual(headers[0], 'Competence \u2190', 'row header');
+
+// Removing a predictor rebuilds the rows: the headers must come back.
+// ES: Quitar un predictor reconstruye las filas: los encabezados vuelven.
+for (let i = 0; i < headers.length; i++) headers[i] = undefined;
+ui.structural.setValue([[], [], [['Construct 2'], ['Competence']]]);
+ev.onPredictorsChanged.call(ctx, ui);
+assert.strictEqual(headers[1], 'Construct 2 \u2190', 'headers after a removal');
 
 ui.reflective.value().splice(1, 1);
 ev.onConstructsChanged.call(ctx, ui);

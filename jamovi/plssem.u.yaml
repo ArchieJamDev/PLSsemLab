@@ -215,6 +215,101 @@ children:
           - type: CheckBox
             name: htmtPlot
   - type: CollapseBox
+    label: Path Diagram
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 0
+        children:
+          - type: Label
+            label: Layout
+            children:
+              - type: ComboBox
+                name: diagramLayout
+                enable: (pathDiagram)
+              - type: TextBox
+                name: diagramTitle
+                format: string
+                enable: (pathDiagram)
+              - type: CheckBox
+                name: diagramIndicators
+                enable: (pathDiagram)
+              - type: CheckBox
+                name: diagramCaption
+                enable: (pathDiagram)
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 0
+        children:
+          - type: Label
+            label: Nodes and labels
+            children:
+              - type: TextBox
+                name: latentSize
+                format: number
+                enable: (pathDiagram)
+              - type: TextBox
+                name: manifestSize
+                format: number
+                enable: (pathDiagram && diagramIndicators)
+              - type: TextBox
+                name: nodeLabelSize
+                format: number
+                enable: (pathDiagram)
+              - type: ComboBox
+                name: latentFill
+                enable: (pathDiagram)
+              - type: ComboBox
+                name: manifestFill
+                enable: (pathDiagram && diagramIndicators)
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 0
+          row: 1
+        children:
+          - type: Label
+            label: Arrows
+            children:
+              - type: ComboBox
+                name: edgeWidth
+                enable: (pathDiagram)
+              - type: ComboBox
+                name: edgeColor
+                enable: (pathDiagram)
+              - type: CheckBox
+                name: nonsigDashed
+                enable: (pathDiagram && bootstrap)
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        cell:
+          column: 1
+          row: 1
+        children:
+          - type: Label
+            label: Coefficients
+            children:
+              - type: CheckBox
+                name: edgeLabels
+                enable: (pathDiagram)
+              - type: TextBox
+                name: edgeLabelSize
+                format: number
+                enable: (pathDiagram && edgeLabels)
+              - type: TextBox
+                name: edgeDigits
+                format: number
+                enable: (pathDiagram && edgeLabels)
+  - type: CollapseBox
     label: Measurement Model
     collapsed: true
     children:

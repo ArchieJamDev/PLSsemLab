@@ -13,6 +13,9 @@ on:
         required: false
         default: 'jamovi/jamovi:2.7.4'
 
+permissions:
+  contents: write
+
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -33,7 +36,17 @@ jobs:
           RS=$(docker exec jam sh -c 'command -v Rscript || find / -maxdepth 6 -name Rscript -type f 2>/dev/null | head -1')
           LIBS=$(docker exec jam sh -c 'find / -maxdepth 7 -name jmvcore -type d 2>/dev/null | grep -v /w/ | xargs -n1 dirname | sort -u | paste -sd:')
           echo "Rscript=$RS libs=$LIBS"
-          docker exec -e R_LIBS="/w/mod/PLSsemLab/R:$LIBS" -e PL_DATA=/w/data/plssemlab_bank.csv jam "$RS" /w/tests/engine/run-in-jamovi.R; echo "exit code: $?"
+          docker exec -e R_LIBS="/w/mod/PLSsemLab/R:$LIBS" -e PL_DATA=/w/data/plssemlab_bank.csv -e PL_DATA2=/w/data/plssemlab_corp_rep.csv jam "$RS" /w/tests/engine/run-in-jamovi.R; echo "exit code: $?"
+      # Artifacts cannot be fetched from the cloud session, so the images
+      # also go to an "engine-probe" pre-release.
+      # ES: Las imágenes también van a una pre-release "engine-probe".
+      - name: Publish the images
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete engine-probe --yes --cleanup-tag || true
+          gh release create engine-probe out/*.png --prerelease --title "Engine probe output (not a release)" --notes "Plots drawn in jamovi's R." || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

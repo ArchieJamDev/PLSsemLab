@@ -119,14 +119,40 @@ test_that("without the bootstrap the structural tables still show estimates", {
 test_that("the diagram and the measurement plots keep their data in the image state", {
     a <- runPlssem(corpRepData(), simpleModel(), loadingsPlot = TRUE, htmtPlot = TRUE)
     st <- a$results$pathDiagram$state
-    expect_equal(nrow(st$nodes), 4)
-    expect_equal(nrow(st$edges), 5)
+    # 4 constructs and 10 indicators; 10 loadings and 5 paths
+    # ES: 4 constructos y 10 indicadores; 10 cargas y 5 rutas
+    expect_equal(sum(!st$vars$manifest), 4)
+    expect_equal(sum(st$vars$manifest), 10)
+    expect_equal(sum(st$pars$kind == "loading"), 10)
+    expect_equal(sum(st$pars$kind == "path"), 5)
+    expect_true(any(grepl("R\u00b2", st$vars$name)))
     expect_equal(nrow(a$results$loadingsPlot$state$data), 9)
     expect_equal(nrow(a$results$htmtPlot$state$data), 6)
     theme <- list(color = c("#333333", "#6B9DE8"), fill = c("#FFFFFF", "#E6E6E6"))
     fun <- function(name) get(name, envir = asNamespace("PLSsemLab"))
-    for (p in list(fun(".pl_plot_paths")(st, ggplot2::theme_minimal(), theme),
-                   fun(".pl_plot_loadings")(a$results$loadingsPlot$state, ggplot2::theme_minimal(), theme),
+    for (p in list(fun(".pl_plot_loadings")(a$results$loadingsPlot$state, ggplot2::theme_minimal(), theme),
                    fun(".pl_plot_htmt")(a$results$htmtPlot$state, ggplot2::theme_minimal(), theme)))
         expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+    without <- runPlssem(corpRepData(), simpleModel(), diagramIndicators = FALSE)$results$pathDiagram$state
+    expect_equal(sum(without$vars$manifest), 0)
+    expect_equal(nrow(without$pars), 5)
+})
+
+test_that("formative indicators point to their construct in the diagram", {
+    st <- runPlssem(corpRepData(), extendedModel())$results$pathDiagram$state
+    w <- st$pars[st$pars$kind == "weight", ]
+    expect_true(all(w$lhs %in% st$vars$name[st$vars$manifest]))
+    expect_true(all(grepl("^QUAL|^PERF|^CSOR|^ATTR", w$rhs)))
+})
+
+test_that("the SEM diagram renders with semPlot", {
+    skip_if_not_installed("semPlot", minimum_version = "1.0")
+    a <- runPlssem(corpRepData(), extendedModel(), bootstrap = TRUE, bootReps = 100)
+    theme <- list(color = c("#333333", "#6B9DE8"), fill = c("#FFFFFF", "#E6E6E6"))
+    f <- tempfile(fileext = ".png")
+    grDevices::png(f, 900, 600)
+    ok <- get(".pl_plot_sem", envir = asNamespace("PLSsemLab"))(a$results$pathDiagram$state, a$options, theme)
+    grDevices::dev.off()
+    expect_true(ok)
+    expect_gt(file.size(f), 5000)
 })

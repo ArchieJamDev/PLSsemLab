@@ -22,6 +22,21 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
+            diagramLayout = "treeLR",
+            diagramTitle = "",
+            diagramIndicators = TRUE,
+            diagramCaption = TRUE,
+            latentSize = 11,
+            manifestSize = 6,
+            nodeLabelSize = 1,
+            latentFill = "theme",
+            manifestFill = "theme",
+            edgeWidth = "estimate",
+            edgeColor = "theme",
+            nonsigDashed = TRUE,
+            edgeLabels = TRUE,
+            edgeLabelSize = 0.8,
+            edgeDigits = 2,
             omegaCfa = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
@@ -145,6 +160,101 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "htmtPlot",
                 htmtPlot,
                 default=FALSE)
+            private$..diagramLayout <- jmvcore::OptionList$new(
+                "diagramLayout",
+                diagramLayout,
+                options=list(
+                    "treeLR",
+                    "treeTB",
+                    "circle",
+                    "spring"),
+                default="treeLR")
+            private$..diagramTitle <- jmvcore::OptionString$new(
+                "diagramTitle",
+                diagramTitle,
+                default="")
+            private$..diagramIndicators <- jmvcore::OptionBool$new(
+                "diagramIndicators",
+                diagramIndicators,
+                default=TRUE)
+            private$..diagramCaption <- jmvcore::OptionBool$new(
+                "diagramCaption",
+                diagramCaption,
+                default=TRUE)
+            private$..latentSize <- jmvcore::OptionNumber$new(
+                "latentSize",
+                latentSize,
+                min=3,
+                max=30,
+                default=11)
+            private$..manifestSize <- jmvcore::OptionNumber$new(
+                "manifestSize",
+                manifestSize,
+                min=2,
+                max=20,
+                default=6)
+            private$..nodeLabelSize <- jmvcore::OptionNumber$new(
+                "nodeLabelSize",
+                nodeLabelSize,
+                min=0.3,
+                max=3,
+                default=1)
+            private$..latentFill <- jmvcore::OptionList$new(
+                "latentFill",
+                latentFill,
+                options=list(
+                    "theme",
+                    "white",
+                    "lightblue",
+                    "grey90",
+                    "lightyellow"),
+                default="theme")
+            private$..manifestFill <- jmvcore::OptionList$new(
+                "manifestFill",
+                manifestFill,
+                options=list(
+                    "theme",
+                    "white",
+                    "lightblue",
+                    "grey90",
+                    "lightyellow"),
+                default="theme")
+            private$..edgeWidth <- jmvcore::OptionList$new(
+                "edgeWidth",
+                edgeWidth,
+                options=list(
+                    "estimate",
+                    "uniform"),
+                default="estimate")
+            private$..edgeColor <- jmvcore::OptionList$new(
+                "edgeColor",
+                edgeColor,
+                options=list(
+                    "theme",
+                    "black",
+                    "grey30",
+                    "navy"),
+                default="theme")
+            private$..nonsigDashed <- jmvcore::OptionBool$new(
+                "nonsigDashed",
+                nonsigDashed,
+                default=TRUE)
+            private$..edgeLabels <- jmvcore::OptionBool$new(
+                "edgeLabels",
+                edgeLabels,
+                default=TRUE)
+            private$..edgeLabelSize <- jmvcore::OptionNumber$new(
+                "edgeLabelSize",
+                edgeLabelSize,
+                min=0.3,
+                max=3,
+                default=0.8)
+            private$..edgeDigits <- jmvcore::OptionInteger$new(
+                "edgeDigits",
+                edgeDigits,
+                min=0,
+                max=4,
+                default=2)
             private$..omegaCfa <- jmvcore::OptionBool$new(
                 "omegaCfa",
                 omegaCfa,
@@ -181,6 +291,21 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
+            self$.addOption(private$..diagramLayout)
+            self$.addOption(private$..diagramTitle)
+            self$.addOption(private$..diagramIndicators)
+            self$.addOption(private$..diagramCaption)
+            self$.addOption(private$..latentSize)
+            self$.addOption(private$..manifestSize)
+            self$.addOption(private$..nodeLabelSize)
+            self$.addOption(private$..latentFill)
+            self$.addOption(private$..manifestFill)
+            self$.addOption(private$..edgeWidth)
+            self$.addOption(private$..edgeColor)
+            self$.addOption(private$..nonsigDashed)
+            self$.addOption(private$..edgeLabels)
+            self$.addOption(private$..edgeLabelSize)
+            self$.addOption(private$..edgeDigits)
             self$.addOption(private$..omegaCfa)
             self$.addOption(private$..showKeySummary)
             self$.addOption(private$..showChoicesGuide)
@@ -203,6 +328,21 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
+        diagramLayout = function() private$..diagramLayout$value,
+        diagramTitle = function() private$..diagramTitle$value,
+        diagramIndicators = function() private$..diagramIndicators$value,
+        diagramCaption = function() private$..diagramCaption$value,
+        latentSize = function() private$..latentSize$value,
+        manifestSize = function() private$..manifestSize$value,
+        nodeLabelSize = function() private$..nodeLabelSize$value,
+        latentFill = function() private$..latentFill$value,
+        manifestFill = function() private$..manifestFill$value,
+        edgeWidth = function() private$..edgeWidth$value,
+        edgeColor = function() private$..edgeColor$value,
+        nonsigDashed = function() private$..nonsigDashed$value,
+        edgeLabels = function() private$..edgeLabels$value,
+        edgeLabelSize = function() private$..edgeLabelSize$value,
+        edgeDigits = function() private$..edgeDigits$value,
         omegaCfa = function() private$..omegaCfa$value,
         showKeySummary = function() private$..showKeySummary$value,
         showChoicesGuide = function() private$..showChoicesGuide$value,
@@ -224,6 +364,21 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
+        ..diagramLayout = NA,
+        ..diagramTitle = NA,
+        ..diagramIndicators = NA,
+        ..diagramCaption = NA,
+        ..latentSize = NA,
+        ..manifestSize = NA,
+        ..nodeLabelSize = NA,
+        ..latentFill = NA,
+        ..manifestFill = NA,
+        ..edgeWidth = NA,
+        ..edgeColor = NA,
+        ..nonsigDashed = NA,
+        ..edgeLabels = NA,
+        ..edgeLabelSize = NA,
+        ..edgeDigits = NA,
         ..omegaCfa = NA,
         ..showKeySummary = NA,
         ..showChoicesGuide = NA,
@@ -905,6 +1060,21 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 renderFun=".plotPaths",
                 visible="(pathDiagram)",
                 clearWith=list(
+                    "diagramLayout",
+                    "diagramTitle",
+                    "diagramIndicators",
+                    "diagramCaption",
+                    "latentSize",
+                    "manifestSize",
+                    "nodeLabelSize",
+                    "latentFill",
+                    "manifestFill",
+                    "edgeWidth",
+                    "edgeColor",
+                    "nonsigDashed",
+                    "edgeLabels",
+                    "edgeLabelSize",
+                    "edgeDigits",
                     "reflective",
                     "formative",
                     "structural",
@@ -1028,6 +1198,21 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
+#' @param diagramLayout .
+#' @param diagramTitle .
+#' @param diagramIndicators .
+#' @param diagramCaption .
+#' @param latentSize .
+#' @param manifestSize .
+#' @param nodeLabelSize .
+#' @param latentFill .
+#' @param manifestFill .
+#' @param edgeWidth .
+#' @param edgeColor .
+#' @param nonsigDashed .
+#' @param edgeLabels .
+#' @param edgeLabelSize .
+#' @param edgeDigits .
 #' @param omegaCfa .
 #' @param showKeySummary .
 #' @param showChoicesGuide .
@@ -1091,6 +1276,21 @@ plssem <- function(
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
+    diagramLayout = "treeLR",
+    diagramTitle = "",
+    diagramIndicators = TRUE,
+    diagramCaption = TRUE,
+    latentSize = 11,
+    manifestSize = 6,
+    nodeLabelSize = 1,
+    latentFill = "theme",
+    manifestFill = "theme",
+    edgeWidth = "estimate",
+    edgeColor = "theme",
+    nonsigDashed = TRUE,
+    edgeLabels = TRUE,
+    edgeLabelSize = 0.8,
+    edgeDigits = 2,
     omegaCfa = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
@@ -1121,6 +1321,21 @@ plssem <- function(
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,
+        diagramLayout = diagramLayout,
+        diagramTitle = diagramTitle,
+        diagramIndicators = diagramIndicators,
+        diagramCaption = diagramCaption,
+        latentSize = latentSize,
+        manifestSize = manifestSize,
+        nodeLabelSize = nodeLabelSize,
+        latentFill = latentFill,
+        manifestFill = manifestFill,
+        edgeWidth = edgeWidth,
+        edgeColor = edgeColor,
+        nonsigDashed = nonsigDashed,
+        edgeLabels = edgeLabels,
+        edgeLabelSize = edgeLabelSize,
+        edgeDigits = edgeDigits,
         omegaCfa = omegaCfa,
         showKeySummary = showKeySummary,
         showChoicesGuide = showChoicesGuide,

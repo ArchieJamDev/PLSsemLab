@@ -207,7 +207,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.null(boot$summary))
                     private$.fillBootstrap(boot$summary, blocks, paths, model, txt)
             }
-            private$.prepareDiagram(blocks, paths, path_tab, r2_tab, boot$summary, model)
+            private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, model)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
             # 5. Notices, interpretation, summaries, reproducibility.
@@ -591,27 +591,24 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Diagrama de rutas: la disposición se calcula aquí y se guarda en
         # image$state; la función de dibujo solo la dibuja.
         # ---------------------------------------------------------------------
-        .prepareDiagram = function(blocks, paths, path_tab, r2_tab, sm, model) {
+        .prepareDiagram = function(blocks, loadings, path_tab, r2_tab, sm, model) {
             image <- self$results$pathDiagram
             if (!self$options$pathDiagram) return()
             lang <- .pl_lang(self$options)
-            sig <- NULL
-            if (!is.null(sm)) {
-                sig <- vapply(seq_len(nrow(paths)), function(i) {
-                    r <- sm$paths[sm$paths$name == paste(model$cmap[[paths$to[i]]], "~", model$cmap[[paths$from[i]]]), ,
-                                  drop = FALSE]
-                    nrow(r) == 1 && is.finite(r$lower) && (r$lower > 0 || r$upper < 0)
-                }, TRUE)
-                names(sig) <- paste(paths$from, paths$to, sep = "->")
-            }
-            lay <- .pl_diagram_layout(blocks, paths, path_tab, r2_tab, sig)
-            lay$caption <- if (is.null(sm)) .pl_text(lang, "labels", "diagram_caption")
-                           else sprintf(.pl_text(lang, "labels", "diagram_caption_boot"),
-                                        format(100 * as.numeric(self$options$ciLevel)))
-            n_layers <- length(unique(lay$nodes$layer))
-            n_rows <- max(table(lay$nodes$layer))
-            image$setSize(max(520, 190 * n_layers + 60), max(300, 78 * n_rows + 90))
-            image$setState(lay)
+            caption <- if (is.null(sm)) .pl_text(lang, "labels", "diagram_caption")
+                       else sprintf(.pl_text(lang, "labels", "diagram_caption_boot"),
+                                    format(100 * as.numeric(self$options$ciLevel)))
+            st <- .pl_sem_state(blocks, loadings, path_tab, r2_tab, sm, model,
+                                indicators = isTRUE(self$options$diagramIndicators), caption = caption)
+            # Size: wider with more layers of constructs, taller with more
+            # indicators per layer (left to right) or the reverse.
+            # ES: Tamaño según capas de constructos e indicadores.
+            per_layer <- if (st$n_ind) ceiling(st$n_ind / max(1, st$n_layers)) else st$n_rows
+            long <- max(560, 230 * st$n_layers + 120)
+            wide <- max(420, min(1400, 34 * max(per_layer, 2 * st$n_rows) + 140))
+            if (identical(self$options$diagramLayout, "treeTB")) image$setSize(wide + 140, long - 60)
+            else image$setSize(long, wide)
+            image$setState(st)
         },
 
         # Loadings and HTMT plots: data in image$state; a plot that does not
@@ -655,9 +652,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .plotPaths = function(image, ggtheme, theme, ...) {
-            if (is.null(image$state) || is.null(image$state$nodes)) return(FALSE)
-            print(.pl_plot_paths(image$state, ggtheme, theme))
-            TRUE
+            if (is.null(image$state) || is.null(image$state$pars)) return(FALSE)
+            .pl_plot_sem(image$state, self$options, theme)
         },
 
         .blocks = function() .pl_constructs(self$options)$blocks,
@@ -986,10 +982,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!self$options$showRepro) return()
             txt <- function(key) .pl_text(lang, "repro", key)
             version <- function(p) tryCatch(as.character(utils::packageVersion(p)), error = function(e) "?")
-            self$results$reproducibility$setContent(.pl_html_block(c(
-                sprintf(txt("versions"), version("PLSsemLab"), version("cSEM"), R.version.string,
-                        format(Sys.Date())),
-                txt("code"))))
+            # Versions go into the code as a comment, not into the report
+            # text (Archie's request).
+            # ES: Las versiones van como comentario del código, no en el
+            # texto del informe (a pedido de Archie).
+            self$results$reproducibility$setContent(.pl_html_block(txt("code")))
             q <- function(x) paste0("\"", gsub("\"", "\\\\\"", x), "\"")
             map_c <- paste0("#   ", model$cmap, " = ", names(model$cmap))
             map_v <- paste0("#   ", model$vmap, " = ", names(model$vmap))
@@ -1001,6 +998,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 "for (v in names(d)) d[[v]][is.na(d[[v]])] <- mean(d[[v]], na.rm = TRUE)"
             else "d <- d[complete.cases(d), ]"
             code <- c(
+                sprintf("# PLSsemLab %s, cSEM %s, %s", version("PLSsemLab"), version("cSEM"), R.version.string),
                 "# Model as defined in jamovi:",
                 paste0("#   ", model$readable),
                 "# Internal names:", map_c, map_v,

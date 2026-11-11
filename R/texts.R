@@ -265,7 +265,6 @@
         # Reproducibility record.
         # ES: Registro de reproducibilidad.
         repro = list(
-            versions = .("PLSsemLab %s, cSEM %s, %s; run on %s."),
             code = .("The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.")
         )
     )

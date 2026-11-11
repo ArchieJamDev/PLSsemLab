@@ -17,6 +17,8 @@ Imports:
     lavaan,
     rlang,
     ggplot2,
+    semPlot,
+    methods,
     stats,
     utils
 Suggests:

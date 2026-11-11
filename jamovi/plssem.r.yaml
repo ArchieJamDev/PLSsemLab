@@ -614,6 +614,21 @@ items:
     renderFun: .plotPaths
     visible: (pathDiagram)
     clearWith:
+      - diagramLayout
+      - diagramTitle
+      - diagramIndicators
+      - diagramCaption
+      - latentSize
+      - manifestSize
+      - nodeLabelSize
+      - latentFill
+      - manifestFill
+      - edgeWidth
+      - edgeColor
+      - nonsigDashed
+      - edgeLabels
+      - edgeLabelSize
+      - edgeDigits
       - reflective
       - formative
       - structural

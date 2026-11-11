@@ -110,6 +110,15 @@
             "Applied interpretation": [
                 "Interpretación aplicada"
             ],
+            "Arrow color": [
+                "Color de las flechas"
+            ],
+            "Arrow width": [
+                "Grosor de las flechas"
+            ],
+            "Arrows": [
+                "Flechas"
+            ],
             "As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as substantial, moderate and weak (Hair et al., 2019, see references), but what counts as high depends on the field: in consumer behaviour an R² of 0.20 can be high.": [
                 "Como guía aproximada, valores de R² de 0.75, 0.50 y 0.25 se describen como sustanciales, moderados y débiles (Hair et al., 2019, ver referencias), pero lo que cuenta como alto depende del campo: en comportamiento del consumidor un R² de 0.20 puede ser alto."
             ],
@@ -143,6 +152,9 @@
             "Below 3: no collinearity problem": [
                 "Menor de 3: sin problema de colinealidad"
             ],
+            "Black": [
+                "Negro"
+            ],
             "Bootstrap": [
                 "Bootstrap"
             ],
@@ -158,14 +170,29 @@
             "Bootstrap: not run. The tables show estimates without significance; tick Run bootstrap in the Bootstrap box to add intervals, standard errors and p values.": [
                 "Bootstrap: no ejecutado. Las tablas muestran estimaciones sin significación; marque Ejecutar bootstrap en la caja Bootstrap para añadir intervalos, errores estándar y valores p."
             ],
+            "Caption": [
+                "Pie del gráfico"
+            ],
             "Centroid": [
                 "Centroide"
+            ],
+            "Circle": [
+                "Círculo"
             ],
             "Coefficient": [
                 "Coeficiente"
             ],
             "Coefficient CI": [
                 "IC del coeficiente"
+            ],
+            "Coefficient size": [
+                "Tamaño de los coeficientes"
+            ],
+            "Coefficients": [
+                "Coeficientes"
+            ],
+            "Coefficients on the arrows": [
+                "Coeficientes sobre las flechas"
             ],
             "Collinearity of formative indicators": [
                 "Colinealidad de los indicadores formativos"
@@ -200,6 +227,12 @@
             "Construct 1": [
                 "Construct 1"
             ],
+            "Construct fill": [
+                "Relleno de los constructos"
+            ],
+            "Construct size": [
+                "Tamaño de los constructos"
+            ],
             "Constructs": [
                 "Constructos"
             ],
@@ -229,6 +262,12 @@
             ],
             "Customer satisfaction index ECSI (n=250)": [
                 "Índice de satisfacción del cliente ECSI (n=250)"
+            ],
+            "Dark gray": [
+                "Gris oscuro"
+            ],
+            "Decimals": [
+                "Decimales"
             ],
             "Define at least two constructs, each with at least one indicator.": [
                 "Defina al menos dos constructos, cada uno con al menos un indicador."
@@ -326,6 +365,9 @@
             "Factorial": [
                 "Factorial"
             ],
+            "Follows the coefficient": [
+                "Según el coeficiente"
+            ],
             "Formative": [
                 "Formativo"
             ],
@@ -386,6 +428,12 @@
             "Indicator": [
                 "Indicador"
             ],
+            "Indicator fill": [
+                "Relleno de los indicadores"
+            ],
+            "Indicator size": [
+                "Tamaño de los indicadores"
+            ],
             "Indicators": [
                 "Indicadores"
             ],
@@ -419,8 +467,26 @@
             "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples.": [
                 "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
             ],
+            "jamovi theme": [
+                "Tema de jamovi"
+            ],
             "Key findings": [
                 "Hallazgos clave"
+            ],
+            "Label size": [
+                "Tamaño de etiqueta"
+            ],
+            "Layout": [
+                "Disposición"
+            ],
+            "Light blue": [
+                "Azul claro"
+            ],
+            "Light gray": [
+                "Gris claro"
+            ],
+            "Light yellow": [
+                "Amarillo claro"
             ],
             "Loading": [
                 "Carga"
@@ -485,8 +551,17 @@
             "moderate": [
                 "moderado"
             ],
+            "Navy": [
+                "Azul marino"
+            ],
             "No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box.": [
                 "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
+            ],
+            "Nodes and labels": [
+                "Nodos y etiquetas"
+            ],
+            "Non-significant paths dashed": [
+                "Rutas no significativas discontinuas"
             ],
             "None.": [
                 "Ninguna."
@@ -551,6 +626,12 @@
             "Path diagram": [
                 "Diagrama de rutas"
             ],
+            "Path Diagram": [
+                "Diagrama de rutas"
+            ],
+            "Plot title": [
+                "Título del gráfico"
+            ],
             "Plots": [
                 "Gráficos"
             ],
@@ -565,9 +646,6 @@
             ],
             "PLS-SEM Lab": [
                 "PLS-SEM Lab"
-            ],
-            "PLSsemLab %s, cSEM %s, %s; run on %s.": [
-                "PLSsemLab %s, cSEM %s, %s; ejecutado el %s."
             ],
             "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault. In development.": [
                 "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas. En desarrollo."
@@ -656,11 +734,17 @@
             "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. Run the bootstrap (Bootstrap box) to turn the HTMT thresholds into a test and to get the significance of paths and weights; until then, treat these estimates as descriptive.": [
                 "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. Ejecute el bootstrap (caja Bootstrap) para convertir los umbrales del HTMT en una prueba y obtener la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
             ],
+            "Show indicators": [
+                "Mostrar indicadores"
+            ],
             "Single predictor: no collinearity": [
                 "Predictor único: sin colinealidad"
             ],
             "Some bootstrap blocks failed and were left out: %s": [
                 "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
+            ],
+            "Spring": [
+                "Resorte"
             ],
             "Structural model": [
                 "Modelo estructural"
@@ -740,8 +824,17 @@
             "Total CI": [
                 "IC del total"
             ],
+            "Tree, left to right": [
+                "Árbol, de izquierda a derecha"
+            ],
+            "Tree, top to bottom": [
+                "Árbol, de arriba abajo"
+            ],
             "Uncertainties": [
                 "Incertidumbres"
+            ],
+            "Uniform": [
+                "Uniforme"
             ],
             "Upper": [
                 "Superior"
@@ -784,6 +877,9 @@
             ],
             "What to do now": [
                 "Qué hacer ahora"
+            ],
+            "White": [
+                "Blanco"
             ],
             "With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s.": [
                 "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."

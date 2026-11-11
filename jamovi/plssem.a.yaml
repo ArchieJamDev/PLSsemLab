@@ -246,6 +246,142 @@ options:
     type: Bool
     default: false
 
+  # Path diagram settings (EGAnetLab's Network Plot box): a SEM diagram
+  # drawn with semPlot (as SEMLj). Colours default to jamovi's theme; the
+  # other choices are fixed colours for printing.
+  # ES: Ajustes del diagrama de rutas (como la caja Gráfico de red de
+  # EGAnetLab): un diagrama SEM con semPlot (como SEMLj). Los colores siguen
+  # por defecto el tema de jamovi.
+  - name: diagramLayout
+    title: Layout
+    type: List
+    options:
+      - title: Tree, left to right
+        name: treeLR
+      - title: Tree, top to bottom
+        name: treeTB
+      - title: Circle
+        name: circle
+      - title: Spring
+        name: spring
+    default: treeLR
+
+  - name: diagramTitle
+    title: Plot title
+    type: String
+    default: ''
+
+  - name: diagramIndicators
+    title: Show indicators
+    type: Bool
+    default: true
+
+  - name: diagramCaption
+    title: Caption
+    type: Bool
+    default: true
+
+  - name: latentSize
+    title: Construct size
+    type: Number
+    min: 3
+    max: 30
+    default: 11
+
+  - name: manifestSize
+    title: Indicator size
+    type: Number
+    min: 2
+    max: 20
+    default: 6
+
+  - name: nodeLabelSize
+    title: Label size
+    type: Number
+    min: 0.3
+    max: 3
+    default: 1
+
+  - name: latentFill
+    title: Construct fill
+    type: List
+    options:
+      - title: jamovi theme
+        name: theme
+      - title: White
+        name: white
+      - title: Light blue
+        name: lightblue
+      - title: Light gray
+        name: grey90
+      - title: Light yellow
+        name: lightyellow
+    default: theme
+
+  - name: manifestFill
+    title: Indicator fill
+    type: List
+    options:
+      - title: jamovi theme
+        name: theme
+      - title: White
+        name: white
+      - title: Light blue
+        name: lightblue
+      - title: Light gray
+        name: grey90
+      - title: Light yellow
+        name: lightyellow
+    default: theme
+
+  - name: edgeWidth
+    title: Arrow width
+    type: List
+    options:
+      - title: Follows the coefficient
+        name: estimate
+      - title: Uniform
+        name: uniform
+    default: estimate
+
+  - name: edgeColor
+    title: Arrow color
+    type: List
+    options:
+      - title: jamovi theme
+        name: theme
+      - title: Black
+        name: black
+      - title: Dark gray
+        name: grey30
+      - title: Navy
+        name: navy
+    default: theme
+
+  - name: nonsigDashed
+    title: Non-significant paths dashed
+    type: Bool
+    default: true
+
+  - name: edgeLabels
+    title: Coefficients on the arrows
+    type: Bool
+    default: true
+
+  - name: edgeLabelSize
+    title: Coefficient size
+    type: Number
+    min: 0.3
+    max: 3
+    default: 0.8
+
+  - name: edgeDigits
+    title: Decimals
+    type: Integer
+    min: 0
+    max: 4
+    default: 2
+
   # McDonald's omega from a one-factor CFA of each reflective construct
   # (lavaan, the engine of jamovi's own CFA), estimated outside the PLS
   # model as an independent reference for rho_C. Off by default.

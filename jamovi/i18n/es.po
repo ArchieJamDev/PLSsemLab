@@ -216,6 +216,18 @@ msgstr "Todos los pesos de los constructos formativos son positivos."
 msgid "Applied interpretation"
 msgstr "Interpretación aplicada"
 
+#: plssem/options/edgeColor.title
+msgid "Arrow color"
+msgstr "Color de las flechas"
+
+#: plssem/options/edgeWidth.title
+msgid "Arrow width"
+msgstr "Grosor de las flechas"
+
+#: plssem/ui[5][2][0].label
+msgid "Arrows"
+msgstr "Flechas"
+
 #: R/texts.R
 msgid ""
 "As a rough guide, R² values of 0.75, 0.50 and 0.25 are described as "
@@ -271,6 +283,10 @@ msgstr "Menor de 0.85: constructos distintos"
 msgid "Below 3: no collinearity problem"
 msgstr "Menor de 3: sin problema de colinealidad"
 
+#: plssem/options/edgeColor/black.title
+msgid "Black"
+msgstr "Negro"
+
 #: plssem/ui[3].label
 #: plssem/results/bootStatus.title
 msgid "Bootstrap"
@@ -320,9 +336,17 @@ msgstr ""
 "marque Ejecutar bootstrap en la caja Bootstrap para añadir intervalos, "
 "errores estándar y valores p."
 
+#: plssem/options/diagramCaption.title
+msgid "Caption"
+msgstr "Pie del gráfico"
+
 #: plssem/options/innerScheme/centroid.title
 msgid "Centroid"
 msgstr "Centroide"
+
+#: plssem/options/diagramLayout/circle.title
+msgid "Circle"
+msgstr "Círculo"
 
 #: plssem/results/paths.columns.title
 msgid "Coefficient"
@@ -331,6 +355,18 @@ msgstr "Coeficiente"
 #: plssem/results/paths.columns.superTitle
 msgid "Coefficient CI"
 msgstr "IC del coeficiente"
+
+#: plssem/options/edgeLabelSize.title
+msgid "Coefficient size"
+msgstr "Tamaño de los coeficientes"
+
+#: plssem/ui[5][3][0].label
+msgid "Coefficients"
+msgstr "Coeficientes"
+
+#: plssem/options/edgeLabels.title
+msgid "Coefficients on the arrows"
+msgstr "Coeficientes sobre las flechas"
 
 #: plssem/results/vif.title
 msgid "Collinearity of formative indicators"
@@ -399,6 +435,14 @@ msgstr "Constructo"
 msgid "Construct 1"
 msgstr "Construct 1"
 
+#: plssem/options/latentFill.title
+msgid "Construct fill"
+msgstr "Relleno de los constructos"
+
+#: plssem/options/latentSize.title
+msgid "Construct size"
+msgstr "Tamaño de los constructos"
+
 #: plssem/ui[1]/constructSupplier.label
 msgid "Constructs"
 msgstr "Constructos"
@@ -464,6 +508,14 @@ msgstr "cSEM no pudo estimar el modelo: %s"
 #: package/datasets/CustomersatisfactionindexECSI(n=250).name
 msgid "Customer satisfaction index ECSI (n=250)"
 msgstr "Índice de satisfacción del cliente ECSI (n=250)"
+
+#: plssem/options/edgeColor/grey30.title
+msgid "Dark gray"
+msgstr "Gris oscuro"
+
+#: plssem/options/edgeDigits.title
+msgid "Decimals"
+msgstr "Decimales"
 
 #: R/texts.R
 msgid "Define at least two constructs, each with at least one indicator."
@@ -693,6 +745,10 @@ msgstr "f²"
 msgid "Factorial"
 msgstr "Factorial"
 
+#: plssem/options/edgeWidth/estimate.title
+msgid "Follows the coefficient"
+msgstr "Según el coeficiente"
+
 #: R/texts.R
 msgid "Formative"
 msgstr "Formativo"
@@ -808,6 +864,14 @@ msgstr "HTMT2"
 msgid "Indicator"
 msgstr "Indicador"
 
+#: plssem/options/manifestFill.title
+msgid "Indicator fill"
+msgstr "Relleno de los indicadores"
+
+#: plssem/options/manifestSize.title
+msgid "Indicator size"
+msgstr "Tamaño de los indicadores"
+
 #: plssem/options/indicatorScale.title
 #: plssem/results/model.columns.title
 msgid "Indicators"
@@ -903,10 +967,40 @@ msgstr ""
 msgid "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples."
 msgstr "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
 
+#: plssem/options/latentFill/theme.title
+#: plssem/options/manifestFill/theme.title
+#: plssem/options/edgeColor/theme.title
+msgid "jamovi theme"
+msgstr "Tema de jamovi"
+
 #: plssem/options/showKeySummary.title
 #: plssem/results/keySummary.title
 msgid "Key findings"
 msgstr "Hallazgos clave"
+
+#: plssem/options/nodeLabelSize.title
+msgid "Label size"
+msgstr "Tamaño de etiqueta"
+
+#: plssem/options/diagramLayout.title
+#: plssem/ui[5][0][0].label
+msgid "Layout"
+msgstr "Disposición"
+
+#: plssem/options/latentFill/lightblue.title
+#: plssem/options/manifestFill/lightblue.title
+msgid "Light blue"
+msgstr "Azul claro"
+
+#: plssem/options/latentFill/grey90.title
+#: plssem/options/manifestFill/grey90.title
+msgid "Light gray"
+msgstr "Gris claro"
+
+#: plssem/options/latentFill/lightyellow.title
+#: plssem/options/manifestFill/lightyellow.title
+msgid "Light yellow"
+msgstr "Amarillo claro"
 
 #: plssem/results/measurement.columns.title
 msgid "Loading"
@@ -999,7 +1093,7 @@ msgstr ""
 msgid "Measurement model"
 msgstr "Modelo de medida"
 
-#: plssem/ui[5].label
+#: plssem/ui[6].label
 msgid "Measurement Model"
 msgstr "Modelo de medida"
 
@@ -1048,6 +1142,10 @@ msgstr ""
 msgid "moderate"
 msgstr "moderado"
 
+#: plssem/options/edgeColor/navy.title
+msgid "Navy"
+msgstr "Azul marino"
+
 #: R/texts.R
 msgid ""
 "No significance or confidence intervals: the bootstrap was not run, so the "
@@ -1057,6 +1155,14 @@ msgstr ""
 "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, "
 "así que los umbrales del HTMT se comparan con la estimación y no con su "
 "límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
+
+#: plssem/ui[5][1][0].label
+msgid "Nodes and labels"
+msgstr "Nodos y etiquetas"
+
+#: plssem/options/nonsigDashed.title
+msgid "Non-significant paths dashed"
+msgstr "Rutas no significativas discontinuas"
 
 #: R/texts.R
 msgid "None."
@@ -1257,6 +1363,14 @@ msgstr ""
 msgid "Path diagram"
 msgstr "Diagrama de rutas"
 
+#: plssem/ui[5].label
+msgid "Path Diagram"
+msgstr "Diagrama de rutas"
+
+#: plssem/options/diagramTitle.title
+msgid "Plot title"
+msgstr "Título del gráfico"
+
 #: plssem/ui[4].label
 msgid "Plots"
 msgstr "Gráficos"
@@ -1292,10 +1406,6 @@ msgstr ""
 #: plssem/options.menuGroup
 msgid "PLS-SEM Lab"
 msgstr "PLS-SEM Lab"
-
-#: R/texts.R
-msgid "PLSsemLab %s, cSEM %s, %s; run on %s."
-msgstr "PLSsemLab %s, cSEM %s, %s; ejecutado el %s."
 
 #: package.description
 msgid ""
@@ -1439,7 +1549,7 @@ msgstr ""
 msgid "Replace by the indicator mean"
 msgstr "Reemplazar por la media del indicador"
 
-#: plssem/ui[6].label
+#: plssem/ui[7].label
 msgid "Report Content"
 msgstr "Contenido del informe"
 
@@ -1488,6 +1598,10 @@ msgstr ""
 "significación de rutas y pesos; mientras tanto, trate estas estimaciones "
 "como descriptivas."
 
+#: plssem/options/diagramIndicators.title
+msgid "Show indicators"
+msgstr "Mostrar indicadores"
+
 #: R/texts.R
 msgid "Single predictor: no collinearity"
 msgstr "Predictor único: sin colinealidad"
@@ -1495,6 +1609,10 @@ msgstr "Predictor único: sin colinealidad"
 #: R/texts.R
 msgid "Some bootstrap blocks failed and were left out: %s"
 msgstr "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
+
+#: plssem/options/diagramLayout/spring.title
+msgid "Spring"
+msgstr "Resorte"
 
 #: R/texts.R
 msgid "Structural model"
@@ -1705,9 +1823,21 @@ msgstr "Total"
 msgid "Total CI"
 msgstr "IC del total"
 
+#: plssem/options/diagramLayout/treeLR.title
+msgid "Tree, left to right"
+msgstr "Árbol, de izquierda a derecha"
+
+#: plssem/options/diagramLayout/treeTB.title
+msgid "Tree, top to bottom"
+msgstr "Árbol, de arriba abajo"
+
 #: R/texts.R
 msgid "Uncertainties"
 msgstr "Incertidumbres"
+
+#: plssem/options/edgeWidth/uniform.title
+msgid "Uniform"
+msgstr "Uniforme"
 
 #: plssem/results/measurement.columns.title
 #: plssem/results/reliability.columns.title
@@ -1780,6 +1910,11 @@ msgstr "IC del peso"
 #: R/texts.R
 msgid "What to do now"
 msgstr "Qué hacer ahora"
+
+#: plssem/options/latentFill/white.title
+#: plssem/options/manifestFill/white.title
+msgid "White"
+msgstr "Blanco"
 
 #: R/texts.R
 msgid ""

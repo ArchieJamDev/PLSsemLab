@@ -21,6 +21,14 @@ on:
         description: 'Build for the newest jamovi of this series still on Flathub (e.g. 2.7); empty = latest'
         required: false
         default: ''
+      r_version:
+        description: "Build with this R version instead of a flatpak jamovi (jamovi 2.7.x uses 4.5.0); empty = use the flatpak"
+        required: false
+        default: ''
+      app_version:
+        description: 'jamovi version to declare when r_version is used (e.g. 2.7.27)'
+        required: false
+        default: '2.7.27'
       tag:
         description: 'Pre-release tag to attach the .jmo to'
         required: false
@@ -33,6 +41,7 @@ permissions:
 
 jobs:
   build-linux:
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.r_version == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -114,4 +123,72 @@ jobs:
           gh release delete "$TAG" --yes --cleanup-tag || true
           gh release create "$TAG" *.jmo --prerelease --target "$GITHUB_SHA" \
             --title "Development build (Linux, jamovi flatpak $JV)" \
+            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."
+
+  # Older jamovi releases are no longer served by Flathub, but the compiler
+  # keeps a CRAN snapshot per R version with binaries built for jamovi
+  # (repo.jamovi.org/cran-linux). This job builds with that R version and a
+  # stand-in jamovi home, so the .jmo declares the R version of the user's
+  # jamovi (jamovi 2.7.x: R 4.5.0-x64).
+  # ES: Flathub ya no sirve versiones viejas de jamovi, pero el compilador
+  # guarda una instantánea de CRAN por versión de R con binarios hechos para
+  # jamovi. Este trabajo compila con esa versión de R y un jamovi sustituto,
+  # así el .jmo declara la versión de R del jamovi del usuario.
+  build-linux-r:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.r_version != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up R ${{ inputs.r_version }}
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ inputs.r_version }}
+          use-public-rspm: true
+
+      - name: Install system libraries and the packages jamovi provides
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan'), repos = c('https://repo.jamovi.org', 'https://packagemanager.posit.co/cran/2025-05-25'))"
+          R --version | head -2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Get the jamovi compiler and a stand-in jamovi home
+        run: |
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev
+          mkdir -p "$RUNNER_TEMP/fakejam/bin"
+          printf '#!/bin/sh\necho %s\n' "${{ inputs.app_version }}" > "$RUNNER_TEMP/fakejam/bin/jamovi"
+          chmod +x "$RUNNER_TEMP/fakejam/bin/jamovi"
+
+      - name: Build the .jmo
+        run: |
+          RHOME=$(R RHOME)
+          RLIB=$(Rscript -e "cat(.libPaths()[1])")
+          node "$RUNNER_TEMP/jmc/index.js" --build . --home "$RUNNER_TEMP/fakejam" --rhome "$RHOME" \
+            --rlibs "$RLIB" --assume-app-version "${{ inputs.app_version }}"
+          ls -la *.jmo
+          unzip -p *.jmo PLSsemLab/jamovi.yaml | grep rVersion
+
+      - name: Keep the .jmo as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLSsemLab-linux-R${{ inputs.r_version }}-jmo
+          path: '*.jmo'
+
+      - name: Attach the .jmo to the pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.tag }}"; TAG="${TAG:-dev-build}"
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" *.jmo --prerelease --target "$GITHUB_SHA" \
+            --title "Development build (Linux, jamovi ${{ inputs.app_version }}, R ${{ inputs.r_version }})" \
             --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."

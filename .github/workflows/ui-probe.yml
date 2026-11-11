@@ -64,7 +64,7 @@ jobs:
       - name: Probe the panel with a headless browser
         run: |
           pip install playwright
-          python -m playwright install --with-deps chromium
+          python -m playwright install chromium  # no --with-deps: it needs the Ubuntu archives
           mkdir -p probe-out
           timeout 900 python "tests/ui/${{ inputs.script || 'probe_structural.py' }}" probe-out || true
           docker logs jamovi > probe-out/jamovi.log 2>&1 || true

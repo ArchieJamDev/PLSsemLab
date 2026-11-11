@@ -13,6 +13,9 @@ on:
         required: false
         default: 'jamovi/jamovi:28.1'
 
+permissions:
+  contents: write
+
 jobs:
   probe:
     runs-on: ubuntu-latest

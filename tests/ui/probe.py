@@ -53,6 +53,20 @@ with sync_playwright() as p:
     if opts:
         with open(f"{OUT}/options.html", "w") as fh:
             fh.write(opts.content())
+        # Structure of the panel, to find the right selectors.
+        # ES: Estructura del panel, para encontrar los selectores correctos.
+        info = opts.evaluate("""() => {
+            const hits = [];
+            for (const el of document.querySelectorAll('*')) {
+                const t = (el.childElementCount === 0 ? el.textContent : '').trim();
+                if (t === 'A' || t === 'B' || t.startsWith('Reflective') || t.startsWith('Constructs'))
+                    hits.push(el.tagName + '.' + el.className + ' <- ' + (el.parentElement ? el.parentElement.className : ''));
+            }
+            const inputs = [...document.querySelectorAll('input')].map(i => (i.className + '=' + i.value)).slice(0, 12);
+            const buttons = [...document.querySelectorAll('button, .jmv-variable-transfer, [class*=transfer]')].map(b => b.tagName + '.' + b.className).slice(0, 12);
+            return { hits: hits.slice(0, 20), inputs, buttons };
+        }""")
+        log.append("panel structure: " + json.dumps(info)[:3000])
         for var in ("A", "B"):
             try_click(opts, f"select variable {var}",
                       lambda: opts.locator(".jmv-variable-label, .jmv-list-item").get_by_text(var, exact=True).first.click(timeout=5000))

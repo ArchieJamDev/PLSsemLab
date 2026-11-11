@@ -69,9 +69,13 @@
     pars <- if (length(pars)) do.call(rbind, pars) else
         data.frame(lhs = character(0), rhs = character(0), est = numeric(0), kind = character(0), sig = logical(0))
     endo <- unique(simple$to)
-    vars <- data.frame(name = c(unique(man), unname(node)),
-                       manifest = c(rep(TRUE, length(unique(man))), rep(FALSE, length(node))),
-                       exogenous = c(rep(NA, length(unique(man))), !(lab %in% endo)),
+    man_u <- unique(man)
+    # formative indicators are exogenous (they point to their construct)
+    # ES: los indicadores formativos son exógenos (apuntan a su constructo)
+    man_exo <- man_u %in% pars$lhs[pars$kind == "weight"]
+    vars <- data.frame(name = c(man_u, unname(node)),
+                       manifest = c(rep(TRUE, length(man_u)), rep(FALSE, length(node))),
+                       exogenous = c(man_exo, !(lab %in% endo)),
                        stringsAsFactors = FALSE)
     lay <- .pl_diagram_layout(blocks, paths, paths, r2, NULL)
     list(vars = vars, pars = pars, caption = caption,
@@ -118,7 +122,9 @@
     labels[!is.na(p$sig) & p$sig] <- paste0(labels[!is.na(p$sig) & p$sig], "*")
     if (isFALSE(opts$edgeLabels)) labels <- rep("", length(labels))
     # Non-significant paths and weights are drawn dashed (semPlot draws
-    # "fixed" parameters with fixedStyle).
+    # "fixed" parameters with fixedStyle). The styles are line types only:
+    # semPlot reads any string with a digit as a line type, so a hex colour
+    # there would break the plot; the colour goes in edge.color.
     # ES: Rutas y pesos no significativos van discontinuos.
     dashed <- !is.na(p$sig) & !p$sig & !isFALSE(opts$nonsigDashed)
     m@Pars$fixed <- dashed
@@ -139,7 +145,7 @@
                       color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
                       border.color = ink, label.color = ink, edge.color = edge_col,
                       edge.label.color = ink, edge.label.bg = back,
-                      fixedStyle = c(edge_col, "dashed"), freeStyle = c(edge_col, "solid"),
+                      fixedStyle = 2, freeStyle = 1,
                       fade = FALSE, esize = if (by_est) 6 else 1.6, asize = 2.6,
                       curvePivot = TRUE, mar = c(5, 4, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 4),
                       bg = back, DoNotPlot = FALSE)

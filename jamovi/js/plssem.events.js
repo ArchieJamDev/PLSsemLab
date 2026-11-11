@@ -50,26 +50,20 @@ const events = {
         sync(ui, this);
     },
 
-    // jamovi requires both handlers on a Supplier: "update" asks for its
-    // items (refilled from the boxes), "change" fires when they change.
-    // ES: jamovi exige ambos manejadores en un Supplier: "update" pide sus
-    // ítems (se vuelven a llenar desde las cajas), "change" avisa del cambio.
+    // jamovi requires an "update" handler on a Supplier. It must not call
+    // sync(): declaring the custom variables refreshes the supplier, which
+    // fires "update" again, and the loop froze the construct boxes (no
+    // selection, no way back). The supplier keeps the items set by sync(),
+    // as in SEMLj, whose handlers are empty too.
+    // ES: jamovi exige un manejador "update" en un Supplier. No debe llamar a
+    // sync(): declarar las variables personalizadas refresca el supplier, que
+    // dispara "update" otra vez, y el bucle congelaba las cajas (sin
+    // selección ni regreso). El supplier conserva los ítems que puso sync(),
+    // como en SEMLj, cuyos manejadores también están vacíos.
     onUpdateConstructSupplier: function(ui) {
-        sync(ui, this);
     },
 
     onChangeConstructSupplier: function(ui) {
-    },
-
-    // The same handlers under jamovi's "magic" names (<control>_<event>),
-    // which jamovi binds by name, as a second route to the same events.
-    // ES: Los mismos manejadores con los nombres "mágicos" de jamovi
-    // (<control>_<evento>), que jamovi enlaza por nombre.
-    constructSupplier_updated: function(ui) {
-        sync(ui, this);
-    },
-
-    constructSupplier_changed: function(ui) {
     }
 };
 
@@ -144,8 +138,15 @@ const sync = function(ui, context) {
     // ES: Los nombres de constructo no son columnas de los datos, así que se
     // declaran como variables personalizadas; si no, el supplier no puede
     // mostrarlos (SEMLj hace lo mismo).
-    context.setCustomVariables(names.map(name => (
-        { name: name, measureType: 'none', dataType: 'none', levels: [] })));
+    // Only when the names change, so the panel is not refreshed on every edit.
+    // ES: Solo cuando cambian los nombres, para no refrescar el panel en cada
+    // edición.
+    let key = names.join('\u0001');
+    if (context.workspace.customKey !== key) {
+        context.workspace.customKey = key;
+        context.setCustomVariables(names.map(name => (
+            { name: name, measureType: 'none', dataType: 'none', levels: [] })));
+    }
     ui.constructSupplier.setValue(context.valuesToItems(names, FormatDef.variable));
 
     let rows = context.cloneArray(ui.structural.value(), []);

@@ -56,6 +56,15 @@
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
             ],
+            "0.02 to 0.15: small": [
+                "0.02 a 0.15: pequeño"
+            ],
+            "0.15 to 0.35: medium": [
+                "0.15 a 0.35: mediano"
+            ],
+            "0.35 or more: large": [
+                "0.35 o más: grande"
+            ],
             "0.85 to 0.90: acceptable only for conceptually similar constructs": [
                 "0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
             ],
@@ -119,17 +128,44 @@
             "AVE below 0.50": [
                 "AVE menor de 0.50"
             ],
+            "AVE CI": [
+                "IC de la AVE"
+            ],
+            "Bank customers, with demographics (n=675)": [
+                "Clientes de bancos, con variables demográficas (n=675)"
+            ],
+            "Below 0.02: no effect": [
+                "Menor de 0.02: sin efecto"
+            ],
             "Below 0.85: distinct constructs": [
                 "Menor de 0.85: constructos distintos"
             ],
             "Below 3: no collinearity problem": [
                 "Menor de 3: sin problema de colinealidad"
             ],
+            "Bootstrap": [
+                "Bootstrap"
+            ],
+            "Bootstrap running: %d of %d resamples done. Changing any option stops it.": [
+                "Bootstrap en curso: %d de %d réplicas hechas. Cambiar cualquier opción lo detiene."
+            ],
+            "Bootstrap: %d resamples drawn, %d admissible and used; seed %d; drawn in blocks of %d (block k uses the seed + k - 1); %d s. Intervals are percentile intervals at %s%%.": [
+                "Bootstrap: %d réplicas extraídas, %d admisibles y usadas; semilla %d; extraídas en bloques de %d (el bloque k usa la semilla + k - 1); %d s. Los intervalos son percentiles al %s%%."
+            ],
+            "Bootstrap: %d resamples with seed %d; percentile intervals at %s%%. Each resample redraws the cases with replacement and re-estimates the model, so the spread of the estimates shows their sampling uncertainty. The seed makes the result reproducible: the same seed and resamples give the same intervals. Inadmissible resamples are dropped and counted in the bootstrap note. 2000 or more resamples are recommended for a final report (Hair et al., 2019, see references).": [
+                "Bootstrap: %d réplicas con semilla %d; intervalos percentiles al %s%%. Cada réplica vuelve a extraer los casos con reemplazo y reestima el modelo, así que la dispersión de las estimaciones muestra su incertidumbre muestral. La semilla hace reproducible el resultado: la misma semilla y el mismo número de réplicas dan los mismos intervalos. Las réplicas inadmisibles se descartan y se cuentan en la nota del bootstrap. Para un informe final se recomiendan 2000 réplicas o más (Hair et al., 2019, vea las referencias)."
+            ],
+            "Bootstrap: not run. The tables show estimates without significance; tick Run bootstrap in the Bootstrap box to add intervals, standard errors and p values.": [
+                "Bootstrap: no ejecutado. Las tablas muestran estimaciones sin significación; marque Ejecutar bootstrap en la caja Bootstrap para añadir intervalos, errores estándar y valores p."
+            ],
             "Centroid": [
                 "Centroide"
             ],
             "Coefficient": [
                 "Coeficiente"
+            ],
+            "Coefficient CI": [
+                "IC del coeficiente"
             ],
             "Collinearity of formative indicators": [
                 "Colinealidad de los indicadores formativos"
@@ -140,8 +176,20 @@
             "Collinearity of formative indicators: VIF of 3 or more for %s. Their weights may be unstable; interpret them with care.": [
                 "Colinealidad de los indicadores formativos: VIF de 3 o más en %s. Sus pesos pueden ser inestables; interprételos con cuidado."
             ],
+            "Collinearity of predictors (structural VIF)": [
+                "Colinealidad de los predictores (VIF estructural)"
+            ],
+            "Collinearity of predictors: every structural VIF is below 3.": [
+                "Colinealidad de los predictores: todos los VIF estructurales son menores de 3."
+            ],
+            "Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable.": [
+                "Colinealidad de los predictores: VIF estructural de 3 o más en %s; sus coeficientes pueden ser inestables."
+            ],
             "Computed from polychoric correlations (ordinal indicators): the values refer to the reliability of the latent continuous responses assumed behind the categories, not to the observed sum score, which is usually lower (Chalmers, 2018, see references).": [
                 "Calculado con correlaciones policóricas (indicadores ordinales): los valores se refieren a la fiabilidad de las respuestas latentes continuas que se suponen detrás de las categorías, no a la del puntaje observado, que suele ser menor (Chalmers, 2018, vea las referencias)."
+            ],
+            "Confidence level": [
+                "Nivel de confianza"
             ],
             "Consistent PLS (PLSc)": [
                 "PLS consistente (PLSc)"
@@ -170,6 +218,9 @@
             "Corporate reputation, satisfaction and loyalty of 344 mobile phone customers, the example of the PLS-SEM primer of Hair et al., with missing answers as empty cells, from the cSEM package - see data/README.md": [
                 "Reputación corporativa, satisfacción y lealtad de 344 clientes de telefonía móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
             ],
+            "Corporate reputation, trust, satisfaction and loyalty of 675 German bank customers (four formative and five reflective constructs) with gender, age group, education, employment, income and family status; Damberg (2023), CC BY 4.0 - see data/README.md": [
+                "Reputación corporativa, confianza, satisfacción y lealtad de 675 clientes de bancos alemanes (cuatro constructos formativos y cinco reflectivos) con sexo, grupo de edad, educación, empleo, ingreso y situación familiar; Damberg (2023), CC BY 4.0 - vea data/README.md"
+            ],
             "Cronbach's α": [
                 "α de Cronbach"
             ],
@@ -187,6 +238,12 @@
             ],
             "Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation.": [
                 "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
+            ],
+            "Direct": [
+                "Directo"
+            ],
+            "Direct, indirect and total effects": [
+                "Efectos directos, indirectos y totales"
             ],
             "Discriminant validity (HTMT)": [
                 "Validez discriminante (HTMT)"
@@ -212,11 +269,20 @@
             "drag predictors here": [
                 "arrastre los predictores aquí"
             ],
-            "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a coefficient as significant. This version reports estimates only; significance needs bootstrap confidence intervals, which arrive in a later version.": [
-                "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. R² es la proporción de la varianza del resultado que explican sus predictores. Lectura errónea frecuente: tratar un coeficiente como significativo. Esta versión solo informa estimaciones; la significación necesita intervalos de confianza bootstrap, que llegan en una versión posterior."
+            "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a large coefficient as significant. Significance needs the bootstrap (Bootstrap box): a path is significant at the chosen level when its interval excludes 0.": [
+                "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. El R² es la proporción de la varianza del resultado explicada por sus predictores. Lectura errónea frecuente: tratar un coeficiente grande como significativo. La significación requiere el bootstrap (caja Bootstrap): una ruta es significativa al nivel elegido cuando su intervalo excluye el 0."
             ],
             "Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number.": [
                 "Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos indicadores tiene y su papel en el modelo estructural. Los constructos exógenos solo son predictores; los endógenos son predichos por al menos otro constructo. Compruebe que esta tabla describe el modelo que quería antes de leer cualquier número."
+            ],
+            "Effect size (f²)": [
+                "Tamaño del efecto (f²)"
+            ],
+            "Effect sizes: f² below 0.02 for %s: removing these predictors barely changes the R² of their outcome.": [
+                "Tamaños del efecto: f² menor de 0.02 en %s: quitar estos predictores apenas cambia el R² de su resultado."
+            ],
+            "Effect sizes: f² of 0.15 or more for %s, the predictors that matter most for their outcome.": [
+                "Tamaños del efecto: f² de 0.15 o más en %s, los predictores que más pesan en su resultado."
             ],
             "Endogenous": [
                 "Endógeno"
@@ -242,6 +308,9 @@
             "Every construct needs a name: one of the constructs has indicators but an empty name.": [
                 "Cada constructo necesita un nombre: uno de los constructos tiene indicadores pero no tiene nombre."
             ],
+            "Every weight of the formative constructs is significant.": [
+                "Todos los pesos de los constructos formativos son significativos."
+            ],
             "Exclude cases listwise": [
                 "Excluir casos por lista"
             ],
@@ -250,6 +319,9 @@
             ],
             "Explained variance": [
                 "Varianza explicada"
+            ],
+            "f²": [
+                "f²"
             ],
             "Factorial": [
                 "Factorial"
@@ -260,8 +332,14 @@
             "Formative Constructs": [
                 "Constructos formativos"
             ],
-            "Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Wait for the significance of the weights (next version) before removing any indicator: a formative indicator carries part of the content of the construct.": [
-                "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Espere la significación de los pesos (próxima versión) antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+            "Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Check the significance of the weights with the bootstrap before removing any indicator: a formative indicator carries part of the content of the construct.": [
+                "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Revise la significación de los pesos con el bootstrap antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+            ],
+            "Formative indicators with a non-significant weight and a loading below 0.50: %s. Consider removing them only on theoretical grounds: a formative indicator carries part of the content of the construct.": [
+                "Indicadores formativos con peso no significativo y carga menor de 0.50: %s. Considere quitarlos solo por razones teóricas: un indicador formativo lleva parte del contenido del constructo."
+            ],
+            "Formative indicators with a non-significant weight but a loading of 0.50 or more: %s. Keep them: their absolute contribution to the construct is important even if their relative contribution is not (Hair et al., 2019, see references).": [
+                "Indicadores formativos con peso no significativo pero carga de 0.50 o más: %s. Consérvelos: su contribución absoluta al constructo es importante aunque su contribución relativa no lo sea (Hair et al., 2019, vea las referencias)."
             ],
             "Formative indicators: the largest VIF is %s (%s).": [
                 "Indicadores formativos: el VIF más alto es %s (%s)."
@@ -274,6 +352,9 @@
             ],
             "How to read each table": [
                 "Cómo leer cada tabla"
+            ],
+            "How to read effect sizes, collinearity and effects": [
+                "Cómo leer los tamaños del efecto, la colinealidad y los efectos"
             ],
             "How to read loadings and weights": [
                 "Cómo leer las cargas y los pesos"
@@ -292,6 +373,12 @@
             ],
             "HTMT": [
                 "HTMT"
+            ],
+            "HTMT per pair of reflective constructs; darker cells reach 0.85 or 0.90.": [
+                "HTMT por par de constructos reflectivos; las celdas más oscuras alcanzan 0.85 o 0.90."
+            ],
+            "HTMT per pair, with its one-sided 95% bootstrap upper bound in brackets; the shade follows the upper bound (darker: 0.85 or 0.90 reached).": [
+                "HTMT por par, con su límite superior bootstrap unilateral al 95% entre paréntesis; el sombreado sigue al límite superior (más oscuro: alcanza 0.85 o 0.90)."
             ],
             "HTMT2": [
                 "HTMT2"
@@ -314,11 +401,23 @@
             "Indicators: ordinal. Correlations between indicators are polychoric: they assume that each category comes from cutting a continuous latent response, and estimate the correlation between those latent responses (ordinal PLS; Schuberth et al., 2018, see references). This changes the whole model, not only the reliability. Reliability and validity then describe the latent responses; Chalmers (2018, see references) argues that this overstates the reliability of the scores people actually obtain, so report which correlations you used.": [
                 "Indicadores: ordinales. Las correlaciones entre indicadores son policóricas: suponen que cada categoría resulta de cortar una respuesta latente continua y estiman la correlación entre esas respuestas latentes (PLS ordinal; Schuberth et al., 2018, vea las referencias). Esto cambia el modelo completo, no solo la fiabilidad. La fiabilidad y la validez describen entonces las respuestas latentes; Chalmers (2018, vea las referencias) sostiene que así se sobrestima la fiabilidad de los puntajes que las personas realmente obtienen, así que informe qué correlaciones usó."
             ],
+            "Indirect": [
+                "Indirecto"
+            ],
+            "Indirect CI": [
+                "IC del indirecto"
+            ],
             "Inner weighting scheme": [
                 "Esquema de ponderación interna"
             ],
             "Inner weighting scheme: %s. The scheme decides how neighbouring constructs inform each other while the weights are estimated; the path scheme is the usual default and the results rarely depend much on this choice.": [
                 "Esquema de ponderación interna: %s. El esquema decide cómo se informan entre sí los constructos vecinos mientras se estiman los pesos; el esquema path es el habitual y los resultados rara vez dependen mucho de esta elección."
+            ],
+            "Intervals from %d admissible of %d bootstrap resamples (seed %d); a path whose interval only just excludes 0 can change with another seed.": [
+                "Intervalos de %d réplicas bootstrap admisibles de %d (semilla %d); una ruta cuyo intervalo apenas excluye el 0 puede cambiar con otra semilla."
+            ],
+            "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples.": [
+                "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
             ],
             "Key findings": [
                 "Hallazgos clave"
@@ -326,11 +425,29 @@
             "Loading": [
                 "Carga"
             ],
+            "Loading CI": [
+                "IC de la carga"
+            ],
+            "Loadings": [
+                "Cargas"
+            ],
             "Loadings and weights": [
                 "Cargas y pesos"
             ],
             "Loadings are the correlations between each indicator and its construct; weights are the contribution of each indicator to the construct score. For reflective constructs read the loadings: values of 0.708 or more mean the construct explains at least half of the indicator's variance (Hair et al., 2019, see references). For formative constructs read the weights: they show the relative contribution of each indicator, and a small or negative weight is not by itself a reason to remove an indicator. Common misreading: judging formative indicators by their loadings as if they were reflective.": [
                 "Las cargas son las correlaciones entre cada indicador y su constructo; los pesos son la contribución de cada indicador a la puntuación del constructo. En los constructos reflectivos lea las cargas: valores de 0.708 o más significan que el constructo explica al menos la mitad de la varianza del indicador (Hair et al., 2019, ver referencias). En los formativos lea los pesos: muestran la contribución relativa de cada indicador, y un peso pequeño o negativo no es por sí solo motivo para quitar un indicador. Lectura errónea frecuente: juzgar los indicadores formativos por sus cargas como si fueran reflectivos."
+            ],
+            "Loadings of reflective indicators": [
+                "Cargas de los indicadores reflectivos"
+            ],
+            "Loadings of reflective indicators with their %s%% bootstrap interval; dashed line at 0.708. Triangles: below 0.708.": [
+                "Cargas de los indicadores reflectivos con su intervalo bootstrap al %s%%; línea discontinua en 0.708. Triángulos: menores de 0.708."
+            ],
+            "Loadings of reflective indicators; dashed line at 0.708. Triangles: below 0.708.": [
+                "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
+            ],
+            "Lower": [
+                "Inferior"
             ],
             "Main findings": [
                 "Hallazgos principales"
@@ -368,8 +485,8 @@
             "moderate": [
                 "moderado"
             ],
-            "No significance or confidence intervals yet: this version reports estimates only, so the HTMT thresholds are compared with the estimate and not with its upper bound.": [
-                "Todavía no hay significación ni intervalos de confianza: esta versión informa solo estimaciones, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior."
+            "No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box.": [
+                "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
             ],
             "None.": [
                 "Ninguna."
@@ -392,8 +509,8 @@
             "One row per indicator of a formative construct. The variance inflation factor (VIF) measures how much an indicator overlaps with the other indicators of the same construct. Because formative indicators compete to explain the construct, high overlap makes their weights unstable and can turn them negative. VIF of 5 or more is critical; 3 to 5 may be a problem (Hair et al., 2019, see references). Common misreading: removing an indicator only because its VIF is high; a formative indicator carries part of the content of the construct, so first consider merging indicators or building a higher-order construct.": [
                 "Una fila por indicador de un constructo formativo. El factor de inflación de la varianza (VIF) mide cuánto se solapa un indicador con los demás indicadores del mismo constructo. Como los indicadores formativos compiten para explicar el constructo, un solapamiento alto vuelve inestables sus pesos y puede volverlos negativos. Un VIF de 5 o más es crítico; de 3 a 5 puede ser un problema (Hair et al., 2019, vea las referencias). Lectura errónea frecuente: quitar un indicador solo porque su VIF es alto; un indicador formativo lleva parte del contenido del constructo, así que primero considere unir indicadores o construir un constructo de orden superior."
             ],
-            "One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap confidence interval, which arrives in the next version.": [
-                "Una fila por par de constructos reflectivos. La razón heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los indicadores de dos constructos distintos con las correlaciones dentro de cada constructo (Henseler et al., 2015, vea las referencias). Valores cercanos a 1 significan que los datos no distinguen los dos constructos. Por debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 usa medias geométricas en lugar de aritméticas y es más exacto cuando las cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea frecuente: tratar el HTMT como una correlación entre los constructos; es una razón de correlaciones entre indicadores. Una prueba formal requiere el intervalo de confianza bootstrap, que llega en la próxima versión."
+            "One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap (Bootstrap box): discriminant validity holds when the upper bound of HTMT stays below the threshold.": [
+                "Una fila por par de constructos reflectivos. La razón heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los indicadores de dos constructos distintos con las correlaciones dentro de cada constructo (Henseler et al., 2015, vea las referencias). Valores cercanos a 1 significan que los datos no distinguen los dos constructos. Por debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 usa medias geométricas en lugar de aritméticas y es más exacto cuando las cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea frecuente: tratar el HTMT como una correlación entre los constructos; es una razón de correlaciones entre indicadores. Una prueba formal requiere el bootstrap (caja Bootstrap): hay validez discriminante cuando el límite superior del HTMT queda por debajo del umbral."
             ],
             "One row per reflective construct. Cronbach's alpha is a lower bound of reliability and composite reliability (ρC) an upper bound; ρA usually lies between them and is the most exact of the three (Hair et al., 2019, see references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is acceptable only in exploratory research; above 0.95 the indicators are probably redundant (the same question asked several times). The average variance extracted (AVE) is the share of indicator variance the construct explains on average: 0.50 or more means convergent validity. Common misreading: reading only alpha, which tends to underestimate reliability when loadings differ.": [
                 "Una fila por constructo reflectivo. El alfa de Cronbach es un límite inferior de la fiabilidad y la fiabilidad compuesta (ρC) un límite superior; ρA suele quedar entre ambos y es la más exacta de las tres (Hair et al., 2019, vea las referencias). Los valores entre 0.70 y 0.95 son satisfactorios; de 0.60 a 0.70 es aceptable solo en investigación exploratoria; por encima de 0.95 los indicadores probablemente son redundantes (la misma pregunta hecha varias veces). La varianza extraída media (AVE) es la proporción de la varianza de los indicadores que el constructo explica en promedio: 0.50 o más indica validez convergente. Lectura errónea frecuente: leer solo el alfa, que tiende a subestimar la fiabilidad cuando las cargas difieren."
@@ -410,6 +527,12 @@
             "Outcome": [
                 "Resultado"
             ],
+            "p (weight)": [
+                "p (peso)"
+            ],
+            "p values come from cSEM: t = estimate / bootstrap standard error.": [
+                "Los valores p vienen de cSEM: t = estimación / error estándar bootstrap."
+            ],
             "Partial least squares structural equation modeling: reflective and formative constructs built from boxes, model validation before estimation, loadings and weights, reliability, convergent and discriminant validity, collinearity of formative indicators, paths and explained variance, with plain-language interpretation.": [
                 "Modelado de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas y pesos, fiabilidad, validez convergente y discriminante, colinealidad de los indicadores formativos, rutas y varianza explicada, con interpretación en lenguaje claro."
             ],
@@ -418,6 +541,18 @@
             ],
             "Path coefficients": [
                 "Coeficientes de ruta"
+            ],
+            "Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); dashed line: not significant.": [
+                "Coeficientes de ruta; * el intervalo bootstrap al %s%% excluye el 0 (línea continua); línea discontinua: no significativa."
+            ],
+            "Path coefficients; line width follows the coefficient. Run the bootstrap to mark which paths are significant.": [
+                "Coeficientes de ruta; el grosor de la línea sigue al coeficiente. Ejecute el bootstrap para marcar qué rutas son significativas."
+            ],
+            "Path diagram": [
+                "Diagrama de rutas"
+            ],
+            "Plots": [
+                "Gráficos"
             ],
             "PLS": [
                 "PLS"
@@ -448,6 +583,12 @@
             ],
             "R²": [
                 "R²"
+            ],
+            "R² CI": [
+                "IC del R²"
+            ],
+            "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. Mediation analysis, prediction and group comparisons come in later versions of PLSsemLab.": [
+                "Lea primero el modelo de medida y luego las rutas significativas y sus tamaños del efecto. Informe cada ruta con su coeficiente, su intervalo y su f², y diga cuántas réplicas bootstrap y qué semilla usó. El análisis de mediación, la predicción y la comparación entre grupos llegan en versiones posteriores de PLSsemLab."
             ],
             "Reflective": [
                 "Reflectivo"
@@ -497,11 +638,29 @@
             "Reproducibility record": [
                 "Registro de reproducibilidad"
             ],
+            "Resamples": [
+                "Réplicas"
+            ],
             "Role": [
                 "Papel"
             ],
-            "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. The next version of PLSsemLab adds bootstrap confidence intervals, which turn the HTMT thresholds into a test and give the significance of paths and weights; until then, treat these estimates as descriptive.": [
-                "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. La próxima versión de PLSsemLab añade intervalos de confianza bootstrap, que convierten los umbrales del HTMT en una prueba y dan la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+            "Run bootstrap": [
+                "Ejecutar bootstrap"
+            ],
+            "SE": [
+                "EE"
+            ],
+            "Seed": [
+                "Semilla"
+            ],
+            "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. Run the bootstrap (Bootstrap box) to turn the HTMT thresholds into a test and to get the significance of paths and weights; until then, treat these estimates as descriptive.": [
+                "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. Ejecute el bootstrap (caja Bootstrap) para convertir los umbrales del HTMT en una prueba y obtener la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+            ],
+            "Single predictor: no collinearity": [
+                "Predictor único: sin colinealidad"
+            ],
+            "Some bootstrap blocks failed and were left out: %s": [
+                "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
             ],
             "Structural model": [
                 "Modelo estructural"
@@ -509,14 +668,29 @@
             "Structural Model": [
                 "Modelo estructural"
             ],
+            "Structural model: %d of %d paths are significant at %s%%.": [
+                "Modelo estructural: %d de %d rutas son significativas al %s%%."
+            ],
             "Structural model: the highest R² is %s for %s.": [
                 "Modelo estructural: el R² más alto es %s, para %s."
             ],
             "substantial": [
                 "sustancial"
             ],
+            "The bootstrap could not be completed; see the notice at the top of the results.": [
+                "El bootstrap no pudo completarse; vea el aviso al inicio de los resultados."
+            ],
+            "The bootstrap could not be computed, so the tables show estimates without intervals: %s": [
+                "No se pudo calcular el bootstrap, así que las tablas muestran estimaciones sin intervalos: %s"
+            ],
             "The correlation with %s exceeds the square root of the AVE of one of the two constructs.": [
                 "La correlación con %s supera la raíz cuadrada de la AVE de uno de los dos constructos."
+            ],
+            "The direct effect is the path itself; the indirect effect is the sum of all routes through other constructs (the product of the paths along each route); the total effect is their sum. An indirect effect whose bootstrap interval excludes 0 means mediation: whether it is full or partial depends on the direct effect, as the mediation section of a later version explains. Common misreading: testing mediation by the significance of each path separately instead of the indirect effect itself.": [
+                "El efecto directo es la ruta misma; el efecto indirecto es la suma de todos los caminos a través de otros constructos (el producto de las rutas de cada camino); el efecto total es su suma. Un efecto indirecto cuyo intervalo bootstrap excluye el 0 indica mediación: que sea completa o parcial depende del efecto directo, como explicará la sección de mediación de una versión posterior. Lectura errónea frecuente: probar la mediación por la significación de cada ruta por separado en lugar del efecto indirecto mismo."
+            ],
+            "The effect size f² tells how much the R² of the outcome drops when that predictor is removed: f² = (R² with − R² without) / (1 − R² with). Values of 0.02, 0.15 and 0.35 are read as small, medium and large (Hair et al., 2019, see references). A significant path can have a negligible f² in a large sample: read both.": [
+                "El tamaño del efecto f² indica cuánto baja el R² del resultado al quitar ese predictor: f² = (R² con − R² sin) / (1 − R² con). Los valores 0.02, 0.15 y 0.35 se leen como pequeño, mediano y grande (Hair et al., 2019, vea las referencias). Una ruta significativa puede tener un f² despreciable en una muestra grande: lea ambos."
             ],
             "The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples.": [
                 "Las estimaciones no son admisibles (%s). Se muestran los resultados, pero no deben interpretarse hasta corregir la causa: revise indicadores con correlaciones muy bajas o negativas, o muestras muy pequeñas."
@@ -545,6 +719,9 @@
             "The one-factor CFA gave a standardized loading of 1 or more (a Heywood case), so ω is not reported.": [
                 "El AFC de un factor dio una carga estandarizada de 1 o más (un caso Heywood), así que ω no se informa."
             ],
+            "The p value and the percentile interval disagree for this path (a borderline case). The decision follows the interval, as recommended for PLS-SEM (Hair et al., 2019, see references); report both, and check with more resamples or another seed.": [
+                "El valor p y el intervalo percentil discrepan en esta ruta (un caso límite). La decisión sigue al intervalo, como se recomienda en PLS-SEM (Hair et al., 2019, vea las referencias); informe ambos y compruébelo con más réplicas u otra semilla."
+            ],
             "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
                 "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
             ],
@@ -554,14 +731,44 @@
             "The structural model includes an interaction (%s). Interactions between constructs will be available in a later version of PLSsemLab; remove it for now.": [
                 "El modelo estructural incluye una interacción (%s). Las interacciones entre constructos estarán disponibles en una versión posterior de PLSsemLab; quítela por ahora."
             ],
+            "The structural VIF measures how much the predictors of the same outcome overlap. Above 3, and certainly above 5, their coefficients become unstable and can even change sign (Hair et al., 2019, see references). With a single predictor there is no collinearity to assess.": [
+                "El VIF estructural mide cuánto se solapan los predictores de un mismo resultado. Por encima de 3, y sin duda por encima de 5, sus coeficientes se vuelven inestables y pueden incluso cambiar de signo (Hair et al., 2019, vea las referencias). Con un solo predictor no hay colinealidad que evaluar."
+            ],
+            "Total": [
+                "Total"
+            ],
+            "Total CI": [
+                "IC del total"
+            ],
             "Uncertainties": [
                 "Incertidumbres"
+            ],
+            "Upper": [
+                "Superior"
+            ],
+            "Upper bound": [
+                "Límite superior"
+            ],
+            "Upper bound 0.85 to 0.90: acceptable only for conceptually similar constructs": [
+                "Límite superior 0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
+            ],
+            "Upper bound 0.90 or more: discriminant validity not established": [
+                "Límite superior 0.90 o más: validez discriminante no establecida"
+            ],
+            "Upper bound below 0.85: distinct constructs": [
+                "Límite superior menor de 0.85: constructos distintos"
+            ],
+            "Upper bound: the one-sided 95%% bootstrap upper bound (the 95th percentile of %d admissible resamples). Discriminant validity holds when it stays below the threshold (Henseler et al., 2015, see references).": [
+                "Límite superior: el límite superior bootstrap unilateral al 95%% (el percentil 95 de %d réplicas admisibles). Hay validez discriminante cuando queda por debajo del umbral (Henseler et al., 2015, vea las referencias)."
             ],
             "very weak": [
                 "muy débil"
             ],
             "VIF": [
                 "VIF"
+            ],
+            "VIF CI": [
+                "IC del VIF"
             ],
             "Warnings": [
                 "Advertencias"
@@ -572,8 +779,23 @@
             "Weight": [
                 "Peso"
             ],
+            "Weight CI": [
+                "IC del peso"
+            ],
             "What to do now": [
                 "Qué hacer ahora"
+            ],
+            "With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s.": [
+                "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."
+            ],
+            "With the bootstrap, all %d paths are significant at %s%%: their intervals exclude 0.": [
+                "Con el bootstrap, las %d rutas son significativas al %s%%: sus intervalos excluyen el 0."
+            ],
+            "With the bootstrap, the upper bound of HTMT reaches 0.85 or more for %s: discriminant validity is not established for these pairs, even if the estimate is lower.": [
+                "Con el bootstrap, el límite superior del HTMT alcanza 0.85 o más en %s: no hay validez discriminante establecida para estos pares, aunque la estimación sea menor."
+            ],
+            "With the bootstrap, the upper bound of HTMT stays below 0.85 for all %d pairs: discriminant validity is established.": [
+                "Con el bootstrap, el límite superior del HTMT queda por debajo de 0.85 en los %d pares: la validez discriminante queda establecida."
             ],
             "ρA": [
                 "ρA"
@@ -583,6 +805,9 @@
             ],
             "ρC": [
                 "ρC"
+            ],
+            "ρC CI": [
+                "IC de ρC"
             ],
             "ρC is McDonald's ω computed with the loadings of the PLS model. With PLS these are composite loadings, which are inflated, so ρC is an upper bound of reliability; with consistent PLS they are common-factor loadings and ρC is close to the ω of a factor analysis. The optional ω (CFA) column estimates a one-factor confirmatory factor analysis of each construct, outside the PLS model (McDonald, 1999, see references): it is the reference used in psychometrics. Common misreading: reporting ρC from plain PLS as if it were the ω of a factor analysis.": [
                 "ρC es la ω de McDonald calculada con las cargas del modelo PLS. Con PLS son cargas de compuestos, que están infladas, así que ρC es un límite superior de la fiabilidad; con PLS consistente son cargas de factor común y ρC queda cerca de la ω de un análisis factorial. La columna opcional ω (AFC) estima un análisis factorial confirmatorio de un factor para cada constructo, fuera del modelo PLS (McDonald, 1999, vea las referencias): es la referencia usada en psicometría. Lectura errónea frecuente: informar la ρC de PLS simple como si fuera la ω de un análisis factorial."

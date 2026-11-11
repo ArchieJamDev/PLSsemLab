@@ -117,6 +117,20 @@
             fl_fails = .("The correlation with %s exceeds the square root of the AVE of one of the two constructs.")
         ),
 
+        # Bootstrap status and table notes.
+        # ES: Estado del bootstrap y notas de las tablas.
+        boot = list(
+            running = .("Bootstrap running: %d of %d resamples done. Changing any option stops it."),
+            done = .("Bootstrap: %d resamples drawn, %d admissible and used; seed %d; drawn in blocks of %d (block k uses the seed + k - 1); %d s. Intervals are percentile intervals at %s%%."),
+            not_done = .("The bootstrap could not be completed; see the notice at the top of the results."),
+            failed = .("The bootstrap could not be computed, so the tables show estimates without intervals: %s"),
+            some_failed = .("Some bootstrap blocks failed and were left out: %s"),
+            ci_note = .("Intervals: %s%% percentile bootstrap intervals from %d admissible resamples."),
+            p_ci_disagree = .("The p value and the percentile interval disagree for this path (a borderline case). The decision follows the interval, as recommended for PLS-SEM (Hair et al., 2019, see references); report both, and check with more resamples or another seed."),
+            p_note = .("p values come from cSEM: t = estimate / bootstrap standard error."),
+            htmt_note = .("Upper bound: the one-sided 95%% bootstrap upper bound (the 95th percentile of %d admissible resamples). Discriminant validity holds when it stays below the threshold (Henseler et al., 2015, see references).")
+        ),
+
         # Table cells and labels.
         # ES: Celdas y etiquetas de las tablas.
         labels = list(
@@ -138,7 +152,21 @@
             htmt_doubt = .("0.90 or more: discriminant validity in doubt"),
             vif_ok = .("Below 3: no collinearity problem"),
             vif_possible = .("3 to 5: possible collinearity"),
-            vif_critical = .("5 or more: critical collinearity")
+            vif_critical = .("5 or more: critical collinearity"),
+            vif_single_predictor = .("Single predictor: no collinearity"),
+            f2_none = .("Below 0.02: no effect"),
+            f2_small = .("0.02 to 0.15: small"),
+            f2_medium = .("0.15 to 0.35: medium"),
+            f2_large = .("0.35 or more: large"),
+            htmt_ok_ci = .("Upper bound below 0.85: distinct constructs"),
+            htmt_similar_ci = .("Upper bound 0.85 to 0.90: acceptable only for conceptually similar constructs"),
+            htmt_doubt_ci = .("Upper bound 0.90 or more: discriminant validity not established"),
+            loadings_caption = .("Loadings of reflective indicators; dashed line at 0.708. Triangles: below 0.708."),
+            loadings_caption_boot = .("Loadings of reflective indicators with their %s%% bootstrap interval; dashed line at 0.708. Triangles: below 0.708."),
+            htmt_caption = .("HTMT per pair of reflective constructs; darker cells reach 0.85 or 0.90."),
+            htmt_caption_boot = .("HTMT per pair, with its one-sided 95% bootstrap upper bound in brackets; the shade follows the upper bound (darker: 0.85 or 0.90 reached)."),
+            diagram_caption = .("Path coefficients; line width follows the coefficient. Run the bootstrap to mark which paths are significant."),
+            diagram_caption_boot = .("Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); dashed line: not significant.")
         ),
 
         # "How to read" guides.
@@ -148,9 +176,12 @@
             measurement = .("Loadings are the correlations between each indicator and its construct; weights are the contribution of each indicator to the construct score. For reflective constructs read the loadings: values of 0.708 or more mean the construct explains at least half of the indicator's variance (Hair et al., 2019, see references). For formative constructs read the weights: they show the relative contribution of each indicator, and a small or negative weight is not by itself a reason to remove an indicator. Common misreading: judging formative indicators by their loadings as if they were reflective."),
             reliability = .("One row per reflective construct. Cronbach's alpha is a lower bound of reliability and composite reliability (\u03c1C) an upper bound; \u03c1A usually lies between them and is the most exact of the three (Hair et al., 2019, see references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is acceptable only in exploratory research; above 0.95 the indicators are probably redundant (the same question asked several times). The average variance extracted (AVE) is the share of indicator variance the construct explains on average: 0.50 or more means convergent validity. Common misreading: reading only alpha, which tends to underestimate reliability when loadings differ."),
             reliability_omega = .("\u03c1C is McDonald's \u03c9 computed with the loadings of the PLS model. With PLS these are composite loadings, which are inflated, so \u03c1C is an upper bound of reliability; with consistent PLS they are common-factor loadings and \u03c1C is close to the \u03c9 of a factor analysis. The optional \u03c9 (CFA) column estimates a one-factor confirmatory factor analysis of each construct, outside the PLS model (McDonald, 1999, see references): it is the reference used in psychometrics. Common misreading: reporting \u03c1C from plain PLS as if it were the \u03c9 of a factor analysis."),
-            htmt = .("One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap confidence interval, which arrives in the next version."),
+            htmt = .("One row per pair of reflective constructs. The heterotrait-monotrait ratio (HTMT) compares the correlations between the indicators of two different constructs with the correlations within each construct (Henseler et al., 2015, see references). Values near 1 mean the two constructs are not distinguished by the data. Below 0.85 the constructs are distinct; up to 0.90 is acceptable when they are conceptually similar (for example, two kinds of satisfaction). HTMT2 uses geometric instead of arithmetic means and is more accurate when loadings differ (Roemer et al., 2021, see references). Common misreading: treating HTMT as a correlation between the constructs; it is a ratio of indicator correlations. A formal test needs the bootstrap (Bootstrap box): discriminant validity holds when the upper bound of HTMT stays below the threshold."),
             vif = .("One row per indicator of a formative construct. The variance inflation factor (VIF) measures how much an indicator overlaps with the other indicators of the same construct. Because formative indicators compete to explain the construct, high overlap makes their weights unstable and can turn them negative. VIF of 5 or more is critical; 3 to 5 may be a problem (Hair et al., 2019, see references). Common misreading: removing an indicator only because its VIF is high; a formative indicator carries part of the content of the construct, so first consider merging indicators or building a higher-order construct."),
-            paths = .("Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R\u00b2 is the share of the outcome's variance explained by its predictors. Common misreading: treating a coefficient as significant. This version reports estimates only; significance needs bootstrap confidence intervals, which arrive in a later version.")
+            f2 = .("The effect size f\u00b2 tells how much the R\u00b2 of the outcome drops when that predictor is removed: f\u00b2 = (R\u00b2 with \u2212 R\u00b2 without) / (1 \u2212 R\u00b2 with). Values of 0.02, 0.15 and 0.35 are read as small, medium and large (Hair et al., 2019, see references). A significant path can have a negligible f\u00b2 in a large sample: read both."),
+            vif_struct = .("The structural VIF measures how much the predictors of the same outcome overlap. Above 3, and certainly above 5, their coefficients become unstable and can even change sign (Hair et al., 2019, see references). With a single predictor there is no collinearity to assess."),
+            effects = .("The direct effect is the path itself; the indirect effect is the sum of all routes through other constructs (the product of the paths along each route); the total effect is their sum. An indirect effect whose bootstrap interval excludes 0 means mediation: whether it is full or partial depends on the direct effect, as the mediation section of a later version explains. Common misreading: testing mediation by the significance of each path separately instead of the indirect effect itself."),
+            paths = .("Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R\u00b2 is the share of the outcome's variance explained by its predictors. Common misreading: treating a large coefficient as significant. Significance needs the bootstrap (Bootstrap box): a path is significant at the chosen level when its interval excludes 0.")
         ),
 
         # About your choices.
@@ -160,6 +191,8 @@
             plsc = .("Estimator: consistent PLS (PLSc). Reflective constructs are treated as common factors and their estimates are corrected for measurement error (Dijkstra & Henseler, 2015, see references); formative constructs stay composites. PLSc can produce inadmissible solutions in small samples; the report warns when that happens."),
             continuous = .("Indicators: continuous. Correlations between indicators are Pearson correlations, as in classic PLS-SEM. With rating scales of 7 or more categories this is usually adequate; with 5 categories or fewer, or very skewed answers, Pearson correlations underestimate the relationships and ordinal treatment is worth considering."),
             ordinal = .("Indicators: ordinal. Correlations between indicators are polychoric: they assume that each category comes from cutting a continuous latent response, and estimate the correlation between those latent responses (ordinal PLS; Schuberth et al., 2018, see references). This changes the whole model, not only the reliability. Reliability and validity then describe the latent responses; Chalmers (2018, see references) argues that this overstates the reliability of the scores people actually obtain, so report which correlations you used."),
+            bootstrap = .("Bootstrap: %d resamples with seed %d; percentile intervals at %s%%. Each resample redraws the cases with replacement and re-estimates the model, so the spread of the estimates shows their sampling uncertainty. The seed makes the result reproducible: the same seed and resamples give the same intervals. Inadmissible resamples are dropped and counted in the bootstrap note. 2000 or more resamples are recommended for a final report (Hair et al., 2019, see references)."),
+            no_bootstrap = .("Bootstrap: not run. The tables show estimates without significance; tick Run bootstrap in the Bootstrap box to add intervals, standard errors and p values."),
             scheme = .("Inner weighting scheme: %s. The scheme decides how neighbouring constructs inform each other while the weights are estimated; the path scheme is the usual default and the results rarely depend much on this choice."),
             listwise = .("Missing values: cases with a missing value on any indicator are excluded (%d of %d cases used). This adds no information to the data; if many cases are lost, consider why the values are missing."),
             mean = .("Missing values: each missing value is replaced by the mean of its indicator (%d value(s) replaced). This keeps every case but shrinks the variance of the indicator; use it only when few values are missing.")
@@ -174,7 +207,7 @@
             low_loadings = .("%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal."),
             good_loadings = .("All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators."),
             no_reflective = .("The model has no reflective constructs, so loadings are not used to judge indicator quality."),
-            formative_negative = .("Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Wait for the significance of the weights (next version) before removing any indicator: a formative indicator carries part of the content of the construct."),
+            formative_negative = .("Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Check the significance of the weights with the bootstrap before removing any indicator: a formative indicator carries part of the content of the construct."),
             formative_ok = .("All weights of the formative constructs are positive."),
             reliability_ok = .("Reliability: composite reliability is between 0.70 and 0.95 in all %d reflective construct(s) with two or more indicators."),
             reliability_low = .("Reliability: composite reliability is below 0.70 in %s. These indicators share too little variance to measure the construct consistently; look at the lowest loadings of each construct and at reverse-coded items."),
@@ -187,6 +220,18 @@
             htmt_high = .("Discriminant validity: HTMT is 0.85 or more for %s. The data barely distinguish these constructs; ask whether they measure the same concept, whether some indicators belong to both, or whether they should be merged."),
             htmt_na = .("Discriminant validity: HTMT could not be computed for %s (see the footnotes of the HTMT table)."),
             vif_ok = .("Collinearity of formative indicators: every VIF is below 3."),
+            htmt_ci_ok = .("With the bootstrap, the upper bound of HTMT stays below 0.85 for all %d pairs: discriminant validity is established."),
+            htmt_ci_high = .("With the bootstrap, the upper bound of HTMT reaches 0.85 or more for %s: discriminant validity is not established for these pairs, even if the estimate is lower."),
+            weights_ns_keep = .("Formative indicators with a non-significant weight but a loading of 0.50 or more: %s. Keep them: their absolute contribution to the construct is important even if their relative contribution is not (Hair et al., 2019, see references)."),
+            weights_ns_drop = .("Formative indicators with a non-significant weight and a loading below 0.50: %s. Consider removing them only on theoretical grounds: a formative indicator carries part of the content of the construct."),
+            weights_all_sig = .("Every weight of the formative constructs is significant."),
+            paths_all_sig = .("With the bootstrap, all %d paths are significant at %s%%: their intervals exclude 0."),
+            paths_sig = .("With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s."),
+            f2_big = .("Effect sizes: f\u00b2 of 0.15 or more for %s, the predictors that matter most for their outcome."),
+            f2_tiny = .("Effect sizes: f\u00b2 below 0.02 for %s: removing these predictors barely changes the R\u00b2 of their outcome."),
+            vifs_ok = .("Collinearity of predictors: every structural VIF is below 3."),
+            vifs_high = .("Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable."),
+            next_steps_boot = .("Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f\u00b2, and say how many bootstrap resamples and which seed you used. Mediation analysis, prediction and group comparisons come in later versions of PLSsemLab."),
             vif_high = .("Collinearity of formative indicators: VIF of 3 or more for %s. Their weights may be unstable; interpret them with care."),
             strongest = .("The largest path is %s \u2192 %s (%s)."),
             r2_line = .("%s: R\u00b2 = %s (%s)."),
@@ -195,7 +240,7 @@
             r2_weak = .("weak"),
             r2_very_weak = .("very weak"),
             r2_note = .("As a rough guide, R\u00b2 values of 0.75, 0.50 and 0.25 are described as substantial, moderate and weak (Hair et al., 2019, see references), but what counts as high depends on the field: in consumer behaviour an R\u00b2 of 0.20 can be high."),
-            next_steps = .("Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. The next version of PLSsemLab adds bootstrap confidence intervals, which turn the HTMT thresholds into a test and give the significance of paths and weights; until then, treat these estimates as descriptive.")
+            next_steps = .("Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. Run the bootstrap (Bootstrap box) to turn the HTMT thresholds into a test and to get the significance of paths and weights; until then, treat these estimates as descriptive.")
         ),
 
         # Key findings.
@@ -211,7 +256,9 @@
             reliability = .("Reliability and convergent validity: %d of %d reflective construct(s) have composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 or more."),
             htmt = .("Discriminant validity: %d of %d pair(s) of reflective constructs have HTMT below 0.85."),
             vif = .("Formative indicators: the largest VIF is %s (%s)."),
-            no_inference = .("No significance or confidence intervals yet: this version reports estimates only, so the HTMT thresholds are compared with the estimate and not with its upper bound."),
+            no_inference = .("No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box."),
+            paths_sig = .("Structural model: %d of %d paths are significant at %s%%."),
+            boot_basis = .("Intervals from %d admissible of %d bootstrap resamples (seed %d); a path whose interval only just excludes 0 can change with another seed."),
             admissible_no = .("The estimates are not admissible; do not interpret them until the cause is fixed.")
         ),
 

@@ -169,6 +169,42 @@ children:
           - type: ComboBox
             name: missing
   - type: CollapseBox
+    label: Bootstrap
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: bootstrap
+          - type: TextBox
+            name: bootReps
+            format: number
+            enable: (bootstrap)
+          - type: TextBox
+            name: bootSeed
+            format: number
+            enable: (bootstrap)
+          - type: TextBox
+            name: ciLevel
+            format: number
+            enable: (bootstrap)
+  - type: CollapseBox
+    label: Plots
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: pathDiagram
+          - type: CheckBox
+            name: loadingsPlot
+          - type: CheckBox
+            name: htmtPlot
+  - type: CollapseBox
     label: Measurement Model
     collapsed: true
     children:

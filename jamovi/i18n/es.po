@@ -118,6 +118,18 @@ msgid "%s: R² = %s (%s)."
 msgstr "%s: R² = %s (%s)."
 
 #: R/texts.R
+msgid "0.02 to 0.15: small"
+msgstr "0.02 a 0.15: pequeño"
+
+#: R/texts.R
+msgid "0.15 to 0.35: medium"
+msgstr "0.15 a 0.35: mediano"
+
+#: R/texts.R
+msgid "0.35 or more: large"
+msgstr "0.35 o más: grande"
+
+#: R/texts.R
 msgid "0.85 to 0.90: acceptable only for conceptually similar constructs"
 msgstr "0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
 
@@ -218,6 +230,8 @@ msgstr ""
 
 #: plssem/results/reliability.columns.title
 #: plssem/results/vif.columns.title
+#: plssem/results/f2.columns.title
+#: plssem/results/vifStruct.columns.title
 msgid "Assessment"
 msgstr "Valoración"
 
@@ -237,6 +251,18 @@ msgstr "AVE adecuada"
 msgid "AVE below 0.50"
 msgstr "AVE menor de 0.50"
 
+#: plssem/results/reliability.columns.superTitle
+msgid "AVE CI"
+msgstr "IC de la AVE"
+
+#: package/datasets/Bankcustomers,withdemographics(n=675).name
+msgid "Bank customers, with demographics (n=675)"
+msgstr "Clientes de bancos, con variables demográficas (n=675)"
+
+#: R/texts.R
+msgid "Below 0.02: no effect"
+msgstr "Menor de 0.02: sin efecto"
+
 #: R/texts.R
 msgid "Below 0.85: distinct constructs"
 msgstr "Menor de 0.85: constructos distintos"
@@ -245,6 +271,40 @@ msgstr "Menor de 0.85: constructos distintos"
 msgid "Below 3: no collinearity problem"
 msgstr "Menor de 3: sin problema de colinealidad"
 
+#: plssem/ui[3].label
+#: plssem/results/bootStatus.title
+msgid "Bootstrap"
+msgstr "Bootstrap"
+
+#: R/texts.R
+msgid "Bootstrap running: %d of %d resamples done. Changing any option stops it."
+msgstr "Bootstrap en curso: %d de %d réplicas hechas. Cambiar cualquier opción lo detiene."
+
+#: R/texts.R
+msgid ""
+"Bootstrap: %d resamples drawn, %d admissible and used; seed %d; drawn in "
+"blocks of %d (block k uses the seed + k - 1); %d s. Intervals are percentile "
+"intervals at %s%%."
+msgstr "Bootstrap: %d réplicas extraídas, %d admisibles y usadas; semilla %d; extraídas en bloques de %d (el bloque k usa la semilla + k - 1); %d s. Los intervalos son percentiles al %s%%."
+
+#: R/texts.R
+msgid ""
+"Bootstrap: %d resamples with seed %d; percentile intervals at %s%%. Each "
+"resample redraws the cases with replacement and re-estimates the model, so "
+"the spread of the estimates shows their sampling uncertainty. The seed makes "
+"the result reproducible: the same seed and resamples give the same "
+"intervals. Inadmissible resamples are dropped and counted in the bootstrap "
+"note. 2000 or more resamples are recommended for a final report (Hair et "
+"al., 2019, see references)."
+msgstr "Bootstrap: %d réplicas con semilla %d; intervalos percentiles al %s%%. Cada réplica vuelve a extraer los casos con reemplazo y reestima el modelo, así que la dispersión de las estimaciones muestra su incertidumbre muestral. La semilla hace reproducible el resultado: la misma semilla y el mismo número de réplicas dan los mismos intervalos. Las réplicas inadmisibles se descartan y se cuentan en la nota del bootstrap. Para un informe final se recomiendan 2000 réplicas o más (Hair et al., 2019, vea las referencias)."
+
+#: R/texts.R
+msgid ""
+"Bootstrap: not run. The tables show estimates without significance; tick Run "
+"bootstrap in the Bootstrap box to add intervals, standard errors and p "
+"values."
+msgstr "Bootstrap: no ejecutado. Las tablas muestran estimaciones sin significación; marque Ejecutar bootstrap en la caja Bootstrap para añadir intervalos, errores estándar y valores p."
+
 #: plssem/options/innerScheme/centroid.title
 msgid "Centroid"
 msgstr "Centroide"
@@ -252,6 +312,10 @@ msgstr "Centroide"
 #: plssem/results/paths.columns.title
 msgid "Coefficient"
 msgstr "Coeficiente"
+
+#: plssem/results/paths.columns.superTitle
+msgid "Coefficient CI"
+msgstr "IC del coeficiente"
 
 #: plssem/results/vif.title
 msgid "Collinearity of formative indicators"
@@ -269,6 +333,20 @@ msgstr ""
 "Colinealidad de los indicadores formativos: VIF de 3 o más en %s. Sus pesos "
 "pueden ser inestables; interprételos con cuidado."
 
+#: plssem/results/vifStruct.title
+msgid "Collinearity of predictors (structural VIF)"
+msgstr "Colinealidad de los predictores (VIF estructural)"
+
+#: R/texts.R
+msgid "Collinearity of predictors: every structural VIF is below 3."
+msgstr "Colinealidad de los predictores: todos los VIF estructurales son menores de 3."
+
+#: R/texts.R
+msgid ""
+"Collinearity of predictors: structural VIF of 3 or more for %s; their "
+"coefficients may be unstable."
+msgstr "Colinealidad de los predictores: VIF estructural de 3 o más en %s; sus coeficientes pueden ser inestables."
+
 #: R/texts.R
 msgid ""
 "Computed from polychoric correlations (ordinal indicators): the values refer "
@@ -280,6 +358,10 @@ msgstr ""
 "se refieren a la fiabilidad de las respuestas latentes continuas que se "
 "suponen detrás de las categorías, no a la del puntaje observado, que suele "
 "ser menor (Chalmers, 2018, vea las referencias)."
+
+#: plssem/options/ciLevel.title
+msgid "Confidence level"
+msgstr "Nivel de confianza"
 
 #: plssem/options/estimator/plsc.title
 msgid "Consistent PLS (PLSc)"
@@ -340,6 +422,14 @@ msgstr ""
 "móvil, el ejemplo del manual de PLS-SEM de Hair et al., con las respuestas "
 "faltantes como celdas vacías, del paquete cSEM - ver data/README.md"
 
+#: package/datasets/Bankcustomers,withdemographics(n=675).description
+msgid ""
+"Corporate reputation, trust, satisfaction and loyalty of 675 German bank "
+"customers (four formative and five reflective constructs) with gender, age "
+"group, education, employment, income and family status; Damberg (2023), CC "
+"BY 4.0 - see data/README.md"
+msgstr "Reputación corporativa, confianza, satisfacción y lealtad de 675 clientes de bancos alemanes (cuatro constructos formativos y cinco reflectivos) con sexo, grupo de edad, educación, empleo, ingreso y situación familiar; Damberg (2023), CC BY 4.0 - vea data/README.md"
+
 #: plssem/results/reliability.columns.title
 msgid "Cronbach's α"
 msgstr "α de Cronbach"
@@ -378,7 +468,16 @@ msgstr ""
 "entre constructos. Hay validez discriminante en un par cuando ambas raíces "
 "superan su correlación."
 
+#: plssem/results/effects.columns.title
+msgid "Direct"
+msgstr "Directo"
+
+#: plssem/results/effects.title
+msgid "Direct, indirect and total effects"
+msgstr "Efectos directos, indirectos y totales"
+
 #: plssem/results/htmt.title
+#: plssem/results/htmtPlot.title
 msgid "Discriminant validity (HTMT)"
 msgstr "Validez discriminante (HTMT)"
 
@@ -439,17 +538,10 @@ msgid ""
 "deviations, when the predictor increases by one standard deviation and the "
 "other predictors of the same outcome stay constant. R² is the share of the "
 "outcome's variance explained by its predictors. Common misreading: treating "
-"a coefficient as significant. This version reports estimates only; "
-"significance needs bootstrap confidence intervals, which arrive in a later "
-"version."
-msgstr ""
-"Cada coeficiente es el cambio del constructo resultado, en desviaciones "
-"estándar, cuando el predictor aumenta una desviación estándar y los demás "
-"predictores del mismo resultado se mantienen constantes. R² es la proporción "
-"de la varianza del resultado que explican sus predictores. Lectura errónea "
-"frecuente: tratar un coeficiente como significativo. Esta versión solo "
-"informa estimaciones; la significación necesita intervalos de confianza "
-"bootstrap, que llegan en una versión posterior."
+"a large coefficient as significant. Significance needs the bootstrap "
+"(Bootstrap box): a path is significant at the chosen level when its interval "
+"excludes 0."
+msgstr "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. El R² es la proporción de la varianza del resultado explicada por sus predictores. Lectura errónea frecuente: tratar un coeficiente grande como significativo. La significación requiere el bootstrap (caja Bootstrap): una ruta es significativa al nivel elegido cuando su intervalo excluye el 0."
 
 #: R/texts.R
 msgid ""
@@ -464,6 +556,22 @@ msgstr ""
 "exógenos solo son predictores; los endógenos son predichos por al menos otro "
 "constructo. Compruebe que esta tabla describe el modelo que quería antes de "
 "leer cualquier número."
+
+#: plssem/results/f2.title
+msgid "Effect size (f²)"
+msgstr "Tamaño del efecto (f²)"
+
+#: R/texts.R
+msgid ""
+"Effect sizes: f² below 0.02 for %s: removing these predictors barely changes "
+"the R² of their outcome."
+msgstr "Tamaños del efecto: f² menor de 0.02 en %s: quitar estos predictores apenas cambia el R² de su resultado."
+
+#: R/texts.R
+msgid ""
+"Effect sizes: f² of 0.15 or more for %s, the predictors that matter most for "
+"their outcome."
+msgstr "Tamaños del efecto: f² de 0.15 o más en %s, los predictores que más pesan en su resultado."
 
 #: R/texts.R
 msgid "Endogenous"
@@ -527,6 +635,10 @@ msgstr ""
 "Cada constructo necesita un nombre: uno de los constructos tiene indicadores "
 "pero no tiene nombre."
 
+#: R/texts.R
+msgid "Every weight of the formative constructs is significant."
+msgstr "Todos los pesos de los constructos formativos son significativos."
+
 #: plssem/options/missing/listwise.title
 msgid "Exclude cases listwise"
 msgstr "Excluir casos por lista"
@@ -538,6 +650,10 @@ msgstr "Exógeno"
 #: plssem/results/r2.title
 msgid "Explained variance"
 msgstr "Varianza explicada"
+
+#: plssem/results/f2.columns.title
+msgid "f²"
+msgstr "f²"
 
 #: plssem/options/innerScheme/factorial.title
 msgid "Factorial"
@@ -556,15 +672,25 @@ msgstr "Constructos formativos"
 msgid ""
 "Formative constructs with negative weights: %s. A negative weight can come "
 "from collinearity among the indicators (see their VIF) or from an indicator "
-"that adds little beyond the others of its construct. Wait for the "
-"significance of the weights (next version) before removing any indicator: a "
-"formative indicator carries part of the content of the construct."
-msgstr ""
-"Constructos formativos con pesos negativos: %s. Un peso negativo puede venir "
-"de la colinealidad entre los indicadores (vea su VIF) o de un indicador que "
-"aporta poco más allá de los demás de su constructo. Espere la significación "
-"de los pesos (próxima versión) antes de quitar un indicador: un indicador "
-"formativo lleva parte del contenido del constructo."
+"that adds little beyond the others of its construct. Check the significance "
+"of the weights with the bootstrap before removing any indicator: a formative "
+"indicator carries part of the content of the construct."
+msgstr "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Revise la significación de los pesos con el bootstrap antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+
+#: R/texts.R
+msgid ""
+"Formative indicators with a non-significant weight and a loading below 0.50: "
+"%s. Consider removing them only on theoretical grounds: a formative "
+"indicator carries part of the content of the construct."
+msgstr "Indicadores formativos con peso no significativo y carga menor de 0.50: %s. Considere quitarlos solo por razones teóricas: un indicador formativo lleva parte del contenido del constructo."
+
+#: R/texts.R
+msgid ""
+"Formative indicators with a non-significant weight but a loading of 0.50 or "
+"more: %s. Keep them: their absolute contribution to the construct is "
+"important even if their relative contribution is not (Hair et al., 2019, see "
+"references)."
+msgstr "Indicadores formativos con peso no significativo pero carga de 0.50 o más: %s. Consérvelos: su contribución absoluta al constructo es importante aunque su contribución relativa no lo sea (Hair et al., 2019, vea las referencias)."
 
 #: R/texts.R
 msgid "Formative indicators: the largest VIF is %s (%s)."
@@ -582,6 +708,10 @@ msgstr "Cómo leer la validez discriminante"
 #: plssem/options/showGuides.title
 msgid "How to read each table"
 msgstr "Cómo leer cada tabla"
+
+#: plssem/results/structuralGuide.title
+msgid "How to read effect sizes, collinearity and effects"
+msgstr "Cómo leer los tamaños del efecto, la colinealidad y los efectos"
 
 #: plssem/results/measurementGuide.title
 msgid "How to read loadings and weights"
@@ -603,9 +733,21 @@ msgstr "Cómo leer el resumen del modelo"
 msgid "How to read the path coefficients"
 msgstr "Cómo leer los coeficientes de ruta"
 
+#: plssem/options/htmtPlot.title
 #: plssem/results/htmt.columns.title
+#: plssem/results/htmt.columns.superTitle
 msgid "HTMT"
 msgstr "HTMT"
+
+#: R/texts.R
+msgid "HTMT per pair of reflective constructs; darker cells reach 0.85 or 0.90."
+msgstr "HTMT por par de constructos reflectivos; las celdas más oscuras alcanzan 0.85 o 0.90."
+
+#: R/texts.R
+msgid ""
+"HTMT per pair, with its one-sided 95% bootstrap upper bound in brackets; the "
+"shade follows the upper bound (darker: 0.85 or 0.90 reached)."
+msgstr "HTMT por par, con su límite superior bootstrap unilateral al 95% entre paréntesis; el sombreado sigue al límite superior (más oscuro: alcanza 0.85 o 0.90)."
 
 #: plssem/results/htmt.columns.title
 msgid "HTMT2"
@@ -677,6 +819,14 @@ msgstr ""
 "sostiene que así se sobrestima la fiabilidad de los puntajes que las "
 "personas realmente obtienen, así que informe qué correlaciones usó."
 
+#: plssem/results/effects.columns.title
+msgid "Indirect"
+msgstr "Indirecto"
+
+#: plssem/results/effects.columns.superTitle
+msgid "Indirect CI"
+msgstr "IC del indirecto"
+
 #: plssem/options/innerScheme.title
 msgid "Inner weighting scheme"
 msgstr "Esquema de ponderación interna"
@@ -691,6 +841,16 @@ msgstr ""
 "sí los constructos vecinos mientras se estiman los pesos; el esquema path es "
 "el habitual y los resultados rara vez dependen mucho de esta elección."
 
+#: R/texts.R
+msgid ""
+"Intervals from %d admissible of %d bootstrap resamples (seed %d); a path "
+"whose interval only just excludes 0 can change with another seed."
+msgstr "Intervalos de %d réplicas bootstrap admisibles de %d (semilla %d); una ruta cuyo intervalo apenas excluye el 0 puede cambiar con otra semilla."
+
+#: R/texts.R
+msgid "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples."
+msgstr "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
+
 #: plssem/options/showKeySummary.title
 #: plssem/results/keySummary.title
 msgid "Key findings"
@@ -699,6 +859,14 @@ msgstr "Hallazgos clave"
 #: plssem/results/measurement.columns.title
 msgid "Loading"
 msgstr "Carga"
+
+#: plssem/results/measurement.columns.superTitle
+msgid "Loading CI"
+msgstr "IC de la carga"
+
+#: plssem/options/loadingsPlot.title
+msgid "Loadings"
+msgstr "Cargas"
 
 #: plssem/results/measurement.title
 msgid "Loadings and weights"
@@ -725,6 +893,32 @@ msgstr ""
 "Lectura errónea frecuente: juzgar los indicadores formativos por sus cargas "
 "como si fueran reflectivos."
 
+#: plssem/results/loadingsPlot.title
+msgid "Loadings of reflective indicators"
+msgstr "Cargas de los indicadores reflectivos"
+
+#: R/texts.R
+msgid ""
+"Loadings of reflective indicators with their %s%% bootstrap interval; dashed "
+"line at 0.708. Triangles: below 0.708."
+msgstr "Cargas de los indicadores reflectivos con su intervalo bootstrap al %s%%; línea discontinua en 0.708. Triángulos: menores de 0.708."
+
+#: R/texts.R
+msgid ""
+"Loadings of reflective indicators; dashed line at 0.708. Triangles: below "
+"0.708."
+msgstr "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
+
+#: plssem/results/measurement.columns.title
+#: plssem/results/reliability.columns.title
+#: plssem/results/vif.columns.title
+#: plssem/results/paths.columns.title
+#: plssem/results/r2.columns.title
+#: plssem/results/vifStruct.columns.title
+#: plssem/results/effects.columns.title
+msgid "Lower"
+msgstr "Inferior"
+
 #: R/texts.R
 msgid "Main findings"
 msgstr "Hallazgos principales"
@@ -749,7 +943,7 @@ msgstr ""
 msgid "Measurement model"
 msgstr "Modelo de medida"
 
-#: plssem/ui[3].label
+#: plssem/ui[5].label
 msgid "Measurement Model"
 msgstr "Modelo de medida"
 
@@ -800,13 +994,10 @@ msgstr "moderado"
 
 #: R/texts.R
 msgid ""
-"No significance or confidence intervals yet: this version reports estimates "
-"only, so the HTMT thresholds are compared with the estimate and not with its "
-"upper bound."
-msgstr ""
-"Todavía no hay significación ni intervalos de confianza: esta versión "
-"informa solo estimaciones, así que los umbrales del HTMT se comparan con la "
-"estimación y no con su límite superior."
+"No significance or confidence intervals: the bootstrap was not run, so the "
+"HTMT thresholds are compared with the estimate and not with its upper bound. "
+"Tick Run bootstrap in the Bootstrap box."
+msgstr "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
 
 #: R/texts.R
 msgid "None."
@@ -883,20 +1074,9 @@ msgid ""
 "is more accurate when loadings differ (Roemer et al., 2021, see references). "
 "Common misreading: treating HTMT as a correlation between the constructs; it "
 "is a ratio of indicator correlations. A formal test needs the bootstrap "
-"confidence interval, which arrives in the next version."
-msgstr ""
-"Una fila por par de constructos reflectivos. La razón "
-"heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los "
-"indicadores de dos constructos distintos con las correlaciones dentro de "
-"cada constructo (Henseler et al., 2015, vea las referencias). Valores "
-"cercanos a 1 significan que los datos no distinguen los dos constructos. Por "
-"debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son "
-"conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 "
-"usa medias geométricas en lugar de aritméticas y es más exacto cuando las "
-"cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea "
-"frecuente: tratar el HTMT como una correlación entre los constructos; es una "
-"razón de correlaciones entre indicadores. Una prueba formal requiere el "
-"intervalo de confianza bootstrap, que llega en la próxima versión."
+"(Bootstrap box): discriminant validity holds when the upper bound of HTMT "
+"stays below the threshold."
+msgstr "Una fila por par de constructos reflectivos. La razón heterorrasgo-monorrasgo (HTMT) compara las correlaciones entre los indicadores de dos constructos distintos con las correlaciones dentro de cada constructo (Henseler et al., 2015, vea las referencias). Valores cercanos a 1 significan que los datos no distinguen los dos constructos. Por debajo de 0.85 los constructos son distintos; hasta 0.90 es aceptable si son conceptualmente similares (por ejemplo, dos tipos de satisfacción). El HTMT2 usa medias geométricas en lugar de aritméticas y es más exacto cuando las cargas difieren (Roemer et al., 2021, vea las referencias). Lectura errónea frecuente: tratar el HTMT como una correlación entre los constructos; es una razón de correlaciones entre indicadores. Una prueba formal requiere el bootstrap (caja Bootstrap): hay validez discriminante cuando el límite superior del HTMT queda por debajo del umbral."
 
 #: R/texts.R
 msgid ""
@@ -947,8 +1127,19 @@ msgid "Ordinal (polychoric correlations)"
 msgstr "Ordinales (correlaciones policóricas)"
 
 #: plssem/results/paths.columns.title
+#: plssem/results/f2.columns.title
+#: plssem/results/vifStruct.columns.title
+#: plssem/results/effects.columns.title
 msgid "Outcome"
 msgstr "Resultado"
+
+#: plssem/results/measurement.columns.title
+msgid "p (weight)"
+msgstr "p (peso)"
+
+#: R/texts.R
+msgid "p values come from cSEM: t = estimate / bootstrap standard error."
+msgstr "Los valores p vienen de cSEM: t = estimación / error estándar bootstrap."
 
 #: package/analyses/plssem.description
 #: plssem/options.description.main
@@ -972,6 +1163,27 @@ msgstr "Path"
 #: plssem/results/paths.title
 msgid "Path coefficients"
 msgstr "Coeficientes de ruta"
+
+#: R/texts.R
+msgid ""
+"Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); "
+"dashed line: not significant."
+msgstr "Coeficientes de ruta; * el intervalo bootstrap al %s%% excluye el 0 (línea continua); línea discontinua: no significativa."
+
+#: R/texts.R
+msgid ""
+"Path coefficients; line width follows the coefficient. Run the bootstrap to "
+"mark which paths are significant."
+msgstr "Coeficientes de ruta; el grosor de la línea sigue al coeficiente. Ejecute el bootstrap para marcar qué rutas son significativas."
+
+#: plssem/options/pathDiagram.title
+#: plssem/results/pathDiagram.title
+msgid "Path diagram"
+msgstr "Diagrama de rutas"
+
+#: plssem/ui[4].label
+msgid "Plots"
+msgstr "Gráficos"
 
 #: plssem/options/estimator/pls.title
 msgid "PLS"
@@ -1033,6 +1245,9 @@ msgid "Predicted by"
 msgstr "Predicho por"
 
 #: plssem/results/paths.columns.title
+#: plssem/results/f2.columns.title
+#: plssem/results/vifStruct.columns.title
+#: plssem/results/effects.columns.title
 msgid "Predictor"
 msgstr "Predictor"
 
@@ -1043,6 +1258,19 @@ msgstr "Predictores de cada constructo"
 #: plssem/results/r2.columns.title
 msgid "R²"
 msgstr "R²"
+
+#: plssem/results/r2.columns.superTitle
+msgid "R² CI"
+msgstr "IC del R²"
+
+#: R/texts.R
+msgid ""
+"Read the measurement model first, then the significant paths and their "
+"effect sizes. Report each path with its coefficient, interval and f², and "
+"say how many bootstrap resamples and which seed you used. Mediation "
+"analysis, prediction and group comparisons come in later versions of "
+"PLSsemLab."
+msgstr "Lea primero el modelo de medida y luego las rutas significativas y sus tamaños del efecto. Informe cada ruta con su coeficiente, su intervalo y su f², y diga cuántas réplicas bootstrap y qué semilla usó. El análisis de mediación, la predicción y la comparación entre grupos llegan en versiones posteriores de PLSsemLab."
 
 #: R/texts.R
 msgid "Reflective"
@@ -1060,7 +1288,12 @@ msgid ""
 "jamovi (for a scale from 1 to k, the new value is k + 1 minus the old one) "
 "and run the analysis again: until then, the reliability, AVE and HTMT of "
 "their constructs are distorted."
-msgstr "Indicadores reflectivos con carga negativa: %s. Casi con seguridad son ítems redactados en sentido opuesto que no se recodificaron. Recodifíquelos en jamovi (en una escala de 1 a k, el valor nuevo es k + 1 menos el anterior) y vuelva a ejecutar el análisis: mientras tanto, la fiabilidad, la AVE y el HTMT de sus constructos están distorsionados."
+msgstr ""
+"Indicadores reflectivos con carga negativa: %s. Casi con seguridad son ítems "
+"redactados en sentido opuesto que no se recodificaron. Recodifíquelos en "
+"jamovi (en una escala de 1 a k, el valor nuevo es k + 1 menos el anterior) y "
+"vuelva a ejecutar el análisis: mientras tanto, la fiabilidad, la AVE y el "
+"HTMT de sus constructos están distorsionados."
 
 #: R/texts.R
 msgid "reliability acceptable only in exploratory research"
@@ -1125,7 +1358,7 @@ msgstr ""
 msgid "Replace by the indicator mean"
 msgstr "Reemplazar por la media del indicador"
 
-#: plssem/ui[4].label
+#: plssem/ui[6].label
 msgid "Report Content"
 msgstr "Contenido del informe"
 
@@ -1137,27 +1370,43 @@ msgstr "Reproducibilidad"
 msgid "Reproducibility record"
 msgstr "Registro de reproducibilidad"
 
+#: plssem/options/bootReps.title
+msgid "Resamples"
+msgstr "Réplicas"
+
 #: plssem/results/model.columns.title
 msgid "Role"
 msgstr "Papel"
+
+#: plssem/options/bootstrap.title
+msgid "Run bootstrap"
+msgstr "Ejecutar bootstrap"
+
+#: plssem/results/paths.columns.title
+msgid "SE"
+msgstr "EE"
+
+#: plssem/options/bootSeed.title
+msgid "Seed"
+msgstr "Semilla"
 
 #: R/texts.R
 msgid ""
 "Settle the measurement model before reading the paths: a construct that is "
 "poorly measured, or not distinct from another, makes its paths hard to "
 "interpret. Any indicator you remove changes every number, so remove one at a "
-"time and run the analysis again. The next version of PLSsemLab adds "
-"bootstrap confidence intervals, which turn the HTMT thresholds into a test "
-"and give the significance of paths and weights; until then, treat these "
-"estimates as descriptive."
-msgstr ""
-"Resuelva el modelo de medida antes de leer las rutas: un constructo mal "
-"medido, o que no se distingue de otro, hace difícil interpretar sus rutas. "
-"Cada indicador que quite cambia todos los números, así que quítelos de uno "
-"en uno y vuelva a ejecutar el análisis. La próxima versión de PLSsemLab "
-"añade intervalos de confianza bootstrap, que convierten los umbrales del "
-"HTMT en una prueba y dan la significación de rutas y pesos; mientras tanto, "
-"trate estas estimaciones como descriptivas."
+"time and run the analysis again. Run the bootstrap (Bootstrap box) to turn "
+"the HTMT thresholds into a test and to get the significance of paths and "
+"weights; until then, treat these estimates as descriptive."
+msgstr "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. Ejecute el bootstrap (caja Bootstrap) para convertir los umbrales del HTMT en una prueba y obtener la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+
+#: R/texts.R
+msgid "Single predictor: no collinearity"
+msgstr "Predictor único: sin colinealidad"
+
+#: R/texts.R
+msgid "Some bootstrap blocks failed and were left out: %s"
+msgstr "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
 
 #: R/texts.R
 msgid "Structural model"
@@ -1169,6 +1418,10 @@ msgid "Structural Model"
 msgstr "Modelo estructural"
 
 #: R/texts.R
+msgid "Structural model: %d of %d paths are significant at %s%%."
+msgstr "Modelo estructural: %d de %d rutas son significativas al %s%%."
+
+#: R/texts.R
 msgid "Structural model: the highest R² is %s for %s."
 msgstr "Modelo estructural: el R² más alto es %s, para %s."
 
@@ -1178,11 +1431,43 @@ msgstr "sustancial"
 
 #: R/texts.R
 msgid ""
+"The bootstrap could not be completed; see the notice at the top of the "
+"results."
+msgstr "El bootstrap no pudo completarse; vea el aviso al inicio de los resultados."
+
+#: R/texts.R
+msgid ""
+"The bootstrap could not be computed, so the tables show estimates without "
+"intervals: %s"
+msgstr "No se pudo calcular el bootstrap, así que las tablas muestran estimaciones sin intervalos: %s"
+
+#: R/texts.R
+msgid ""
 "The correlation with %s exceeds the square root of the AVE of one of the two "
 "constructs."
 msgstr ""
 "La correlación con %s supera la raíz cuadrada de la AVE de uno de los dos "
 "constructos."
+
+#: R/texts.R
+msgid ""
+"The direct effect is the path itself; the indirect effect is the sum of all "
+"routes through other constructs (the product of the paths along each route); "
+"the total effect is their sum. An indirect effect whose bootstrap interval "
+"excludes 0 means mediation: whether it is full or partial depends on the "
+"direct effect, as the mediation section of a later version explains. Common "
+"misreading: testing mediation by the significance of each path separately "
+"instead of the indirect effect itself."
+msgstr "El efecto directo es la ruta misma; el efecto indirecto es la suma de todos los caminos a través de otros constructos (el producto de las rutas de cada camino); el efecto total es su suma. Un efecto indirecto cuyo intervalo bootstrap excluye el 0 indica mediación: que sea completa o parcial depende del efecto directo, como explicará la sección de mediación de una versión posterior. Lectura errónea frecuente: probar la mediación por la significación de cada ruta por separado en lugar del efecto indirecto mismo."
+
+#: R/texts.R
+msgid ""
+"The effect size f² tells how much the R² of the outcome drops when that "
+"predictor is removed: f² = (R² with − R² without) / (1 − R² with). Values of "
+"0.02, 0.15 and 0.35 are read as small, medium and large (Hair et al., 2019, "
+"see references). A significant path can have a negligible f² in a large "
+"sample: read both."
+msgstr "El tamaño del efecto f² indica cuánto baja el R² del resultado al quitar ese predictor: f² = (R² con − R² sin) / (1 − R² con). Los valores 0.02, 0.15 y 0.35 se leen como pequeño, mediano y grande (Hair et al., 2019, vea las referencias). Una ruta significativa puede tener un f² despreciable en una muestra grande: lea ambos."
 
 #: R/texts.R
 msgid ""
@@ -1255,6 +1540,14 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"The p value and the percentile interval disagree for this path (a borderline "
+"case). The decision follows the interval, as recommended for PLS-SEM (Hair "
+"et al., 2019, see references); report both, and check with more resamples or "
+"another seed."
+msgstr "El valor p y el intervalo percentil discrepan en esta ruta (un caso límite). La decisión sigue al intervalo, como se recomienda en PLS-SEM (Hair et al., 2019, vea las referencias); informe ambos y compruébelo con más réplicas u otra semilla."
+
+#: R/texts.R
+msgid ""
 "The R code below reproduces this analysis with cSEM directly, from the data "
 "set loaded in jamovi (called data). Constructs and indicators get internal "
 "names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or "
@@ -1287,16 +1580,71 @@ msgstr ""
 "quítela por ahora."
 
 #: R/texts.R
+msgid ""
+"The structural VIF measures how much the predictors of the same outcome "
+"overlap. Above 3, and certainly above 5, their coefficients become unstable "
+"and can even change sign (Hair et al., 2019, see references). With a single "
+"predictor there is no collinearity to assess."
+msgstr "El VIF estructural mide cuánto se solapan los predictores de un mismo resultado. Por encima de 3, y sin duda por encima de 5, sus coeficientes se vuelven inestables y pueden incluso cambiar de signo (Hair et al., 2019, vea las referencias). Con un solo predictor no hay colinealidad que evaluar."
+
+#: plssem/results/effects.columns.title
+msgid "Total"
+msgstr "Total"
+
+#: plssem/results/effects.columns.superTitle
+msgid "Total CI"
+msgstr "IC del total"
+
+#: R/texts.R
 msgid "Uncertainties"
 msgstr "Incertidumbres"
+
+#: plssem/results/measurement.columns.title
+#: plssem/results/reliability.columns.title
+#: plssem/results/vif.columns.title
+#: plssem/results/paths.columns.title
+#: plssem/results/r2.columns.title
+#: plssem/results/vifStruct.columns.title
+#: plssem/results/effects.columns.title
+msgid "Upper"
+msgstr "Superior"
+
+#: plssem/results/htmt.columns.title
+msgid "Upper bound"
+msgstr "Límite superior"
+
+#: R/texts.R
+msgid "Upper bound 0.85 to 0.90: acceptable only for conceptually similar constructs"
+msgstr "Límite superior 0.85 a 0.90: aceptable solo para constructos conceptualmente similares"
+
+#: R/texts.R
+msgid "Upper bound 0.90 or more: discriminant validity not established"
+msgstr "Límite superior 0.90 o más: validez discriminante no establecida"
+
+#: R/texts.R
+msgid "Upper bound below 0.85: distinct constructs"
+msgstr "Límite superior menor de 0.85: constructos distintos"
+
+#: R/texts.R
+msgid ""
+"Upper bound: the one-sided 95%% bootstrap upper bound (the 95th percentile "
+"of %d admissible resamples). Discriminant validity holds when it stays below "
+"the threshold (Henseler et al., 2015, see references)."
+msgstr "Límite superior: el límite superior bootstrap unilateral al 95%% (el percentil 95 de %d réplicas admisibles). Hay validez discriminante cuando queda por debajo del umbral (Henseler et al., 2015, vea las referencias)."
 
 #: R/texts.R
 msgid "very weak"
 msgstr "muy débil"
 
 #: plssem/results/vif.columns.title
+#: plssem/results/vifStruct.columns.title
 msgid "VIF"
 msgstr "VIF"
+
+#: plssem/results/vif.columns.superTitle
+#: plssem/results/vifStruct.columns.superTitle
+msgid "VIF CI"
+msgstr "IC del VIF"
 
 #: R/texts.R
 msgid "Warnings"
@@ -1310,9 +1658,38 @@ msgstr "débil"
 msgid "Weight"
 msgstr "Peso"
 
+#: plssem/results/measurement.columns.superTitle
+msgid "Weight CI"
+msgstr "IC del peso"
+
 #: R/texts.R
 msgid "What to do now"
 msgstr "Qué hacer ahora"
+
+#: R/texts.R
+msgid ""
+"With the bootstrap, %d of %d paths are significant at %s%%. Not significant "
+"(interval includes 0): %s."
+msgstr "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."
+
+#: R/texts.R
+msgid ""
+"With the bootstrap, all %d paths are significant at %s%%: their intervals "
+"exclude 0."
+msgstr "Con el bootstrap, las %d rutas son significativas al %s%%: sus intervalos excluyen el 0."
+
+#: R/texts.R
+msgid ""
+"With the bootstrap, the upper bound of HTMT reaches 0.85 or more for %s: "
+"discriminant validity is not established for these pairs, even if the "
+"estimate is lower."
+msgstr "Con el bootstrap, el límite superior del HTMT alcanza 0.85 o más en %s: no hay validez discriminante establecida para estos pares, aunque la estimación sea menor."
+
+#: R/texts.R
+msgid ""
+"With the bootstrap, the upper bound of HTMT stays below 0.85 for all %d "
+"pairs: discriminant validity is established."
+msgstr "Con el bootstrap, el límite superior del HTMT queda por debajo de 0.85 en los %d pares: la validez discriminante queda establecida."
 
 #: plssem/results/reliability.columns.title
 msgid "ρA"
@@ -1331,6 +1708,10 @@ msgstr ""
 #: plssem/results/reliability.columns.title
 msgid "ρC"
 msgstr "ρC"
+
+#: plssem/results/reliability.columns.superTitle
+msgid "ρC CI"
+msgstr "IC de ρC"
 
 #: R/texts.R
 msgid ""

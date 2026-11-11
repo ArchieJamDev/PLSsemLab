@@ -1,5 +1,48 @@
 # PLSsemLab 0.0.0 (development)
 
+## Phase 3: structural model and bootstrap (D2, D4)
+
+* **Structural model:** path coefficients and R² with adjusted R², plus
+  three new tables. The f² effect size is banded against 0.02, 0.15 and
+  0.35. The structural VIF has an assessment against 3 and 5, and an
+  outcome with a single predictor keeps its row and says why. The direct,
+  indirect and total effects table has one row for every pair of
+  constructs linked by a route. Each table has a "How to read" guide.
+* **Bootstrap in blocks (D4):** an explicit *Run bootstrap* checkbox, off
+  by default. The resamples (default 2000), seed and confidence level are
+  in the panel and printed in the report.
+  * Resamples are drawn in blocks of 200; block k uses seed + k − 1.
+    `private$.checkpoint()` runs between blocks, so changing an option stops
+    the run, and the status line reports progress.
+  * Up to 200 resamples, the intervals are identical to a direct
+    `resamplecSEMResults()` call with the same seed. With more, they equal
+    the module's equivalent R code.
+  * Inadmissible resamples are dropped and counted, and blocks that fail
+    are reported as a notice.
+  * Results are cached (small and capped) by a hash of the model, data and
+    bootstrap options.
+* **Intervals for every measure:** percentile CIs, standard errors and p
+  values for paths, loadings, weights and effects. There are CIs for R², ρC,
+  AVE, the formative and structural VIF, and the one-sided 95% upper bound
+  of HTMT.
+  * With the bootstrap, the HTMT assessment uses the upper bound (Henseler
+    et al., 2015).
+  * Formative weights are assessed by significance and loading (Hair et
+    al., 2019).
+  * When p and the interval disagree, a footnote explains that the decision
+    follows the interval.
+* **Plots** (colours from jamovi's theme only, data in `image$state`):
+  * a path diagram (on by default) with R² in each outcome, line width
+    following the coefficient, and dashed lines for non-significant paths;
+  * a loadings plot with the 0.708 reference line and bootstrap error bars;
+  * an HTMT grid shaded by the upper bound.
+* Teaching: interpretation and key findings of significance, f², structural
+  VIF and HTMT upper bounds. "What to do now" changes once the bootstrap has
+  run, and the reproducibility code adds the blocks and their merge.
+* Tests: the bootstrap is checked against direct cSEM calls to 1e-10, and f²,
+  structural VIF and total effects against cSEM. 2000 resamples of the
+  extended corporate-reputation model ran in 52 s with all 2000 admissible.
+
 ## Phase 2: quality of the measurement model (D2)
 
 * **Reliability and convergent validity:** Cronbach's alpha, ρA, ρC and

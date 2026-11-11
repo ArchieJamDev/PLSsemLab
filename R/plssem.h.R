@@ -15,6 +15,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             indicatorScale = "continuous",
             missing = "listwise",
             fornellLarcker = FALSE,
+            bootstrap = FALSE,
+            bootReps = 2000,
+            bootSeed = 2026,
+            ciLevel = 0.95,
+            pathDiagram = TRUE,
+            loadingsPlot = FALSE,
+            htmtPlot = FALSE,
             omegaCfa = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
@@ -106,6 +113,38 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "fornellLarcker",
                 fornellLarcker,
                 default=FALSE)
+            private$..bootstrap <- jmvcore::OptionBool$new(
+                "bootstrap",
+                bootstrap,
+                default=FALSE)
+            private$..bootReps <- jmvcore::OptionInteger$new(
+                "bootReps",
+                bootReps,
+                min=100,
+                max=100000,
+                default=2000)
+            private$..bootSeed <- jmvcore::OptionInteger$new(
+                "bootSeed",
+                bootSeed,
+                default=2026)
+            private$..ciLevel <- jmvcore::OptionNumber$new(
+                "ciLevel",
+                ciLevel,
+                min=0.5,
+                max=0.999,
+                default=0.95)
+            private$..pathDiagram <- jmvcore::OptionBool$new(
+                "pathDiagram",
+                pathDiagram,
+                default=TRUE)
+            private$..loadingsPlot <- jmvcore::OptionBool$new(
+                "loadingsPlot",
+                loadingsPlot,
+                default=FALSE)
+            private$..htmtPlot <- jmvcore::OptionBool$new(
+                "htmtPlot",
+                htmtPlot,
+                default=FALSE)
             private$..omegaCfa <- jmvcore::OptionBool$new(
                 "omegaCfa",
                 omegaCfa,
@@ -135,6 +174,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..indicatorScale)
             self$.addOption(private$..missing)
             self$.addOption(private$..fornellLarcker)
+            self$.addOption(private$..bootstrap)
+            self$.addOption(private$..bootReps)
+            self$.addOption(private$..bootSeed)
+            self$.addOption(private$..ciLevel)
+            self$.addOption(private$..pathDiagram)
+            self$.addOption(private$..loadingsPlot)
+            self$.addOption(private$..htmtPlot)
             self$.addOption(private$..omegaCfa)
             self$.addOption(private$..showKeySummary)
             self$.addOption(private$..showChoicesGuide)
@@ -150,6 +196,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         indicatorScale = function() private$..indicatorScale$value,
         missing = function() private$..missing$value,
         fornellLarcker = function() private$..fornellLarcker$value,
+        bootstrap = function() private$..bootstrap$value,
+        bootReps = function() private$..bootReps$value,
+        bootSeed = function() private$..bootSeed$value,
+        ciLevel = function() private$..ciLevel$value,
+        pathDiagram = function() private$..pathDiagram$value,
+        loadingsPlot = function() private$..loadingsPlot$value,
+        htmtPlot = function() private$..htmtPlot$value,
         omegaCfa = function() private$..omegaCfa$value,
         showKeySummary = function() private$..showKeySummary$value,
         showChoicesGuide = function() private$..showChoicesGuide$value,
@@ -164,6 +217,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..indicatorScale = NA,
         ..missing = NA,
         ..fornellLarcker = NA,
+        ..bootstrap = NA,
+        ..bootReps = NA,
+        ..bootSeed = NA,
+        ..ciLevel = NA,
+        ..pathDiagram = NA,
+        ..loadingsPlot = NA,
+        ..htmtPlot = NA,
         ..omegaCfa = NA,
         ..showKeySummary = NA,
         ..showChoicesGuide = NA,
@@ -177,6 +237,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         intro = function() private$.items[["intro"]],
         keySummary = function() private$.items[["keySummary"]],
+        bootStatus = function() private$.items[["bootStatus"]],
         choicesGuide = function() private$.items[["choicesGuide"]],
         modelGuide = function() private$.items[["modelGuide"]],
         model = function() private$.items[["model"]],
@@ -192,6 +253,14 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pathsGuide = function() private$.items[["pathsGuide"]],
         paths = function() private$.items[["paths"]],
         r2 = function() private$.items[["r2"]],
+        structuralGuide = function() private$.items[["structuralGuide"]],
+        f2 = function() private$.items[["f2"]],
+        vifStruct = function() private$.items[["vifStruct"]],
+        effects = function() private$.items[["effects"]],
+        pathDiagram = function() private$.items[["pathDiagram"]],
+        loadingsPlot = function() private$.items[["loadingsPlot"]],
+        htmtPlot = function() private$.items[["htmtPlot"]],
+        cacheStore = function() private$.items[["cacheStore"]],
         interpretation = function() private$.items[["interpretation"]],
         reproducibility = function() private$.items[["reproducibility"]],
         reproducibilityCode = function() private$.items[["reproducibilityCode"]]),
@@ -211,6 +280,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="keySummary",
                 title="Key findings",
                 visible="(showKeySummary)"))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="bootStatus",
+                title="Bootstrap",
+                visible="(bootstrap)"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="choicesGuide",
@@ -278,7 +352,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "estimator",
                     "innerScheme",
                     "indicatorScale",
-                    "missing"),
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
                 columns=list(
                     list(
                         `name`="construct", 
@@ -294,9 +372,39 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="Loading", 
                         `type`="number"),
                     list(
+                        `name`="loadLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Loading CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="loadUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Loading CI", 
+                        `visible`="(bootstrap)"),
+                    list(
                         `name`="weight", 
                         `title`="Weight", 
-                        `type`="number"))))
+                        `type`="number"),
+                    list(
+                        `name`="weightLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Weight CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="weightUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Weight CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="weightP", 
+                        `title`="p (weight)", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `visible`="(bootstrap)"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="reliabilityGuide",
@@ -321,6 +429,10 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "innerScheme",
                     "indicatorScale",
                     "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel",
                     "omegaCfa"),
                 columns=list(
                     list(
@@ -340,6 +452,18 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="\u03C1C", 
                         `type`="number"),
                     list(
+                        `name`="rhoCLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="\u03C1C CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="rhoCUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="\u03C1C CI", 
+                        `visible`="(bootstrap)"),
+                    list(
                         `name`="omega", 
                         `title`="\u03C9 (CFA)", 
                         `type`="number", 
@@ -348,6 +472,18 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="ave", 
                         `title`="AVE", 
                         `type`="number"),
+                    list(
+                        `name`="aveLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="AVE CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="aveUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="AVE CI", 
+                        `visible`="(bootstrap)"),
                     list(
                         `name`="assessment", 
                         `title`="Assessment", 
@@ -372,7 +508,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "estimator",
                     "innerScheme",
                     "indicatorScale",
-                    "missing"),
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
                 columns=list(
                     list(
                         `name`="c1", 
@@ -390,6 +530,12 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="htmt", 
                         `title`="HTMT", 
                         `type`="number"),
+                    list(
+                        `name`="htmtUpper", 
+                        `title`="Upper bound", 
+                        `type`="number", 
+                        `superTitle`="HTMT", 
+                        `visible`="(bootstrap)"),
                     list(
                         `name`="htmt2", 
                         `title`="HTMT2", 
@@ -440,7 +586,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "estimator",
                     "innerScheme",
                     "indicatorScale",
-                    "missing"),
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
                 columns=list(
                     list(
                         `name`="construct", 
@@ -455,6 +605,18 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="vif", 
                         `title`="VIF", 
                         `type`="number"),
+                    list(
+                        `name`="vifLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="vifUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
                     list(
                         `name`="assessment", 
                         `title`="Assessment", 
@@ -479,7 +641,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "estimator",
                     "innerScheme",
                     "indicatorScale",
-                    "missing"),
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
                 columns=list(
                     list(
                         `name`="from", 
@@ -496,7 +662,35 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     list(
                         `name`="estimate", 
                         `title`="Coefficient", 
-                        `type`="number"))))
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="t", 
+                        `title`="t", 
+                        `type`="number", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="lower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Coefficient CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="upper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Coefficient CI", 
+                        `visible`="(bootstrap)"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="r2",
@@ -511,7 +705,11 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "estimator",
                     "innerScheme",
                     "indicatorScale",
-                    "missing"),
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
                 columns=list(
                     list(
                         `name`="construct", 
@@ -522,9 +720,254 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `title`="R\u00B2", 
                         `type`="number"),
                     list(
+                        `name`="r2Lower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="R\u00B2 CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="r2Upper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="R\u00B2 CI", 
+                        `visible`="(bootstrap)"),
+                    list(
                         `name`="r2adj", 
                         `title`="Adjusted R\u00B2", 
                         `type`="number"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="structuralGuide",
+                title="How to read effect sizes, collinearity and effects",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="f2",
+                title="Effect size (f\u00B2)",
+                rows=0,
+                refs=list(
+                    "hair_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing"),
+                columns=list(
+                    list(
+                        `name`="from", 
+                        `title`="Predictor", 
+                        `type`="text"),
+                    list(
+                        `name`="arrow", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="to", 
+                        `title`="Outcome", 
+                        `type`="text"),
+                    list(
+                        `name`="f2", 
+                        `title`="f\u00B2", 
+                        `type`="number"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="vifStruct",
+                title="Collinearity of predictors (structural VIF)",
+                rows=0,
+                refs=list(
+                    "hair_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="from", 
+                        `title`="Predictor", 
+                        `type`="text"),
+                    list(
+                        `name`="arrow", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="to", 
+                        `title`="Outcome", 
+                        `type`="text"),
+                    list(
+                        `name`="vif", 
+                        `title`="VIF", 
+                        `type`="number"),
+                    list(
+                        `name`="vifLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="vifUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="effects",
+                title="Direct, indirect and total effects",
+                rows=0,
+                refs=list(
+                    "hair_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="from", 
+                        `title`="Predictor", 
+                        `type`="text"),
+                    list(
+                        `name`="arrow", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="to", 
+                        `title`="Outcome", 
+                        `type`="text"),
+                    list(
+                        `name`="direct", 
+                        `title`="Direct", 
+                        `type`="number"),
+                    list(
+                        `name`="indirect", 
+                        `title`="Indirect", 
+                        `type`="number"),
+                    list(
+                        `name`="indLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Indirect CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="indUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Indirect CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="total", 
+                        `title`="Total", 
+                        `type`="number"),
+                    list(
+                        `name`="totLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Total CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="totUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Total CI", 
+                        `visible`="(bootstrap)"))))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="pathDiagram",
+                title="Path diagram",
+                width=700,
+                height=460,
+                renderFun=".plotPaths",
+                visible="(pathDiagram)",
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="loadingsPlot",
+                title="Loadings of reflective indicators",
+                width=600,
+                height=400,
+                renderFun=".plotLoadings",
+                visible="(loadingsPlot)",
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel")))
+            self$add(jmvcore::Image$new(
+                options=options,
+                name="htmtPlot",
+                title="Discriminant validity (HTMT)",
+                width=520,
+                height=420,
+                renderFun=".plotHtmt",
+                visible="(htmtPlot)",
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel")))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="cacheStore",
+                visible=FALSE,
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing")))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="interpretation",
@@ -578,6 +1021,13 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param indicatorScale .
 #' @param missing .
 #' @param fornellLarcker .
+#' @param bootstrap .
+#' @param bootReps .
+#' @param bootSeed .
+#' @param ciLevel .
+#' @param pathDiagram .
+#' @param loadingsPlot .
+#' @param htmtPlot .
 #' @param omegaCfa .
 #' @param showKeySummary .
 #' @param showChoicesGuide .
@@ -587,6 +1037,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' \tabular{llllll}{
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$keySummary} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$bootStatus} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$choicesGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$modelGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
@@ -602,6 +1053,14 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pathsGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$paths} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$r2} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$effects} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a preformatted \cr
@@ -625,6 +1084,13 @@ plssem <- function(
     indicatorScale = "continuous",
     missing = "listwise",
     fornellLarcker = FALSE,
+    bootstrap = FALSE,
+    bootReps = 2000,
+    bootSeed = 2026,
+    ciLevel = 0.95,
+    pathDiagram = TRUE,
+    loadingsPlot = FALSE,
+    htmtPlot = FALSE,
     omegaCfa = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
@@ -648,6 +1114,13 @@ plssem <- function(
         indicatorScale = indicatorScale,
         missing = missing,
         fornellLarcker = fornellLarcker,
+        bootstrap = bootstrap,
+        bootReps = bootReps,
+        bootSeed = bootSeed,
+        ciLevel = ciLevel,
+        pathDiagram = pathDiagram,
+        loadingsPlot = loadingsPlot,
+        htmtPlot = htmtPlot,
         omegaCfa = omegaCfa,
         showKeySummary = showKeySummary,
         showChoicesGuide = showChoicesGuide,

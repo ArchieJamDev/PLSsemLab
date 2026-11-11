@@ -187,6 +187,65 @@ options:
     type: Bool
     default: false
 
+  # ---------------------------------------------------------------------------
+  # Bootstrap (phase 3). Off by default because it takes time (jamovi's
+  # review: long computations behind an explicit "Run" box); run in blocks of
+  # 200 resamples with a checkpoint between blocks, so it shows progress and
+  # stops when an option changes. Block k uses seed + k - 1: up to 200
+  # resamples the result is identical to a direct cSEM call with this seed.
+  # ES: Bootstrap (fase 3). Desactivado por defecto porque tarda (revisión de
+  # jamovi: cálculos largos tras una casilla "Run" explícita); en bloques de
+  # 200 réplicas con un checkpoint entre bloques, para mostrar el avance y
+  # detenerse si cambia una opción. El bloque k usa semilla + k - 1: hasta
+  # 200 réplicas el resultado es idéntico a una llamada directa a cSEM.
+  # ---------------------------------------------------------------------------
+  - name: bootstrap
+    title: Run bootstrap
+    type: Bool
+    default: false
+
+  - name: bootReps
+    title: Resamples
+    type: Integer
+    min: 100
+    max: 100000
+    default: 2000
+
+  - name: bootSeed
+    title: Seed
+    type: Integer
+    default: 2026
+
+  - name: ciLevel
+    title: Confidence level
+    type: Number
+    min: 0.5
+    max: 0.999
+    default: 0.95
+
+  # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
+  # cannot show).
+  # ES: Diagrama de rutas dibujado por el módulo (el de cSEM usa
+  # DiagrammeR, que jamovi no muestra).
+  - name: pathDiagram
+    title: Path diagram
+    type: Bool
+    default: true
+
+  # Measurement-model plots: loadings of reflective indicators against the
+  # 0.708 reference (with intervals after the bootstrap), and HTMT per pair.
+  # ES: Gráficos del modelo de medida: cargas reflectivas frente a 0.708 (con
+  # intervalos tras el bootstrap) y HTMT por par.
+  - name: loadingsPlot
+    title: Loadings
+    type: Bool
+    default: false
+
+  - name: htmtPlot
+    title: HTMT
+    type: Bool
+    default: false
+
   # McDonald's omega from a one-factor CFA of each reflective construct
   # (lavaan, the engine of jamovi's own CFA), estimated outside the PLS
   # model as an independent reference for rho_C. Off by default.

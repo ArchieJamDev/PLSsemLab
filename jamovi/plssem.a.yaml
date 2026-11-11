@@ -89,27 +89,23 @@ options:
           permitted:
             - numeric
 
-  # Structural model: one row per construct, kept in step with the two boxes
-  # above by jamovi/js/plssem.events.js. `label` is the construct (the
-  # outcome) and `predictors` the constructs dragged into its row; a row with
-  # no predictors is an exogenous construct. The row carries its own label,
-  # so the R side never depends on the order of the rows.
-  # ES: Modelo estructural: una fila por constructo, sincronizada con las dos
-  # cajas de arriba por jamovi/js/plssem.events.js. `label` es el constructo
-  # (el resultado) y `predictors` los constructos arrastrados a su fila; una
-  # fila sin predictores es un constructo exógeno. La fila lleva su propia
-  # etiqueta, así que el lado R nunca depende del orden de las filas.
+  # Structural model: one row per construct (Array of Terms, as SEMLj's
+  # endogenousTerms), in the order of the constructs that have a name and at
+  # least one indicator (reflective first); each row holds the constructs
+  # dragged into it, its predictors. A row with no predictors is an exogenous
+  # construct. jamovi/js/plssem.events.js keeps the rows in step with the
+  # boxes and R reads them with the same rule (.pl_structural_labels).
+  # ES: Modelo estructural: una fila por constructo (Array de Terms, como el
+  # endogenousTerms de SEMLj), en el orden de los constructos con nombre y al
+  # menos un indicador (reflectivos primero); cada fila guarda sus
+  # predictores. Una fila sin predictores es un constructo exógeno. El JS
+  # mantiene las filas sincronizadas y R las lee con la misma regla.
   - name: structural
     title: Structural Model
     type: Array
     default: []
     template:
-      type: Group
-      elements:
-        - name: label
-          type: String
-        - name: predictors
-          type: Terms
+      type: Terms
 
   # PLS (composite-based; reflective constructs as Mode A composites) or
   # consistent PLS (reflective constructs as common factors, corrected for

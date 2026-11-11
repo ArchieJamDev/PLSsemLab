@@ -73,7 +73,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .init = function() {
             blocks <- .pl_constructs(self$options)$blocks
             labels <- vapply(blocks, `[[`, "", "label")
-            paths <- .pl_paths(self$options$structural, labels)
+            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks))
             for (i in seq_along(blocks)) {
                 self$results$model$addRow(rowKey = i, values = list(construct = blocks[[i]]$label))
                 for (v in blocks[[i]]$vars)
@@ -128,7 +128,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             cons <- .pl_constructs(self$options)
             blocks <- cons$blocks
             labels <- vapply(blocks, `[[`, "", "label")
-            paths <- .pl_paths(self$options$structural, labels)
+            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks))
             if (length(blocks) < 2 || nrow(paths) == 0) {
                 private$.showIntro(lang, if (length(blocks) < 2) "need_constructs" else "need_paths")
                 return()

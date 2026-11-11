@@ -76,7 +76,6 @@ children:
                   height: auto
                   ghostText: drag indicators here
                   events:
-                    change: './plssem.events::onConstructsChanged'
                     listItemAdded: './plssem.events::onConstructsChanged'
                     listItemRemoved: './plssem.events::onConstructsChanged'
       - type: TargetLayoutBox
@@ -112,7 +111,6 @@ children:
                   height: auto
                   ghostText: drag indicators here
                   events:
-                    change: './plssem.events::onConstructsChanged'
                     listItemAdded: './plssem.events::onConstructsChanged'
                     listItemRemoved: './plssem.events::onConstructsChanged'
   - type: CollapseBox
@@ -144,18 +142,8 @@ children:
                   margin: normal
                   targetArea: true
                   children:
-                    - type: TextBox
-                      valueKey:
-                        - label
-                      borderless: true
-                      name: outcomeName
-                      enable: false
-                      stretchFactor: 1
-                      margin: normal
                     - type: ListBox
                       name: predictorList
-                      valueKey:
-                        - predictors
                       isTarget: true
                       valueFilter: unique
                       height: auto

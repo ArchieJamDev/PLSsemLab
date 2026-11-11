@@ -176,26 +176,33 @@
 # -----------------------------------------------------------------------------
 # .pl_paths()
 #
-# Input: structural - list of list(label, predictors), one per construct;
-#   labels - the names of the constructs with indicators.
+# Input: structural - list of Terms, one row per construct, in the order of
+#   .pl_structural_labels() (the rule of constructNames() in
+#   jamovi/js/plssem.events.js: a name and at least one indicator, reflective
+#   first, no repeated names); names - those labels.
 # Output: data.frame(from, to) with one row per predictor term, interaction
-#   terms joined by ":" (rows of constructs no longer defined are ignored:
-#   the panel removes them on its next update).
-# ES: Salida: data.frame(from, to) con una fila por término predictor, las
-#   interacciones unidas por ":" (se ignoran filas de constructos que ya no
-#   existen: el panel las quita en su siguiente actualización).
+#   terms joined by ":" (rows beyond the constructs are ignored: the panel
+#   removes them on its next update).
+# ES: Entrada: structural - lista de Terms, una fila por constructo, en el
+#   orden de .pl_structural_labels() (la misma regla que constructNames() en
+#   el JS). Salida: data.frame(from, to) con una fila por término predictor,
+#   las interacciones unidas por ":".
 # -----------------------------------------------------------------------------
-.pl_paths <- function(structural, labels) {
+.pl_structural_labels <- function(blocks) {
+    labels <- vapply(blocks, `[[`, "", "label")
+    unique(labels[nzchar(labels)])
+}
+
+.pl_paths <- function(structural, names) {
     rows <- list()
-    for (item in structural) {
-        to <- trimws(if (is.null(item$label)) "" else as.character(item$label))
-        if (!nzchar(to) || !(to %in% labels))
-            next
-        for (term in item$predictors) {
+    for (i in seq_along(structural)) {
+        if (i > length(names))
+            break
+        for (term in structural[[i]]) {
             term <- as.character(unlist(term))
             if (length(term) == 0)
                 next
-            rows[[length(rows) + 1]] <- data.frame(from = paste(term, collapse = ":"), to = to,
+            rows[[length(rows) + 1]] <- data.frame(from = paste(term, collapse = ":"), to = names[i],
                                                    stringsAsFactors = FALSE)
         }
     }

@@ -54,11 +54,27 @@ simpleModel <- function() list(
     structural = list(srow("CUSA", "COMP", "LIKE"), srow("CUSL", "COMP", "LIKE", "CUSA"),
                       srow("COMP"), srow("LIKE")))
 
+# The structural option as jamovi stores it: one list of terms per construct,
+# in the order of the constructs with a name and indicators (reflective
+# first), as jamovi/js/plssem.events.js builds it. Tests write rows by name
+# (srow) and this puts them in that order.
+# ES: La opción estructural como la guarda jamovi: una lista de términos por
+# constructo, en el orden de los constructos con nombre e indicadores.
+asRows <- function(model) {
+    blocks <- c(model$reflective, model$formative)
+    names <- unique(vapply(Filter(function(b) length(b$vars) > 0 && nzchar(trimws(b$label)), blocks),
+                           function(b) trimws(b$label), ""))
+    lapply(names, function(n) {
+        row <- Filter(function(r) identical(r$label, n), model$structural)
+        if (length(row)) row[[1]]$predictors else list()
+    })
+}
+
 runPlssem <- function(data, model, ...) {
     cls <- get("plssemClass", envir = asNamespace("PLSsemLab"))
     opts <- get("plssemOptions", envir = asNamespace("PLSsemLab"))
     analysis <- cls$new(options = opts$new(reflective = model$reflective, formative = model$formative,
-                                           structural = model$structural, ...),
+                                           structural = asRows(model), ...),
                         data = data)
     analysis$init()
     analysis$run()

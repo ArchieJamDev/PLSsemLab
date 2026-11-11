@@ -70,16 +70,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "structural",
                 structural,
                 default=list(),
-                template=jmvcore::OptionGroup$new(
+                template=jmvcore::OptionTerms$new(
                     "structural",
-                    NULL,
-                    elements=list(
-                        jmvcore::OptionString$new(
-                            "label",
-                            NULL),
-                        jmvcore::OptionTerms$new(
-                            "predictors",
-                            NULL))))
+                    NULL))
             private$..estimator <- jmvcore::OptionList$new(
                 "estimator",
                 estimator,

@@ -1,0 +1,49 @@
+# Fetches a public dataset (metadata and files) from Mendeley Data, prints its
+# licence and attaches the files to a "dataset-fetch" pre-release, so that it
+# can be inspected before being considered for the bundled datasets.
+# ES: Descarga un conjunto de datos público de Mendeley Data (metadatos y
+# archivos), imprime su licencia y adjunta los archivos a una pre-release
+# "dataset-fetch", para revisarlo antes de considerarlo para el módulo.
+name: Fetch a Mendeley dataset
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: 'Mendeley dataset id'
+        required: true
+        default: '4wyg7vdzzm'
+      version:
+        description: 'Version'
+        required: true
+        default: '3'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Metadata, licence and files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          ID=${{ inputs.dataset }}; V=${{ inputs.version }}
+          curl -sL "https://data.mendeley.com/public-api/datasets/$ID?version=$V" -o out/metadata.json
+          python3 -c "import json; d=json.load(open('out/metadata.json')); print(json.dumps({k: d.get(k) for k in ['name','description','licence','license','contributors','publish_date','doi']}, indent=1)[:4000])" || head -c 3000 out/metadata.json
+          curl -sL "https://data.mendeley.com/public-api/datasets/$ID/files?folder_id=root&version=$V" -o out/files.json
+          python3 - <<'PY'
+          import json, urllib.request, os
+          files = json.load(open('out/files.json'))
+          for f in files:
+              name = f.get('filename'); url = (f.get('content_details') or {}).get('download_url')
+              print(name, f.get('size'), url is not None)
+              if url and name:
+                  urllib.request.urlretrieve(url, os.path.join('out', name))
+          PY
+          ls -la out
+          gh release delete dataset-fetch --yes --cleanup-tag || true
+          gh release create dataset-fetch out/* --prerelease --title "Dataset fetch (not a release)" --notes "Mendeley $ID v$V, for inspection."

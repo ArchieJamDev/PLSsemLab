@@ -239,3 +239,39 @@ test_that("few categories treated as continuous are pointed out", {
     b <- runPlssem(data, simpleModel(), indicatorScale = "ordinal")
     expect_false(any(grepl("5 categories or fewer", noticesOf(b))))
 })
+
+test_that("reverse-coded items left unrecoded are warned by name", {
+    data <- corpRepData()
+    data$comp_2 <- 8 - data$comp_2
+    a <- runPlssem(data, simpleModel())
+    expect_true(any(grepl("negative loading: comp_2 \\(COMP", noticesOf(a))))
+    expect_match(a$results$keySummary$content, "negative loading")
+})
+
+test_that("long item names are shortened to their code in running text", {
+    data <- corpRepData()
+    names(data)[names(data) == "comp_1"] <- "C01.- Es una empresa de primer nivel en su sector"
+    m <- simpleModel()
+    m$reflective[[1]] <- block("COMP", c("C01.- Es una empresa de primer nivel en su sector", "comp_2", "comp_3"))
+    a <- runPlssem(data, m)
+    expect_false(grepl("primer nivel", a$results$interpretation$content))
+})
+
+test_that("the bundled bank data run with formative and reflective constructs", {
+    path <- system.file("extdata", "plssemlab_bank.csv", package = "PLSsemLab")
+    if (!nzchar(path)) path <- testthat::test_path("..", "..", "data", "plssemlab_bank.csv")
+    bank <- utils::read.csv(path)
+    v <- function(p, n) paste0(p, "_", n)
+    m <- list(
+        reflective = list(block("LIKE", v("like", 1:2)), block("COMP", v("comp", 1:3)), block("TRUST", v("trust", 1:4)),
+                          block("SAT", v("sat", 1:3)), block("LOY", v("loy", 1:3))),
+        formative = list(block("QUAL", v("qual", c(1, 2, 4:7))), block("PERF", v("perf", 1:5)),
+                         block("CSOR", v("csor", 1:5)), block("ATTR", v("attr", 1:4))),
+        structural = list(srow("COMP", "QUAL", "PERF", "CSOR", "ATTR"), srow("LIKE", "QUAL", "PERF", "CSOR", "ATTR"),
+                          srow("TRUST", "COMP", "LIKE"), srow("SAT", "COMP", "LIKE"),
+                          srow("LOY", "TRUST", "SAT", "COMP", "LIKE")))
+    a <- runPlssem(bank, m)
+    expect_true(any(grepl("3 case\\(s\\) with missing values were excluded; 672", noticesOf(a))))
+    expect_equal(nrow(a$results$vif$asDF), 20)
+    expect_equal(round(a$results$r2$asDF$r2[a$results$r2$asDF$construct == "COMP"], 3), 0.742)
+})

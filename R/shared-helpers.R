@@ -425,6 +425,20 @@
 # ES: Salida: texto con 3 decimales, para la narrativa; las celdas de las
 #   tablas siguen siendo numéricas.
 # -----------------------------------------------------------------------------
+# Short label of an indicator for running text: the item code when the name
+# starts with one ("E02.- Actualmente..." -> "E02"), otherwise the name cut
+# at 30 characters. Tables always keep the full name.
+# ES: Etiqueta corta de un indicador para el texto corrido: el código del ítem
+# si el nombre empieza con uno, si no el nombre cortado a 30 caracteres. Las
+# tablas conservan siempre el nombre completo.
+.pl_short <- function(x) {
+    vapply(x, function(v) {
+        code <- regmatches(v, regexpr("^[[:alnum:]_]{1,12}(?=[.:)\\-]\\s|\\s*[.:)\\-]{1,2}\\s)", v, perl = TRUE))
+        if (length(code) == 1 && nzchar(code) && nchar(v) > nchar(code) + 3) return(code)
+        if (nchar(v) > 30) paste0(substr(v, 1, 29), "\u2026") else v
+    }, "", USE.NAMES = FALSE)
+}
+
 .pl_fmt <- function(x) {
     if (length(x) == 0 || is.na(x)) return("")
     formatC(x, format = "f", digits = 3)

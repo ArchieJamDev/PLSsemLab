@@ -189,7 +189,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       unlist(lapply(blocks, function(b)
                           if (b$type == "reflective" && length(b$vars) == 1)
                               sprintf(txt("notices", "single_reflective"), b$label))),
-                      fit$warnings, quality$warnings)
+                      fit$warnings, quality$warnings,
+                      private$.negativeLoadings(loadings, txt))
             if (!admissible) {
                 failed <- names(which(unlist(cSEM::verify(fit$value))))
                 warn <- c(warn, sprintf(txt("notices", "inadmissible"), paste(failed, collapse = ", ")))
@@ -432,7 +433,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .interpretation = function(lang, blocks, loadings, paths, r2, quality) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
-                paste(sprintf("%s (%s)", names, vapply(values, .pl_fmt, "")), collapse = ", ")
+                paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
             refl <- private$.multiReflective(loadings)
             meas <- character(0)
             if (nrow(refl) == 0) {
@@ -441,7 +442,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 low <- refl[refl$loading < 0.708, , drop = FALSE]
                 meas <- if (nrow(low))
                     sprintf(txt("low_loadings"), nrow(low), nrow(refl),
-                            paste(sprintf("%s %s", low$indicator, vapply(low$loading, .pl_fmt, "")), collapse = ", "))
+                            paste(sprintf("%s %s", .pl_short(low$indicator), vapply(low$loading, .pl_fmt, "")), collapse = ", "))
                 else sprintf(txt("good_loadings"), nrow(refl))
             }
 
@@ -507,6 +508,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$interpretation$setContent(html)
         },
 
+        # Reflective indicators with a negative loading: almost always items
+        # worded in the opposite direction that were not recoded. Everything
+        # downstream (alpha, rho_C, AVE, HTMT) is distorted until they are, so
+        # the report says it as a warning, by name.
+        # ES: Indicadores reflectivos con carga negativa: casi siempre ítems
+        # redactados en sentido opuesto que no se recodificaron. Todo lo que
+        # sigue queda distorsionado hasta corregirlo, así que el informe lo
+        # advierte, con nombres.
+        .negativeLoadings = function(loadings, txt) {
+            refl <- private$.multiReflective(loadings)
+            neg <- refl[!is.na(refl$loading) & refl$loading < 0, , drop = FALSE]
+            if (!nrow(neg)) return(character(0))
+            sprintf(txt("notices", "negative_loadings"),
+                    paste(sprintf("%s (%s, %s)", .pl_short(neg$indicator), neg$construct,
+                                  vapply(neg$loading, .pl_fmt, "")), collapse = "; "))
+        },
+
         # Indicators of reflective constructs with two or more indicators: a
         # single indicator has a loading of 1 by definition, so it never
         # enters a count of loadings (key findings and interpretation agree).
@@ -545,7 +563,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             k <- which.max(r2$r2)
             findings <- c(findings, sprintf(txt("r2"), .pl_fmt(r2$r2[k]), r2$construct[k]))
-            warnings <- if (admissible) character(0) else txt("admissible_no")
+            warnings <- c(if (!admissible) txt("admissible_no"),
+                          private$.negativeLoadings(loadings, function(section, key) .pl_text(lang, section, key)))
             section <- function(title, items)
                 paste0("<p><strong>", .pl_html_escape(title), "</strong></p>",
                        .pl_html_list(if (length(items)) items else txt("none")))

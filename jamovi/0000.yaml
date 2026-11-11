@@ -45,5 +45,12 @@ datasets:
       European Customer Satisfaction Index for the mobile phone industry: image,
       expectation, quality, value, satisfaction and loyalty, from the cSEM
       package - see data/README.md
+  - name: Bank customers, with demographics (n=675)
+    path: plssemlab_bank.csv
+    description: >-
+      Corporate reputation, trust, satisfaction and loyalty of 675 German bank
+      customers (four formative and five reflective constructs) with gender,
+      age group, education, employment, income and family status; Damberg
+      (2023), CC BY 4.0 - see data/README.md
 
 ...

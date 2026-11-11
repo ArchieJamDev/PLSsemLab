@@ -41,7 +41,16 @@
   model used: equal to `cSEM::calculateVIFModeB()` with continuous
   indicators, and with ordinal ones it uses the polychoric correlations
   (cSEM's function regresses the raw category codes).
-* Spanish catalog: 193 strings. Tests: 193 expectations, including equality
+* A warning names the reflective indicators with a negative loading
+  (reverse-coded items not recoded), also in the key findings; running
+  text shows item codes instead of long item wordings.
+* Options panel fixed for jus 3.0 (jamovi 2.7): helpers through jamovi's
+  global utils, construct names declared as custom variables, structural
+  model as SEMLj's Array of Terms; tested in the official jamovi 2.7.4
+  docker image with a headless browser and in jamovi 2.7.27 by the author.
+* New bundled dataset: Bank customers (Damberg, 2023, CC BY 4.0), with
+  formative and reflective constructs and demographics.
+* Spanish catalog: 194 strings. Tests: 199 expectations, including equality
   of every value with direct cSEM calls on the common-factor syntax, the
   values of COMP of experiment E1, and PLSc.
 

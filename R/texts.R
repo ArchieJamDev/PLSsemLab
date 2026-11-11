@@ -92,6 +92,7 @@
             inadmissible = .("The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples."),
             dropped = .("%d case(s) with missing values were excluded; %d case(s) remain."),
             replaced = .("%d missing value(s) were replaced by the mean of their indicator (%d case(s) affected)."),
+            negative_loadings = .("Reflective indicators with a negative loading: %s. They are almost certainly items worded in the opposite direction that were not recoded. Recode them in jamovi (for a scale from 1 to k, the new value is k + 1 minus the old one) and run the analysis again: until then, the reliability, AVE and HTMT of their constructs are distorted."),
             few_categories = .("Indicators with 5 categories or fewer are treated as continuous: %s. With so few categories Pearson correlations underestimate the relationships; consider Ordinal (polychoric correlations) in Estimation."),
             many_categories = .("Indicators with more than 10 categories are treated as ordinal: %s. Polychoric correlations are meant for a few ordered categories; with many categories, treating the indicators as continuous is usually adequate and more stable."),
             no_reflective_quality = .("The model has no reflective constructs, so reliability, convergent validity (AVE) and discriminant validity (HTMT) do not apply. Formative constructs are judged by the collinearity and the weights of their indicators."),

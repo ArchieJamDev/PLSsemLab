@@ -63,3 +63,29 @@ utils::write.csv(satisfaction, "data/plssemlab_satisfaction.csv", row.names = FA
 
 cat(sprintf("corp_rep: %d x %d, %d missing cells | satisfaction: %d x %d\n",
             nrow(corp), ncol(corp), sum(is.na(corp)), nrow(satisfaction), ncol(satisfaction)))
+
+# Bank Customer Perceptions (Damberg, 2023): 675 customers of German
+# cooperative banks, Mendeley Data V3, https://doi.org/10.17632/4wyg7vdzzm.3,
+# CC BY 4.0. Download DataInBrief_Bankdata.xlsx (the workflow
+# .github/workflows/fetch-dataset.yml fetches it) and set its path here.
+# Gender is 0/1 in the file; the article reports 393 women and 282 men, so
+# 1 = female (the codebook's 1 = male, 2 = female does not match the file).
+# ES: Percepciones de clientes de bancos (Damberg, 2023), CC BY 4.0. El sexo
+# está codificado 0/1; el artículo informa 393 mujeres y 282 hombres, así
+# que 1 = mujer.
+bank_xlsx <- Sys.getenv("PLSSEMLAB_BANK_XLSX", "DataInBrief_Bankdata.xlsx")
+if (file.exists(bank_xlsx)) {
+    b <- as.data.frame(readxl::read_excel(bank_xlsx))
+    names(b)[names(b) == "QUA_7"] <- "QUAL_7"
+    names(b) <- tolower(names(b))
+    names(b)[match(c("a_1_age", "d_1_gender", "d_2_family", "d_3_education", "d_4_employment", "d_6_income"), names(b))] <-
+        c("age_group", "gender", "family", "education", "employment", "income")
+    b$gender <- factor(b$gender, levels = c(0, 1), labels = c("Male", "Female"))
+    b$age_group <- factor(b$age_group, levels = 1:6, labels = c("18-24", "25-34", "35-44", "45-54", "55-65", ">65"),
+                          ordered = TRUE)
+    items <- setdiff(names(b), c("age_group", "gender", "family", "education", "employment", "income"))
+    items <- items[order(match(sub("_.*", "", items), c("qual", "perf", "csor", "attr", "like", "comp", "sat", "loy", "trust")))]
+    b <- b[, c("gender", "age_group", "education", "employment", "income", "family", items)]
+    utils::write.csv(b, "data/plssemlab_bank.csv", row.names = FALSE, na = "")
+    cat(sprintf("bank: %d x %d, %d missing cells\n", nrow(b), ncol(b), sum(is.na(b[, items]))))
+}

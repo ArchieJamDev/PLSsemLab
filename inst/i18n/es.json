@@ -372,7 +372,7 @@
                 "Todavía no hay significación ni intervalos de confianza: esta versión informa solo estimaciones, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior."
             ],
             "None.": [
-                "Ninguno."
+                "Ninguna."
             ],
             "Not computable": [
                 "No computable"
@@ -454,6 +454,9 @@
             ],
             "Reflective Constructs": [
                 "Constructos reflectivos"
+            ],
+            "Reflective indicators with a negative loading: %s. They are almost certainly items worded in the opposite direction that were not recoded. Recode them in jamovi (for a scale from 1 to k, the new value is k + 1 minus the old one) and run the analysis again: until then, the reliability, AVE and HTMT of their constructs are distorted.": [
+                "Indicadores reflectivos con carga negativa: %s. Casi con seguridad son ítems redactados en sentido opuesto que no se recodificaron. Recodifíquelos en jamovi (en una escala de 1 a k, el valor nuevo es k + 1 menos el anterior) y vuelva a ejecutar el análisis: mientras tanto, la fiabilidad, la AVE y el HTMT de sus constructos están distorsionados."
             ],
             "reliability acceptable only in exploratory research": [
                 "fiabilidad aceptable solo en investigación exploratoria"

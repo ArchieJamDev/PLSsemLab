@@ -138,6 +138,14 @@ const sync = function(ui, context) {
     defaultNames(ui);
     let names = constructNames(ui, context);
 
+    // Construct names are not columns of the data set, so they are declared
+    // as custom variables; otherwise the supplier cannot show them (SEMLj
+    // does the same).
+    // ES: Los nombres de constructo no son columnas de los datos, así que se
+    // declaran como variables personalizadas; si no, el supplier no puede
+    // mostrarlos (SEMLj hace lo mismo).
+    context.setCustomVariables(names.map(name => (
+        { name: name, measureType: 'none', dataType: 'none', levels: [] })));
     ui.constructSupplier.setValue(context.valuesToItems(names, FormatDef.variable));
 
     let rows = context.cloneArray(ui.structural.value(), []);

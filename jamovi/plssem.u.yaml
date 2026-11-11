@@ -77,6 +77,8 @@ children:
                   ghostText: drag indicators here
                   events:
                     change: './plssem.events::onConstructsChanged'
+                    listItemAdded: './plssem.events::onConstructsChanged'
+                    listItemRemoved: './plssem.events::onConstructsChanged'
       - type: TargetLayoutBox
         label: Formative Constructs
         children:
@@ -111,6 +113,8 @@ children:
                   ghostText: drag indicators here
                   events:
                     change: './plssem.events::onConstructsChanged'
+                    listItemAdded: './plssem.events::onConstructsChanged'
+                    listItemRemoved: './plssem.events::onConstructsChanged'
   - type: CollapseBox
     label: Structural Model
     collapsed: false

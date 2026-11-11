@@ -33,11 +33,17 @@ jobs:
           docker logs jamovi | tail -20
           docker exec jamovi sh -c 'cat /usr/lib/jamovi/bin/env.conf; which node; node --version' || true
 
-      - name: Build and install PLSsemLab inside the image
+      # The same .jmo the user installs (dev-build pre-release, R 4.5.0 for
+      # jamovi 2.7), handed to the running jamovi as the compiler does.
+      # ES: El mismo .jmo que instala el usuario, entregado al jamovi en
+      # marcha como hace el compilador.
+      - name: Install the dev-build .jmo
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
-          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev && cd -
-          node "$RUNNER_TEMP/jmc/index.js" --install . --home docker:jamovi
+          gh release download dev-build --pattern '*.jmo' --dir jmo
+          docker cp jmo/*.jmo jamovi:/tmp/PLSsemLab.jmo
+          docker exec jamovi /bin/sh -c 'echo "install: /tmp/PLSsemLab.jmo" > /proc/1/fd/0'
           sleep 30
           docker logs jamovi | tail -30
 

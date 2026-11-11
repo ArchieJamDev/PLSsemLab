@@ -36,7 +36,7 @@ def snap(page, opts, name):
     except Exception as e:
         log.append(f"screenshot {name} failed: {e.__class__.__name__}")
     try:
-        heads = opts.evaluate("""() => [...document.querySelectorAll('.silky-control-label, .silky-list-item-value')]
+        heads = opts.evaluate("""() => [...document.querySelectorAll('.silky-target-list-header, .silky-list-item-value')]
             .map(e => e.textContent.trim()).filter(t => t.length && t.length < 40)""")
         log.append(f"--- {name} panel: " + json.dumps(heads, ensure_ascii=False)[:1800])
     except Exception as e:
@@ -100,7 +100,7 @@ with sync_playwright() as p:
     snap(page, opts, "b2-paths")
 
     step("open Bootstrap box", lambda: opts.get_by_text("Bootstrap", exact=True).first.click())
-    reps = opts.locator("input[value='2000']")
+    reps = opts.get_by_label("Resamples")
     step("resamples 100", lambda: (reps.first.fill("100"), reps.first.press("Tab")))
     step("run bootstrap", lambda: opts.get_by_text("Run bootstrap", exact=True).first.click(), wait=1)
     for t in range(12):

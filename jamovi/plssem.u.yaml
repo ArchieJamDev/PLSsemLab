@@ -142,8 +142,15 @@ children:
                   margin: normal
                   targetArea: true
                   children:
+                    # A placeholder label: jamovi only creates the header
+                    # element when the label is set at render time; the JS
+                    # then writes the construct name into it.
+                    # ES: Etiqueta provisional: jamovi solo crea el
+                    # encabezado si la etiqueta existe al dibujar; el JS
+                    # escribe luego el nombre del constructo.
                     - type: ListBox
                       name: predictorList
+                      label: ' '
                       isTarget: true
                       valueFilter: unique
                       height: auto

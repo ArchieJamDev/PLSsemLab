@@ -20,8 +20,9 @@ RHOME=$(R RHOME)
 RLIB=$(Rscript -e "cat(.libPaths()[1])")
 build() { node /w/.tools/jmc/index.js --build . "$@" --home /tmp/fakejam --rhome "$RHOME" --rlibs "$RLIB" --assume-app-version "$APP_VERSION"; }
 build
-Rscript -e "install.packages('cSEM', lib = 'build/R', repos = 'https://cloud.r-project.org', dependencies = FALSE)"
-Rscript -e ".libPaths(c('build/R', .libPaths())); stopifnot(packageVersion('cSEM') >= '0.7.1'); loadNamespace('cSEM'); cat('cSEM', format(packageVersion('cSEM')), 'loads\n')"
+ls -d build/*
+Rscript -e "install.packages('cSEM', lib = Sys.glob('build/R*')[1], repos = 'https://cloud.r-project.org', dependencies = FALSE)"
+Rscript -e ".libPaths(c(Sys.glob('build/R*')[1], .libPaths())); stopifnot(packageVersion('cSEM') >= '0.7.1'); loadNamespace('cSEM'); cat('cSEM', format(packageVersion('cSEM')), 'loads\n')"
 rm -f *.jmo
 build --skip-deps
 Rscript -e "f <- Sys.glob('*.jmo'); d <- tempfile(); utils::unzip(f, exdir = d); cat(grep('rVersion', readLines(file.path(d, 'PLSsemLab/jamovi.yaml')), value = TRUE), '\n'); cat(read.dcf(file.path(d, 'PLSsemLab/R/cSEM/DESCRIPTION'))[, 'Version'], '\n')"

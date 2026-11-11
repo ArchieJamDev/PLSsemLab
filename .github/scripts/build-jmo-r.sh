@@ -6,6 +6,11 @@
 # un jamovi sustituto, así el .jmo declara esta versión de R; luego cSEM
 # 0.7.1 reemplaza al 0.6.1 de la instantánea del compilador.
 set -euo pipefail
+# GitHub runners reach Ubuntu through Azure's mirror; archive.ubuntu.com
+# did not resolve from the runners.
+# ES: Los runners llegan a Ubuntu por el espejo de Azure.
+sed -i 's#http://archive.ubuntu.com#http://azure.archive.ubuntu.com#g; s#http://security.ubuntu.com#http://azure.archive.ubuntu.com#g' \
+    /etc/apt/sources.list.d/*.sources /etc/apt/sources.list 2>/dev/null || true
 apt-get update -qq
 apt-get install -y -qq git unzip zip nodejs npm libcurl4-openssl-dev libssl-dev libxml2-dev libglpk-dev libgmp3-dev >/dev/null
 R --version | head -1

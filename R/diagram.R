@@ -218,6 +218,19 @@
     unit <- 0.0112 * sqrt(width * height)
     kl <- (if (is.null(opts$latentSize)) 11 else opts$latentSize) / 11
     km <- (if (is.null(opts$manifestSize)) 6 else opts$manifestSize) / 6
+    # When the layout is tight for the image, nodes shrink to fit their
+    # spacing (pixels per layout unit, after qgraph's margins).
+    # ES: Si la disposición queda apretada, los nodos se achican.
+    tb <- identical(opts$diagramLayout, "treeTB")
+    gx <- if (tb) state$x_tb else state$x
+    gy <- if (tb) state$y_tb else state$y
+    geo <- if (tb) list(side = 1.7, step = 1.3, gap = 0.6) else list(side = 2.8, step = 1.4, gap = 0.62)
+    ppx <- 0.84 * width / (diff(range(gx)) + 1.6)
+    ppy <- 0.80 * height / (diff(range(gy)) + 1)
+    man_w <- min(70 * km, 0.85 * (if (tb) geo$step * ppx else min(geo$step * ppx, 0.4 * geo$side * ppx)))
+    man_h <- min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy)
+    lat_w <- min(115 * kl, 0.5 * (if (tb) 2.3 else geo$side) * ppx)
+    lat_h <- min(56 * kl, 0.9 * ppy)
     # Coefficients near the indicator on measurement arrows (where arrows
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
@@ -233,12 +246,12 @@
     }
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
-                      sizeLat = 115 * kl / unit, sizeLat2 = 56 * kl / unit,
-                      sizeMan = 70 * km / unit, sizeMan2 = 24 * km / unit,
+                      sizeLat = lat_w / unit, sizeLat2 = lat_h / unit,
+                      sizeMan = man_w / unit, sizeMan2 = man_h / unit,
                       nCharNodes = 0, label.cex = if (is.null(opts$nodeLabelSize)) 1 else opts$nodeLabelSize,
                       label.scale = FALSE,
                       edge.label.cex = (if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize) *
-                          ifelse(p$kind == "path", 1, 0.75),
+                          ifelse(p$kind == "path", 1, 0.9),
                       residuals = FALSE, intercepts = FALSE, thresholds = FALSE, exoCov = FALSE,
                       color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
                       border.color = ink, label.color = ink, edge.color = edge_col,

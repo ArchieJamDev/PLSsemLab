@@ -1147,7 +1147,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="reproducibility",
                 title="Reproducibility",
                 visible="(showRepro)"))
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Html$new(
                 options=options,
                 name="reproducibilityCode",
                 title="Equivalent R code",
@@ -1248,7 +1248,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

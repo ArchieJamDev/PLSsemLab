@@ -100,7 +100,7 @@ test_that("the report blocks are filled and the reproducibility code runs", {
     # ES: El código R equivalente reproduce las rutas del módulo.
     env <- new.env()
     env$data <- data
-    eval(parse(text = a$results$reproducibilityCode$content), envir = env)
+    eval(parse(text = reproCode(a)), envir = env)
     p <- env$fit$Estimates$Path_estimates
     expect_equal(sort(unname(p[p != 0])), sort(a$results$paths$asDF$estimate), tolerance = 1e-10)
 })

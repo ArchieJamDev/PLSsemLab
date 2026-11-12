@@ -22,7 +22,7 @@
 reproEnv <- function(a, data) {
     env <- new.env()
     env$data <- data
-    utils::capture.output(eval(parse(text = a$results$reproducibilityCode$content), envir = env))
+    utils::capture.output(eval(parse(text = reproCode(a)), envir = env))
     env
 }
 

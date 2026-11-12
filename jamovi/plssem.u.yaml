@@ -245,8 +245,8 @@ children:
         margin: large
         stretchFactor: 1
         cell:
-          column: 1
-          row: 0
+          column: 0
+          row: 1
         children:
           - type: Label
             label: Nodes and labels
@@ -274,7 +274,7 @@ children:
         stretchFactor: 1
         cell:
           column: 0
-          row: 1
+          row: 2
         children:
           - type: Label
             label: Arrows
@@ -292,8 +292,8 @@ children:
         margin: large
         stretchFactor: 1
         cell:
-          column: 1
-          row: 1
+          column: 0
+          row: 3
         children:
           - type: Label
             label: Coefficients

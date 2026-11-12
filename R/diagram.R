@@ -249,7 +249,8 @@
     if (nzchar(opts$diagramTitle %or% ""))
         graphics::title(main = opts$diagramTitle, col.main = ink, font.main = 1, cex.main = 1.1, line = 0.5)
     if (!isFALSE(opts$diagramCaption) && nzchar(state$caption))
-        graphics::mtext(state$caption, side = 1, line = 1, adj = 0, cex = 0.75, col = ink)
+        graphics::mtext(paste(strwrap(state$caption, width = max(40, round(width / 7))), collapse = "\n"),
+                        side = 1, line = 1, adj = 0, cex = 0.75, col = ink, padj = 1)
     TRUE
 }
 

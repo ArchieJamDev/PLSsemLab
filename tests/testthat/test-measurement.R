@@ -148,7 +148,7 @@ test_that("the reproducibility code reproduces reliability, rho_A and HTMT", {
     a <- runPlssem(data, extendedModel())
     env <- new.env()
     env$data <- data
-    out <- utils::capture.output(eval(parse(text = a$results$reproducibilityCode$content), envir = env))
+    out <- utils::capture.output(eval(parse(text = reproCode(a)), envir = env))
     rel <- a$results$reliability$asDF
     rhoC <- cSEM::calculateRhoC(env$fit, .only_common_factors = FALSE)
     expect_equal(unname(rhoC[c("C1", "C2", "C4")]), rel$rhoC[c(1, 2, 4)], tolerance = 1e-10)

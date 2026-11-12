@@ -59,7 +59,7 @@
         ggplot2::scale_shape_manual(values = c(`FALSE` = 21, `TRUE` = 24), guide = "none") +
         ggplot2::facet_grid(construct ~ ., scales = "free_y", space = "free_y") +
         ggplot2::scale_x_continuous(limits = c(min(0, d$lower, d$loading, na.rm = TRUE), 1)) +
-        ggplot2::labs(x = NULL, y = NULL, caption = state$caption) +
+        ggplot2::labs(x = NULL, y = NULL, caption = paste(strwrap(state$caption, 95), collapse = "\n")) +
         ggtheme +
         ggplot2::theme(plot.caption = ggplot2::element_text(hjust = 0, size = 9),
                        strip.text.y = ggplot2::element_text(angle = 0))
@@ -98,7 +98,7 @@
         ggplot2::scale_x_discrete(drop = FALSE) +
         ggplot2::scale_y_discrete(drop = FALSE) +
         ggplot2::coord_equal() +
-        ggplot2::labs(x = NULL, y = NULL, caption = state$caption) +
+        ggplot2::labs(x = NULL, y = NULL, caption = paste(strwrap(state$caption, 95), collapse = "\n")) +
         ggtheme +
         ggplot2::theme(panel.grid = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank(),
                        axis.line = ggplot2::element_blank(), panel.border = ggplot2::element_blank(),

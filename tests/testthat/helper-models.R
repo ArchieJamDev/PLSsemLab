@@ -87,3 +87,10 @@ noticesOf <- function(analysis) {
     items <- analysis$results$items
     unlist(lapply(items[grepl("^\\.plssem", names(items))], function(n) n$content))
 }
+
+# The equivalent R code as plain text (the output is Html with a <pre>).
+# ES: El código R equivalente como texto (la salida es Html con <pre>).
+reproCode <- function(a) {
+    code <- gsub("<[^>]+>", "", a$results$reproducibilityCode$content)
+    gsub("&gt;", ">", gsub("&lt;", "<", gsub("&amp;", "&", code, fixed = TRUE), fixed = TRUE), fixed = TRUE)
+}

@@ -608,12 +608,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Tamaño según la extensión de la disposición.
             span_x <- diff(range(st$x)) + 1.6
             span_y <- diff(range(st$y)) + 1
-            long <- max(560, min(1800, 75 * span_x + 120))
-            wide <- max(360, min(1800, 62 * span_y + (if (isTRUE(self$options$diagramCaption)) 170 else 110)))
+            long <- max(560, min(900, 75 * span_x + 120))
+            wide <- max(360, min(1100, 62 * span_y + (if (isTRUE(self$options$diagramCaption)) 170 else 110)))
             if (identical(self$options$diagramLayout, "treeTB")) {
                 tx <- diff(range(st$x_tb)) + 1.6
                 ty <- diff(range(st$y_tb)) + 1
-                image$setSize(max(560, min(1800, 62 * tx + 120)), max(360, min(1800, 75 * ty + 170)))
+                image$setSize(max(560, min(900, 62 * tx + 120)), max(360, min(1100, 75 * ty + 170)))
             } else image$setSize(long, wide)
             image$setState(st)
         },
@@ -1091,7 +1091,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             paste(q(unname(model$vmap[b$vars])), collapse = ", "),
                                             unname(model$cmap[[b$label]])))
             }
-            self$results$reproducibilityCode$setContent(paste(code, collapse = "\n"))
+            esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x, fixed = TRUE), fixed = TRUE), fixed = TRUE)
+            self$results$reproducibilityCode$setContent(paste0(
+                "<pre style=\"white-space: pre-wrap; font-family: monospace; font-size: 0.85em;\">",
+                esc(paste(code, collapse = "\n")), "</pre>"))
         }
     )
 )

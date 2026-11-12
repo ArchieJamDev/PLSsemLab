@@ -713,8 +713,12 @@ items:
     type: Html
     visible: (showRepro)
 
+  # Html with <pre>, not Preformatted: jamovi's PDF export drops the line
+  # breaks of a Preformatted item.
+  # ES: Html con <pre>: la exportación a PDF de jamovi pierde los saltos de
+  # línea de un Preformatted.
   - name: reproducibilityCode
     title: Equivalent R code
-    type: Preformatted
+    type: Html
     visible: (showRepro)
 ...

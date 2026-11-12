@@ -113,6 +113,100 @@ children:
                   events:
                     listItemAdded: './plssem.events::onConstructsChanged'
                     listItemRemoved: './plssem.events::onConstructsChanged'
+  # Higher-order constructs (phase 4): built from the first-order
+  # constructs, which a second supplier offers (filled by the JS, as the
+  # structural model's).
+  # ES: Constructos de orden superior (fase 4): se arman con los constructos
+  # de primer orden, que ofrece un segundo supplier (lo llena el JS).
+  - type: CollapseBox
+    label: Higher-Order Constructs
+    collapsed: true
+    stretchFactor: 1
+    children:
+      - type: Supplier
+        label: First-order constructs
+        name: hocSupplier
+        format: term
+        persistentItems: true
+        stretchFactor: 1
+        events:
+          update: './plssem.events::onUpdateHocSupplier'
+          change: './plssem.events::onChangeConstructSupplier'
+        children:
+          - type: TargetLayoutBox
+            label: Reflective Higher-Order Constructs
+            children:
+              - type: ListBox
+                name: reflectiveHoc
+                height: normal
+                addButton: Add Higher-Order Construct
+                events:
+                  listItemAdded: './plssem.events::onConstructsChanged'
+                  listItemRemoved: './plssem.events::onConstructsChanged'
+                templateName: linreg-block-template
+                template:
+                  type: LayoutBox
+                  margin: normal
+                  targetArea: true
+                  children:
+                    - type: TextBox
+                      valueKey:
+                        - label
+                      borderless: true
+                      name: reflectiveHocName
+                      stretchFactor: 1
+                      margin: normal
+                      events:
+                        change: './plssem.events::onConstructsChanged'
+                    - type: ListBox
+                      valueKey:
+                        - components
+                      name: reflectiveHocComponents
+                      isTarget: true
+                      valueFilter: unique
+                      height: auto
+                      ghostText: drag first-order constructs here
+                      events:
+                        change: './plssem.events::onConstructsChanged'
+                      template:
+                        type: TermLabel
+          - type: TargetLayoutBox
+            label: Formative Higher-Order Constructs
+            children:
+              - type: ListBox
+                name: formativeHoc
+                height: normal
+                addButton: Add Higher-Order Construct
+                events:
+                  listItemAdded: './plssem.events::onConstructsChanged'
+                  listItemRemoved: './plssem.events::onConstructsChanged'
+                templateName: linreg-block-template
+                template:
+                  type: LayoutBox
+                  margin: normal
+                  targetArea: true
+                  children:
+                    - type: TextBox
+                      valueKey:
+                        - label
+                      borderless: true
+                      name: formativeHocName
+                      stretchFactor: 1
+                      margin: normal
+                      events:
+                        change: './plssem.events::onConstructsChanged'
+                    - type: ListBox
+                      valueKey:
+                        - components
+                      name: formativeHocComponents
+                      isTarget: true
+                      valueFilter: unique
+                      height: auto
+                      ghostText: drag first-order constructs here
+                      events:
+                        change: './plssem.events::onConstructsChanged'
+                      template:
+                        type: TermLabel
   - type: CollapseBox
     label: Structural Model
     collapsed: false

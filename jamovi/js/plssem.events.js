@@ -89,6 +89,12 @@ const events = {
         ui.constructSupplier.setValue(toItems(this, constructNames(ui, this)));
     },
 
+    // The higher-order box offers only first-order constructs (phase 4).
+    // ES: La caja de orden superior ofrece solo constructos de primer orden.
+    onUpdateHocSupplier: function(ui) {
+        ui.hocSupplier.setValue(toItems(this, firstOrderNames(ui, this)));
+    },
+
     onChangeConstructSupplier: function(ui) {
     }
 };
@@ -109,6 +115,16 @@ const defaultNames = function(ui) {
         if ( ! value || value.trim() === '')
             item.controls[0].setValue('Construct ' + (nReflective + index + 1));
     });
+    let nHoc = 0;
+    for (let box of [ui.reflectiveHoc, ui.formativeHoc]) {
+        if ( ! box) continue;
+        box.applyToItems(0, (item) => {
+            nHoc += 1;
+            let value = item.controls[0].value();
+            if ( ! value || value.trim() === '')
+                item.controls[0].setValue('Higher-order ' + nHoc);
+        });
+    }
 };
 
 // Constructs that can enter the structural model: a name and at least one
@@ -117,7 +133,7 @@ const defaultNames = function(ui) {
 // ES: Constructos que pueden entrar al modelo estructural: nombre y al menos
 // un indicador, reflectivos primero y luego formativos, sin nombres
 // repetidos. El lado R aplica la misma regla para leer las filas.
-const constructNames = function(ui, context) {
+const firstOrderNames = function(ui, context) {
     let blocks = clone(ui.reflective.value(), [])
         .concat(clone(ui.formative.value(), []));
     let names = [];
@@ -131,6 +147,65 @@ const constructNames = function(ui, context) {
             names.push(label);
     }
     return names;
+};
+
+// Higher-order constructs: a name and at least one component, reflective
+// first (the R side, .pl_structural_labels, reads them in this order).
+// ES: Constructos de orden superior: nombre y al menos un componente,
+// reflectivos primero.
+const hocNames = function(ui) {
+    let names = [];
+    for (let box of [ui.reflectiveHoc, ui.formativeHoc]) {
+        if ( ! box) continue;
+        for (let h of clone(box.value(), [])) {
+            if ( ! h || typeof h.label !== 'string') continue;
+            let label = h.label.trim();
+            if (label === '' || ! Array.isArray(h.components) || h.components.length === 0)
+                continue;
+            if (names.indexOf(label) === -1)
+                names.push(label);
+        }
+    }
+    return names;
+};
+
+// Constructs of the structural model: first-order, then higher-order.
+// ES: Constructos del modelo estructural: primer orden y luego superior.
+const constructNames = function(ui, context) {
+    let names = firstOrderNames(ui, context);
+    for (let h of hocNames(ui))
+        if (names.indexOf(h) === -1)
+            names.push(h);
+    return names;
+};
+
+// Components of each higher-order construct: first-order names only, once
+// each; renames of first-order constructs follow (map from old to new).
+// ES: Componentes de cada constructo de orden superior: solo nombres de
+// primer orden, una vez cada uno; los renombrados se siguen.
+const cleanHocs = function(ui, first, rename) {
+    for (let box of [ui.reflectiveHoc, ui.formativeHoc]) {
+        if ( ! box) continue;
+        let value = clone(box.value(), []);
+        let changed = false;
+        let out = value.map(h => {
+            if ( ! h) return h;
+            let comps = Array.isArray(h.components) ? h.components : [];
+            let clean = [];
+            for (let raw of comps) {
+                let t = asTerm(raw);
+                if (t === null || t.length !== 1) continue;
+                let name = rename[t[0]] || t[0];
+                if (first.indexOf(name) === -1) continue;
+                if (clean.some(c => c[0] === name)) continue;
+                clean.push([name]);
+            }
+            if (JSON.stringify(clean) !== JSON.stringify(comps)) changed = true;
+            return { label: h.label, components: clean };
+        });
+        if (changed)
+            box.setValue(out);
+    }
 };
 
 // A term is a list of construct names (one name, or two for an interaction).
@@ -177,6 +252,17 @@ const labelize = function(ui, names) {
 const sync = function(ui, context) {
 
     defaultNames(ui);
+    let first = firstOrderNames(ui, context);
+    let previousFirst = context.workspace.firstNames || first;
+    let rename = {};
+    if (previousFirst.length === first.length)
+        for (let i = 0; i < first.length; i++)
+            if (previousFirst[i] !== first[i] && first.indexOf(previousFirst[i]) === -1)
+                rename[previousFirst[i]] = first[i];
+    cleanHocs(ui, first, rename);
+    context.workspace.firstNames = first;
+    if (ui.hocSupplier)
+        ui.hocSupplier.setValue(toItems(context, first));
     let names = constructNames(ui, context);
 
     // Custom variables only when the names change (SEMLj declares them on

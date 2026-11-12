@@ -32,6 +32,15 @@
             "'%s' has the same value for every case, so it carries no information. Remove it from its construct.": [
                 "'%s' tiene el mismo valor en todos los casos, así que no aporta información. Quítelo de su constructo."
             ],
+            "'%s' in the higher-order construct '%s' is not a first-order construct with indicators.": [
+                "'%s' en el constructo de orden superior '%s' no es un constructo de primer orden con indicadores."
+            ],
+            "'%s' is a dimension of the higher-order construct '%s', so it cannot have structural paths of its own. Draw the paths to or from '%s' instead.": [
+                "'%s' es una dimensión del constructo de orden superior '%s', así que no puede tener rutas estructurales propias. Trace las rutas hacia o desde '%s'."
+            ],
+            "'%s' is a dimension of two higher-order constructs. Each lower-order construct can belong to one higher-order construct only.": [
+                "'%s' es dimensión de dos constructos de orden superior. Cada constructo de orden inferior puede pertenecer a un solo constructo de orden superior."
+            ],
             "'%s' is an indicator of more than one construct. In PLS-SEM each indicator belongs to one construct only; keep it in one of them.": [
                 "'%s' es indicador de más de un constructo. En PLS-SEM cada indicador pertenece a un solo constructo; déjelo en uno de ellos."
             ],
@@ -40,6 +49,9 @@
             ],
             "'%s' is not numeric. Indicators must be numeric variables.": [
                 "'%s' no es numérica. Los indicadores deben ser variables numéricas."
+            ],
+            "'%s' is the name of a first-order construct and of a higher-order construct. Use a different name for each.": [
+                "'%s' es el nombre de un constructo de primer orden y de uno de orden superior. Use un nombre distinto para cada uno."
             ],
             "%d case(s) with missing values were excluded; %d case(s) remain.": [
                 "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
@@ -98,6 +110,12 @@
             "A construct with a single indicator has no collinearity among its indicators.": [
                 "Un constructo con un solo indicador no tiene colinealidad entre sus indicadores."
             ],
+            "A higher-order construct has no name. Give each higher-order construct a name.": [
+                "Un constructo de orden superior no tiene nombre. Dé un nombre a cada constructo de orden superior."
+            ],
+            "A higher-order construct is measured by other constructs, its dimensions (for example, psychological capital by hope, efficacy, resilience and optimism). In the disjoint two-stage approach, stage 1 estimates the dimensions as ordinary constructs, linked to the constructs the higher-order construct is related to, and stage 2 treats their scores as the indicators of the higher-order construct (Sarstedt et al., 2019, see references). Read this table as a measurement table one level up: for a reflective higher-order construct, the loadings of its dimensions, its reliability and its AVE, judged on the usual thresholds; for a formative one, the weights of its dimensions, their significance and their VIF. The dimensions themselves are assessed in the first-order tables. Common misreading: drawing structural paths from the dimensions as well as from the higher-order construct; the dimensions only reach the rest of the model through it.": [
+                "Un constructo de orden superior se mide con otros constructos, sus dimensiones (por ejemplo, el capital psicológico con esperanza, eficacia, resiliencia y optimismo). En el enfoque disjunto en dos etapas, la etapa 1 estima las dimensiones como constructos ordinarios, unidos a los constructos con los que se relaciona el de orden superior, y la etapa 2 trata sus puntuaciones como los indicadores del constructo de orden superior (Sarstedt et al., 2019, vea las referencias). Lea esta tabla como una tabla de medida un nivel más arriba: en un constructo de orden superior reflectivo, las cargas de sus dimensiones, su fiabilidad y su AVE, con los umbrales habituales; en uno formativo, los pesos de sus dimensiones, su significación y su VIF. Las dimensiones mismas se evalúan en las tablas de primer orden. Lectura errónea frecuente: trazar rutas estructurales desde las dimensiones además de desde el constructo de orden superior; las dimensiones solo llegan al resto del modelo a través de él."
+            ],
             "A negative alpha means that some indicators of the construct correlate negatively: check for reverse-coded items.": [
                 "Un alfa negativo significa que algunos indicadores del constructo correlacionan negativamente: revise si hay ítems invertidos."
             ],
@@ -109,6 +127,9 @@
             ],
             "About your choices": [
                 "Acerca de sus elecciones"
+            ],
+            "Add Higher-Order Construct": [
+                "Agregar constructo de orden superior"
             ],
             "Add New Construct": [
                 "Agregar constructo"
@@ -154,6 +175,9 @@
             ],
             "Assessment (HTMT)": [
                 "Valoración (HTMT)"
+            ],
+            "Assessment (VIF)": [
+                "Valoración (VIF)"
             ],
             "AVE": [
                 "AVE"
@@ -305,6 +329,9 @@
             "Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation.": [
                 "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
             ],
+            "Dimension of %s": [
+                "Dimensión de %s"
+            ],
             "Direct": [
                 "Directo"
             ],
@@ -328,6 +355,9 @@
             ],
             "Discriminant validity: HTMT is 0.85 or more for %s. The data barely distinguish these constructs; ask whether they measure the same concept, whether some indicators belong to both, or whether they should be merged.": [
                 "Validez discriminante: el HTMT es de 0.85 o más en %s. Los datos apenas distinguen estos constructos; pregúntese si miden el mismo concepto, si algunos indicadores pertenecen a ambos o si deberían unirse."
+            ],
+            "drag first-order constructs here": [
+                "arrastre aquí los constructos de primer orden"
             ],
             "drag indicators here": [
                 "arrastre los indicadores aquí"
@@ -398,6 +428,9 @@
             "Factorial": [
                 "Factorial"
             ],
+            "First-order constructs": [
+                "Constructos de primer orden"
+            ],
             "Floodlight": [
                 "Floodlight"
             ],
@@ -407,11 +440,17 @@
             "Formative": [
                 "Formativo"
             ],
+            "Formative (higher-order)": [
+                "Formativo (orden superior)"
+            ],
             "Formative Constructs": [
                 "Constructos formativos"
             ],
             "Formative constructs with negative weights: %s. A negative weight can come from collinearity among the indicators (see their VIF) or from an indicator that adds little beyond the others of its construct. Check the significance of the weights with the bootstrap before removing any indicator: a formative indicator carries part of the content of the construct.": [
                 "Constructos formativos con pesos negativos: %s. Un peso negativo puede venir de la colinealidad entre los indicadores (vea su VIF) o de un indicador que aporta poco más allá de los demás de su constructo. Revise la significación de los pesos con el bootstrap antes de quitar un indicador: un indicador formativo lleva parte del contenido del constructo."
+            ],
+            "Formative Higher-Order Constructs": [
+                "Constructos formativos de orden superior"
             ],
             "Formative indicators with a non-significant weight and a loading below 0.50: %s. Consider removing them only on theoretical grounds: a formative indicator carries part of the content of the construct.": [
                 "Indicadores formativos con peso no significativo y carga menor de 0.50: %s. Considere quitarlos solo por razones teóricas: un indicador formativo lleva parte del contenido del constructo."
@@ -425,6 +464,21 @@
             "Fornell-Larcker criterion": [
                 "Criterio de Fornell-Larcker"
             ],
+            "Higher-order construct": [
+                "Constructo de orden superior"
+            ],
+            "Higher-Order Constructs": [
+                "Constructos de orden superior"
+            ],
+            "Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; stage 2 uses the stage-1 scores as indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together.": [
+                "Constructos de orden superior (%s): enfoque disjunto en dos etapas (Sarstedt et al., 2019). La etapa 1 estima cada constructo de primer orden, con cada constructo de orden superior reemplazado en el modelo estructural por sus constructos de orden inferior; la etapa 2 usa las puntuaciones de la etapa 1 como indicadores. Las tablas de medida de los constructos de primer orden vienen de la etapa 1; el modelo estructural y los constructos de orden superior, de la etapa 2. Con el bootstrap, ambas etapas se remuestrean juntas."
+            ],
+            "Higher-order constructs (stage 2)": [
+                "Constructos de orden superior (etapa 2)"
+            ],
+            "Higher-order constructs are estimated with PLS in two stages; consistent PLS with higher-order constructs is not available in this version. Choose PLS as the estimator.": [
+                "Los constructos de orden superior se estiman con PLS en dos etapas; PLS consistente con constructos de orden superior no está disponible en esta versión. Elija PLS como estimador."
+            ],
             "How to read a moderation": [
                 "Cómo leer una moderación"
             ],
@@ -436,6 +490,9 @@
             ],
             "How to read effect sizes, collinearity and effects": [
                 "Cómo leer los tamaños del efecto, la colinealidad y los efectos"
+            ],
+            "How to read higher-order constructs": [
+                "Cómo leer los constructos de orden superior"
             ],
             "How to read loadings and weights": [
                 "Cómo leer las cargas y los pesos"
@@ -583,6 +640,9 @@
             ],
             "Lower": [
                 "Inferior"
+            ],
+            "Lower-order construct": [
+                "Constructo de orden inferior"
             ],
             "Main findings": [
                 "Hallazgos principales"
@@ -761,8 +821,14 @@
             "Reflective": [
                 "Reflectivo"
             ],
+            "Reflective (higher-order)": [
+                "Reflectivo (orden superior)"
+            ],
             "Reflective Constructs": [
                 "Constructos reflectivos"
+            ],
+            "Reflective Higher-Order Constructs": [
+                "Constructos reflectivos de orden superior"
             ],
             "Reflective indicators with a negative loading: %s. They are almost certainly items worded in the opposite direction that were not recoded. Recode them in jamovi (for a scale from 1 to k, the new value is k + 1 minus the old one) and run the analysis again: until then, the reliability, AVE and HTMT of their constructs are distorted.": [
                 "Indicadores reflectivos con carga negativa: %s. Casi con seguridad son ítems redactados en sentido opuesto que no se recodificaron. Recodifíquelos en jamovi (en una escala de 1 a k, el valor nuevo es k + 1 menos el anterior) y vuelva a ejecutar el análisis: mientras tanto, la fiabilidad, la AVE y el HTMT de sus constructos están distorsionados."
@@ -775,6 +841,9 @@
             ],
             "Reliability and convergent validity: %d of %d reflective construct(s) have composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 or more.": [
                 "Fiabilidad y validez convergente: %d de %d constructo(s) reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95, y %d de %d tienen una AVE de 0.50 o más."
+            ],
+            "Reliability of reflective higher-order constructs": [
+                "Fiabilidad de los constructos reflectivos de orden superior"
             ],
             "reliability satisfactory": [
                 "fiabilidad satisfactoria"
@@ -898,6 +967,12 @@
             ],
             "The f² of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small.": [
                 "El f² de una interacción se juzga con umbrales menores que el de otras rutas: 0.005, 0.01 y 0.025 para pequeño, mediano y grande (Kenny, 2018; Hair et al., 2021, vea las referencias), porque los efectos moderadores suelen ser pequeños."
+            ],
+            "The higher-order construct '%s' is part of an interaction. Interactions with higher-order constructs are not available in this version.": [
+                "El constructo de orden superior '%s' forma parte de una interacción. Las interacciones con constructos de orden superior no están disponibles en esta versión."
+            ],
+            "The higher-order construct '%s' needs at least two lower-order constructs. Drag two or more first-order constructs into it.": [
+                "El constructo de orden superior '%s' necesita al menos dos constructos de orden inferior. Arrastre a él dos o más constructos de primer orden."
             ],
             "The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs.": [
                 "La interacción %s tiene más de dos constructos. PLSsemLab estima interacciones de dos vías; ármela con dos constructos."

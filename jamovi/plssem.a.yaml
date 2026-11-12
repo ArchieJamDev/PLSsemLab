@@ -100,6 +100,37 @@ options:
   # menos un indicador (reflectivos primero); cada fila guarda sus
   # predictores. Una fila sin predictores es un constructo exógeno. El JS
   # mantiene las filas sincronizadas y R las lee con la misma regla.
+  # Higher-order constructs (phase 4): a name and two or more first-order
+  # constructs, taken as Terms from the construct supplier (not data
+  # variables). Reflective: the lower-order constructs reflect it (Mode A in
+  # stage 2); formative: they form it (Mode B).
+  # ES: Constructos de orden superior (fase 4): un nombre y dos o más
+  # constructos de primer orden, como Terms del supplier (no variables de los
+  # datos). Reflectivo: Modo A en la etapa 2; formativo: Modo B.
+  - name: reflectiveHoc
+    title: Reflective Higher-Order Constructs
+    type: Array
+    default: []
+    template:
+      type: Group
+      elements:
+        - name: label
+          type: String
+        - name: components
+          type: Terms
+
+  - name: formativeHoc
+    title: Formative Higher-Order Constructs
+    type: Array
+    default: []
+    template:
+      type: Group
+      elements:
+        - name: label
+          type: String
+        - name: components
+          type: Terms
+
   - name: structural
     title: Structural Model
     type: Array

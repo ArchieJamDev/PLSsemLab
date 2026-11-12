@@ -38,8 +38,9 @@
 # needed to read the result back.
 # ES: Lo que el bootstrap calcula además de las cantidades de cSEM, con las
 # etiquetas para leer el resultado.
-.pl_boot_spec <- function(blocks, model, fit, options) {
+.pl_boot_spec <- function(blocks, model, fit, options, smodel = model, paths = NULL) {
     est <- fit$Estimates
+    s2 <- !is.null(smodel$m2)
     refl <- Filter(function(b) b$type == "reflective", blocks)
     multi <- Filter(function(b) length(b$vars) > 1, refl)
     rint <- unname(model$cmap[vapply(multi, `[[`, "", "label")])
@@ -61,8 +62,8 @@
             if (length(v) != n) rep(NA_real_, n) else v
         }
     }
-    funs <- list(R2 = safe(function(o) o$Estimates$R2[r2names], length(r2names)),
-                 R2adj = safe(function(o) o$Estimates$R2adj[r2names], length(r2names)))
+    funs <- if (s2) list() else list(R2 = safe(function(o) o$Estimates$R2[r2names], length(r2names)),
+                                     R2adj = safe(function(o) o$Estimates$R2adj[r2names], length(r2names)))
     if (length(rint)) {
         funs$rhoC <- if (isTRUE(model$nonlinear)) safe(function(o) .pl_rhoC_loadings(o, rint), length(rint))
                      else safe(function(o) cSEM::calculateRhoC(o, .only_common_factors = FALSE)[rint], length(rint))
@@ -86,11 +87,80 @@
             unlist(lapply(form_ids, function(ids) diag(solve(S[ids, ids, drop = FALSE]))))
         }, nB)
     }
-    if (length(vifs))
+    if (length(vifs) && !s2)
         funs$VIFS <- safe(function(o) unlist(o$Estimates$VIF)[names(vifs)], length(vifs))
 
-    list(funs = funs, rint = rint, pairs = pairs, form_ids = form_ids, r2names = r2names,
+    # Higher-order model: every structural quantity comes from stage 2,
+    # re-estimated in each resample from that resample's stage-1 scores, so
+    # both stages are resampled together. One function returns all of them
+    # (one stage-2 fit per resample).
+    # ES: Modelo de orden superior: cada cantidad estructural sale de la
+    # etapa 2, reestimada en cada réplica a partir de sus puntuaciones de la
+    # etapa 1, así que ambas etapas se remuestrean juntas.
+    s2spec <- NULL
+    if (s2) {
+        s2spec <- .pl_s2_spec(smodel, paths, options)
+        n <- length(s2spec$names)
+        funs$S2 <- safe(function(o) s2spec$fun(o$Estimates$Construct_scores), n)
+        s2spec$original <- s2spec$fun(est$Construct_scores)
+    }
+
+    list(funs = funs, s2 = s2spec, rint = rint, pairs = pairs, form_ids = form_ids, r2names = r2names,
          vifnames = names(vifs), plsc = plsc, nonlinear = isTRUE(model$nonlinear))
+}
+
+# Stage-2 quantities of a higher-order model as one named vector: paths,
+# total and indirect effects, R2, structural VIF, and the measurement of the
+# higher-order constructs. fun(scores) re-estimates stage 2 from stage-1
+# scores.
+# ES: Cantidades de la etapa 2 de un modelo de orden superior como un solo
+# vector con nombres; fun(scores) reestima la etapa 2.
+.pl_s2_spec <- function(smodel, paths, options) {
+    cm <- smodel$cmap
+    m2 <- smodel$m2
+    hocs <- smodel$hocs
+    p_names <- paste(cm[paths$to], "~", cm[paths$from])
+    pairs <- .pl_effect_pairs(paths)
+    e_names <- paste(cm[pairs$to], "~", cm[pairs$from])
+    endo <- unname(cm[unique(paths$to)])
+    vif_pairs <- paths[paths$to %in% paths$to[duplicated(paths$to)], , drop = FALSE]
+    v_names <- paste(cm[vif_pairs$to], cm[vif_pairs$from], sep = ".")
+    hl <- list(); hw <- list(); hv <- list(); hr <- character(0)
+    for (h in hocs) {
+        hh <- m2$hmap[[h$label]]
+        ids <- paste0("S_", unname(cm[h$components]))
+        hl[[hh]] <- ids
+        if (h$type == "formative") hv[[hh]] <- ids else hr <- c(hr, hh)
+    }
+    names_all <- c(p_names, e_names, e_names, endo, v_names,
+                   unlist(lapply(names(hl), function(hh) paste(hh, "=~", hl[[hh]]))),
+                   unlist(lapply(names(hl), function(hh) paste(hh, "<~", hl[[hh]]))),
+                   unlist(lapply(names(hv), function(hh) paste(hh, hv[[hh]], sep = "~"))),
+                   hr, hr)
+    group <- c(rep("path", length(p_names)), rep("total", length(e_names)), rep("indirect", length(e_names)),
+               rep("R2", length(endo)), rep("VIFS", length(v_names)),
+               rep("hoc_loading", length(unlist(hl))), rep("hoc_weight", length(unlist(hl))),
+               rep("hoc_vif", length(unlist(hv))), rep("hoc_rhoC", length(hr)), rep("hoc_ave", length(hr)))
+    fun <- function(scores) {
+        f <- .pl_stage2_fit(scores, m2, options)
+        e <- f$Estimates
+        B <- e$Path_estimates
+        TT <- solve(diag(nrow(B)) - B) - diag(nrow(B))
+        dimnames(TT) <- dimnames(B)
+        II <- TT - B
+        pick <- function(M, to, from) mapply(function(a, b) M[a, b], cm[to], cm[from])
+        vifs <- unlist(e$VIF)
+        c(pick(B, paths$to, paths$from),
+          pick(TT, pairs$to, pairs$from), pick(II, pairs$to, pairs$from),
+          e$R2[endo],
+          if (length(v_names)) vifs[v_names],
+          unlist(lapply(names(hl), function(hh) e$Loading_estimates[hh, hl[[hh]]])),
+          unlist(lapply(names(hl), function(hh) e$Weight_estimates[hh, hl[[hh]]])),
+          unlist(lapply(names(hv), function(hh) diag(solve(e$Indicator_VCV[hv[[hh]], hv[[hh]], drop = FALSE])))),
+          vapply(hr, function(hh) { l <- e$Loading_estimates[hh, hl[[hh]]]; sum(l)^2 / (sum(l)^2 + sum(1 - l^2)) }, 0),
+          vapply(hr, function(hh) mean(e$Loading_estimates[hh, hl[[hh]]]^2), 0))
+    }
+    list(fun = function(scores) unname(as.numeric(fun(scores))), names = names_all, group = group)
 }
 
 # Runs the blocks, calling progress(done, total) after each one (the caller
@@ -150,6 +220,7 @@
     s <- cSEM::summarize(merged, .alpha = alpha, .ci = "CI_percentile")$Estimates
     inf <- cSEM::infer(merged, .quantity = c("sd", "CI_percentile"), .alpha = alpha)
     bounds <- function(df) {
+        if (is.null(df)) return(NULL)
         lo <- grep("L$", names(df), value = TRUE)[1]
         up <- grep("U$", names(df), value = TRUE)[1]
         data.frame(name = as.character(df$Name), estimate = df$Estimate, se = df$Std_err, t = df$t_stat,
@@ -160,6 +231,7 @@
         if (is.null(m)) return(NULL)
         data.frame(name = names, lower = unname(m[1, ]), upper = unname(m[2, ]), stringsAsFactors = FALSE)
     }
+    if (!is.null(spec$s2)) s$Path_estimates <- NULL
     out <- list(
         paths = bounds(s$Path_estimates),
         loadings = bounds(s$Loading_estimates),
@@ -184,6 +256,27 @@
         },
         admissible = merged$Information$Information_resample$Number_of_admissibles,
         runs = merged$Information$Information_resample$Number_of_runs)
+    if (!is.null(spec$s2)) {
+        q <- inf$S2
+        g <- spec$s2$group
+        est <- spec$s2$original
+        se <- unname(q$sd)
+        tt <- est / se
+        all <- data.frame(name = spec$s2$names, estimate = est, se = se, t = tt, p = 2 * stats::pnorm(-abs(tt)),
+                          lower = unname(q$CI_percentile[1, ]), upper = unname(q$CI_percentile[2, ]),
+                          stringsAsFactors = FALSE)
+        part <- function(x) all[g == x, , drop = FALSE]
+        out$paths <- part("path")
+        out$total <- part("total")
+        out$indirect <- part("indirect")
+        out$R2 <- part("R2")[, c("name", "lower", "upper")]
+        out$VIFS <- part("VIFS")[, c("name", "lower", "upper")]
+        out$hoc_loadings <- part("hoc_loading")
+        out$hoc_weights <- part("hoc_weight")
+        out$hoc_vif <- part("hoc_vif")[, c("name", "lower", "upper")]
+        out$hoc_rhoC <- part("hoc_rhoC")[, c("name", "lower", "upper")]
+        out$hoc_ave <- part("hoc_ave")[, c("name", "lower", "upper")]
+    }
     # HTMT: the one-sided 95% upper bound of Henseler et al. (2015), the 95th
     # percentile, read from cSEM's 90% two-sided interval.
     # ES: HTMT: el límite superior unilateral al 95% de Henseler et al.

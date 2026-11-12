@@ -145,6 +145,17 @@ refs:
         pages: '39-50'
         url: https://doi.org/10.1177/002224378101800104
 
+    sarstedt_2019:
+        type: 'article'
+        author: 'Sarstedt, M., Hair, J. F., Cheah, J.-H., Becker, J.-M., & Ringle, C. M.'
+        year: 2019
+        title: 'How to specify, estimate, and validate higher-order constructs in PLS-SEM'
+        publisher: 'Australasian Marketing Journal'
+        volume: '27'
+        issue: '3'
+        pages: '197-211'
+        url: https://doi.org/10.1016/j.ausmj.2019.05.003
+
     kenny_2018:
         type: 'misc'
         author: 'Kenny, D. A.'

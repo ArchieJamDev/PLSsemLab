@@ -75,6 +75,14 @@
             self = .("'%s' cannot predict itself."),
             loop = .("The structural model has a loop (%s). PLS-SEM estimates recursive models only, in which no construct predicts itself through others: remove one path of the loop."),
             isolated = .("'%s' is not connected to any other construct. Drag it into the row of the construct it predicts, or drag its predictors into its row, or remove it."),
+            hoc_no_name = .("A higher-order construct has no name. Give each higher-order construct a name."),
+            hoc_clash = .("'%s' is the name of a first-order construct and of a higher-order construct. Use a different name for each."),
+            hoc_two = .("The higher-order construct '%s' needs at least two lower-order constructs. Drag two or more first-order constructs into it."),
+            hoc_unknown = .("'%s' in the higher-order construct '%s' is not a first-order construct with indicators."),
+            hoc_twice = .("'%s' is a dimension of two higher-order constructs. Each lower-order construct can belong to one higher-order construct only."),
+            hoc_plsc = .("Higher-order constructs are estimated with PLS in two stages; consistent PLS with higher-order constructs is not available in this version. Choose PLS as the estimator."),
+            hoc_path_loc = .("'%s' is a dimension of the higher-order construct '%s', so it cannot have structural paths of its own. Draw the paths to or from '%s' instead."),
+            hoc_interaction = .("The higher-order construct '%s' is part of an interaction. Interactions with higher-order constructs are not available in this version."),
             interaction_order = .("The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs."),
             interaction_self = .("The interaction %s predicts %s, one of its own components. An interaction must predict a different construct."),
             interaction_main = .("The interaction %s predicts %s, but %s is not also a predictor of %s. Add the main effect of each component to the same construct: without it the interaction term mixes the moderation with the main effect and cannot be read as moderation."),
@@ -89,6 +97,7 @@
         # Notices (Category B, never block).
         # ES: Avisos (Categoría B, nunca bloquean).
         notices = list(
+            hoc_two_stage = .("Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; stage 2 uses the stage-1 scores as indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together."),
             rhoc_loadings = .("With an interaction in the model, cSEM cannot build the model-implied matrix used for \u03c1C, so \u03c1C is computed from the loadings, (\u03a3\u03bb)\u00b2 / ((\u03a3\u03bb)\u00b2 + \u03a3(1 \u2212 \u03bb\u00b2)); in models without interactions this gives the same value as cSEM."),
             empty_construct = .("'%s' has no indicators yet and was left out of the model."),
             single_reflective = .("'%s' has a single indicator: its loading is fixed at 1 and its measurement quality cannot be evaluated."),
@@ -161,6 +170,9 @@
             f2_small = .("0.02 to 0.15: small"),
             f2_medium = .("0.15 to 0.35: medium"),
             f2_large = .("0.35 or more: large"),
+            dimension_of = .("Dimension of %s"),
+            reflective_hoc = .("Reflective (higher-order)"),
+            formative_hoc = .("Formative (higher-order)"),
             f2i_none = .("Interaction below 0.005: no effect"),
             f2i_small = .("Interaction 0.005 to 0.01: small"),
             f2i_medium = .("Interaction 0.01 to 0.025: medium"),
@@ -179,6 +191,7 @@
         # "How to read" guides.
         # ES: Guías "Cómo leer".
         guide = list(
+            hoc = .("A higher-order construct is measured by other constructs, its dimensions (for example, psychological capital by hope, efficacy, resilience and optimism). In the disjoint two-stage approach, stage 1 estimates the dimensions as ordinary constructs, linked to the constructs the higher-order construct is related to, and stage 2 treats their scores as the indicators of the higher-order construct (Sarstedt et al., 2019, see references). Read this table as a measurement table one level up: for a reflective higher-order construct, the loadings of its dimensions, its reliability and its AVE, judged on the usual thresholds; for a formative one, the weights of its dimensions, their significance and their VIF. The dimensions themselves are assessed in the first-order tables. Common misreading: drawing structural paths from the dimensions as well as from the higher-order construct; the dimensions only reach the rest of the model through it."),
             moderation = .("An interaction X \u00d7 M asks whether the effect of X on the outcome depends on the moderator M. Its coefficient is the change in that effect when M rises by one standard deviation. The table gives the simple effect of X at three values of M (one standard deviation below the mean, the mean and one above), and the plot draws the same idea twice: the simple slopes (left) and the floodlight analysis (right), the simple effect over the whole observed range of M with its bootstrap interval. The Johnson-Neyman points mark where that interval starts or stops including 0. The first construct of the term is the predictor and the second the moderator, in the order the term was built in the panel. Common misreading: concluding there is moderation because the simple effect is significant at one value of M; moderation is the interaction coefficient itself, and its interval must exclude 0."),
             moderation_f2 = .("The f\u00b2 of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small."),
             model = .("Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number."),

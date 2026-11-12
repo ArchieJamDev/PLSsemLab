@@ -58,6 +58,14 @@ Tenenhaus, M., Esposito Vinzi, V., Chatelin, Y.-M., & Lauro, C. (2005). PLS
 path modeling. *Computational Statistics & Data Analysis, 48*(1), 159–205.
 https://doi.org/10.1016/j.csda.2004.03.005
 
+## Higher-order constructs
+
+Sarstedt, M., Hair, J. F., Cheah, J.-H., Becker, J.-M., & Ringle, C. M.
+(2019). How to specify, estimate, and validate higher-order constructs in
+PLS-SEM. *Australasian Marketing Journal, 27*(3), 197–211.
+https://doi.org/10.1016/j.ausmj.2019.05.003 — the two-stage approaches the
+module follows (disjoint two-stage).
+
 ## Moderation
 
 Kenny, D. A. (2018, September 15). *Moderation*.

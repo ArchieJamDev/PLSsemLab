@@ -59,5 +59,19 @@ t3 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
                                  structural = list(list("Qual"), list("Qual", "Trust"), list()), bootstrap = TRUE, bootReps = 100), data = d)
 t3$init(); t3$run(); draw(t3, "diagram-trust-LR.png")
+sat <- read.csv(sub("bank", "satisfaction", Sys.getenv("PL_DATA")))
+hoc <- cls$new(options = opts$new(reflective = list(list(label = "SAT", vars = paste0("sat", 1:4)), list(label = "LOY", vars = paste0("loy", 1:4))),
+                                  formative = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "EXPE", vars = paste0("expe", 1:5))),
+                                  reflectiveHoc = list(list(label = "QUAL", components = list("IMAG", "EXPE"))),
+                                  structural = list(list("QUAL"), list("SAT", "QUAL"), list(), list(), list()),
+                                  bootstrap = TRUE, bootReps = 100), data = sat)
+hoc$init(); hoc$run(); draw(hoc, "diagram-hoc-LR.png")
+it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "SAT", vars = paste0("sat", 1:4)),
+                                                    list(label = "LOY", vars = paste0("loy", 1:4))),
+                                 structural = list(list(), list(), list("SAT", "IMAG", c("SAT", "IMAG"))),
+                                 bootstrap = TRUE, bootReps = 100), data = sat)
+it$init(); it$run(); draw(it, "diagram-interaction-LR.png")
+grDevices::png("/tmp/out/moderation.png", 760, 360, res = 96)
+print(f(".pl_plot_moderation")(it$results$moderationPlots$items[[1]]$state, ggplot2::theme_minimal(), theme)); grDevices::dev.off()
 cat("diagrams ok\n")
 cat("max RSS (MB):", as.numeric(sub("\\D+(\\d+).*", "\\1", system(paste("grep VmHWM /proc", Sys.getpid(), "status", sep = "/"), intern = TRUE))) / 1024, "\n")

@@ -28,8 +28,15 @@
 #   or NULL; model - internal names; indicators - show them; caption.
 # Output: list(vars, pars, caption, n_layers, n_rows) for image$state.
 # ES: Salida: lista con variables, parámetros y leyenda para image$state.
-.pl_sem_state <- function(blocks, loadings, paths, r2, sm, model, indicators = TRUE, caption = "") {
-    lab <- vapply(blocks, `[[`, "", "label")
+.pl_sem_state <- function(blocks, loadings, paths, r2, sm, model, indicators = TRUE, caption = "", hocq = NULL) {
+    # Higher-order constructs are drawn as constructs whose lower-order
+    # constructs stand before them, linked by loadings (reflective) or
+    # weights (formative).
+    # ES: Los constructos de orden superior se dibujan con sus constructos de
+    # orden inferior delante, unidos por cargas o pesos.
+    hocs <- if (is.null(model$hocs)) list() else model$hocs
+    blocks_all <- c(blocks, lapply(hocs, function(h) list(label = h$label, vars = character(0), type = "hoc")))
+    lab <- vapply(blocks_all, `[[`, "", "label")
     r2v <- stats::setNames(r2$r2, r2$construct)
     # Construct node names carry their R² (semPlot draws the name as label).
     # ES: El nombre del nodo lleva su R² (semPlot dibuja el nombre).
@@ -75,6 +82,17 @@
     for (k in seq_len(nrow(inter)))
         add(node[[inter$from[k]]], node[[inter$to[k]]], inter$estimate[k], "path",
             sig_of(paste(model$cmap[[inter$to[k]]], "~", model$cmap[[inter$from[k]]]), "paths"))
+    for (h in hocs) {
+        hh <- model$m2$hmap[[h$label]]
+        for (cpt in h$components) {
+            r <- hocq$measurement[hocq$measurement$hoc == h$label & hocq$measurement$component == cpt, , drop = FALSE]
+            ind <- paste0("S_", model$cmap[[cpt]])
+            if (h$type == "formative")
+                add(node[[cpt]], node[[h$label]], r$weight, "hoc", sig_of(paste(hh, "<~", ind), "hoc_weights"))
+            else
+                add(node[[h$label]], node[[cpt]], r$loading, "hoc")
+        }
+    }
     pars <- if (length(pars)) do.call(rbind, pars) else
         data.frame(lhs = character(0), rhs = character(0), est = numeric(0), kind = character(0), sig = logical(0))
     endo <- unique(simple$to)
@@ -86,17 +104,24 @@
                        manifest = c(rep(TRUE, length(man_u)), rep(FALSE, length(node))),
                        exogenous = c(man_exo, !(names(node) %in% endo)),
                        stringsAsFactors = FALSE)
-    lay <- .pl_diagram_layout(blocks, paths, paths, r2, NULL)
+    # layout paths: the user's, plus each lower-order construct before its
+    # higher-order construct
+    # ES: rutas de la disposición: las del usuario y cada constructo de orden
+    # inferior antes del suyo de orden superior
+    lay_paths <- paths[, c("from", "to")]
+    for (h in hocs) lay_paths <- rbind(lay_paths, data.frame(from = h$components, to = h$label, stringsAsFactors = FALSE))
+    lay <- .pl_diagram_layout(blocks_all, lay_paths, paths, r2, NULL)
     for (term in unique(inter$from)) {
         parts <- strsplit(term, .PL_X, fixed = TRUE)[[1]]
         lay$nodes <- rbind(lay$nodes[, c("label", "type", "layer")], data.frame(
             label = term, type = "interaction", layer = max(lay$nodes$layer[lay$nodes$label %in% parts]),
             stringsAsFactors = FALSE))
     }
-    xy <- .pl_sem_coords(lay$nodes, simple, node, pars, vars)
+    simple_lay <- lay_paths[!grepl(.PL_X, lay_paths$from, fixed = TRUE), , drop = FALSE]
+    xy <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars)
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
-    tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
+    tb <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
                          row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 1.4)
     list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),

@@ -72,8 +72,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ---------------------------------------------------------------------
         .init = function() {
             blocks <- .pl_constructs(self$options)$blocks
+            hocs <- .pl_hocs(self$options)
             labels <- vapply(blocks, `[[`, "", "label")
-            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks))
+            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks, hocs))
             for (i in seq_along(blocks)) {
                 self$results$model$addRow(rowKey = i, values = list(construct = blocks[[i]]$label))
                 for (v in blocks[[i]]$vars)
@@ -85,6 +86,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                                                     to = paths$to[k]))
             for (to in unique(paths$to))
                 self$results$r2$addRow(rowKey = to, values = list(construct = to))
+            # Higher-order constructs (phase 4): a row in the model summary
+            # and one per lower-order construct in their measurement table.
+            # ES: Constructos de orden superior (fase 4).
+            for (j in seq_along(hocs)) {
+                h <- hocs[[j]]
+                self$results$model$addRow(rowKey = paste0("hoc", j), values = list(construct = h$label))
+                for (cpt in h$components)
+                    self$results$hocMeasurement$addRow(rowKey = paste(h$label, cpt, sep = "::"),
+                                                       values = list(hoc = h$label, component = cpt))
+                if (h$type == "reflective")
+                    self$results$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
+            }
+            if (!length(hocs))
+                for (name in c("hocGuide", "hocMeasurement", "hocReliability"))
+                    self$results[[name]]$setVisible(FALSE)
+            else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
+                self$results$hocReliability$setVisible(FALSE)
 
             # Measurement-model quality (phase 2): rows follow the constructs
             # in the boxes; a table that does not apply to the model (no
@@ -162,8 +180,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: 1. Leer las cajas.
             cons <- .pl_constructs(self$options)
             blocks <- cons$blocks
+            hocs <- .pl_hocs(self$options)
             labels <- vapply(blocks, `[[`, "", "label")
-            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks))
+            paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks, hocs))
             if (length(blocks) < 2 || nrow(paths) == 0) {
                 private$.showIntro(lang, if (length(blocks) < 2) "need_constructs" else "need_paths")
                 return()
@@ -172,7 +191,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             # 2. Validate and prepare (Category A).
             # ES: 2. Validar y preparar (Categoría A).
-            errors <- .pl_validate_model(blocks, paths, lang)
+            # Higher-order constructs (phase 4): checked first; the
+            # first-order model is then validated with the stage-1 paths,
+            # where each higher-order construct is replaced by its
+            # lower-order constructs.
+            # ES: Constructos de orden superior (fase 4): se revisan primero;
+            # el modelo de primer orden se valida con las rutas de la etapa 1.
+            errors <- .pl_hoc_validate(blocks, hocs, paths, self$options, lang)
+            if (length(errors))
+                jmvcore::reject(paste(errors, collapse = "\n"))
+            paths1 <- if (length(hocs)) .pl_stage1_paths(paths, hocs) else paths
+            errors <- .pl_validate_model(blocks, paths1, lang)
             if (length(errors))
                 jmvcore::reject(paste(errors, collapse = "\n"))
             ordinal <- self$options$indicatorScale == "ordinal"
@@ -185,7 +214,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
             # 3. Build and estimate.
             # ES: 3. Armar y estimar.
-            model <- .pl_build_syntax(blocks, paths, self$options$estimator)
+            model <- .pl_build_syntax(blocks, paths1, self$options$estimator)
             d <- prep$data[, names(model$vmap), drop = FALSE]
             names(d) <- unname(model$vmap)
             # Ordinal indicators go to cSEM as ordered factors, which makes it
@@ -205,31 +234,53 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             est <- fit$value$Estimates
             admissible <- !any(unlist(cSEM::verify(fit$value)))
 
+            # Stage 2 of a higher-order model: the structural model is read
+            # from it; smodel adds the higher-order names to the maps.
+            # ES: Etapa 2 de un modelo de orden superior: el modelo
+            # estructural se lee de ella; smodel añade los nombres de orden
+            # superior a los mapas.
+            sfit <- fit$value
+            smodel <- model
+            if (length(hocs)) {
+                m2 <- .pl_stage2_model(hocs, paths, model$cmap)
+                fit2 <- .pl_capture(.pl_stage2_fit(est$Construct_scores, m2, self$options))
+                if (!is.null(fit2$error))
+                    jmvcore::reject(sprintf(txt("errors", "estimation"), fit2$error))
+                sfit <- fit2$value
+                smodel$cmap <- c(model$cmap, m2$hmap)
+                smodel$m2 <- m2
+                smodel$hocs <- hocs
+                admissible <- admissible && !any(unlist(cSEM::verify(sfit)))
+            }
+            sest <- sfit$Estimates
+
             # 4. Tables.
             # ES: 4. Tablas.
-            inv <- stats::setNames(names(model$cmap), model$cmap)
-            private$.fillModel(blocks, paths, txt)
+            private$.fillModel(blocks, paths, txt, hocs)
             loadings <- private$.fillMeasurement(blocks, model, est)
-            path_tab <- private$.fillPaths(paths, model, est)
-            r2_tab <- private$.fillR2(paths, model, est)
-            quality <- .pl_measurement_quality(fit$value, blocks, paths, model, d, self$options)
+            path_tab <- private$.fillPaths(paths, smodel, sest)
+            r2_tab <- private$.fillR2(paths, smodel, sest)
+            quality <- .pl_measurement_quality(fit$value, blocks, paths1, model, d, self$options)
             private$.fillReliability(quality, txt)
             private$.fillHtmt(quality, txt)
             private$.fillFornell(quality, txt)
             private$.fillVif(quality, txt)
-            structural <- private$.fillStructural(fit$value, paths, model, txt)
+            hocq <- if (length(hocs)) private$.fillHoc(sfit, hocs, smodel, txt) else NULL
+            structural <- private$.fillStructural(sfit, paths, smodel, txt)
 
             # Bootstrap (phase 3): only when "Run bootstrap" is ticked.
             # ES: Bootstrap (fase 3): solo con "Ejecutar bootstrap" marcado.
             boot <- NULL
             if (self$options$bootstrap) {
-                boot <- private$.bootstrap(fit$value, blocks, model, d, txt)
-                if (!is.null(boot$summary))
-                    private$.fillBootstrap(boot$summary, blocks, paths, model, txt)
+                boot <- private$.bootstrap(fit$value, blocks, model, d, txt, smodel, paths)
+                if (!is.null(boot$summary)) {
+                    private$.fillBootstrap(boot$summary, blocks, paths, smodel, txt)
+                    if (length(hocs)) private$.fillHocBootstrap(boot$summary, hocs, smodel, txt)
+                }
             }
             mod <- if (isTRUE(model$nonlinear))
                 private$.fillModeration(fit$value, paths, model, boot$summary, txt) else NULL
-            private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, model)
+            private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
             # 5. Notices, interpretation, summaries, reproducibility.
@@ -245,10 +296,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       if (!is.null(boot$summary) && length(boot$error))
                           sprintf(txt("boot", "some_failed"), paste(boot$error, collapse = "; ")))
             if (!admissible) {
-                failed <- names(which(unlist(cSEM::verify(fit$value))))
+                failed <- c(names(which(unlist(cSEM::verify(fit$value)))),
+                            if (length(hocs)) names(which(unlist(cSEM::verify(sfit)))))
                 warn <- c(warn, sprintf(txt("notices", "inadmissible"), paste(failed, collapse = ", ")))
             }
-            info <- character(0)
+            info <- if (length(hocs)) sprintf(txt("notices", "hoc_two_stage"),
+                                              paste(vapply(hocs, `[[`, "", "label"), collapse = ", ")) else character(0)
             if (prep$n_dropped > 0)
                 info <- c(info, sprintf(txt("notices", "dropped"), prep$n_dropped, prep$n_used))
             if (prep$n_replaced > 0)
@@ -270,13 +323,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, info, jmvcore::NoticeType$INFO, ".plssemInfo")
             .pl_insert_notices(self$results, self$options, warn)
 
-            private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, model,
-                                    mod)
+            private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
+                                    mod, hocq)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                model)
+                                smodel)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
-            private$.reproducibility(lang, model, prep, blocks, paths)
+            private$.reproducibility(lang, smodel, prep, blocks, paths)
         },
 
         # ---------------------------------------------------------------------
@@ -478,13 +531,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Bootstrap: en caché, por bloques, con avance y un checkpoint
         # después de cada bloque (se detiene si cambia una opción).
         # ---------------------------------------------------------------------
-        .bootstrap = function(fit, blocks, model, d, txt) {
+        .bootstrap = function(fit, blocks, model, d, txt, smodel = model, paths = NULL) {
             reps <- as.integer(self$options$bootReps)
             seed <- as.integer(self$options$bootSeed)
             level <- as.numeric(self$options$ciLevel)
             status <- self$results$bootStatus
-            spec <- .pl_boot_spec(blocks, model, fit, self$options)
-            key <- list("plssem-boot-1", model$syntax, model$modes, d, self$options$estimator,
+            spec <- .pl_boot_spec(blocks, model, fit, self$options, smodel, paths)
+            key <- list("plssem-boot-2", model$syntax, model$modes, smodel$m2$syntax, d, self$options$estimator,
                         self$options$innerScheme, reps, seed, level,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$cacheStore, key, function() {
@@ -660,7 +713,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             TRUE
         },
 
-        .prepareDiagram = function(blocks, loadings, path_tab, r2_tab, sm, model) {
+        .prepareDiagram = function(blocks, loadings, path_tab, r2_tab, sm, model, hocq = NULL) {
             image <- self$results$pathDiagram
             if (!self$options$pathDiagram) return()
             lang <- .pl_lang(self$options)
@@ -668,7 +721,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                        else sprintf(.pl_text(lang, "labels", "diagram_caption_boot"),
                                     format(100 * as.numeric(self$options$ciLevel)))
             st <- .pl_sem_state(blocks, loadings, path_tab, r2_tab, sm, model,
-                                indicators = isTRUE(self$options$diagramIndicators), caption = caption)
+                                indicators = isTRUE(self$options$diagramIndicators), caption = caption,
+                                hocq = hocq)
             # Size: wider with more layers of constructs, taller with more
             # indicators per layer (left to right) or the reverse.
             # ES: Tamaño según capas de constructos e indicadores.
@@ -751,17 +805,87 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 self$results[[name]]$setVisible(FALSE)
         },
 
-        .fillModel = function(blocks, paths, txt) {
+        .fillModel = function(blocks, paths, txt, hocs = list()) {
+            dims <- stats::setNames(rep(vapply(hocs, `[[`, "", "label"), vapply(hocs, function(h) length(h$components), 0)),
+                                    unlist(lapply(hocs, `[[`, "components")))
             for (i in seq_along(blocks)) {
                 b <- blocks[[i]]
                 preds <- paths$from[paths$to == b$label]
+                role <- if (b$label %in% names(dims)) sprintf(txt("labels", "dimension_of"), dims[[b$label]])
+                        else txt("labels", if (length(preds)) "endogenous" else "exogenous")
                 self$results$model$setRow(rowKey = i, values = list(
                     construct = b$label,
                     measurement = txt("labels", b$type),
                     indicators = length(b$vars),
+                    role = role,
+                    predictors = if (length(preds)) paste(preds, collapse = ", ") else txt("labels", "none")))
+            }
+            for (j in seq_along(hocs)) {
+                h <- hocs[[j]]
+                preds <- paths$from[paths$to == h$label]
+                self$results$model$setRow(rowKey = paste0("hoc", j), values = list(
+                    construct = h$label,
+                    measurement = txt("labels", paste0(h$type, "_hoc")),
+                    indicators = length(h$components),
                     role = txt("labels", if (length(preds)) "endogenous" else "exogenous"),
                     predictors = if (length(preds)) paste(preds, collapse = ", ") else txt("labels", "none")))
             }
+        },
+
+        # Measurement of the higher-order constructs (stage 2): one row per
+        # lower-order construct, and reliability of the reflective ones.
+        # ES: Medida de los constructos de orden superior (etapa 2).
+        .fillHoc = function(sfit, hocs, smodel, txt) {
+            q <- .pl_hoc_quality(sfit, hocs, smodel$cmap, smodel$m2$hmap)
+            for (k in seq_len(nrow(q$measurement))) {
+                r <- q$measurement[k, ]
+                band <- if (r$type == "formative") .pl_band_vif(r$vif) else NA_character_
+                values <- list(hoc = r$hoc, component = r$component, loading = r$loading, weight = r$weight,
+                               vifAssessment = if (is.na(band)) "" else txt("labels", band))
+                if (is.finite(r$vif)) values$vif <- r$vif
+                self$results$hocMeasurement$setRow(rowKey = paste(r$hoc, r$component, sep = "::"), values = values)
+            }
+            rel <- q$reliability
+            for (k in seq_len(if (is.null(rel)) 0 else nrow(rel))) {
+                r <- rel[k, ]
+                a <- c(.pl_band_reliability(r$rhoC), if (r$ave >= 0.5) "ave_ok" else "ave_low")
+                self$results$hocReliability$setRow(rowKey = r$hoc, values = list(
+                    hoc = r$hoc, alpha = r$alpha, rhoC = r$rhoC, ave = r$ave,
+                    assessment = paste(vapply(a, function(x) txt("labels", x), ""), collapse = "; ")))
+            }
+            q
+        },
+
+        .fillHocBootstrap = function(sm, hocs, smodel, txt) {
+            set <- function(table, key, values) for (col in names(values)) {
+                v <- values[[col]]
+                if (length(v) == 1 && is.finite(v)) table$setCell(rowKey = key, col = col, value = v)
+            }
+            row_of <- function(df, name) if (is.null(df)) NULL else df[df$name == name, , drop = FALSE]
+            for (h in hocs) {
+                hh <- smodel$m2$hmap[[h$label]]
+                for (cpt in h$components) {
+                    ind <- paste0("S_", smodel$cmap[[cpt]])
+                    key <- paste(h$label, cpt, sep = "::")
+                    l <- row_of(sm$hoc_loadings, paste(hh, "=~", ind))
+                    w <- row_of(sm$hoc_weights, paste(hh, "<~", ind))
+                    v <- row_of(sm$hoc_vif, paste(hh, ind, sep = "~"))
+                    if (!is.null(l) && nrow(l)) set(self$results$hocMeasurement, key, list(loadLower = l$lower, loadUpper = l$upper))
+                    if (!is.null(w) && nrow(w)) set(self$results$hocMeasurement, key, list(weightLower = w$lower,
+                                                                                            weightUpper = w$upper, weightP = w$p))
+                    if (!is.null(v) && nrow(v)) set(self$results$hocMeasurement, key, list(vifLower = v$lower, vifUpper = v$upper))
+                }
+                if (h$type == "reflective") {
+                    r <- row_of(sm$hoc_rhoC, hh)
+                    a <- row_of(sm$hoc_ave, hh)
+                    if (!is.null(r) && nrow(r)) set(self$results$hocReliability, h$label, list(rhoCLower = r$lower, rhoCUpper = r$upper))
+                    if (!is.null(a) && nrow(a)) set(self$results$hocReliability, h$label, list(aveLower = a$lower, aveUpper = a$upper))
+                }
+            }
+            pct <- format(100 * as.numeric(self$options$ciLevel))
+            note <- sprintf(txt("boot", "ci_note"), pct, sm$admissible)
+            self$results$hocMeasurement$setNote("ci", note)
+            self$results$hocReliability$setNote("ci", note)
         },
 
         # Returns the long table of loadings and weights, reused by the
@@ -815,7 +939,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1071,6 +1195,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$structuralGuide$setContent(.pl_html_block(c(txt("f2"), txt("vif_struct"), txt("effects"))))
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
+            self$results$hocGuide$setContent(.pl_html_block(txt("hoc")))
         },
 
         # ---------------------------------------------------------------------
@@ -1082,6 +1207,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .reproducibility = function(lang, model, prep, blocks, paths) {
             if (!self$options$showRepro) return()
             txt <- function(key) .pl_text(lang, "repro", key)
+            m2 <- model$m2
+            if (!is.null(model$hocs)) paths <- .pl_stage1_paths(paths, model$hocs)
             version <- function(p) tryCatch(as.character(utils::packageVersion(p)), error = function(e) "?")
             # Versions go into the code as a comment, not into the report
             # text (Archie's request).
@@ -1102,7 +1229,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             code <- c(
                 sprintf("# PLSsemLab %s, cSEM %s, %s", version("PLSsemLab"), version("cSEM"), R.version.string),
                 "# Model as defined in jamovi:",
-                paste0("#   ", model$readable),
+                paste0("#   ", if (is.null(m2)) model$readable else c(m2$readable, "# Stage 1 (higher-order constructs replaced by their dimensions):", paste0("#   ", model$readable))),
                 "# Internal names:", map_c, map_v,
                 sprintf("d <- data[, c(%s)]", paste(q(names(model$vmap)), collapse = ", ")),
                 sprintf("names(d) <- c(%s)", paste(q(unname(model$vmap)), collapse = ", ")),
@@ -1116,6 +1243,19 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         if (self$options$estimator == "plsc") "TRUE" else "FALSE"),
                 sprintf("                  .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme),
                 "cSEM::summarize(fit)")
+            if (!is.null(m2)) {
+                # Stage 2 of the disjoint two-stage approach.
+                # ES: Etapa 2 del enfoque disjunto en dos etapas.
+                code <- c(code, "",
+                    "# Stage 2: the stage-1 construct scores are the indicators",
+                    "d2 <- as.data.frame(fit$Estimates$Construct_scores)",
+                    "names(d2) <- paste0(\"S_\", names(d2))",
+                    "model2 <- \"", m2$syntax, "\"",
+                    sprintf("fit2 <- cSEM::csem(d2, model2, .PLS_modes = %s, .disattenuate = FALSE,", modes_of(m2$modes)),
+                    sprintf("                   .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme),
+                    "cSEM::summarize(fit2)",
+                    "# Bootstrap of a higher-order model: in each resample of stage 1, stage 2 is re-estimated from its scores (.user_funs; see R/bootstrap.R in PLSsemLab)")
+            }
             if (self$options$bootstrap) {
                 # The same blocks and seeds as the module: up to 200 resamples
                 # this is a single cSEM call with the seed.

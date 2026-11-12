@@ -83,4 +83,24 @@ ctx.workspace = {};
 ev.update.call(ctx, ui);
 assert.strictEqual(JSON.stringify(rows()), saved, 'a reopened analysis keeps its rows');
 assert.strictEqual(maxDepth, 1, 'no supplier update loop');
+// Higher-order constructs (phase 4): the second supplier offers the
+// first-order names; a higher-order construct with components joins the
+// structural rows after them; unknown and repeated components are removed
+// and renames of first-order constructs follow.
+// ES: Constructos de orden superior (fase 4).
+ui.reflectiveHoc = box([{ label: 'CAPSI', components: [['Competence'], ['Construct 3'], ['Nope'], ['Competence']] }]);
+ui.formativeHoc = box([]);
+ui.hocSupplier = { items: [], setValue(x) { this.items = x; } };
+ev.onConstructsChanged.call(ctx, ui);
+assert.deepStrictEqual(ui.hocSupplier.items.map(i => i.value), ['Competence', 'Construct 3'], 'hoc supplier: first-order only');
+assert.deepStrictEqual(ui.reflectiveHoc.value()[0].components, [['Competence'], ['Construct 3']], 'components cleaned');
+assert.deepStrictEqual(supplier(), ['Competence', 'Construct 3', 'CAPSI'], 'hoc in the structural supplier');
+assert.strictEqual(rows().length, 3, 'a structural row for the hoc');
+ui.reflective.value()[0].label = 'COMPET';
+ev.onConstructsChanged.call(ctx, ui);
+assert.deepStrictEqual(ui.reflectiveHoc.value()[0].components, [['COMPET'], ['Construct 3']], 'rename followed');
+ui.formativeHoc.value().push({ label: '', components: [] });
+ev.onConstructsChanged.call(ctx, ui);
+assert.strictEqual(ui.formativeHoc.value()[0].label, 'Higher-order 2', 'default hoc name');
+
 console.log('plssem.events.js: all checks passed');

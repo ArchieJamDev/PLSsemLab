@@ -194,8 +194,9 @@
 #   el JS). Salida: data.frame(from, to) con una fila por término predictor,
 #   las interacciones unidas por " × ".
 # -----------------------------------------------------------------------------
-.pl_structural_labels <- function(blocks) {
-    labels <- vapply(blocks, `[[`, "", "label")
+.pl_structural_labels <- function(blocks, hocs = list()) {
+    labels <- c(vapply(blocks, `[[`, "", "label"),
+                vapply(Filter(function(h) length(h$components) > 0, hocs), `[[`, "", "label"))
     unique(labels[nzchar(labels)])
 }
 

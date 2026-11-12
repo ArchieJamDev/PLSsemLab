@@ -9,6 +9,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             reflective = list(
                 list(label="Construct 1", vars=list())),
             formative = list(),
+            reflectiveHoc = list(),
+            formativeHoc = list(),
             structural = list(),
             estimator = "pls",
             innerScheme = "path",
@@ -89,6 +91,34 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 "ordinal"),
                             permitted=list(
                                 "numeric")))))
+            private$..reflectiveHoc <- jmvcore::OptionArray$new(
+                "reflectiveHoc",
+                reflectiveHoc,
+                default=list(),
+                template=jmvcore::OptionGroup$new(
+                    "reflectiveHoc",
+                    NULL,
+                    elements=list(
+                        jmvcore::OptionString$new(
+                            "label",
+                            NULL),
+                        jmvcore::OptionTerms$new(
+                            "components",
+                            NULL))))
+            private$..formativeHoc <- jmvcore::OptionArray$new(
+                "formativeHoc",
+                formativeHoc,
+                default=list(),
+                template=jmvcore::OptionGroup$new(
+                    "formativeHoc",
+                    NULL,
+                    elements=list(
+                        jmvcore::OptionString$new(
+                            "label",
+                            NULL),
+                        jmvcore::OptionTerms$new(
+                            "components",
+                            NULL))))
             private$..structural <- jmvcore::OptionArray$new(
                 "structural",
                 structural,
@@ -283,6 +313,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
             self$.addOption(private$..reflective)
             self$.addOption(private$..formative)
+            self$.addOption(private$..reflectiveHoc)
+            self$.addOption(private$..formativeHoc)
             self$.addOption(private$..structural)
             self$.addOption(private$..estimator)
             self$.addOption(private$..innerScheme)
@@ -321,6 +353,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     active = list(
         reflective = function() private$..reflective$value,
         formative = function() private$..formative$value,
+        reflectiveHoc = function() private$..reflectiveHoc$value,
+        formativeHoc = function() private$..formativeHoc$value,
         structural = function() private$..structural$value,
         estimator = function() private$..estimator$value,
         innerScheme = function() private$..innerScheme$value,
@@ -358,6 +392,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     private = list(
         ..reflective = NA,
         ..formative = NA,
+        ..reflectiveHoc = NA,
+        ..formativeHoc = NA,
         ..structural = NA,
         ..estimator = NA,
         ..innerScheme = NA,
@@ -416,6 +452,9 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pathsGuide = function() private$.items[["pathsGuide"]],
         paths = function() private$.items[["paths"]],
         r2 = function() private$.items[["r2"]],
+        hocGuide = function() private$.items[["hocGuide"]],
+        hocMeasurement = function() private$.items[["hocMeasurement"]],
+        hocReliability = function() private$.items[["hocReliability"]],
         structuralGuide = function() private$.items[["structuralGuide"]],
         f2 = function() private$.items[["f2"]],
         vifStruct = function() private$.items[["vifStruct"]],
@@ -472,6 +511,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -514,6 +555,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -590,6 +633,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -670,6 +715,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -722,6 +769,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -748,6 +797,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -803,6 +854,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -867,6 +920,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -903,6 +958,167 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="hocGuide",
+                title="How to read higher-order constructs",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="hocMeasurement",
+                title="Higher-order constructs (stage 2)",
+                rows=0,
+                refs=list(
+                    "sarstedt_2019",
+                    "hair_2021"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="hoc", 
+                        `title`="Higher-order construct", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="component", 
+                        `title`="Lower-order construct", 
+                        `type`="text"),
+                    list(
+                        `name`="loading", 
+                        `title`="Loading", 
+                        `type`="number"),
+                    list(
+                        `name`="loadLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Loading CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="loadUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Loading CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="weight", 
+                        `title`="Weight", 
+                        `type`="number"),
+                    list(
+                        `name`="weightLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Weight CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="weightUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Weight CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="weightP", 
+                        `title`="p (weight)", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="vif", 
+                        `title`="VIF", 
+                        `type`="number"),
+                    list(
+                        `name`="vifLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="vifUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="VIF CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="vifAssessment", 
+                        `title`="Assessment (VIF)", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="hocReliability",
+                title="Reliability of reflective higher-order constructs",
+                rows=0,
+                refs=list(
+                    "sarstedt_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="hoc", 
+                        `title`="Higher-order construct", 
+                        `type`="text"),
+                    list(
+                        `name`="alpha", 
+                        `title`="Cronbach's \u03B1", 
+                        `type`="number"),
+                    list(
+                        `name`="rhoC", 
+                        `title`="\u03C1C", 
+                        `type`="number"),
+                    list(
+                        `name`="rhoCLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="\u03C1C CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="rhoCUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="\u03C1C CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="ave", 
+                        `title`="AVE", 
+                        `type`="number"),
+                    list(
+                        `name`="aveLower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="AVE CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="aveUpper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="AVE CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="structuralGuide",
                 title="How to read effect sizes, collinearity and effects",
                 visible="(showGuides)"))
@@ -916,6 +1132,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -952,6 +1170,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1004,6 +1224,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1078,6 +1300,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1138,6 +1362,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     clearWith=list(
                         "reflective",
                         "formative",
+                        "reflectiveHoc",
+                        "formativeHoc",
                         "structural",
                         "estimator",
                         "innerScheme",
@@ -1173,6 +1399,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "edgeDigits",
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1193,6 +1421,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1213,6 +1443,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1229,6 +1461,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 clearWith=list(
                     "reflective",
                     "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1281,6 +1515,8 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data .
 #' @param reflective .
 #' @param formative .
+#' @param reflectiveHoc .
+#' @param formativeHoc .
 #' @param structural .
 #' @param estimator .
 #' @param innerScheme .
@@ -1335,6 +1571,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$pathsGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$paths} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$r2} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$hocGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$hocMeasurement} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$hocReliability} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$structuralGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
@@ -1363,6 +1602,8 @@ plssem <- function(
     reflective = list(
                 list(label="Construct 1", vars=list())),
     formative = list(),
+    reflectiveHoc = list(),
+    formativeHoc = list(),
     structural = list(),
     estimator = "pls",
     innerScheme = "path",
@@ -1409,6 +1650,8 @@ plssem <- function(
     options <- plssemOptions$new(
         reflective = reflective,
         formative = formative,
+        reflectiveHoc = reflectiveHoc,
+        formativeHoc = formativeHoc,
         structural = structural,
         estimator = estimator,
         innerScheme = innerScheme,

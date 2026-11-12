@@ -67,6 +67,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -106,6 +108,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -175,6 +179,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -246,6 +252,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -294,6 +302,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -321,6 +331,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -372,6 +384,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -429,6 +443,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -459,6 +475,148 @@ items:
         title: Adjusted R²
         type: number
 
+  # Higher-order constructs (phase 4): measurement in stage 2, rows laid
+  # out in .init(); hidden when the model has none.
+  # ES: Constructos de orden superior (fase 4): medida en la etapa 2.
+  - name: hocGuide
+    title: How to read higher-order constructs
+    type: Html
+    visible: (showGuides)
+
+  - name: hocMeasurement
+    title: Higher-order constructs (stage 2)
+    type: Table
+    rows: 0
+    refs:
+      - sarstedt_2019
+      - hair_2021
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootstrap
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: hoc
+        title: Higher-order construct
+        type: text
+        combineBelow: true
+      - name: component
+        title: Lower-order construct
+        type: text
+      - name: loading
+        title: Loading
+        type: number
+      - name: loadLower
+        title: Lower
+        type: number
+        superTitle: Loading CI
+        visible: (bootstrap)
+      - name: loadUpper
+        title: Upper
+        type: number
+        superTitle: Loading CI
+        visible: (bootstrap)
+      - name: weight
+        title: Weight
+        type: number
+      - name: weightLower
+        title: Lower
+        type: number
+        superTitle: Weight CI
+        visible: (bootstrap)
+      - name: weightUpper
+        title: Upper
+        type: number
+        superTitle: Weight CI
+        visible: (bootstrap)
+      - name: weightP
+        title: p (weight)
+        type: number
+        format: zto,pvalue
+        visible: (bootstrap)
+      - name: vif
+        title: VIF
+        type: number
+      - name: vifLower
+        title: Lower
+        type: number
+        superTitle: VIF CI
+        visible: (bootstrap)
+      - name: vifUpper
+        title: Upper
+        type: number
+        superTitle: VIF CI
+        visible: (bootstrap)
+      - name: vifAssessment
+        title: Assessment (VIF)
+        type: text
+
+  - name: hocReliability
+    title: Reliability of reflective higher-order constructs
+    type: Table
+    rows: 0
+    refs:
+      - sarstedt_2019
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootstrap
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: hoc
+        title: Higher-order construct
+        type: text
+      - name: alpha
+        title: Cronbach's α
+        type: number
+      - name: rhoC
+        title: ρC
+        type: number
+      - name: rhoCLower
+        title: Lower
+        type: number
+        superTitle: ρC CI
+        visible: (bootstrap)
+      - name: rhoCUpper
+        title: Upper
+        type: number
+        superTitle: ρC CI
+        visible: (bootstrap)
+      - name: ave
+        title: AVE
+        type: number
+      - name: aveLower
+        title: Lower
+        type: number
+        superTitle: AVE CI
+        visible: (bootstrap)
+      - name: aveUpper
+        title: Upper
+        type: number
+        superTitle: AVE CI
+        visible: (bootstrap)
+      - name: assessment
+        title: Assessment
+        type: text
+
   - name: structuralGuide
     title: How to read effect sizes, collinearity and effects
     type: Html
@@ -475,6 +633,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -508,6 +668,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -557,6 +719,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -625,6 +789,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -678,6 +844,8 @@ items:
       clearWith:
         - reflective
         - formative
+        - reflectiveHoc
+        - formativeHoc
         - structural
         - estimator
         - innerScheme
@@ -713,6 +881,8 @@ items:
       - edgeDigits
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -737,6 +907,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -761,6 +933,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme
@@ -780,6 +954,8 @@ items:
     clearWith:
       - reflective
       - formative
+      - reflectiveHoc
+      - formativeHoc
       - structural
       - estimator
       - innerScheme

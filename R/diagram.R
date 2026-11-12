@@ -241,7 +241,7 @@
     geo <- if (tb) list(side = 1.7, step = 1.3, gap = 0.6) else list(side = 2.8, step = 1.4, gap = 0.62)
     ppx <- 0.84 * width / (diff(range(gx)) + 1.6)
     ppy <- 0.80 * height / (diff(range(gy)) + 1)
-    man_w <- max(42, min(70 * km, 0.85 * (if (tb) geo$step * ppx else min(geo$step * ppx, 0.75 * geo$side * ppx))))
+    man_w <- max(58, min(70 * km, 0.85 * (if (tb) geo$step * ppx else min(geo$step * ppx, 0.75 * geo$side * ppx))))
     man_h <- max(16, min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy))
     lat_w <- max(70, min(115 * kl, 1.0 * (if (tb) 2.3 else geo$side) * ppx))
     lat_h <- max(34, min(56 * kl, 0.9 * ppy))

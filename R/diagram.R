@@ -81,7 +81,8 @@
     xy <- .pl_sem_coords(lay$nodes, simple, node, pars, vars)
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
-    tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.25, step = 0.75)
+    tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
+                         row_off = 1.9, row_extra = 2.5, min_body = 2.3, layer = 4)
     list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
@@ -97,7 +98,8 @@
 # constructos en columnas por profundidad; indicadores formativos y de
 # reflectivos exógenos a la izquierda, de reflectivos terminales a la
 # derecha y de reflectivos intermedios en una fila arriba.
-.pl_sem_coords <- function(nodes, simple, node, pars, vars, gap = 0.6, step = 1.2) {
+.pl_sem_coords <- function(nodes, simple, node, pars, vars, gap = 0.62, step = 1.4, side = 2.8,
+                           row_off = 1.5, row_extra = 1.8, min_body = 1.5, layer = 6.2) {
     x <- stats::setNames(rep(0, nrow(vars)), vars$name)
     y <- x
     sides <- lapply(nodes$label, function(cl) {
@@ -110,7 +112,7 @@
              top = if (!exo && !term) outof else character(0))
     })
     names(sides) <- nodes$label
-    body <- vapply(sides, function(sd) max(1.5, gap * length(sd$left), gap * length(sd$right)), 0)
+    body <- vapply(sides, function(sd) max(min_body, gap * length(sd$left), gap * length(sd$right)), 0)
     order_y <- stats::setNames(rep(0, nrow(nodes)), nodes$label)
     for (l in sort(unique(nodes$layer))) {
         idx <- which(nodes$layer == l)
@@ -126,7 +128,7 @@
         # ES: el primer constructo de la columna lleva su fila arriba, los
         # demás abajo
         row_above <- seq_along(idx) == 1
-        extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) 1.3 else 0, 0)
+        extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) row_extra else 0, 0)
         total <- sum(body[nodes$label[idx]] + extra) + 0.8 * (length(idx) - 1)
         top <- total / 2
         for (j in seq_along(idx)) {
@@ -135,7 +137,7 @@
             nm <- node[[cl]]
             above <- if (row_above[j]) extra[[j]] else 0
             cy <- top - above - body[[cl]] / 2
-            cx <- 5.8 * l
+            cx <- layer * l
             x[[nm]] <- cx
             y[[nm]] <- cy
             order_y[[cl]] <- cy
@@ -143,11 +145,11 @@
                 x[v] <<- xx
                 y[v] <<- cy + rev(seq_along(v) - (length(v) + 1) / 2) * gap
             }
-            col(sd$left, cx - 2.3)
-            col(sd$right, cx + 2.3)
+            col(sd$left, cx - side)
+            col(sd$right, cx + side)
             if (length(sd$top)) {
                 x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * step
-                y[sd$top] <- cy + if (row_above[j]) 1.25 else -1.25
+                y[sd$top] <- cy + if (row_above[j]) row_off else -row_off
             }
             top <- top - body[[cl]] - extra[[j]] - 0.8
         }
@@ -218,14 +220,15 @@
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
-    lab_pos <- ifelse(p$kind == "weight", 0.42, ifelse(p$kind == "loading", 0.58, 0.5))
+    lab_pos <- ifelse(p$kind == "weight", 0.4, ifelse(p$kind == "loading", 0.6, 0.5))
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
                       sizeLat = 115 * kl / unit, sizeLat2 = 56 * kl / unit,
                       sizeMan = 70 * km / unit, sizeMan2 = 24 * km / unit,
                       nCharNodes = 0, label.cex = if (is.null(opts$nodeLabelSize)) 1 else opts$nodeLabelSize,
                       label.scale = FALSE,
-                      edge.label.cex = if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize,
+                      edge.label.cex = (if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize) *
+                          ifelse(p$kind == "path", 1, 0.75),
                       residuals = FALSE, intercepts = FALSE, thresholds = FALSE, exoCov = FALSE,
                       color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
                       border.color = ink, label.color = ink, edge.color = edge_col,

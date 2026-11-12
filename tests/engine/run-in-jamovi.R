@@ -30,10 +30,10 @@ draw <- function(a, file, ...) {
     o <- utils::modifyList(list(diagramLayout = "treeLR", edgeLabels = TRUE, diagramCaption = TRUE, diagramTitle = ""), list(...))
     sz <- list(width = a$results$pathDiagram$width, height = a$results$pathDiagram$height)
     if (identical(o$diagramLayout, "treeTB"))
-        sz <- list(width = max(560, min(1800, 62 * (diff(range(st$x_tb)) + 1.6) + 120)),
-                   height = max(360, min(1800, 75 * (diff(range(st$y_tb)) + 1) + 170)))
+        sz <- list(width = max(560, min(900, 62 * (diff(range(st$x_tb)) + 1.6) + 120)),
+                   height = max(360, min(1100, 75 * (diff(range(st$y_tb)) + 1) + 170)))
     grDevices::png(file.path("/tmp/out", file), sz$width, sz$height, res = 96)
-    f(".pl_plot_sem")(st, o, theme, width = sz$width)
+    f(".pl_plot_sem")(st, o, theme, width = sz$width, height = sz$height)
     grDevices::dev.off()
     cat(file, sz$width, "x", sz$height, "\n")
 }

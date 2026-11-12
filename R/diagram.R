@@ -182,7 +182,7 @@
 # options; theme: jamovi's theme (color[1] ink, fill[1] background, fill[2]
 # soft fill).
 # ES: Dibuja el diagrama (gráficos base, por qgraph).
-.pl_plot_sem <- function(state, opts, theme, width = 900) {
+.pl_plot_sem <- function(state, opts, theme, width = 900, height = 600) {
     p <- state$pars
     if (!nrow(p)) return(FALSE)
     ink <- theme$color[1]
@@ -208,12 +208,14 @@
                      circle = list("circle2", 1), spring = list("spring", 1))
     if (is.null(state$x)) layout[[1]] <- "tree2"
     by_est <- !identical(opts$edgeWidth, "uniform")
-    # qgraph sizes nodes relative to the device width: the defaults give
-    # boxes of about 70 x 24 px and ellipses of 115 x 56 px at any width;
-    # the size options scale them.
-    # ES: qgraph mide los nodos respecto al ancho del dispositivo: por
-    # defecto, cajas de unos 70 x 24 px y elipses de 115 x 56 px.
-    unit <- width / 132
+    # qgraph sizes nodes relative to the device (measured in jamovi's R:
+    # about 0.0112 * sqrt(width * height) px per size unit); the defaults
+    # give boxes of about 70 x 24 px and ellipses of 115 x 56 px at any
+    # size; the size options scale them.
+    # ES: qgraph mide los nodos respecto al dispositivo (medido en el R de
+    # jamovi: unos 0.0112 * sqrt(ancho * alto) px por unidad); por defecto,
+    # cajas de unos 70 x 24 px y elipses de 115 x 56 px.
+    unit <- 0.0112 * sqrt(width * height)
     kl <- (if (is.null(opts$latentSize)) 11 else opts$latentSize) / 11
     km <- (if (is.null(opts$manifestSize)) 6 else opts$manifestSize) / 6
     # Coefficients near the indicator on measurement arrows (where arrows

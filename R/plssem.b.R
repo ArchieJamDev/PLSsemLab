@@ -660,7 +660,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .plotPaths = function(image, ggtheme, theme, ...) {
             if (is.null(image$state) || is.null(image$state$pars)) return(FALSE)
-            .pl_plot_sem(image$state, self$options, theme, width = image$width)
+            .pl_plot_sem(image$state, self$options, theme, width = image$width, height = image$height)
         },
 
         .blocks = function() .pl_constructs(self$options)$blocks,

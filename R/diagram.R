@@ -82,7 +82,7 @@
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
     tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
-                         row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 4)
+                         row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 1.4)
     list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
@@ -99,7 +99,7 @@
 # reflectivos exógenos a la izquierda, de reflectivos terminales a la
 # derecha y de reflectivos intermedios en una fila arriba.
 .pl_sem_coords <- function(nodes, simple, node, pars, vars, gap = 0.62, step = 1.4, side = 2.8,
-                           row_off = 1.5, row_extra = 1.8, min_body = 1.5, layer = 6.2) {
+                           row_off = 1.5, row_extra = 1.8, min_body = 1.5, layer = 1.6) {
     x <- stats::setNames(rep(0, nrow(vars)), vars$name)
     y <- x
     sides <- lapply(nodes$label, function(cl) {
@@ -114,7 +114,22 @@
     names(sides) <- nodes$label
     body <- vapply(sides, function(sd) max(min_body, gap * length(sd$left), gap * length(sd$right)), 0)
     order_y <- stats::setNames(rep(0, nrow(nodes)), nodes$label)
-    for (l in sort(unique(nodes$layer))) {
+    # Column positions: each column is as wide as what it holds (indicator
+    # columns at the sides, rows above or below), plus `layer` between
+    # columns for the path labels.
+    # ES: Cada columna es tan ancha como lo que contiene, más `layer` entre
+    # columnas para las etiquetas de las rutas.
+    layers <- sort(unique(nodes$layer))
+    ext <- function(l, which) {
+        cls <- nodes$label[nodes$layer == l]
+        has <- any(vapply(sides[cls], function(sd) length(sd[[which]]) > 0, TRUE))
+        row <- max(0, vapply(sides[cls], function(sd) (length(sd$top) - 1) * step / 2 + 0.6, 0))
+        max(1.1, row, if (has) side + 0.6 else 0)
+    }
+    col_x <- stats::setNames(numeric(length(layers)), layers)
+    for (k in seq_along(layers)[-1])
+        col_x[k] <- col_x[k - 1] + ext(layers[k - 1], "right") + layer + ext(layers[k], "left")
+    for (l in layers) {
         idx <- which(nodes$layer == l)
         if (l > 0) {
             key <- vapply(nodes$label[idx], function(cl) {
@@ -137,7 +152,7 @@
             nm <- node[[cl]]
             above <- if (row_above[j]) extra[[j]] else 0
             cy <- top - above - body[[cl]] / 2
-            cx <- layer * l
+            cx <- col_x[[as.character(l)]]
             x[[nm]] <- cx
             y[[nm]] <- cy
             order_y[[cl]] <- cy
@@ -208,14 +223,13 @@
                      circle = list("circle2", 1), spring = list("spring", 1))
     if (is.null(state$x)) layout[[1]] <- "tree2"
     by_est <- !identical(opts$edgeWidth, "uniform")
-    # qgraph sizes nodes relative to the device (measured in jamovi's R:
-    # about 0.0112 * sqrt(width * height) px per size unit); the defaults
-    # give boxes of about 70 x 24 px and ellipses of 115 x 56 px at any
-    # size; the size options scale them.
-    # ES: qgraph mide los nodos respecto al dispositivo (medido en el R de
-    # jamovi: unos 0.0112 * sqrt(ancho * alto) px por unidad); por defecto,
-    # cajas de unos 70 x 24 px y elipses de 115 x 56 px.
-    unit <- 0.0112 * sqrt(width * height)
+    # qgraph sizes nodes relative to the device diagonal (its Cent2Edge with
+    # normalize = TRUE gives 0.00749 * sqrt(width^2 + height^2) px per size
+    # unit); the defaults give boxes of about 70 x 24 px and ellipses of
+    # 115 x 56 px at any size; the size options scale them.
+    # ES: qgraph mide los nodos respecto a la diagonal del dispositivo; por
+    # defecto, cajas de unos 70 x 24 px y elipses de 115 x 56 px.
+    unit <- 0.00749 * sqrt(width^2 + height^2)
     kl <- (if (is.null(opts$latentSize)) 11 else opts$latentSize) / 11
     km <- (if (is.null(opts$manifestSize)) 6 else opts$manifestSize) / 6
     # When the layout is tight for the image, nodes shrink to fit their
@@ -227,10 +241,10 @@
     geo <- if (tb) list(side = 1.7, step = 1.3, gap = 0.6) else list(side = 2.8, step = 1.4, gap = 0.62)
     ppx <- 0.84 * width / (diff(range(gx)) + 1.6)
     ppy <- 0.80 * height / (diff(range(gy)) + 1)
-    man_w <- min(70 * km, 0.85 * (if (tb) geo$step * ppx else min(geo$step * ppx, 0.4 * geo$side * ppx)))
-    man_h <- min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy)
-    lat_w <- min(115 * kl, 0.5 * (if (tb) 2.3 else geo$side) * ppx)
-    lat_h <- min(56 * kl, 0.9 * ppy)
+    man_w <- max(42, min(70 * km, 0.85 * (if (tb) geo$step * ppx else min(geo$step * ppx, 0.75 * geo$side * ppx))))
+    man_h <- max(16, min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy))
+    lat_w <- max(70, min(115 * kl, 1.0 * (if (tb) 2.3 else geo$side) * ppx))
+    lat_h <- max(34, min(56 * kl, 0.9 * ppy))
     # Coefficients near the indicator on measurement arrows (where arrows
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al

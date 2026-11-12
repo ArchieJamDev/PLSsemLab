@@ -608,12 +608,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Tamaño según la extensión de la disposición.
             span_x <- diff(range(st$x)) + 1.6
             span_y <- diff(range(st$y)) + 1
-            long <- max(560, min(900, 75 * span_x + 120))
+            long <- max(560, min(1100, 75 * span_x + 120))
             wide <- max(360, min(1100, 62 * span_y + (if (isTRUE(self$options$diagramCaption)) 170 else 110)))
             if (identical(self$options$diagramLayout, "treeTB")) {
                 tx <- diff(range(st$x_tb)) + 1.6
                 ty <- diff(range(st$y_tb)) + 1
-                image$setSize(max(560, min(900, 62 * tx + 120)), max(360, min(1100, 75 * ty + 170)))
+                image$setSize(max(560, min(1100, 62 * tx + 120)), max(360, min(1100, 75 * ty + 170)))
             } else image$setSize(long, wide)
             image$setState(st)
         },

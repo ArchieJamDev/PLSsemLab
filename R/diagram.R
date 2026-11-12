@@ -146,6 +146,16 @@
         extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) row_extra else 0, 0)
         total <- sum(body[nodes$label[idx]] + extra) + 0.8 * (length(idx) - 1)
         top <- total / 2
+        # A path that skips this column (e.g. Qual -> Loy over Trust) runs
+        # near the middle: the column moves down and its rows go below, so
+        # the path passes above instead of through the indicators.
+        # ES: Una ruta que salta esta columna pasa por el centro: la columna
+        # baja y sus filas van abajo, para que la ruta pase por encima.
+        lay_of <- stats::setNames(nodes$layer, nodes$label)
+        if (any(lay_of[simple$from] < l & lay_of[simple$to] > l)) {
+            row_above <- rep(FALSE, length(idx))
+            top <- total / 2 - 1.4
+        }
         for (j in seq_along(idx)) {
             cl <- nodes$label[idx[j]]
             sd <- sides[[cl]]

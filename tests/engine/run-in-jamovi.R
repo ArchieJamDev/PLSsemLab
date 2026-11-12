@@ -55,5 +55,9 @@ e <- cls$new(options = ext, data = cr); e$init(); e$run()
 draw(e, "diagram-ext-LR.png")
 draw(e, "diagram-ext-TB.png", diagramLayout = "treeTB")
 draw(e, "diagram-ext-nolabels.png", edgeLabels = FALSE, edgeWidth = "uniform")
+t3 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 structural = list(list("Qual"), list("Qual", "Trust"), list()), bootstrap = TRUE, bootReps = 100), data = d)
+t3$init(); t3$run(); draw(t3, "diagram-trust-LR.png")
 cat("diagrams ok\n")
 cat("max RSS (MB):", as.numeric(sub("\\D+(\\d+).*", "\\1", system(paste("grep VmHWM /proc", Sys.getpid(), "status", sep = "/"), intern = TRUE))) / 1024, "\n")

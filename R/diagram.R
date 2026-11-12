@@ -82,7 +82,7 @@
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
     tb <- .pl_sem_coords(lay$nodes, simple, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
-                         row_off = 1.9, row_extra = 2.5, min_body = 2.3, layer = 4)
+                         row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 4)
     list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
@@ -220,7 +220,15 @@
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
-    lab_pos <- ifelse(p$kind == "weight", 0.4, ifelse(p$kind == "loading", 0.6, 0.5))
+    lab_pos <- ifelse(p$kind == "weight", 0.27, ifelse(p$kind == "loading", 0.73, 0.5))
+    # paths into the same construct alternate their label position so the
+    # labels of converging paths do not stack
+    # ES: las rutas hacia un mismo constructo alternan la posición de su
+    # etiqueta para que no se apilen
+    for (to in unique(p$rhs[p$kind == "path"])) {
+        k <- which(p$kind == "path" & p$rhs == to)
+        if (length(k) > 1) lab_pos[k] <- rep(c(0.4, 0.6), length.out = length(k))
+    }
     semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
                       sizeLat = 115 * kl / unit, sizeLat2 = 56 * kl / unit,

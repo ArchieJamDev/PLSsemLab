@@ -104,6 +104,10 @@ msgstr ""
 "eliminarse."
 
 #: R/texts.R
+msgid "%s (standardized)"
+msgstr "%s (estandarizado)"
+
+#: R/texts.R
 msgid ""
 "%s has a single indicator: cSEM takes its within-construct correlation as 1 "
 "(perfect reliability), so this HTMT is a lower bound of the overlap between "
@@ -114,8 +118,28 @@ msgstr ""
 "solapamiento entre los dos constructos."
 
 #: R/texts.R
+msgid "%s, moderator (standardized)"
+msgstr "%s, moderador (estandarizado)"
+
+#: R/texts.R
 msgid "%s: R² = %s (%s)."
 msgstr "%s: R² = %s (%s)."
+
+#: R/texts.R
+msgid "+1 SD"
+msgstr "+1 DE"
+
+#: R/texts.R
+msgid "+1 SD of %s"
+msgstr "+1 DE de %s"
+
+#: R/texts.R
+msgid "−1 SD"
+msgstr "−1 DE"
+
+#: R/texts.R
+msgid "−1 SD of %s"
+msgstr "−1 DE de %s"
 
 #: R/texts.R
 msgid "0.02 to 0.15: small"
@@ -211,6 +235,34 @@ msgstr ""
 #: R/texts.R
 msgid "All weights of the formative constructs are positive."
 msgstr "Todos los pesos de los constructos formativos son positivos."
+
+#: R/texts.R
+msgid ""
+"Along the whole observed range of %3$s, the effect of %1$s on %2$s stays "
+"significant."
+msgstr "En todo el rango observado de %3$s, el efecto de %1$s sobre %2$s se mantiene significativo."
+
+#: R/texts.R
+msgid ""
+"Along the whole observed range of %3$s, the interval of the effect of %1$s "
+"on %2$s includes 0."
+msgstr "En todo el rango observado de %3$s, el intervalo del efecto de %1$s sobre %2$s incluye el 0."
+
+#: R/texts.R
+msgid ""
+"An interaction X × M asks whether the effect of X on the outcome depends on "
+"the moderator M. Its coefficient is the change in that effect when M rises "
+"by one standard deviation. The table gives the simple effect of X at three "
+"values of M (one standard deviation below the mean, the mean and one above), "
+"and the plot draws the same idea twice: the simple slopes (left) and the "
+"floodlight analysis (right), the simple effect over the whole observed range "
+"of M with its bootstrap interval. The Johnson-Neyman points mark where that "
+"interval starts or stops including 0. The first construct of the term is the "
+"predictor and the second the moderator, in the order the term was built in "
+"the panel. Common misreading: concluding there is moderation because the "
+"simple effect is significant at one value of M; moderation is the "
+"interaction coefficient itself, and its interval must exclude 0."
+msgstr "Una interacción X × M pregunta si el efecto de X sobre el resultado depende del moderador M. Su coeficiente es el cambio en ese efecto cuando M aumenta una desviación estándar. La tabla da el efecto simple de X en tres valores de M (una desviación estándar por debajo de la media, la media y una por encima), y el gráfico dibuja la misma idea dos veces: las pendientes simples (izquierda) y el análisis floodlight (derecha), el efecto simple en todo el rango observado de M con su intervalo bootstrap. Los puntos de Johnson-Neyman marcan dónde ese intervalo empieza o deja de incluir el 0. El primer constructo del término es el predictor y el segundo el moderador, en el orden en que se armó el término en el panel. Lectura errónea frecuente: concluir que hay moderación porque el efecto simple es significativo en un valor de M; la moderación es el coeficiente de la interacción mismo, y su intervalo debe excluir el 0."
 
 #: plssem/results/interpretation.title
 msgid "Applied interpretation"
@@ -639,6 +691,14 @@ msgstr ""
 "constructo. Compruebe que esta tabla describe el modelo que quería antes de "
 "leer cualquier número."
 
+#: plssem/results/simpleSlopes.columns.title
+msgid "Effect"
+msgstr "Efecto"
+
+#: R/texts.R
+msgid "Effect of %s on %s"
+msgstr "Efecto de %s sobre %s"
+
 #: plssem/results/f2.title
 msgid "Effect size (f²)"
 msgstr "Tamaño del efecto (f²)"
@@ -745,6 +805,10 @@ msgstr "f²"
 msgid "Factorial"
 msgstr "Factorial"
 
+#: R/texts.R
+msgid "Floodlight"
+msgstr "Floodlight"
+
 #: plssem/options/edgeWidth/estimate.title
 msgid "Follows the coefficient"
 msgstr "Según el coeficiente"
@@ -801,6 +865,10 @@ msgstr "Indicadores formativos: el VIF más alto es %s (%s)."
 #: plssem/results/fornell.title
 msgid "Fornell-Larcker criterion"
 msgstr "Criterio de Fornell-Larcker"
+
+#: plssem/results/moderationGuide.title
+msgid "How to read a moderation"
+msgstr "Cómo leer una moderación"
 
 #: plssem/results/htmtGuide.title
 msgid "How to read discriminant validity"
@@ -955,6 +1023,26 @@ msgstr ""
 "sí los constructos vecinos mientras se estiman los pesos; el esquema path es "
 "el habitual y los resultados rara vez dependen mucho de esta elección."
 
+#: plssem/results/simpleSlopes.columns.title
+msgid "Interaction"
+msgstr "Interacción"
+
+#: R/texts.R
+msgid "Interaction 0.005 to 0.01: small"
+msgstr "Interacción 0.005 a 0.01: pequeño"
+
+#: R/texts.R
+msgid "Interaction 0.01 to 0.025: medium"
+msgstr "Interacción 0.01 a 0.025: mediano"
+
+#: R/texts.R
+msgid "Interaction 0.025 or more: large"
+msgstr "Interacción 0.025 o más: grande"
+
+#: R/texts.R
+msgid "Interaction below 0.005: no effect"
+msgstr "Interacción menor de 0.005: sin efecto"
+
 #: R/texts.R
 msgid ""
 "Intervals from %d admissible of %d bootstrap resamples (seed %d); a path "
@@ -966,6 +1054,20 @@ msgstr ""
 #: R/texts.R
 msgid "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples."
 msgstr "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
+
+#: R/texts.R
+msgid "Its bootstrap interval excludes 0: %s moderates the effect of %s on %s."
+msgstr "Su intervalo bootstrap excluye el 0: %s modera el efecto de %s sobre %s."
+
+#: R/texts.R
+msgid ""
+"Its bootstrap interval includes 0: there is no evidence that %s moderates "
+"the effect of %s on %s, whatever the simple effects show."
+msgstr "Su intervalo bootstrap incluye el 0: no hay evidencia de que %s modere el efecto de %s sobre %s, muestren lo que muestren los efectos simples."
+
+#: R/texts.R
+msgid "Its f² is %s (%s)."
+msgstr "Su f² es %s (%s)."
 
 #: plssem/options/latentFill/theme.title
 #: plssem/options/manifestFill/theme.title
@@ -986,6 +1088,21 @@ msgstr "Tamaño de etiqueta"
 #: plssem/ui[5][0][0].label
 msgid "Layout"
 msgstr "Disposición"
+
+#: R/texts.R
+msgid ""
+"Left: predicted outcome over the predictor at three values of the moderator. "
+"Right: the simple effect over the observed range of the moderator with its "
+"%s%% bootstrap interval (band); vertical lines: Johnson-Neyman points, where "
+"the interval starts or stops including 0."
+msgstr "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador con su intervalo bootstrap al %s%% (banda); líneas verticales: puntos de Johnson-Neyman, donde el intervalo empieza o deja de incluir el 0."
+
+#: R/texts.R
+msgid ""
+"Left: predicted outcome over the predictor at three values of the moderator. "
+"Right: the simple effect over the observed range of the moderator. Run the "
+"bootstrap to add its interval and the Johnson-Neyman points."
+msgstr "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador. Ejecute el bootstrap para añadir su intervalo y los puntos de Johnson-Neyman."
 
 #: plssem/options/latentFill/lightblue.title
 #: plssem/options/manifestFill/lightblue.title
@@ -1066,6 +1183,7 @@ msgstr ""
 #: plssem/results/r2.columns.title
 #: plssem/results/vifStruct.columns.title
 #: plssem/results/effects.columns.title
+#: plssem/results/simpleSlopes.columns.title
 msgid "Lower"
 msgstr "Inferior"
 
@@ -1076,6 +1194,14 @@ msgstr "Hallazgos principales"
 #: plssem/options/omegaCfa.title
 msgid "McDonald's ω (one-factor CFA)"
 msgstr "ω de McDonald (AFC de un factor)"
+
+#: R/texts.R
+msgid "Mean"
+msgstr "Media"
+
+#: R/texts.R
+msgid "Mean of %s"
+msgstr "Media de %s"
 
 #: R/texts.R
 msgid ""
@@ -1141,6 +1267,24 @@ msgstr ""
 #: R/texts.R
 msgid "moderate"
 msgstr "moderado"
+
+#: plssem/results/moderationPlots.title
+msgid "Moderation"
+msgstr "Moderación"
+
+#: plssem/options/moderationPlot.title
+msgid "Moderation (simple slopes and floodlight)"
+msgstr "Moderación (pendientes simples y floodlight)"
+
+#: R/texts.R
+msgid ""
+"Moderation: the interaction %s on %s is %s, the change in the effect of %s "
+"on %s when %s rises by one standard deviation."
+msgstr "Moderación: la interacción %s sobre %s es %s, el cambio en el efecto de %s sobre %s cuando %s aumenta una desviación estándar."
+
+#: plssem/results/simpleSlopes.columns.title
+msgid "Moderator at"
+msgstr "Moderador en"
 
 #: plssem/options/edgeColor/navy.title
 msgid "Navy"
@@ -1426,6 +1570,10 @@ msgstr ""
 "estimar, con mensajes que nombran el constructo o indicador con problemas. "
 "En desarrollo."
 
+#: R/texts.R
+msgid "Predicted %s (standardized)"
+msgstr "%s predicho (estandarizado)"
+
 #: plssem/results/model.columns.title
 msgid "Predicted by"
 msgstr "Predicho por"
@@ -1573,7 +1721,14 @@ msgstr "Papel"
 msgid "Run bootstrap"
 msgstr "Ejecutar bootstrap"
 
+#: R/texts.R
+msgid ""
+"Run the bootstrap to know whether the interaction and the simple effects are "
+"significant."
+msgstr "Ejecute el bootstrap para saber si la interacción y los efectos simples son significativos."
+
 #: plssem/results/paths.columns.title
+#: plssem/results/simpleSlopes.columns.title
 msgid "SE"
 msgstr "EE"
 
@@ -1601,6 +1756,35 @@ msgstr ""
 #: plssem/options/diagramIndicators.title
 msgid "Show indicators"
 msgstr "Mostrar indicadores"
+
+#: plssem/results/simpleSlopes.columns.title
+msgid "Simple effect"
+msgstr "Efecto simple"
+
+#: plssem/results/simpleSlopes.columns.superTitle
+msgid "Simple effect CI"
+msgstr "IC del efecto simple"
+
+#: R/texts.R
+msgid ""
+"Simple effect of the predictor at each value of the moderator: b(X) + b(X × "
+"M) × M, with M in standard deviations; %s%% percentile bootstrap intervals "
+"from %d admissible resamples."
+msgstr "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar; intervalos percentiles bootstrap al %s%%, de %d réplicas admisibles."
+
+#: R/texts.R
+msgid ""
+"Simple effect of the predictor at each value of the moderator: b(X) + b(X × "
+"M) × M, with M in standard deviations. Run the bootstrap for intervals."
+msgstr "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar. Ejecute el bootstrap para obtener intervalos."
+
+#: plssem/results/simpleSlopes.title
+msgid "Simple effects (moderation)"
+msgstr "Efectos simples (moderación)"
+
+#: R/texts.R
+msgid "Simple slopes"
+msgstr "Pendientes simples"
 
 #: R/texts.R
 msgid "Single predictor: no collinearity"
@@ -1677,6 +1861,12 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
+"The effect of %1$s on %2$s is significant only for part of the range of "
+"%3$s; Johnson-Neyman points (in standard deviations of %3$s): %4$s."
+msgstr "El efecto de %1$s sobre %2$s es significativo solo en parte del rango de %3$s; puntos de Johnson-Neyman (en desviaciones estándar de %3$s): %4$s."
+
+#: R/texts.R
+msgid ""
 "The effect size f² tells how much the R² of the outcome drops when that "
 "predictor is removed: f² = (R² with − R² without) / (1 − R² with). Values of "
 "0.02, 0.15 and 0.35 are read as small, medium and large (Hair et al., 2019, "
@@ -1706,6 +1896,33 @@ msgid ""
 msgstr ""
 "Las estimaciones no son admisibles; no las interprete hasta corregir la "
 "causa."
+
+#: R/texts.R
+msgid ""
+"The f² of an interaction is judged on smaller benchmarks than other paths: "
+"0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., "
+"2021, see references), because moderating effects are typically small."
+msgstr "El f² de una interacción se juzga con umbrales menores que el de otras rutas: 0.005, 0.01 y 0.025 para pequeño, mediano y grande (Kenny, 2018; Hair et al., 2021, vea las referencias), porque los efectos moderadores suelen ser pequeños."
+
+#: R/texts.R
+msgid ""
+"The interaction %s has more than two constructs. PLSsemLab estimates two-way "
+"interactions; build it from two constructs."
+msgstr "La interacción %s tiene más de dos constructos. PLSsemLab estima interacciones de dos vías; ármela con dos constructos."
+
+#: R/texts.R
+msgid ""
+"The interaction %s predicts %s, but %s is not also a predictor of %s. Add "
+"the main effect of each component to the same construct: without it the "
+"interaction term mixes the moderation with the main effect and cannot be "
+"read as moderation."
+msgstr "La interacción %s predice %s, pero %s no es también predictor de %s. Añada el efecto principal de cada componente al mismo constructo: sin él, el término de interacción mezcla la moderación con el efecto principal y no puede leerse como moderación."
+
+#: R/texts.R
+msgid ""
+"The interaction %s predicts %s, one of its own components. An interaction "
+"must predict a different construct."
+msgstr "La interacción %s predice %s, uno de sus propios componentes. Una interacción debe predecir otro constructo."
 
 #: R/texts.R
 msgid "The largest path is %s → %s (%s)."
@@ -1795,16 +2012,6 @@ msgstr ""
 
 #: R/texts.R
 msgid ""
-"The structural model includes an interaction (%s). Interactions between "
-"constructs will be available in a later version of PLSsemLab; remove it for "
-"now."
-msgstr ""
-"El modelo estructural incluye una interacción (%s). Las interacciones entre "
-"constructos estarán disponibles en una versión posterior de PLSsemLab; "
-"quítela por ahora."
-
-#: R/texts.R
-msgid ""
 "The structural VIF measures how much the predictors of the same outcome "
 "overlap. Above 3, and certainly above 5, their coefficients become unstable "
 "and can even change sign (Hair et al., 2019, see references). With a single "
@@ -1846,6 +2053,7 @@ msgstr "Uniforme"
 #: plssem/results/r2.columns.title
 #: plssem/results/vifStruct.columns.title
 #: plssem/results/effects.columns.title
+#: plssem/results/simpleSlopes.columns.title
 msgid "Upper"
 msgstr "Superior"
 
@@ -1915,6 +2123,13 @@ msgstr "Qué hacer ahora"
 #: plssem/options/manifestFill/white.title
 msgid "White"
 msgstr "Blanco"
+
+#: R/texts.R
+msgid ""
+"With an interaction in the model, cSEM cannot build the model-implied matrix "
+"used for ρC, so ρC is computed from the loadings, (Σλ)² / ((Σλ)² + Σ(1 − "
+"λ²)); in models without interactions this gives the same value as cSEM."
+msgstr "Con una interacción en el modelo, cSEM no puede armar la matriz implicada que usa ρC, así que ρC se calcula a partir de las cargas, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); en modelos sin interacciones da el mismo valor que cSEM."
 
 #: R/texts.R
 msgid ""

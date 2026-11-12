@@ -58,6 +58,13 @@ Tenenhaus, M., Esposito Vinzi, V., Chatelin, Y.-M., & Lauro, C. (2005). PLS
 path modeling. *Computational Statistics & Data Analysis, 48*(1), 159–205.
 https://doi.org/10.1016/j.csda.2004.03.005
 
+## Moderation
+
+Kenny, D. A. (2018, September 15). *Moderation*.
+https://davidakenny.net/cm/moderation.htm — proposes f² of 0.005, 0.01 and
+0.025 as small, medium and large interaction effects (used by Hair et al.,
+2021, ch. 8).
+
 ## Consistent PLS and the measurement model
 
 Dijkstra, T. K., & Henseler, J. (2015). Consistent partial least squares path

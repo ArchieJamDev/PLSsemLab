@@ -606,6 +606,88 @@ items:
         superTitle: Total CI
         visible: (bootstrap)
 
+  # Moderation (phase 4): rows laid out in .init(), three per interaction;
+  # hidden when the model has none.
+  # ES: Moderación (fase 4): tres filas por interacción, en .init(); oculta
+  # si el modelo no tiene ninguna.
+  - name: moderationGuide
+    title: How to read a moderation
+    type: Html
+    visible: (showGuides)
+
+  - name: simpleSlopes
+    title: Simple effects (moderation)
+    type: Table
+    rows: 0
+    refs:
+      - hair_2021
+      - kenny_2018
+    clearWith:
+      - reflective
+      - formative
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootstrap
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: term
+        title: Interaction
+        type: text
+        combineBelow: true
+      - name: effect
+        title: Effect
+        type: text
+        combineBelow: true
+      - name: level
+        title: Moderator at
+        type: text
+      - name: slope
+        title: Simple effect
+        type: number
+      - name: se
+        title: SE
+        type: number
+        visible: (bootstrap)
+      - name: lower
+        title: Lower
+        type: number
+        superTitle: Simple effect CI
+        visible: (bootstrap)
+      - name: upper
+        title: Upper
+        type: number
+        superTitle: Simple effect CI
+        visible: (bootstrap)
+
+  - name: moderationPlots
+    title: Moderation
+    type: Array
+    items: 0
+    visible: (moderationPlot)
+    template:
+      title: $key
+      type: Image
+      width: 760
+      height: 360
+      renderFun: .plotModeration
+      clearWith:
+        - reflective
+        - formative
+        - structural
+        - estimator
+        - innerScheme
+        - indicatorScale
+        - missing
+        - bootstrap
+        - bootReps
+        - bootSeed
+        - ciLevel
+
   - name: pathDiagram
     title: Path diagram
     type: Image

@@ -18,6 +18,7 @@ Imports:
     rlang,
     ggplot2,
     semPlot,
+    patchwork,
     methods,
     stats,
     utils

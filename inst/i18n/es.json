@@ -50,11 +50,29 @@
             "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal.": [
                 "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos lleve la fiabilidad compuesta o la AVE de su constructo por encima de su umbral; los indicadores por debajo de 0.40 son candidatos a eliminarse."
             ],
+            "%s (standardized)": [
+                "%s (estandarizado)"
+            ],
             "%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs.": [
                 "%s tiene un solo indicador: cSEM toma su correlación dentro del constructo como 1 (fiabilidad perfecta), así que este HTMT es un límite inferior del solapamiento entre los dos constructos."
             ],
+            "%s, moderator (standardized)": [
+                "%s, moderador (estandarizado)"
+            ],
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
+            ],
+            "+1 SD": [
+                "+1 DE"
+            ],
+            "+1 SD of %s": [
+                "+1 DE de %s"
+            ],
+            "−1 SD": [
+                "−1 DE"
+            ],
+            "−1 SD of %s": [
+                "−1 DE de %s"
             ],
             "0.02 to 0.15: small": [
                 "0.02 a 0.15: pequeño"
@@ -106,6 +124,15 @@
             ],
             "All weights of the formative constructs are positive.": [
                 "Todos los pesos de los constructos formativos son positivos."
+            ],
+            "Along the whole observed range of %3$s, the effect of %1$s on %2$s stays significant.": [
+                "En todo el rango observado de %3$s, el efecto de %1$s sobre %2$s se mantiene significativo."
+            ],
+            "Along the whole observed range of %3$s, the interval of the effect of %1$s on %2$s includes 0.": [
+                "En todo el rango observado de %3$s, el intervalo del efecto de %1$s sobre %2$s incluye el 0."
+            ],
+            "An interaction X × M asks whether the effect of X on the outcome depends on the moderator M. Its coefficient is the change in that effect when M rises by one standard deviation. The table gives the simple effect of X at three values of M (one standard deviation below the mean, the mean and one above), and the plot draws the same idea twice: the simple slopes (left) and the floodlight analysis (right), the simple effect over the whole observed range of M with its bootstrap interval. The Johnson-Neyman points mark where that interval starts or stops including 0. The first construct of the term is the predictor and the second the moderator, in the order the term was built in the panel. Common misreading: concluding there is moderation because the simple effect is significant at one value of M; moderation is the interaction coefficient itself, and its interval must exclude 0.": [
+                "Una interacción X × M pregunta si el efecto de X sobre el resultado depende del moderador M. Su coeficiente es el cambio en ese efecto cuando M aumenta una desviación estándar. La tabla da el efecto simple de X en tres valores de M (una desviación estándar por debajo de la media, la media y una por encima), y el gráfico dibuja la misma idea dos veces: las pendientes simples (izquierda) y el análisis floodlight (derecha), el efecto simple en todo el rango observado de M con su intervalo bootstrap. Los puntos de Johnson-Neyman marcan dónde ese intervalo empieza o deja de incluir el 0. El primer constructo del término es el predictor y el segundo el moderador, en el orden en que se armó el término en el panel. Lectura errónea frecuente: concluir que hay moderación porque el efecto simple es significativo en un valor de M; la moderación es el coeficiente de la interacción mismo, y su intervalo debe excluir el 0."
             ],
             "Applied interpretation": [
                 "Interpretación aplicada"
@@ -314,6 +341,12 @@
             "Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number.": [
                 "Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos indicadores tiene y su papel en el modelo estructural. Los constructos exógenos solo son predictores; los endógenos son predichos por al menos otro constructo. Compruebe que esta tabla describe el modelo que quería antes de leer cualquier número."
             ],
+            "Effect": [
+                "Efecto"
+            ],
+            "Effect of %s on %s": [
+                "Efecto de %s sobre %s"
+            ],
             "Effect size (f²)": [
                 "Tamaño del efecto (f²)"
             ],
@@ -365,6 +398,9 @@
             "Factorial": [
                 "Factorial"
             ],
+            "Floodlight": [
+                "Floodlight"
+            ],
             "Follows the coefficient": [
                 "Según el coeficiente"
             ],
@@ -388,6 +424,9 @@
             ],
             "Fornell-Larcker criterion": [
                 "Criterio de Fornell-Larcker"
+            ],
+            "How to read a moderation": [
+                "Cómo leer una moderación"
             ],
             "How to read discriminant validity": [
                 "Cómo leer la validez discriminante"
@@ -461,11 +500,35 @@
             "Inner weighting scheme: %s. The scheme decides how neighbouring constructs inform each other while the weights are estimated; the path scheme is the usual default and the results rarely depend much on this choice.": [
                 "Esquema de ponderación interna: %s. El esquema decide cómo se informan entre sí los constructos vecinos mientras se estiman los pesos; el esquema path es el habitual y los resultados rara vez dependen mucho de esta elección."
             ],
+            "Interaction": [
+                "Interacción"
+            ],
+            "Interaction 0.005 to 0.01: small": [
+                "Interacción 0.005 a 0.01: pequeño"
+            ],
+            "Interaction 0.01 to 0.025: medium": [
+                "Interacción 0.01 a 0.025: mediano"
+            ],
+            "Interaction 0.025 or more: large": [
+                "Interacción 0.025 o más: grande"
+            ],
+            "Interaction below 0.005: no effect": [
+                "Interacción menor de 0.005: sin efecto"
+            ],
             "Intervals from %d admissible of %d bootstrap resamples (seed %d); a path whose interval only just excludes 0 can change with another seed.": [
                 "Intervalos de %d réplicas bootstrap admisibles de %d (semilla %d); una ruta cuyo intervalo apenas excluye el 0 puede cambiar con otra semilla."
             ],
             "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples.": [
                 "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
+            ],
+            "Its bootstrap interval excludes 0: %s moderates the effect of %s on %s.": [
+                "Su intervalo bootstrap excluye el 0: %s modera el efecto de %s sobre %s."
+            ],
+            "Its bootstrap interval includes 0: there is no evidence that %s moderates the effect of %s on %s, whatever the simple effects show.": [
+                "Su intervalo bootstrap incluye el 0: no hay evidencia de que %s modere el efecto de %s sobre %s, muestren lo que muestren los efectos simples."
+            ],
+            "Its f² is %s (%s).": [
+                "Su f² es %s (%s)."
             ],
             "jamovi theme": [
                 "Tema de jamovi"
@@ -478,6 +541,12 @@
             ],
             "Layout": [
                 "Disposición"
+            ],
+            "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator with its %s%% bootstrap interval (band); vertical lines: Johnson-Neyman points, where the interval starts or stops including 0.": [
+                "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador con su intervalo bootstrap al %s%% (banda); líneas verticales: puntos de Johnson-Neyman, donde el intervalo empieza o deja de incluir el 0."
+            ],
+            "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator. Run the bootstrap to add its interval and the Johnson-Neyman points.": [
+                "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador. Ejecute el bootstrap para añadir su intervalo y los puntos de Johnson-Neyman."
             ],
             "Light blue": [
                 "Azul claro"
@@ -521,6 +590,12 @@
             "McDonald's ω (one-factor CFA)": [
                 "ω de McDonald (AFC de un factor)"
             ],
+            "Mean": [
+                "Media"
+            ],
+            "Mean of %s": [
+                "Media de %s"
+            ],
             "Mean replacement cannot be used with ordinal indicators: the mean of an ordinal indicator is usually not one of its categories. Choose Exclude cases listwise in Missing values, or treat the indicators as continuous.": [
                 "El reemplazo por la media no puede usarse con indicadores ordinales: la media de un indicador ordinal casi nunca es una de sus categorías. Elija Excluir casos por lista en Valores perdidos, o trate los indicadores como continuos."
             ],
@@ -550,6 +625,18 @@
             ],
             "moderate": [
                 "moderado"
+            ],
+            "Moderation": [
+                "Moderación"
+            ],
+            "Moderation (simple slopes and floodlight)": [
+                "Moderación (pendientes simples y floodlight)"
+            ],
+            "Moderation: the interaction %s on %s is %s, the change in the effect of %s on %s when %s rises by one standard deviation.": [
+                "Moderación: la interacción %s sobre %s es %s, el cambio en el efecto de %s sobre %s cuando %s aumenta una desviación estándar."
+            ],
+            "Moderator at": [
+                "Moderador en"
             ],
             "Navy": [
                 "Azul marino"
@@ -650,6 +737,9 @@
             "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault. In development.": [
                 "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas. En desarrollo."
             ],
+            "Predicted %s (standardized)": [
+                "%s predicho (estandarizado)"
+            ],
             "Predicted by": [
                 "Predicho por"
             ],
@@ -725,6 +815,9 @@
             "Run bootstrap": [
                 "Ejecutar bootstrap"
             ],
+            "Run the bootstrap to know whether the interaction and the simple effects are significant.": [
+                "Ejecute el bootstrap para saber si la interacción y los efectos simples son significativos."
+            ],
             "SE": [
                 "EE"
             ],
@@ -736,6 +829,24 @@
             ],
             "Show indicators": [
                 "Mostrar indicadores"
+            ],
+            "Simple effect": [
+                "Efecto simple"
+            ],
+            "Simple effect CI": [
+                "IC del efecto simple"
+            ],
+            "Simple effect of the predictor at each value of the moderator: b(X) + b(X × M) × M, with M in standard deviations; %s%% percentile bootstrap intervals from %d admissible resamples.": [
+                "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar; intervalos percentiles bootstrap al %s%%, de %d réplicas admisibles."
+            ],
+            "Simple effect of the predictor at each value of the moderator: b(X) + b(X × M) × M, with M in standard deviations. Run the bootstrap for intervals.": [
+                "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar. Ejecute el bootstrap para obtener intervalos."
+            ],
+            "Simple effects (moderation)": [
+                "Efectos simples (moderación)"
+            ],
+            "Simple slopes": [
+                "Pendientes simples"
             ],
             "Single predictor: no collinearity": [
                 "Predictor único: sin colinealidad"
@@ -773,6 +884,9 @@
             "The direct effect is the path itself; the indirect effect is the sum of all routes through other constructs (the product of the paths along each route); the total effect is their sum. An indirect effect whose bootstrap interval excludes 0 means mediation: whether it is full or partial depends on the direct effect, as the mediation section of a later version explains. Common misreading: testing mediation by the significance of each path separately instead of the indirect effect itself.": [
                 "El efecto directo es la ruta misma; el efecto indirecto es la suma de todos los caminos a través de otros constructos (el producto de las rutas de cada camino); el efecto total es su suma. Un efecto indirecto cuyo intervalo bootstrap excluye el 0 indica mediación: que sea completa o parcial depende del efecto directo, como explicará la sección de mediación de una versión posterior. Lectura errónea frecuente: probar la mediación por la significación de cada ruta por separado en lugar del efecto indirecto mismo."
             ],
+            "The effect of %1$s on %2$s is significant only for part of the range of %3$s; Johnson-Neyman points (in standard deviations of %3$s): %4$s.": [
+                "El efecto de %1$s sobre %2$s es significativo solo en parte del rango de %3$s; puntos de Johnson-Neyman (en desviaciones estándar de %3$s): %4$s."
+            ],
             "The effect size f² tells how much the R² of the outcome drops when that predictor is removed: f² = (R² with − R² without) / (1 − R² with). Values of 0.02, 0.15 and 0.35 are read as small, medium and large (Hair et al., 2019, see references). A significant path can have a negligible f² in a large sample: read both.": [
                 "El tamaño del efecto f² indica cuánto baja el R² del resultado al quitar ese predictor: f² = (R² con − R² sin) / (1 − R² con). Los valores 0.02, 0.15 y 0.35 se leen como pequeño, mediano y grande (Hair et al., 2019, vea las referencias). Una ruta significativa puede tener un f² despreciable en una muestra grande: lea ambos."
             ],
@@ -781,6 +895,18 @@
             ],
             "The estimates are not admissible; do not interpret them until the cause is fixed.": [
                 "Las estimaciones no son admisibles; no las interprete hasta corregir la causa."
+            ],
+            "The f² of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small.": [
+                "El f² de una interacción se juzga con umbrales menores que el de otras rutas: 0.005, 0.01 y 0.025 para pequeño, mediano y grande (Kenny, 2018; Hair et al., 2021, vea las referencias), porque los efectos moderadores suelen ser pequeños."
+            ],
+            "The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs.": [
+                "La interacción %s tiene más de dos constructos. PLSsemLab estima interacciones de dos vías; ármela con dos constructos."
+            ],
+            "The interaction %s predicts %s, but %s is not also a predictor of %s. Add the main effect of each component to the same construct: without it the interaction term mixes the moderation with the main effect and cannot be read as moderation.": [
+                "La interacción %s predice %s, pero %s no es también predictor de %s. Añada el efecto principal de cada componente al mismo constructo: sin él, el término de interacción mezcla la moderación con el efecto principal y no puede leerse como moderación."
+            ],
+            "The interaction %s predicts %s, one of its own components. An interaction must predict a different construct.": [
+                "La interacción %s predice %s, uno de sus propios componentes. Una interacción debe predecir otro constructo."
             ],
             "The largest path is %s → %s (%s).": [
                 "La ruta más grande es %s → %s (%s)."
@@ -811,9 +937,6 @@
             ],
             "The structural model has a loop (%s). PLS-SEM estimates recursive models only, in which no construct predicts itself through others: remove one path of the loop.": [
                 "El modelo estructural tiene un ciclo (%s). PLS-SEM solo estima modelos recursivos, en los que ningún constructo se predice a sí mismo a través de otros: quite una ruta del ciclo."
-            ],
-            "The structural model includes an interaction (%s). Interactions between constructs will be available in a later version of PLSsemLab; remove it for now.": [
-                "El modelo estructural incluye una interacción (%s). Las interacciones entre constructos estarán disponibles en una versión posterior de PLSsemLab; quítela por ahora."
             ],
             "The structural VIF measures how much the predictors of the same outcome overlap. Above 3, and certainly above 5, their coefficients become unstable and can even change sign (Hair et al., 2019, see references). With a single predictor there is no collinearity to assess.": [
                 "El VIF estructural mide cuánto se solapan los predictores de un mismo resultado. Por encima de 3, y sin duda por encima de 5, sus coeficientes se vuelven inestables y pueden incluso cambiar de signo (Hair et al., 2019, vea las referencias). Con un solo predictor no hay colinealidad que evaluar."
@@ -880,6 +1003,9 @@
             ],
             "White": [
                 "Blanco"
+            ],
+            "With an interaction in the model, cSEM cannot build the model-implied matrix used for ρC, so ρC is computed from the loadings, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); in models without interactions this gives the same value as cSEM.": [
+                "Con una interacción en el modelo, cSEM no puede armar la matriz implicada que usa ρC, así que ρC se calcula a partir de las cargas, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); en modelos sin interacciones da el mismo valor que cSEM."
             ],
             "With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s.": [
                 "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."

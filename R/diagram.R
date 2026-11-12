@@ -62,10 +62,19 @@
                 add(node[[l$construct]], vn, l$loading, "loading")
         }
     }
-    simple <- paths[!grepl(":", paths$from, fixed = TRUE), , drop = FALSE]
+    simple <- paths[!grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
     for (k in seq_len(nrow(simple)))
         add(node[[simple$from[k]]], node[[simple$to[k]]], simple$estimate[k], "path",
             sig_of(paste(model$cmap[[simple$to[k]]], "~", model$cmap[[simple$from[k]]]), "paths"))
+    # Each interaction term is a node of its own ("A × B") with its path to
+    # the outcome, drawn in the column of its components, below them.
+    # ES: Cada interacción es un nodo propio ("A × B") con su ruta al
+    # resultado, en la columna de sus componentes, debajo de ellos.
+    inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
+    for (term in unique(inter$from)) node[[term]] <- term
+    for (k in seq_len(nrow(inter)))
+        add(node[[inter$from[k]]], node[[inter$to[k]]], inter$estimate[k], "path",
+            sig_of(paste(model$cmap[[inter$to[k]]], "~", model$cmap[[inter$from[k]]]), "paths"))
     pars <- if (length(pars)) do.call(rbind, pars) else
         data.frame(lhs = character(0), rhs = character(0), est = numeric(0), kind = character(0), sig = logical(0))
     endo <- unique(simple$to)
@@ -75,9 +84,15 @@
     man_exo <- man_u %in% pars$lhs[pars$kind == "weight"]
     vars <- data.frame(name = c(man_u, unname(node)),
                        manifest = c(rep(TRUE, length(man_u)), rep(FALSE, length(node))),
-                       exogenous = c(man_exo, !(lab %in% endo)),
+                       exogenous = c(man_exo, !(names(node) %in% endo)),
                        stringsAsFactors = FALSE)
     lay <- .pl_diagram_layout(blocks, paths, paths, r2, NULL)
+    for (term in unique(inter$from)) {
+        parts <- strsplit(term, .PL_X, fixed = TRUE)[[1]]
+        lay$nodes <- rbind(lay$nodes[, c("label", "type", "layer")], data.frame(
+            label = term, type = "interaction", layer = max(lay$nodes$layer[lay$nodes$label %in% parts]),
+            stringsAsFactors = FALSE))
+    }
     xy <- .pl_sem_coords(lay$nodes, simple, node, pars, vars)
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
@@ -138,6 +153,7 @@
             }, 0)
             idx <- idx[order(-key)]
         }
+        idx <- c(idx[nodes$type[idx] != "interaction"], idx[nodes$type[idx] == "interaction"])
         # the first construct of a column gets its row of indicators above,
         # the others below, so the rows stay outside the column
         # ES: el primer constructo de la columna lleva su fila arriba, los

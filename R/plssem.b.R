@@ -127,6 +127,26 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             values = list(from = pairs_eff$from[k], arrow = "\u2192",
                                                           to = pairs_eff$to[k]))
 
+            # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
+            # +1 SD) and one plot per interaction.
+            # ES: Moderación (fase 4): tres filas y un gráfico por interacción.
+            inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
+            lang <- .pl_lang(self$options)
+            lv <- c(.pl_text(lang, "moderation", "minus_sd"), .pl_text(lang, "moderation", "mean"),
+                    .pl_text(lang, "moderation", "plus_sd"))
+            for (k in seq_len(nrow(inter))) {
+                parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
+                for (j in 1:3)
+                    self$results$simpleSlopes$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                        term = paste(inter$from[k], "\u2192", inter$to[k]),
+                        effect = paste(parts[1], "\u2192", inter$to[k]),
+                        level = sprintf(lv[j], parts[2])))
+                self$results$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
+            }
+            if (!nrow(inter))
+                for (name in c("moderationGuide", "simpleSlopes", "moderationPlots"))
+                    self$results[[name]]$setVisible(FALSE)
+
             hide <- c(if (length(refl) == 0) c("reliability", "reliabilityGuide", "fornell"),
                       if (length(refl) < 2) c("htmt", "htmtGuide"),
                       if (!any(vapply(blocks, function(b) b$type == "formative", TRUE))) c("vif", "vifGuide"))
@@ -207,6 +227,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.null(boot$summary))
                     private$.fillBootstrap(boot$summary, blocks, paths, model, txt)
             }
+            mod <- if (isTRUE(model$nonlinear))
+                private$.fillModeration(fit$value, paths, model, boot$summary, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, model)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
@@ -239,6 +261,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (ordinal && length(many))
                 warn <- c(warn, sprintf(txt("notices", "many_categories"), paste(many, collapse = ", ")))
             types <- vapply(blocks, `[[`, "", "type")
+            if (isTRUE(model$nonlinear) && any(types == "reflective"))
+                info <- c(info, txt("notices", "rhoc_loadings"))
             if (!any(types == "reflective"))
                 info <- c(info, txt("notices", "no_reflective_quality"))
             else if (sum(types == "reflective") == 1)
@@ -246,7 +270,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, info, jmvcore::NoticeType$INFO, ".plssemInfo")
             .pl_insert_notices(self$results, self$options, warn)
 
-            private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, model)
+            private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, model,
+                                    mod)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
                                 model)
             private$.choices(lang, prep, boot)
@@ -399,7 +424,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 from <- cc(paths$from[k])
                 f <- if (is.null(f2$value)) NA_real_ else f2$value[to, from]
                 out_f2[k] <- if (is.finite(f)) f else NA_real_
-                band <- .pl_band_f2(out_f2[k])
+                # interaction terms are judged on Kenny's (2018) smaller
+                # benchmarks (Hair et al., 2021, ch. 8)
+                # ES: las interacciones se juzgan con los umbrales menores de
+                # Kenny (2018)
+                band <- if (grepl(.PL_X, paths$from[k], fixed = TRUE)) .pl_band_f2_int(out_f2[k])
+                        else .pl_band_f2(out_f2[k])
                 values <- list(from = paths$from[k], arrow = "\u2192", to = paths$to[k],
                                assessment = if (is.na(band)) txt("labels", "not_computable") else txt("labels", band))
                 if (!is.na(out_f2[k])) values$f2 <- out_f2[k]
@@ -591,6 +621,45 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Diagrama de rutas: la disposición se calcula aquí y se guarda en
         # image$state; la función de dibujo solo la dibuja.
         # ---------------------------------------------------------------------
+        # Simple effects at -1 SD, the mean and +1 SD of the moderator, and
+        # the plot state of each interaction.
+        # ES: Efectos simples en -1 DE, la media y +1 DE del moderador, y el
+        # estado del gráfico de cada interacción.
+        .fillModeration = function(fit, paths, model, sm, txt) {
+            level <- as.numeric(self$options$ciLevel)
+            mod <- .pl_moderation(fit, paths, model, sm, level)
+            pct <- format(100 * level)
+            for (k in seq_along(mod)) {
+                md <- mod[[k]]
+                for (j in 1:3) {
+                    r <- md$slopes[j, ]
+                    values <- list(slope = r$slope)
+                    if (md$boot) values <- c(values, list(se = r$se, lower = r$lower, upper = r$upper))
+                    self$results$simpleSlopes$setRow(rowKey = paste(k, j, sep = "::"), values = values)
+                }
+                if (self$options$moderationPlot) {
+                    item <- self$results$moderationPlots$get(key = paste(md$term, "\u2192", md$y))
+                    labels <- list(levels = c(txt("moderation", "minus_sd_short"), txt("moderation", "mean_short"),
+                                              txt("moderation", "plus_sd_short")),
+                                   x_axis = txt("moderation", "x_axis"), y_axis = txt("moderation", "y_axis"),
+                                   m_axis = txt("moderation", "m_axis"), effect_axis = txt("moderation", "effect_axis"),
+                                   slopes = txt("moderation", "slopes_title"), floodlight = txt("moderation", "flood_title"))
+                    caption <- if (md$boot) sprintf(txt("moderation", "caption_boot"), pct) else txt("moderation", "caption")
+                    item$setState(.pl_moderation_state(md, labels, caption))
+                }
+            }
+            note <- if (!is.null(sm)) sprintf(txt("moderation", "table_note_boot"), pct, sm$admissible)
+                    else txt("moderation", "table_note")
+            self$results$simpleSlopes$setNote("mod", note)
+            mod
+        },
+
+        .plotModeration = function(image, ggtheme, theme, ...) {
+            if (is.null(image$state) || is.null(image$state$lines)) return(FALSE)
+            print(.pl_plot_moderation(image$state, ggtheme, theme))
+            TRUE
+        },
+
         .prepareDiagram = function(blocks, loadings, path_tab, r2_tab, sm, model) {
             image <- self$results$pathDiagram
             if (!self$options$pathDiagram) return()
@@ -746,7 +815,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL) {
+                                   model = NULL, mod = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -861,6 +930,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             struct <- c(struct, r2_lines, txt("r2_note"))
             if (!is.null(structural)) {
                 f <- structural$f2
+                f <- f[!grepl(.PL_X, f$from, fixed = TRUE), , drop = FALSE]
                 big <- !is.na(f$f2) & f$f2 >= 0.15
                 if (any(big)) struct <- c(struct, sprintf(txt("f2_big"), listed(paste(f$from[big], f$to[big], sep = " \u2192 "), f$f2[big])))
                 tiny <- !is.na(f$f2) & f$f2 < 0.02
@@ -870,8 +940,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 struct <- c(struct, if (any(hv)) sprintf(txt("vifs_high"), listed(paste(vs$from[hv], vs$to[hv], sep = " \u2192 "), vs$vif[hv]))
                                     else txt("vifs_ok"))
             }
+            mtxt <- function(key) .pl_text(lang, "moderation", key)
+            txt_band <- function(v) .pl_text(lang, "labels", .pl_band_f2_int(v))
+            mlines <- character(0)
+            for (md in mod) {
+                head <- sprintf(mtxt("line"), md$term, md$y, .pl_fmt(md$bxm), md$x, md$y, md$m)
+                f2i <- structural$f2$f2[structural$f2$from == md$term & structural$f2$to == md$y]
+                if (length(f2i) && is.finite(f2i[1]))
+                    head <- paste(head, sprintf(mtxt("f2_line"), .pl_fmt(f2i[1]), txt_band(f2i[1])))
+                if (md$boot) {
+                    r <- sm$paths[sm$paths$name == paste(model$cmap[[md$y]], "~", model$cmap[[md$term]]), , drop = FALSE]
+                    if (nrow(r) == 1 && is.finite(r$lower))
+                        head <- paste(head, if (r$lower > 0 || r$upper < 0) sprintf(mtxt("int_sig"), md$m, md$x, md$y)
+                                            else sprintf(mtxt("int_ns"), md$m, md$x, md$y))
+                    reg <- .pl_jn_region(md)
+                    tail <- switch(reg$key,
+                        jn_all = sprintf(mtxt("jn_all"), md$x, md$y, md$m),
+                        jn_none = sprintf(mtxt("jn_none"), md$x, md$y, md$m),
+                        jn_some = sprintf(mtxt("jn_some"), md$x, md$y, md$m,
+                                          paste(formatC(reg$points, format = "f", digits = 2), collapse = ", ")))
+                    head <- paste(head, tail)
+                } else head <- paste(head, mtxt("no_boot"))
+                mlines <- c(mlines, head)
+            }
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
-                           .pl_html_block(struct, txt("title_structural")),
+                           .pl_html_block(c(struct, mlines), txt("title_structural")),
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
         },
@@ -977,6 +1070,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$vifGuide$setContent(.pl_html_block(txt("vif")))
             self$results$structuralGuide$setContent(.pl_html_block(c(txt("f2"), txt("vif_struct"), txt("effects"))))
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
+            self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
         },
 
         # ---------------------------------------------------------------------
@@ -995,7 +1089,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # texto del informe (a pedido de Archie).
             self$results$reproducibility$setContent(.pl_html_block(txt("code")))
             q <- function(x) paste0("\"", gsub("\"", "\\\\\"", x), "\"")
-            map_c <- paste0("#   ", model$cmap, " = ", names(model$cmap))
+            cm <- model$cmap[!grepl(.PL_X, names(model$cmap), fixed = TRUE)]
+            map_c <- paste0("#   ", cm, " = ", names(cm))
             map_v <- paste0("#   ", model$vmap, " = ", names(model$vmap))
             modes_of <- function(m) if (length(m))
                 paste0("list(", paste(sprintf("%s = \"%s\"", names(m), unlist(m)), collapse = ", "), ")")

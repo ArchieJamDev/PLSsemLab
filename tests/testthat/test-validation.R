@@ -52,8 +52,10 @@ test_that("the seven model mistakes of E4 are rejected with a message that names
     self <- m; self$structural[[1]] <- srow("CUSA", "COMP", "CUSA")
     expect_error(runPlssem(data, self), "'CUSA' cannot predict itself")
 
-    inter <- m; inter$structural[[2]]$predictors <- list("COMP", "LIKE", c("COMP", "LIKE"))
-    expect_error(runPlssem(data, inter), "interaction")
+    # two-way interactions are estimated (phase 4); three-way ones are not
+    # ES: las interacciones de dos vías se estiman (fase 4); las de tres no
+    inter <- m; inter$structural[[2]]$predictors <- list("COMP", "LIKE", "CUSA", c("COMP", "LIKE", "CUSA"))
+    expect_error(runPlssem(data, inter), "more than two constructs")
 })
 
 test_that("an empty construct is left out with a notice, not an error", {

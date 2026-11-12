@@ -246,6 +246,14 @@ options:
     type: Bool
     default: false
 
+  # Simple slopes and floodlight of each interaction (phase 4); drawn only
+  # when the model has an interaction.
+  # ES: Pendientes simples y floodlight de cada interacción (fase 4).
+  - name: moderationPlot
+    title: Moderation (simple slopes and floodlight)
+    type: Bool
+    default: true
+
   # Path diagram settings (EGAnetLab's Network Plot box): a SEM diagram
   # drawn with semPlot (as SEMLj). Colours default to jamovi's theme; the
   # other choices are fixed colours for printing.

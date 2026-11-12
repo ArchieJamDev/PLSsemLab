@@ -102,4 +102,11 @@
         `volume`="18", 
         `issue`="1", 
         `pages`="39-50", 
-        `url`="https://doi.org/10.1177/002224378101800104"))
+        `url`="https://doi.org/10.1177/002224378101800104"), 
+    `kenny_2018`=list(
+        `type`="misc", 
+        `author`="Kenny, D. A.", 
+        `year`=2018, 
+        `title`="Moderation", 
+        `publisher`="Retrieved from https://davidakenny.net/cm/moderation.htm", 
+        `url`="https://davidakenny.net/cm/moderation.htm"))

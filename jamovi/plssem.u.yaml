@@ -214,6 +214,8 @@ children:
             name: loadingsPlot
           - type: CheckBox
             name: htmtPlot
+          - type: CheckBox
+            name: moderationPlot
   - type: CollapseBox
     label: Path Diagram
     collapsed: true

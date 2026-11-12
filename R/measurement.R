@@ -71,7 +71,15 @@
     out <- list(reliability = NULL, htmt = NULL, fl = NULL, vif = NULL)
     if (length(refl)) {
         alpha <- grab("alpha", cSEM::calculateRhoT(fit, .only_common_factors = FALSE))
-        rhoC <- grab("rhoC", cSEM::calculateRhoC(fit, .only_common_factors = FALSE))
+        # With an interaction cSEM cannot build the model-implied matrix
+        # calculateRhoC() relies on; rho_C is then computed from the
+        # loadings, (sum l)^2 / ((sum l)^2 + sum(1 - l^2)), which equals
+        # calculateRhoC() in linear models (test-interaction.R).
+        # ES: Con una interacción cSEM no puede armar la matriz implicada que
+        # usa calculateRhoC(); rho_C sale entonces de las cargas, igual que
+        # calculateRhoC() en modelos lineales.
+        rhoC <- if (isTRUE(model$nonlinear)) grab("rhoC", .pl_rhoC_loadings(fit, rint))
+                else grab("rhoC", cSEM::calculateRhoC(fit, .only_common_factors = FALSE))
         ave <- grab("ave", cSEM::calculateAVE(fit, .only_common_factors = FALSE))
         rhoA <- if (options$estimator == "plsc") {
             fit$Estimates$Reliabilities
@@ -168,6 +176,16 @@
     out$errors <- errors
     out$warnings <- unique(warnings)
     out
+}
+
+# rho_C from the standardized loadings of each construct in ids.
+# ES: rho_C a partir de las cargas estandarizadas de cada constructo.
+.pl_rhoC_loadings <- function(fit, ids) {
+    L <- fit$Estimates$Loading_estimates
+    vapply(stats::setNames(ids, ids), function(cn) {
+        l <- L[cn, L[cn, ] != 0]
+        sum(l)^2 / (sum(l)^2 + sum(1 - l^2))
+    }, 0)
 }
 
 # McDonald's omega (total) of a one-factor CFA with lavaan: standardized

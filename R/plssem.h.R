@@ -22,6 +22,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
+            moderationPlot = TRUE,
             diagramLayout = "treeLR",
             diagramTitle = "",
             diagramIndicators = TRUE,
@@ -160,6 +161,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "htmtPlot",
                 htmtPlot,
                 default=FALSE)
+            private$..moderationPlot <- jmvcore::OptionBool$new(
+                "moderationPlot",
+                moderationPlot,
+                default=TRUE)
             private$..diagramLayout <- jmvcore::OptionList$new(
                 "diagramLayout",
                 diagramLayout,
@@ -291,6 +296,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
+            self$.addOption(private$..moderationPlot)
             self$.addOption(private$..diagramLayout)
             self$.addOption(private$..diagramTitle)
             self$.addOption(private$..diagramIndicators)
@@ -328,6 +334,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
+        moderationPlot = function() private$..moderationPlot$value,
         diagramLayout = function() private$..diagramLayout$value,
         diagramTitle = function() private$..diagramTitle$value,
         diagramIndicators = function() private$..diagramIndicators$value,
@@ -364,6 +371,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
+        ..moderationPlot = NA,
         ..diagramLayout = NA,
         ..diagramTitle = NA,
         ..diagramIndicators = NA,
@@ -412,6 +420,9 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         f2 = function() private$.items[["f2"]],
         vifStruct = function() private$.items[["vifStruct"]],
         effects = function() private$.items[["effects"]],
+        moderationGuide = function() private$.items[["moderationGuide"]],
+        simpleSlopes = function() private$.items[["simpleSlopes"]],
+        moderationPlots = function() private$.items[["moderationPlots"]],
         pathDiagram = function() private$.items[["pathDiagram"]],
         loadingsPlot = function() private$.items[["loadingsPlot"]],
         htmtPlot = function() private$.items[["htmtPlot"]],
@@ -1051,6 +1062,91 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number", 
                         `superTitle`="Total CI", 
                         `visible`="(bootstrap)"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="moderationGuide",
+                title="How to read a moderation",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="simpleSlopes",
+                title="Simple effects (moderation)",
+                rows=0,
+                refs=list(
+                    "hair_2021",
+                    "kenny_2018"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="term", 
+                        `title`="Interaction", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="effect", 
+                        `title`="Effect", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="level", 
+                        `title`="Moderator at", 
+                        `type`="text"),
+                    list(
+                        `name`="slope", 
+                        `title`="Simple effect", 
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="lower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Simple effect CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="upper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Simple effect CI", 
+                        `visible`="(bootstrap)"))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="moderationPlots",
+                title="Moderation",
+                items=0,
+                visible="(moderationPlot)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=760,
+                    height=360,
+                    renderFun=".plotModeration",
+                    clearWith=list(
+                        "reflective",
+                        "formative",
+                        "structural",
+                        "estimator",
+                        "innerScheme",
+                        "indicatorScale",
+                        "missing",
+                        "bootstrap",
+                        "bootReps",
+                        "bootSeed",
+                        "ciLevel"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
@@ -1198,6 +1294,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
+#' @param moderationPlot .
 #' @param diagramLayout .
 #' @param diagramTitle .
 #' @param diagramIndicators .
@@ -1242,6 +1339,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$effects} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$moderationGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$simpleSlopes} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$moderationPlots} \tab \tab \tab \tab \tab an array of images \cr
 #'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
@@ -1276,6 +1376,7 @@ plssem <- function(
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
+    moderationPlot = TRUE,
     diagramLayout = "treeLR",
     diagramTitle = "",
     diagramIndicators = TRUE,
@@ -1321,6 +1422,7 @@ plssem <- function(
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,
+        moderationPlot = moderationPlot,
         diagramLayout = diagramLayout,
         diagramTitle = diagramTitle,
         diagramIndicators = diagramIndicators,

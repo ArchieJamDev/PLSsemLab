@@ -75,7 +75,9 @@
             self = .("'%s' cannot predict itself."),
             loop = .("The structural model has a loop (%s). PLS-SEM estimates recursive models only, in which no construct predicts itself through others: remove one path of the loop."),
             isolated = .("'%s' is not connected to any other construct. Drag it into the row of the construct it predicts, or drag its predictors into its row, or remove it."),
-            interaction = .("The structural model includes an interaction (%s). Interactions between constructs will be available in a later version of PLSsemLab; remove it for now."),
+            interaction_order = .("The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs."),
+            interaction_self = .("The interaction %s predicts %s, one of its own components. An interaction must predict a different construct."),
+            interaction_main = .("The interaction %s predicts %s, but %s is not also a predictor of %s. Add the main effect of each component to the same construct: without it the interaction term mixes the moderation with the main effect and cannot be read as moderation."),
             not_numeric = .("'%s' is not numeric. Indicators must be numeric variables."),
             constant = .("'%s' has the same value for every case, so it carries no information. Remove it from its construct."),
             sentinel = .("'%s' has %d value(s) of %s, far outside the range of its other values (%s to %s). If this is a missing-data code, declare it as missing in jamovi's data view (Setup > Missing values) and run the analysis again."),
@@ -87,6 +89,7 @@
         # Notices (Category B, never block).
         # ES: Avisos (Categoría B, nunca bloquean).
         notices = list(
+            rhoc_loadings = .("With an interaction in the model, cSEM cannot build the model-implied matrix used for \u03c1C, so \u03c1C is computed from the loadings, (\u03a3\u03bb)\u00b2 / ((\u03a3\u03bb)\u00b2 + \u03a3(1 \u2212 \u03bb\u00b2)); in models without interactions this gives the same value as cSEM."),
             empty_construct = .("'%s' has no indicators yet and was left out of the model."),
             single_reflective = .("'%s' has a single indicator: its loading is fixed at 1 and its measurement quality cannot be evaluated."),
             inadmissible = .("The estimates are not admissible (%s). Results are shown, but should not be interpreted until the cause is fixed: check indicators with very low or negative correlations, or very small samples."),
@@ -158,6 +161,10 @@
             f2_small = .("0.02 to 0.15: small"),
             f2_medium = .("0.15 to 0.35: medium"),
             f2_large = .("0.35 or more: large"),
+            f2i_none = .("Interaction below 0.005: no effect"),
+            f2i_small = .("Interaction 0.005 to 0.01: small"),
+            f2i_medium = .("Interaction 0.01 to 0.025: medium"),
+            f2i_large = .("Interaction 0.025 or more: large"),
             htmt_ok_ci = .("Upper bound below 0.85: distinct constructs"),
             htmt_similar_ci = .("Upper bound 0.85 to 0.90: acceptable only for conceptually similar constructs"),
             htmt_doubt_ci = .("Upper bound 0.90 or more: discriminant validity not established"),
@@ -172,6 +179,8 @@
         # "How to read" guides.
         # ES: Guías "Cómo leer".
         guide = list(
+            moderation = .("An interaction X \u00d7 M asks whether the effect of X on the outcome depends on the moderator M. Its coefficient is the change in that effect when M rises by one standard deviation. The table gives the simple effect of X at three values of M (one standard deviation below the mean, the mean and one above), and the plot draws the same idea twice: the simple slopes (left) and the floodlight analysis (right), the simple effect over the whole observed range of M with its bootstrap interval. The Johnson-Neyman points mark where that interval starts or stops including 0. The first construct of the term is the predictor and the second the moderator, in the order the term was built in the panel. Common misreading: concluding there is moderation because the simple effect is significant at one value of M; moderation is the interaction coefficient itself, and its interval must exclude 0."),
+            moderation_f2 = .("The f\u00b2 of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small."),
             model = .("Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number."),
             measurement = .("Loadings are the correlations between each indicator and its construct; weights are the contribution of each indicator to the construct score. For reflective constructs read the loadings: values of 0.708 or more mean the construct explains at least half of the indicator's variance (Hair et al., 2019, see references). For formative constructs read the weights: they show the relative contribution of each indicator, and a small or negative weight is not by itself a reason to remove an indicator. Common misreading: judging formative indicators by their loadings as if they were reflective."),
             reliability = .("One row per reflective construct. Cronbach's alpha is a lower bound of reliability and composite reliability (\u03c1C) an upper bound; \u03c1A usually lies between them and is the most exact of the three (Hair et al., 2019, see references). Values between 0.70 and 0.95 are satisfactory; 0.60 to 0.70 is acceptable only in exploratory research; above 0.95 the indicators are probably redundant (the same question asked several times). The average variance extracted (AVE) is the share of indicator variance the construct explains on average: 0.50 or more means convergent validity. Common misreading: reading only alpha, which tends to underestimate reliability when loadings differ."),
@@ -264,6 +273,33 @@
 
         # Reproducibility record.
         # ES: Registro de reproducibilidad.
+        moderation = list(
+            minus_sd = .("\u22121 SD of %s"),
+            mean = .("Mean of %s"),
+            plus_sd = .("+1 SD of %s"),
+            minus_sd_short = .("\u22121 SD"),
+            mean_short = .("Mean"),
+            plus_sd_short = .("+1 SD"),
+            x_axis = .("%s (standardized)"),
+            y_axis = .("Predicted %s (standardized)"),
+            m_axis = .("%s, moderator (standardized)"),
+            effect_axis = .("Effect of %s on %s"),
+            slopes_title = .("Simple slopes"),
+            flood_title = .("Floodlight"),
+            caption = .("Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator. Run the bootstrap to add its interval and the Johnson-Neyman points."),
+            caption_boot = .("Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator with its %s%% bootstrap interval (band); vertical lines: Johnson-Neyman points, where the interval starts or stops including 0."),
+            table_note = .("Simple effect of the predictor at each value of the moderator: b(X) + b(X \u00d7 M) \u00d7 M, with M in standard deviations. Run the bootstrap for intervals."),
+            table_note_boot = .("Simple effect of the predictor at each value of the moderator: b(X) + b(X \u00d7 M) \u00d7 M, with M in standard deviations; %s%% percentile bootstrap intervals from %d admissible resamples."),
+            line = .("Moderation: the interaction %s on %s is %s, the change in the effect of %s on %s when %s rises by one standard deviation."),
+            f2_line = .("Its f\u00b2 is %s (%s)."),
+            int_sig = .("Its bootstrap interval excludes 0: %s moderates the effect of %s on %s."),
+            int_ns = .("Its bootstrap interval includes 0: there is no evidence that %s moderates the effect of %s on %s, whatever the simple effects show."),
+            jn_all = .("Along the whole observed range of %3$s, the effect of %1$s on %2$s stays significant."),
+            jn_none = .("Along the whole observed range of %3$s, the interval of the effect of %1$s on %2$s includes 0."),
+            jn_some = .("The effect of %1$s on %2$s is significant only for part of the range of %3$s; Johnson-Neyman points (in standard deviations of %3$s): %4$s."),
+            no_boot = .("Run the bootstrap to know whether the interaction and the simple effects are significant.")
+        ),
+
         repro = list(
             code = .("The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.")
         )

@@ -60,6 +60,12 @@
 # ES: Salida: un entorno con el traductor de esta ejecución (`tr`) y la tabla
 #   de textos, que se arma al primer uso.
 # -----------------------------------------------------------------------------
+# Separator of the two constructs of an interaction term, used as is in
+# every table and text ("A × B"); cmap maps the term to cSEM's C1.C2.
+# ES: Separador de los dos constructos de una interacción, tal cual en tablas
+# y textos ("A × B"); cmap lleva el término al C1.C2 de cSEM.
+.PL_X <- " \u00d7 "
+
 .pl_lang <- function(options) {
     lang <- new.env(parent = emptyenv())
     lang$tr <- function(text) {
@@ -181,12 +187,12 @@
 #   jamovi/js/plssem.events.js: a name and at least one indicator, reflective
 #   first, no repeated names); names - those labels.
 # Output: data.frame(from, to) with one row per predictor term, interaction
-#   terms joined by ":" (rows beyond the constructs are ignored: the panel
+#   terms joined by " × " (rows beyond the constructs are ignored: the panel
 #   removes them on its next update).
 # ES: Entrada: structural - lista de Terms, una fila por constructo, en el
 #   orden de .pl_structural_labels() (la misma regla que constructNames() en
 #   el JS). Salida: data.frame(from, to) con una fila por término predictor,
-#   las interacciones unidas por ":".
+#   las interacciones unidas por " × ".
 # -----------------------------------------------------------------------------
 .pl_structural_labels <- function(blocks) {
     labels <- vapply(blocks, `[[`, "", "label")
@@ -202,7 +208,7 @@
             term <- as.character(unlist(term))
             if (length(term) == 0)
                 next
-            rows[[length(rows) + 1]] <- data.frame(from = paste(term, collapse = ":"), to = names[i],
+            rows[[length(rows) + 1]] <- data.frame(from = paste(term, collapse = .PL_X), to = names[i],
                                                    stringsAsFactors = FALSE)
         }
     }
@@ -270,10 +276,34 @@
     if (length(errors))
         return(unname(errors))
 
-    inter <- unique(paths$from[grepl(":", paths$from, fixed = TRUE)])
-    errors <- c(errors, vapply(inter, function(x)
-        sprintf(txt("interaction"), gsub(":", .pl_text(lang, "labels", "interaction_sep"), x, fixed = TRUE)), ""))
-    simple <- paths[!grepl(":", paths$from, fixed = TRUE), , drop = FALSE]
+    # Interactions (phase 4): two-way terms of constructs, with both main
+    # effects in the same equation (a product term without its components
+    # is not interpretable as moderation) and neither component being the
+    # outcome itself.
+    # ES: Interacciones (fase 4): términos de dos vías entre constructos, con
+    # ambos efectos principales en la misma ecuación y sin que un componente
+    # sea el propio resultado.
+    inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
+    for (k in seq_len(nrow(inter))) {
+        parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
+        shown <- inter$from[k]
+        if (length(parts) != 2) {
+            errors <- c(errors, sprintf(txt("interaction_order"), shown))
+            next
+        }
+        bad <- setdiff(parts, labels)
+        if (length(bad)) {
+            errors <- c(errors, vapply(bad, function(x) sprintf(txt("unknown"), x), ""))
+            next
+        }
+        if (inter$to[k] %in% parts)
+            errors <- c(errors, sprintf(txt("interaction_self"), shown, inter$to[k]))
+        missing_main <- setdiff(parts, paths$from[paths$to == inter$to[k]])
+        if (length(missing_main))
+            errors <- c(errors, sprintf(txt("interaction_main"), shown, inter$to[k],
+                                        paste(missing_main, collapse = ", "), inter$to[k]))
+    }
+    simple <- paths[!grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
     unknown <- setdiff(unique(c(simple$from, simple$to)), labels)
     errors <- c(errors, vapply(unknown, function(x) sprintf(txt("unknown"), x), ""))
     self <- unique(simple$from[simple$from == simple$to])
@@ -408,13 +438,19 @@
         if (op == "<~")
             modes[[cmap[[b$label]]]] <- if (b$type == "formative") "modeB" else "modeA"
     }
+    # An interaction term A:B is the product C1.C2 in cSEM's syntax; it is
+    # added to cmap so that every lookup by term works the same way.
+    # ES: Un término A:B es el producto C1.C2 en la sintaxis de cSEM; se
+    # añade a cmap para que toda búsqueda por término funcione igual.
+    for (term in unique(paths$from[grepl(.PL_X, paths$from, fixed = TRUE)]))
+        cmap[[term]] <- paste(cmap[strsplit(term, .PL_X, fixed = TRUE)[[1]]], collapse = ".")
     for (to in unique(paths$to)) {
         from <- paths$from[paths$to == to]
         lines <- c(lines, sprintf("%s ~ %s", cmap[[to]], paste(cmap[from], collapse = " + ")))
-        readable <- c(readable, sprintf("%s ~ %s", to, paste(from, collapse = " + ")))
+        readable <- c(readable, sprintf("%s ~ %s", to, paste(gsub(.PL_X, ".", from, fixed = TRUE), collapse = " + ")))
     }
     list(syntax = paste(lines, collapse = "\n"), modes = modes, cmap = cmap, vmap = vmap,
-         readable = readable)
+         readable = readable, nonlinear = any(grepl(.PL_X, paths$from, fixed = TRUE)))
 }
 
 # -----------------------------------------------------------------------------

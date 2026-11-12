@@ -64,7 +64,8 @@
     funs <- list(R2 = safe(function(o) o$Estimates$R2[r2names], length(r2names)),
                  R2adj = safe(function(o) o$Estimates$R2adj[r2names], length(r2names)))
     if (length(rint)) {
-        funs$rhoC <- safe(function(o) cSEM::calculateRhoC(o, .only_common_factors = FALSE)[rint], length(rint))
+        funs$rhoC <- if (isTRUE(model$nonlinear)) safe(function(o) .pl_rhoC_loadings(o, rint), length(rint))
+                     else safe(function(o) cSEM::calculateRhoC(o, .only_common_factors = FALSE)[rint], length(rint))
         funs$AVE <- safe(function(o) cSEM::calculateAVE(o, .only_common_factors = FALSE)[rint], length(rint))
         if (plsc)
             funs$rhoA <- safe(function(o) o$Estimates$Reliabilities[rint], length(rint))
@@ -89,7 +90,7 @@
         funs$VIFS <- safe(function(o) unlist(o$Estimates$VIF)[names(vifs)], length(vifs))
 
     list(funs = funs, rint = rint, pairs = pairs, form_ids = form_ids, r2names = r2names,
-         vifnames = names(vifs), plsc = plsc)
+         vifnames = names(vifs), plsc = plsc, nonlinear = isTRUE(model$nonlinear))
 }
 
 # Runs the blocks, calling progress(done, total) after each one (the caller
@@ -171,6 +172,16 @@
         VIFB = if (length(spec$form_ids)) ci("VIFB", unlist(lapply(names(spec$form_ids), function(cc)
             paste(cc, spec$form_ids[[cc]], sep = "~")))),
         VIFS = if (length(spec$vifnames)) ci("VIFS", spec$vifnames),
+        # draws of the path coefficients, for simple slopes and floodlight
+        # (only with an interaction)
+        # ES: réplicas de los coeficientes de ruta, para pendientes simples y
+        # floodlight (solo con una interacción)
+        path_draws = if (isTRUE(spec$nonlinear)) {
+            pe <- merged$Estimates$Estimates_resample$Estimates1$Path_estimates
+            m <- pe$Resampled
+            colnames(m) <- names(pe$Original)
+            m
+        },
         admissible = merged$Information$Information_resample$Number_of_admissibles,
         runs = merged$Information$Information_resample$Number_of_runs)
     # HTMT: the one-sided 95% upper bound of Henseler et al. (2015), the 95th
@@ -212,12 +223,19 @@
     ifelse(f2 < 0.02, "f2_none", ifelse(f2 < 0.15, "f2_small", ifelse(f2 < 0.35, "f2_medium", "f2_large"))))
 }
 
+# Kenny's (2018) benchmarks for the f² of an interaction term.
+# ES: Umbrales de Kenny (2018) para el f² de una interacción.
+.pl_band_f2_int <- function(f2) {
+    ifelse(is.na(f2), NA_character_,
+    ifelse(f2 < 0.005, "f2i_none", ifelse(f2 < 0.01, "f2i_small", ifelse(f2 < 0.025, "f2i_medium", "f2i_large"))))
+}
+
 # Pairs of constructs joined by at least one path (directly or through
 # others), in the order of the paths: the rows of the effects table.
 # ES: Pares de constructos unidos por al menos una ruta (directa o a través
 # de otros): las filas de la tabla de efectos.
 .pl_effect_pairs <- function(paths) {
-    simple <- paths[!grepl(":", paths$from, fixed = TRUE), , drop = FALSE]
+    simple <- paths[!grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
     if (!nrow(simple)) return(data.frame(from = character(0), to = character(0), stringsAsFactors = FALSE))
     nodes <- unique(c(simple$from, simple$to))
     reach <- function(start) {
@@ -250,7 +268,7 @@
 # -----------------------------------------------------------------------------
 .pl_diagram_layout <- function(blocks, paths, path_tab, r2_tab, sig = NULL) {
     labels <- vapply(blocks, `[[`, "", "label")
-    simple <- paths[!grepl(":", paths$from, fixed = TRUE), , drop = FALSE]
+    simple <- paths[!grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
     depth <- stats::setNames(rep(NA_integer_, length(labels)), labels)
     layer_of <- function(n, seen = character(0)) {
         if (!is.na(depth[[n]])) return(depth[[n]])

@@ -202,7 +202,25 @@
         # ES: Una ruta que salta esta columna pasa por el centro: la columna
         # baja y sus filas van abajo, para que la ruta pase por encima.
         lay_of <- stats::setNames(nodes$layer, nodes$label)
-        if (any(lay_of[simple$from] < l & lay_of[simple$to] > l)) {
+        skip <- lay_of[simple$from] < l & lay_of[simple$to] > l
+        # A lone construct whose predictors are all placed sits at their
+        # mean height (e.g. a higher-order construct between its
+        # dimensions), unless a skipping path starts near that height.
+        # ES: Un constructo solo en su columna, con sus predictores ya
+        # ubicados, va a la altura media de ellos (p. ej. un constructo de
+        # orden superior entre sus dimensiones), salvo que una ruta que salta
+        # la columna salga cerca de esa altura.
+        pr <- if (l > 0 && length(idx) == 1) simple$from[simple$to == nodes$label[idx]] else character(0)
+        centred <- FALSE
+        if (length(pr) && all(pr %in% names(order_y)) && all(lay_of[pr] < l)) {
+            want <- mean(order_y[pr])
+            near <- any(abs(order_y[simple$from[skip]] - want) < body[[nodes$label[idx]]] / 2 + 0.8)
+            if (!near) {
+                top <- want + body[[nodes$label[idx]]] / 2 + (if (row_above[1]) extra[[1]] else 0)
+                centred <- TRUE
+            }
+        }
+        if (any(skip) && !centred) {
             row_above <- rep(FALSE, length(idx))
             top <- total / 2 - 1.4
         }

@@ -61,7 +61,7 @@
             # ES: un indicador con el nombre de un constructo recibe un espacio
             vn <- if (v %in% node) paste0(v, " ") else v
             man <- c(man, vn)
-            cc <- model$cmap[[l$construct]]
+            cc <- (if (is.null(model$mcmap)) model$cmap else model$mcmap)[[l$construct]]
             vv <- model$vmap[[v]]
             if (l$type == "formative")
                 add(vn, node[[l$construct]], l$weight, "weight", sig_of(paste(cc, "<~", vv), "weights"))
@@ -86,7 +86,7 @@
         hh <- model$m2$hmap[[h$label]]
         for (cpt in h$components) {
             r <- hocq$measurement[hocq$measurement$hoc == h$label & hocq$measurement$component == cpt, , drop = FALSE]
-            ind <- paste0("S_", model$cmap[[cpt]])
+            ind <- model$m2$ind(cpt)
             if (h$type == "formative")
                 add(node[[cpt]], node[[h$label]], r$weight, "hoc", sig_of(paste(hh, "<~", ind), "hoc_weights"))
             else

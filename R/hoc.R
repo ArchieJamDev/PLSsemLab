@@ -106,48 +106,97 @@
     unique(do.call(rbind, rows))
 }
 
-# Stage-2 model: the higher-order constructs measured by the scores of their
-# lower-order constructs, every other construct in the user's paths by its
-# own score. Returns list(syntax, modes, hmap, readable).
-# ES: Modelo de la etapa 2: los constructos de orden superior medidos por
-# las puntuaciones de sus constructos de orden inferior; los demás por su
-# propia puntuación.
-.pl_stage2_model <- function(hocs, paths, cmap) {
+# Stage-2 model. Two approaches (option hocApproach):
+#   disjoint - the disjoint two-stage approach: indicators S_Cx (stage-1
+#              scores), the higher-order construct in Mode A (reflective) or
+#              Mode B (formative), no disattenuation;
+#   csem     - cSEM's own second-order routine reproduced with a plain call:
+#              indicators named as the stage-1 scores (Cx), the other
+#              constructs renamed Cx_temp, a reflective higher-order
+#              construct as a common factor (=~), .PLS_modes = NULL and
+#              .disattenuate = TRUE, as calculate2ndStage() does (cSEM 0.7.1;
+#              with composite first-order constructs its reliability
+#              adjustments are 1, so the plain call gives the same values,
+#              test-hoc.R).
+# Returns list(syntax, modes, disattenuate, hmap, cmap2, ind(x), prefix,
+#   readable): cmap2 maps every construct of the structural model to its
+#   stage-2 name, ind(x) gives the stage-2 indicator of a lower-order
+#   construct x.
+# ES: Modelo de la etapa 2, con dos enfoques: disjunto (indicadores S_Cx,
+# Modo A o B, sin desatenuación) o la rutina de cSEM reproducida con una
+# llamada simple (constructos Cx_temp, orden superior reflectivo como factor
+# común, .PLS_modes = NULL y .disattenuate = TRUE).
+.pl_stage2_model <- function(hocs, paths, cmap, approach = "disjoint") {
+    csem_like <- identical(approach, "csem")
     hmap <- stats::setNames(paste0("H", seq_along(hocs)), vapply(hocs, `[[`, "", "label"))
-    all <- c(cmap, hmap)
-    s <- function(x) paste0("S_", cmap[[x]])
+    prefix <- if (csem_like) "" else "S_"
+    ind <- function(x) paste0(prefix, cmap[[x]])
+    others <- setdiff(unique(c(paths$from, paths$to)), names(hmap))
+    cmap2 <- c(stats::setNames(if (csem_like) paste0(cmap[others], "_temp") else unname(cmap[others]), others), hmap)
     lines <- character(0)
     readable <- character(0)
     modes <- list()
     for (h in hocs) {
-        lines <- c(lines, sprintf("%s <~ %s", hmap[[h$label]], paste(vapply(h$components, s, ""), collapse = " + ")))
-        readable <- c(readable, sprintf("%s <~ %s", h$label, paste(h$components, collapse = " + ")))
+        op <- if (csem_like && h$type == "reflective") "=~" else "<~"
+        lines <- c(lines, sprintf("%s %s %s", hmap[[h$label]], op, paste(vapply(h$components, ind, ""), collapse = " + ")))
+        readable <- c(readable, sprintf("%s %s %s", h$label, op, paste(h$components, collapse = " + ")))
         modes[[hmap[[h$label]]]] <- if (h$type == "reflective") "modeA" else "modeB"
     }
-    others <- setdiff(unique(c(paths$from, paths$to)), names(hmap))
     for (x in others) {
-        lines <- c(lines, sprintf("%s <~ %s", cmap[[x]], s(x)))
-        modes[[cmap[[x]]]] <- "modeA"
+        lines <- c(lines, sprintf("%s <~ %s", cmap2[[x]], ind(x)))
+        modes[[cmap2[[x]]]] <- "modeA"
     }
     for (to in unique(paths$to)) {
         from <- paths$from[paths$to == to]
-        lines <- c(lines, sprintf("%s ~ %s", all[[to]], paste(all[from], collapse = " + ")))
+        lines <- c(lines, sprintf("%s ~ %s", cmap2[[to]], paste(cmap2[from], collapse = " + ")))
         readable <- c(readable, sprintf("%s ~ %s", to, paste(from, collapse = " + ")))
     }
-    list(syntax = paste(lines, collapse = "\n"), modes = modes, hmap = hmap, readable = readable)
+    list(syntax = paste(lines, collapse = "\n"), modes = if (csem_like) NULL else modes,
+         disattenuate = csem_like, hmap = hmap, cmap2 = cmap2, ind = ind, prefix = prefix,
+         approach = approach, readable = readable)
 }
 
-# Stage-2 data from stage-1 construct scores (columns S_Cx).
+# Stage-2 data from stage-1 construct scores.
 # ES: Datos de la etapa 2 a partir de las puntuaciones de la etapa 1.
-.pl_stage2_data <- function(scores) {
+.pl_stage2_data <- function(scores, m2) {
     d <- as.data.frame(scores)
-    names(d) <- paste0("S_", colnames(scores))
+    names(d) <- paste0(m2$prefix, colnames(scores))
     d
 }
 
 .pl_stage2_fit <- function(scores, m2, options) {
-    cSEM::csem(.data = .pl_stage2_data(scores), .model = m2$syntax, .PLS_modes = m2$modes,
-               .disattenuate = FALSE, .PLS_weight_scheme_inner = options$innerScheme)
+    suppressWarnings(cSEM::csem(.data = .pl_stage2_data(scores, m2), .model = m2$syntax, .PLS_modes = m2$modes,
+                                .disattenuate = m2$disattenuate, .PLS_weight_scheme_inner = options$innerScheme))
+}
+
+# cSEM's second-order routine (hocApproach = "csem"): the model in cSEM's
+# syntax, estimated once to obtain cSEM's stage 1 (where the lower-order
+# constructs also get paths among themselves); stage 2 then follows
+# .pl_stage2_model(). Returns list(fit1, paths1) or list(error).
+# ES: La rutina de segundo orden de cSEM: el modelo en la sintaxis de cSEM,
+# estimado una vez para obtener su etapa 1 (donde los constructos de orden
+# inferior también tienen rutas entre sí).
+.pl_csem_stage1 <- function(d, blocks, hocs, paths, model, options) {
+    hmap <- stats::setNames(paste0("H", seq_along(hocs)), vapply(hocs, `[[`, "", "label"))
+    all <- c(model$cmap, hmap)
+    lines <- strsplit(model$syntax, "\n", fixed = TRUE)[[1]]
+    lines <- lines[!grepl(" ~ ", lines, fixed = TRUE)]
+    for (h in hocs)
+        lines <- c(lines, sprintf("%s %s %s", hmap[[h$label]], if (h$type == "reflective") "=~" else "<~",
+                                  paste(unname(model$cmap[h$components]), collapse = " + ")))
+    for (to in unique(paths$to))
+        lines <- c(lines, sprintf("%s ~ %s", all[[to]], paste(all[paths$from[paths$to == to]], collapse = " + ")))
+    syntax <- paste(lines, collapse = "\n")
+    f <- suppressWarnings(cSEM::csem(.data = d, .model = syntax,
+                                     .PLS_modes = if (length(model$modes)) model$modes else NULL,
+                                     .disattenuate = FALSE, .PLS_weight_scheme_inner = options$innerScheme))
+    fit1 <- f$First_stage
+    S <- fit1$Information$Model$structural
+    inv <- stats::setNames(names(model$cmap), model$cmap)
+    idx <- which(S == 1, arr.ind = TRUE)
+    paths1 <- data.frame(from = unname(inv[colnames(S)[idx[, 2]]]), to = unname(inv[rownames(S)[idx[, 1]]]),
+                         stringsAsFactors = FALSE)
+    list(fit1 = fit1, paths1 = paths1, syntax = syntax, second = f$Second_stage)
 }
 
 # Measurement of the higher-order constructs in stage 2: loadings and
@@ -155,13 +204,14 @@
 # ones, VIF of the formative ones (diagonal of the inverse correlation of
 # the lower-order scores).
 # ES: Medida de los constructos de orden superior en la etapa 2.
-.pl_hoc_quality <- function(fit2, hocs, cmap, hmap) {
+.pl_hoc_quality <- function(fit2, hocs, m2) {
+    hmap <- m2$hmap
     est <- fit2$Estimates
     rows <- list()
     rel <- list()
     for (h in hocs) {
         hh <- hmap[[h$label]]
-        ids <- paste0("S_", unname(cmap[h$components]))
+        ids <- vapply(h$components, m2$ind, "")
         l <- est$Loading_estimates[hh, ids]
         w <- est$Weight_estimates[hh, ids]
         vif <- if (h$type == "formative") {

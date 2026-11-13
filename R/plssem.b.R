@@ -200,6 +200,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             errors <- .pl_hoc_validate(blocks, hocs, paths, self$options, lang)
             if (length(errors))
                 jmvcore::reject(paste(errors, collapse = "\n"))
+            approach <- if (is.null(self$options$hocApproach)) "disjoint" else self$options$hocApproach
             paths1 <- if (length(hocs)) .pl_stage1_paths(paths, hocs) else paths
             errors <- .pl_validate_model(blocks, paths1, lang)
             if (length(errors))
@@ -224,7 +225,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             categories <- stats::setNames(vapply(d, function(x) length(unique(x)), 0), names(model$vmap))
             if (ordinal)
                 for (v in names(d)) d[[v]] <- ordered(d[[v]])
-            fit <- .pl_capture(cSEM::csem(
+            fit <- if (length(hocs) && approach == "csem") {
+                # cSEM's routine: its own stage 1 (the paths among the
+                # dimensions it adds are read back into paths1)
+                # ES: la rutina de cSEM: su propia etapa 1
+                c1 <- .pl_capture(.pl_csem_stage1(d, blocks, hocs, paths, model, self$options))
+                if (is.null(c1$error)) {
+                    paths1 <- c1$value$paths1
+                    model$csem_syntax <- c1$value$syntax
+                }
+                list(value = c1$value$fit1, error = c1$error, warnings = c1$warnings)
+            } else .pl_capture(cSEM::csem(
                 .data = d, .model = model$syntax,
                 .PLS_modes = if (length(model$modes)) model$modes else NULL,
                 .disattenuate = self$options$estimator == "plsc",
@@ -242,12 +253,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             sfit <- fit$value
             smodel <- model
             if (length(hocs)) {
-                m2 <- .pl_stage2_model(hocs, paths, model$cmap)
+                m2 <- .pl_stage2_model(hocs, paths, model$cmap, approach)
                 fit2 <- .pl_capture(.pl_stage2_fit(est$Construct_scores, m2, self$options))
                 if (!is.null(fit2$error))
                     jmvcore::reject(sprintf(txt("errors", "estimation"), fit2$error))
                 sfit <- fit2$value
-                smodel$cmap <- c(model$cmap, m2$hmap)
+                smodel$cmap <- c(m2$cmap2, model$cmap[setdiff(names(model$cmap), names(m2$cmap2))])
+                smodel$mcmap <- model$cmap
                 smodel$m2 <- m2
                 smodel$hocs <- hocs
                 admissible <- admissible && !any(unlist(cSEM::verify(sfit)))
@@ -300,7 +312,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             if (length(hocs)) names(which(unlist(cSEM::verify(sfit)))))
                 warn <- c(warn, sprintf(txt("notices", "inadmissible"), paste(failed, collapse = ", ")))
             }
-            info <- if (length(hocs)) sprintf(txt("notices", "hoc_two_stage"),
+            info <- if (length(hocs)) sprintf(txt("notices", if (approach == "csem") "hoc_csem" else "hoc_two_stage"),
                                               paste(vapply(hocs, `[[`, "", "label"), collapse = ", ")) else character(0)
             if (prep$n_dropped > 0)
                 info <- c(info, sprintf(txt("notices", "dropped"), prep$n_dropped, prep$n_used))
@@ -475,7 +487,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(nrow(paths))) {
                 to <- cc(paths$to[k])
                 from <- cc(paths$from[k])
-                f <- if (is.null(f2$value)) NA_real_ else f2$value[to, from]
+                # cSEM's calculatef2() drops the "_temp" suffix of the
+                # second-order routine's stage 2; look up by name.
+                # ES: calculatef2() quita el sufijo "_temp"; se busca por nombre.
+                fm <- f2$value
+                to2 <- sub("_temp$", "", to)
+                from2 <- sub("_temp$", "", from)
+                f <- if (is.null(fm) || !(to2 %in% rownames(fm)) || !(from2 %in% colnames(fm)))
+                    NA_real_ else fm[to2, from2]
                 out_f2[k] <- if (is.finite(f)) f else NA_real_
                 # interaction terms are judged on Kenny's (2018) smaller
                 # benchmarks (Hair et al., 2021, ch. 8)
@@ -563,6 +582,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # interno.
         .fillBootstrap = function(sm, blocks, paths, model, txt) {
             cc <- function(x) model$cmap[[x]]
+            # measurement rows use the stage-1 names (they differ from the
+            # stage-2 ones with cSEM's second-order routine)
+            # ES: las filas de medida usan los nombres de la etapa 1
+            mc <- function(x) (if (is.null(model$mcmap)) model$cmap else model$mcmap)[[x]]
             vv <- function(x) model$vmap[[x]]
             set <- function(table, values, rowNo = NA, rowKey = NULL) {
                 for (col in names(values)) {
@@ -598,8 +621,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Cargas y pesos.
             for (i in seq_along(blocks)) for (v in blocks[[i]]$vars) {
                 key <- paste(i, v, sep = "::")
-                l <- row_of(sm$loadings, paste(cc(blocks[[i]]$label), "=~", vv(v)))
-                w <- row_of(sm$weights, paste(cc(blocks[[i]]$label), "<~", vv(v)))
+                l <- row_of(sm$loadings, paste(mc(blocks[[i]]$label), "=~", vv(v)))
+                w <- row_of(sm$weights, paste(mc(blocks[[i]]$label), "<~", vv(v)))
                 if (!is.null(l) && nrow(l)) set(self$results$measurement, list(loadLower = l$lower, loadUpper = l$upper), rowKey = key)
                 if (!is.null(w) && nrow(w)) set(self$results$measurement, list(weightLower = w$lower, weightUpper = w$upper,
                                                                               weightP = w$p), rowKey = key)
@@ -613,8 +636,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$r2$setNote("ci", note)
 
             for (b in Filter(function(b) b$type == "reflective" && length(b$vars) > 1, blocks)) {
-                rc <- row_of(sm$rhoC, cc(b$label))
-                av <- row_of(sm$AVE, cc(b$label))
+                rc <- row_of(sm$rhoC, mc(b$label))
+                av <- row_of(sm$AVE, mc(b$label))
                 if (!is.null(rc) && nrow(rc)) set(self$results$reliability, list(rhoCLower = rc$lower, rhoCUpper = rc$upper), rowKey = b$label)
                 if (!is.null(av) && nrow(av)) set(self$results$reliability, list(aveLower = av$lower, aveUpper = av$upper), rowKey = b$label)
             }
@@ -627,7 +650,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 refl <- vapply(Filter(function(b) b$type == "reflective", blocks), `[[`, "", "label")
                 pr <- utils::combn(refl, 2)
                 for (k in seq_len(ncol(pr))) {
-                    r <- row_of(sm$HTMT, paste(cc(pr[1, k]), cc(pr[2, k]), sep = "~"))
+                    r <- row_of(sm$HTMT, paste(mc(pr[1, k]), mc(pr[2, k]), sep = "~"))
                     key <- paste(pr[, k], collapse = "::")
                     if (!is.null(r) && nrow(r) && is.finite(r$upper)) {
                         self$results$htmt$setCell(col = "htmtUpper", value = r$upper, rowKey = key)
@@ -641,7 +664,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (i in seq_along(blocks)) {
                 if (blocks[[i]]$type != "formative" || length(blocks[[i]]$vars) < 2) next
                 for (v in blocks[[i]]$vars) {
-                    r <- row_of(sm$VIFB, paste(cc(blocks[[i]]$label), vv(v), sep = "~"))
+                    r <- row_of(sm$VIFB, paste(mc(blocks[[i]]$label), vv(v), sep = "~"))
                     if (!is.null(r) && nrow(r)) set(self$results$vif, list(vifLower = r$lower, vifUpper = r$upper),
                                                     rowKey = paste(i, v, sep = "::"))
                 }
@@ -836,7 +859,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # lower-order construct, and reliability of the reflective ones.
         # ES: Medida de los constructos de orden superior (etapa 2).
         .fillHoc = function(sfit, hocs, smodel, txt) {
-            q <- .pl_hoc_quality(sfit, hocs, smodel$cmap, smodel$m2$hmap)
+            q <- .pl_hoc_quality(sfit, hocs, smodel$m2)
             for (k in seq_len(nrow(q$measurement))) {
                 r <- q$measurement[k, ]
                 band <- if (r$type == "formative") .pl_band_vif(r$vif) else NA_character_
@@ -865,7 +888,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (h in hocs) {
                 hh <- smodel$m2$hmap[[h$label]]
                 for (cpt in h$components) {
-                    ind <- paste0("S_", smodel$cmap[[cpt]])
+                    ind <- smodel$m2$ind(cpt)
                     key <- paste(h$label, cpt, sep = "::")
                     l <- row_of(sm$hoc_loadings, paste(hh, "=~", ind))
                     w <- row_of(sm$hoc_weights, paste(hh, "<~", ind))
@@ -996,7 +1019,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 # ES: Con bootstrap, la prueba es el límite superior.
                 if (!is.null(sm$HTMT)) {
                     up <- vapply(seq_len(nrow(h)), function(k) {
-                        r <- sm$HTMT$upper[sm$HTMT$name == paste(model$cmap[[h$c1[k]]], model$cmap[[h$c2[k]]], sep = "~")]
+                        mm <- if (is.null(model$mcmap)) model$cmap else model$mcmap
+                        r <- sm$HTMT$upper[sm$HTMT$name == paste(mm[[h$c1[k]]], mm[[h$c2[k]]], sep = "~")]
                         if (length(r)) r[1] else NA_real_
                     }, 0)
                     bad <- !is.na(up) & up >= 0.85
@@ -1022,7 +1046,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 # 0.50 o más; si no, son candidatos a quitarse por teoría.
                 if (!is.null(sm$weights)) {
                     ns <- vapply(seq_len(nrow(form)), function(k) {
-                        r <- sm$weights[sm$weights$name == paste(model$cmap[[form$construct[k]]], "<~",
+                        r <- sm$weights[sm$weights$name == paste((if (is.null(model$mcmap)) model$cmap else model$mcmap)[[form$construct[k]]], "<~",
                                                                  model$vmap[[form$indicator[k]]]), , drop = FALSE]
                         nrow(r) == 1 && is.finite(r$lower) && r$lower <= 0 && r$upper >= 0
                     }, TRUE)
@@ -1243,7 +1267,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         if (self$options$estimator == "plsc") "TRUE" else "FALSE"),
                 sprintf("                  .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme),
                 "cSEM::summarize(fit)")
-            if (!is.null(m2)) {
+            if (!is.null(m2) && identical(m2$approach, "csem")) {
+                # cSEM's second-order routine: one call; stage 1 is its
+                # First_stage, stage 2 its Second_stage.
+                # ES: La rutina de segundo orden de cSEM: una llamada.
+                code <- c(code, "",
+                    "# cSEM's second-order routine (as JASP): stage 1 = fit_2nd$First_stage, stage 2 = fit_2nd$Second_stage",
+                    "model_2nd <- \"", model$csem_syntax, "\"",
+                    sprintf("fit_2nd <- cSEM::csem(d, model_2nd, .PLS_modes = %s, .PLS_weight_scheme_inner = \"%s\")  # cSEM sets .disattenuate = TRUE",
+                            modes, self$options$innerScheme),
+                    "cSEM::summarize(fit_2nd)",
+                    "# The same stage 2 as one plain call (used for the bootstrap):",
+                    "d2 <- as.data.frame(fit_2nd$First_stage$Estimates$Construct_scores)",
+                    "model2 <- \"", m2$syntax, "\"",
+                    sprintf("fit2 <- cSEM::csem(d2, model2, .disattenuate = TRUE, .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme))
+            } else if (!is.null(m2)) {
                 # Stage 2 of the disjoint two-stage approach.
                 # ES: Etapa 2 del enfoque disjunto en dos etapas.
                 code <- c(code, "",

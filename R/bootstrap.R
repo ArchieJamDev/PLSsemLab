@@ -128,7 +128,7 @@
     hl <- list(); hw <- list(); hv <- list(); hr <- character(0)
     for (h in hocs) {
         hh <- m2$hmap[[h$label]]
-        ids <- paste0("S_", unname(cm[h$components]))
+        ids <- vapply(h$components, m2$ind, "")
         hl[[hh]] <- ids
         if (h$type == "formative") hv[[hh]] <- ids else hr <- c(hr, hh)
     }

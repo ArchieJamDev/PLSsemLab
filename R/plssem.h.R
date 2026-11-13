@@ -11,6 +11,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             formative = list(),
             reflectiveHoc = list(),
             formativeHoc = list(),
+            hocApproach = "disjoint",
             structural = list(),
             estimator = "pls",
             innerScheme = "path",
@@ -119,6 +120,13 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         jmvcore::OptionTerms$new(
                             "components",
                             NULL))))
+            private$..hocApproach <- jmvcore::OptionList$new(
+                "hocApproach",
+                hocApproach,
+                options=list(
+                    "disjoint",
+                    "csem"),
+                default="disjoint")
             private$..structural <- jmvcore::OptionArray$new(
                 "structural",
                 structural,
@@ -315,6 +323,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..formative)
             self$.addOption(private$..reflectiveHoc)
             self$.addOption(private$..formativeHoc)
+            self$.addOption(private$..hocApproach)
             self$.addOption(private$..structural)
             self$.addOption(private$..estimator)
             self$.addOption(private$..innerScheme)
@@ -355,6 +364,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         formative = function() private$..formative$value,
         reflectiveHoc = function() private$..reflectiveHoc$value,
         formativeHoc = function() private$..formativeHoc$value,
+        hocApproach = function() private$..hocApproach$value,
         structural = function() private$..structural$value,
         estimator = function() private$..estimator$value,
         innerScheme = function() private$..innerScheme$value,
@@ -394,6 +404,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..formative = NA,
         ..reflectiveHoc = NA,
         ..formativeHoc = NA,
+        ..hocApproach = NA,
         ..structural = NA,
         ..estimator = NA,
         ..innerScheme = NA,
@@ -513,6 +524,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -557,6 +569,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -635,6 +648,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -717,6 +731,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -771,6 +786,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -799,6 +815,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -856,6 +873,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -922,6 +940,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -974,6 +993,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1063,6 +1083,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1134,6 +1155,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1172,6 +1194,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1226,6 +1249,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1302,6 +1326,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1364,6 +1389,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         "formative",
                         "reflectiveHoc",
                         "formativeHoc",
+                        "hocApproach",
                         "structural",
                         "estimator",
                         "innerScheme",
@@ -1401,6 +1427,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1423,6 +1450,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1445,6 +1473,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1463,6 +1492,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "formative",
                     "reflectiveHoc",
                     "formativeHoc",
+                    "hocApproach",
                     "structural",
                     "estimator",
                     "innerScheme",
@@ -1517,6 +1547,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param formative .
 #' @param reflectiveHoc .
 #' @param formativeHoc .
+#' @param hocApproach .
 #' @param structural .
 #' @param estimator .
 #' @param innerScheme .
@@ -1604,6 +1635,7 @@ plssem <- function(
     formative = list(),
     reflectiveHoc = list(),
     formativeHoc = list(),
+    hocApproach = "disjoint",
     structural = list(),
     estimator = "pls",
     innerScheme = "path",
@@ -1652,6 +1684,7 @@ plssem <- function(
         formative = formative,
         reflectiveHoc = reflectiveHoc,
         formativeHoc = formativeHoc,
+        hocApproach = hocApproach,
         structural = structural,
         estimator = estimator,
         innerScheme = innerScheme,

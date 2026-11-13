@@ -97,6 +97,7 @@
         # Notices (Category B, never block).
         # ES: Avisos (Categoría B, nunca bloquean).
         notices = list(
+            hoc_csem = .("Higher-order constructs (%s): cSEM's second-order routine, as JASP uses it. It differs from the disjoint two-stage approach in two ways: in stage 1 the lower-order constructs also get structural paths among themselves, and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021)."),
             hoc_two_stage = .("Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; stage 2 uses the stage-1 scores as indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together."),
             rhoc_loadings = .("With an interaction in the model, cSEM cannot build the model-implied matrix used for \u03c1C, so \u03c1C is computed from the loadings, (\u03a3\u03bb)\u00b2 / ((\u03a3\u03bb)\u00b2 + \u03a3(1 \u2212 \u03bb\u00b2)); in models without interactions this gives the same value as cSEM."),
             empty_construct = .("'%s' has no indicators yet and was left out of the model."),

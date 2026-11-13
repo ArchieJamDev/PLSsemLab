@@ -146,3 +146,32 @@ test_that("higher-order mistakes are rejected with the reason", {
                                           list(label = "Q2", components = list("IMAG", "SAT"))),
                      structural = list(list("Q1"), list("Q2"), list(), list(), list(), list())), "two higher-order")
 })
+
+test_that("cSEM's second-order routine, as an option, equals cSEM's own estimates", {
+    a <- runHoc("reflective", hocApproach = "csem", bootstrap = TRUE, bootReps = 100, bootSeed = 2)
+    d <- hocData()
+    m <- "SAT <~ sat1 + sat2 + sat3 + sat4
+          LOY <~ loy1 + loy2 + loy3 + loy4
+          IMAG <~ imag1 + imag2 + imag3 + imag4 + imag5
+          EXPE <~ expe1 + expe2 + expe3 + expe4 + expe5
+          QUAL =~ IMAG + EXPE
+          SAT ~ QUAL
+          LOY ~ SAT + QUAL"
+    f <- suppressWarnings(cSEM::csem(d, m, .PLS_modes = list(SAT = "modeA", LOY = "modeA", IMAG = "modeB", EXPE = "modeB")))
+    B <- f$Second_stage$Estimates$Path_estimates
+    p <- a$results$paths$asDF
+    expect_equal(p$estimate[p$from == "QUAL" & p$to == "SAT"], B["SAT_temp", "QUAL"], tolerance = 1e-8)
+    expect_equal(p$estimate[p$from == "QUAL" & p$to == "LOY"], B["LOY_temp", "QUAL"], tolerance = 1e-8)
+    expect_equal(a$results$hocMeasurement$asDF$loading,
+                 unname(f$Second_stage$Estimates$Loading_estimates["QUAL", c("IMAG", "EXPE")]), tolerance = 1e-8)
+    m1 <- a$results$measurement$asDF
+    expect_equal(m1$weight[m1$construct == "IMAG"],
+                 unname(f$First_stage$Estimates$Weight_estimates["IMAG", paste0("imag", 1:5)]), tolerance = 1e-8)
+    expect_true(all(is.finite(p$lower)))
+    expect_true(any(grepl("second-order routine", noticesOf(a))))
+    # the disjoint approach differs (no paths among the dimensions in stage 1)
+    # ES: el enfoque disjunto difiere
+    b <- runHoc("reflective")
+    pb <- b$results$paths$asDF
+    expect_gt(abs(pb$estimate[pb$from == "QUAL" & pb$to == "SAT"] - p$estimate[p$from == "QUAL" & p$to == "SAT"]), 1e-4)
+})

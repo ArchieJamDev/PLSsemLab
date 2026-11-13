@@ -131,6 +131,20 @@ options:
         - name: components
           type: Terms
 
+  # Approach for higher-order constructs: the disjoint two-stage approach
+  # (default) or cSEM's own second-order routine, to reproduce JASP.
+  # ES: Enfoque para los constructos de orden superior: disjunto en dos
+  # etapas (por defecto) o la rutina de segundo orden de cSEM.
+  - name: hocApproach
+    title: Two-stage approach
+    type: List
+    options:
+      - title: Disjoint (Sarstedt et al., 2019)
+        name: disjoint
+      - title: cSEM's second-order routine (as JASP)
+        name: csem
+    default: disjoint
+
   - name: structural
     title: Structural Model
     type: Array

@@ -1,12 +1,11 @@
 {
-    "code": "es",
     "domain": "messages",
     "locale_data": {
         "messages": {
             "": {
                 "domain": "messages",
-                "lang": "es",
-                "plural_forms": "nplurals=2; plural=(n!=1);"
+                "plural_forms": "nplurals=2; plural=(n!=1);",
+                "lang": "es"
             },
             " × ": [
                 " × "
@@ -311,6 +310,9 @@
             "cSEM could not estimate the model: %s": [
                 "cSEM no pudo estimar el modelo: %s"
             ],
+            "cSEM's second-order routine (as JASP)": [
+                "Rutina de segundo orden de cSEM (como JASP)"
+            ],
             "Customer satisfaction index ECSI (n=250)": [
                 "Índice de satisfacción del cliente ECSI (n=250)"
             ],
@@ -355,6 +357,9 @@
             ],
             "Discriminant validity: HTMT is 0.85 or more for %s. The data barely distinguish these constructs; ask whether they measure the same concept, whether some indicators belong to both, or whether they should be merged.": [
                 "Validez discriminante: el HTMT es de 0.85 o más en %s. Los datos apenas distinguen estos constructos; pregúntese si miden el mismo concepto, si algunos indicadores pertenecen a ambos o si deberían unirse."
+            ],
+            "Disjoint (Sarstedt et al., 2019)": [
+                "Disjunto (Sarstedt et al., 2019)"
             ],
             "drag first-order constructs here": [
                 "arrastre aquí los constructos de primer orden"
@@ -469,6 +474,9 @@
             ],
             "Higher-Order Constructs": [
                 "Constructos de orden superior"
+            ],
+            "Higher-order constructs (%s): cSEM's second-order routine, as JASP uses it. It differs from the disjoint two-stage approach in two ways: in stage 1 the lower-order constructs also get structural paths among themselves, and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021).": [
+                "Constructos de orden superior (%s): rutina de segundo orden de cSEM, como la usa JASP. Difiere del enfoque disjunto de dos etapas en dos aspectos: en la etapa 1 los constructos de orden inferior reciben además rutas estructurales entre sí, y en la etapa 2 un constructo de orden superior reflectivo es un factor común corregido por PLS consistente (cSEM fija allí .PLS_modes = NULL y .disattenuate = TRUE), aunque se haya elegido PLS. Elige el enfoque disjunto para seguir a Sarstedt et al. (2019) y Hair et al. (2021)."
             ],
             "Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; stage 2 uses the stage-1 scores as indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together.": [
                 "Constructos de orden superior (%s): enfoque disjunto en dos etapas (Sarstedt et al., 2019). La etapa 1 estima cada constructo de primer orden, con cada constructo de orden superior reemplazado en el modelo estructural por sus constructos de orden inferior; la etapa 2 usa las puntuaciones de la etapa 1 como indicadores. Las tablas de medida de los constructos de primer orden vienen de la etapa 1; el modelo estructural y los constructos de orden superior, de la etapa 2. Con el bootstrap, ambas etapas se remuestrean juntas."
@@ -749,6 +757,9 @@
             "Outcome": [
                 "Resultado"
             ],
+            "p": [
+                ""
+            ],
             "p (weight)": [
                 "p (peso)"
             ],
@@ -941,6 +952,9 @@
             "substantial": [
                 "sustancial"
             ],
+            "t": [
+                ""
+            ],
             "The bootstrap could not be completed; see the notice at the top of the results.": [
                 "El bootstrap no pudo completarse; vea el aviso al inicio de los resultados."
             ],
@@ -1028,6 +1042,9 @@
             "Tree, top to bottom": [
                 "Árbol, de arriba abajo"
             ],
+            "Two-stage approach": [
+                "Enfoque de dos etapas"
+            ],
             "Uncertainties": [
                 "Incertidumbres"
             ],
@@ -1113,5 +1130,6 @@
                 "ω (AFC)"
             ]
         }
-    }
+    },
+    "code": "es"
 }

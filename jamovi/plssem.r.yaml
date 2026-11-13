@@ -69,6 +69,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -110,6 +111,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -181,6 +183,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -254,6 +257,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -304,6 +308,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -333,6 +338,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -386,6 +392,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -445,6 +452,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -495,6 +503,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -571,6 +580,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -635,6 +645,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -670,6 +681,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -721,6 +733,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -791,6 +804,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -846,6 +860,7 @@ items:
         - formative
         - reflectiveHoc
         - formativeHoc
+        - hocApproach
         - structural
         - estimator
         - innerScheme
@@ -883,6 +898,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -909,6 +925,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -935,6 +952,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme
@@ -956,6 +974,7 @@ items:
       - formative
       - reflectiveHoc
       - formativeHoc
+      - hocApproach
       - structural
       - estimator
       - innerScheme

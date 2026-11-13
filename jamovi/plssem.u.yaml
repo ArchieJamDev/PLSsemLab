@@ -123,6 +123,11 @@ children:
     collapsed: true
     stretchFactor: 1
     children:
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ComboBox
+            name: hocApproach
       - type: Supplier
         label: First-order constructs
         name: hocSupplier

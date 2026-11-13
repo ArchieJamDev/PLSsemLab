@@ -1,5 +1,25 @@
 # PLSsemLab 0.0.0 (development)
 
+## Phase 4: interactions and higher-order constructs (D3)
+
+* **Two-way interactions:** drag two constructs together into a predictor
+  box. The report adds the simple effects at −1, 0 and +1 SD of the
+  moderator, a floodlight plot with the Johnson-Neyman bounds (from the
+  bootstrap) and the f² of the interaction on Kenny's (2018) benchmarks.
+  SRMR-type criteria are not defined with interactions; ρC is computed from
+  the loadings.
+* **Higher-order constructs:** a *Higher-Order Constructs* box builds
+  reflective or formative second-order constructs from first-order ones.
+  * Default: the disjoint two-stage approach (Sarstedt et al., 2019), with
+    both stages resampled together in the bootstrap.
+  * Option: cSEM's own second-order routine, as JASP uses it, whose
+    estimates equal a direct `cSEM::csem()` call. A notice explains the two
+    differences (paths among lower-order constructs in stage 1; a
+    reflective higher-order construct as a common factor with consistent
+    PLS in stage 2).
+* **Path diagram:** drawn with semPlot, with interaction and higher-order
+  nodes, and a *Path Diagram* settings box.
+
 ## Phase 3: structural model and bootstrap (D2, D4)
 
 * **Structural model:** path coefficients and R² with adjusted R², plus

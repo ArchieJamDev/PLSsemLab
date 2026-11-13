@@ -23,6 +23,7 @@ Imports:
     stats,
     utils
 Suggests:
+    rootSolve,
     testthat (>= 3.2.0),
     withr
 Encoding: UTF-8

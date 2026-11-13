@@ -330,6 +330,32 @@
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
     lab_pos <- ifelse(p$kind == "weight", 0.45, ifelse(p$kind == "loading", 0.55, 0.5))
+    # Measurement arrows: the label goes in the middle of the visible gap
+    # between the indicator box and the construct ellipse (qgraph measures
+    # the position between node centres), so it covers neither node.
+    # ES: Flechas de medida: la etiqueta va al medio del tramo visible entre
+    # la caja del indicador y la elipse del constructo (qgraph mide la
+    # posición entre centros), así no tapa ningún nodo.
+    pos_of <- stats::setNames(seq_along(state$vars$name), state$vars$name)
+    for (k in which(p$kind %in% c("weight", "loading"))) {
+        ind <- if (p$kind[k] == "weight") p$lhs[k] else p$rhs[k]
+        con <- if (p$kind[k] == "weight") p$rhs[k] else p$lhs[k]
+        dx <- (gx[pos_of[[con]]] - gx[pos_of[[ind]]]) * ppx
+        dy <- (gy[pos_of[[con]]] - gy[pos_of[[ind]]]) * ppy
+        len <- sqrt(dx^2 + dy^2)
+        if (!is.finite(len) || len <= 0) next
+        ux <- abs(dx) / len
+        uy <- abs(dy) / len
+        t_ind <- min(if (ux > 0) (man_w / 2) / ux else Inf, if (uy > 0) (man_h / 2) / uy else Inf)
+        r_con <- 1 / sqrt((ux / (lat_w / 2))^2 + (uy / (lat_h / 2))^2)
+        if (t_ind + r_con >= len) next
+        # rows of indicators above or below (steep arrows): just outside the
+        # box, where the arrows are spread out
+        # ES: filas de indicadores arriba o abajo: justo fuera de la caja,
+        # donde las flechas están separadas
+        mid <- if (uy > ux) min((t_ind + 11) / len, 0.5) else (t_ind + len - r_con) / 2 / len
+        lab_pos[k] <- if (p$kind[k] == "weight") mid else 1 - mid
+    }
     # paths into the same construct alternate their label position so the
     # labels of converging paths do not stack
     # ES: las rutas hacia un mismo constructo alternan la posición de su

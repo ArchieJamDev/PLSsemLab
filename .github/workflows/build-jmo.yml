@@ -24,7 +24,10 @@ on:
       r_version:
         description: "Build with this R version instead of a flatpak jamovi (jamovi 2.7.x uses 4.5.0); empty = use the flatpak"
         required: false
-        default: ''
+        # Default 4.5.0: a build for another R shows "Installed version needs
+        # to be updated" in jamovi 2.7.
+        # ES: Por defecto 4.5.0: un .jmo de otro R no carga en jamovi 2.7.
+        default: '4.5.0'
       app_version:
         description: 'jamovi version to declare when r_version is used (e.g. 2.7.27)'
         required: false

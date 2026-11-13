@@ -101,8 +101,8 @@
     if (s2) {
         s2spec <- .pl_s2_spec(smodel, paths, options)
         n <- length(s2spec$names)
-        funs$S2 <- safe(function(o) s2spec$fun(o$Estimates$Construct_scores), n)
-        s2spec$original <- s2spec$fun(est$Construct_scores)
+        funs$S2 <- safe(function(o) s2spec$fun(o$Estimates$Construct_scores, o$Information$Data), n)
+        s2spec$original <- s2spec$fun(est$Construct_scores, fit$Information$Data)
     }
 
     list(funs = funs, s2 = s2spec, rint = rint, pairs = pairs, form_ids = form_ids, r2names = r2names,
@@ -141,8 +141,8 @@
                rep("R2", length(endo)), rep("VIFS", length(v_names)),
                rep("hoc_loading", length(unlist(hl))), rep("hoc_weight", length(unlist(hl))),
                rep("hoc_vif", length(unlist(hv))), rep("hoc_rhoC", length(hr)), rep("hoc_ave", length(hr)))
-    fun <- function(scores) {
-        f <- .pl_stage2_fit(scores, m2, options)
+    fun <- function(scores, data) {
+        f <- .pl_stage2_fit(scores, m2, options, data)
         e <- f$Estimates
         B <- e$Path_estimates
         TT <- solve(diag(nrow(B)) - B) - diag(nrow(B))
@@ -160,7 +160,7 @@
           vapply(hr, function(hh) { l <- e$Loading_estimates[hh, hl[[hh]]]; sum(l)^2 / (sum(l)^2 + sum(1 - l^2)) }, 0),
           vapply(hr, function(hh) mean(e$Loading_estimates[hh, hl[[hh]]]^2), 0))
     }
-    list(fun = function(scores) unname(as.numeric(fun(scores))), names = names_all, group = group)
+    list(fun = function(scores, data = NULL) unname(as.numeric(fun(scores, data))), names = names_all, group = group)
 }
 
 # Runs the blocks, calling progress(done, total) after each one (the caller

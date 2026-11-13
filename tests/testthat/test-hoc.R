@@ -36,8 +36,10 @@ runHoc <- function(type = "reflective", ...) {
     a
 }
 
-# Stage 1: IMAG and EXPE take QUAL's paths; stage 2: scores as indicators.
-# ES: Etapa 1: IMAG y EXPE toman las rutas de QUAL; etapa 2: puntuaciones.
+# Stage 1: IMAG and EXPE take QUAL's paths; stage 2: their scores measure
+# QUAL and SAT and LOY keep their own indicators (Sarstedt et al., 2019).
+# ES: Etapa 1: IMAG y EXPE toman las rutas de QUAL; etapa 2: sus
+# puntuaciones miden QUAL y SAT y LOY conservan sus indicadores.
 directTwoStage <- function(mode) {
     d <- hocData()
     m1 <- "SAT <~ sat1 + sat2 + sat3 + sat4
@@ -50,9 +52,10 @@ directTwoStage <- function(mode) {
                      .disattenuate = FALSE)
     s <- as.data.frame(f1$Estimates$Construct_scores)
     names(s) <- paste0("s_", names(s))
+    s <- cbind(d[, c(paste0("sat", 1:4), paste0("loy", 1:4))], s)
     m2 <- "QUAL <~ s_IMAG + s_EXPE
-           SAT <~ s_SAT
-           LOY <~ s_LOY
+           SAT <~ sat1 + sat2 + sat3 + sat4
+           LOY <~ loy1 + loy2 + loy3 + loy4
            SAT ~ QUAL
            LOY ~ SAT + QUAL"
     f2 <- cSEM::csem(s, m2, .PLS_modes = list(QUAL = mode, SAT = "modeA", LOY = "modeA"), .disattenuate = FALSE)
@@ -98,9 +101,10 @@ test_that("the bootstrap resamples both stages and the R code reproduces the mod
     fun <- function(.object) {
         s <- as.data.frame(.object$Estimates$Construct_scores)
         names(s) <- paste0("s_", names(s))
+        s <- cbind(as.data.frame(.object$Information$Data[, c(paste0("sat", 1:4), paste0("loy", 1:4))]), s)
         f2 <- cSEM::csem(s, "QUAL <~ s_IMAG + s_EXPE
-                             SAT <~ s_SAT
-                             LOY <~ s_LOY
+                             SAT <~ sat1 + sat2 + sat3 + sat4
+                             LOY <~ loy1 + loy2 + loy3 + loy4
                              SAT ~ QUAL
                              LOY ~ SAT + QUAL", .PLS_modes = list(QUAL = "modeA", SAT = "modeA", LOY = "modeA"),
                          .disattenuate = FALSE)

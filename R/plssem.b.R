@@ -253,8 +253,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             sfit <- fit$value
             smodel <- model
             if (length(hocs)) {
-                m2 <- .pl_stage2_model(hocs, paths, model$cmap, approach)
-                fit2 <- .pl_capture(.pl_stage2_fit(est$Construct_scores, m2, self$options))
+                m2 <- .pl_stage2_model(hocs, paths, model$cmap, approach, model)
+                fit2 <- .pl_capture(.pl_stage2_fit(est$Construct_scores, m2, self$options, fit$value$Information$Data))
                 if (!is.null(fit2$error))
                     jmvcore::reject(sprintf(txt("errors", "estimation"), fit2$error))
                 sfit <- fit2$value
@@ -1285,14 +1285,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 # Stage 2 of the disjoint two-stage approach.
                 # ES: Etapa 2 del enfoque disjunto en dos etapas.
                 code <- c(code, "",
-                    "# Stage 2: the stage-1 construct scores are the indicators",
+                    "# Stage 2: the stage-1 scores of the dimensions measure the higher-order construct;",
+                    "# the other constructs keep their own indicators (Sarstedt et al., 2019)",
                     "d2 <- as.data.frame(fit$Estimates$Construct_scores)",
                     "names(d2) <- paste0(\"S_\", names(d2))",
+                    if (length(m2$own)) c(
+                        sprintf("own <- as.data.frame(fit$Information$Data[, c(%s)])",
+                                paste0("\"", m2$own, "\"", collapse = ", ")),
+                        if (self$options$indicatorScale == "ordinal")
+                            "for (v in names(own)) own[[v]] <- ordered(own[[v]])  # ordinal: polychoric correlations",
+                        "d2 <- cbind(own, d2)"),
                     "model2 <- \"", m2$syntax, "\"",
                     sprintf("fit2 <- cSEM::csem(d2, model2, .PLS_modes = %s, .disattenuate = FALSE,", modes_of(m2$modes)),
                     sprintf("                   .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme),
                     "cSEM::summarize(fit2)",
-                    "# Bootstrap of a higher-order model: in each resample of stage 1, stage 2 is re-estimated from its scores (.user_funs; see R/bootstrap.R in PLSsemLab)")
+                    "# Bootstrap of a higher-order model: in each resample of stage 1, stage 2 is re-estimated from that resample (.user_funs; see R/bootstrap.R in PLSsemLab)")
             }
             if (self$options$bootstrap) {
                 # The same blocks and seeds as the module: up to 200 resamples

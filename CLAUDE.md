@@ -80,6 +80,12 @@ carry every rule below in full.
   VIF as `diag(solve(Indicator_VCV[block, block]))` (equal for Pearson).
 - rho_C is omega with the model's loadings: PLS inflates it (~+0.07 on
   corp_rep); a one-factor lavaan CFA omega ~ rho_C of PLSc.
+- Disjoint two-stage HOC (Sarstedt et al., 2019, Fig. 4): in stage 2 only
+  the HOC is measured by stage-1 scores; every other construct keeps its
+  own indicators. cSEM's `calculate2ndStage` uses scores for all (and adds
+  paths among LOCs in stage 1): it is the optional "as JASP" approach.
+- cSEM accepts a path to one dimension of a second-order construct without
+  warning and drops it from the reported stage 2: the module rejects it.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in
   jamovi.yaml vs jamovi's `JAMOVI_R_VERSION`), else "Installed version
   needs to be updated".

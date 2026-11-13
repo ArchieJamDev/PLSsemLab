@@ -10,13 +10,16 @@
   the loadings.
 * **Higher-order constructs:** a *Higher-Order Constructs* box builds
   reflective or formative second-order constructs from first-order ones.
-  * Default: the disjoint two-stage approach (Sarstedt et al., 2019), with
-    both stages resampled together in the bootstrap.
+  * Default: the disjoint two-stage approach (Sarstedt et al., 2019): in
+    stage 2 the dimensions' scores measure the higher-order construct and
+    every other construct keeps its own indicators. Both stages are
+    resampled together in the bootstrap.
   * Option: cSEM's own second-order routine, as JASP uses it, whose
-    estimates equal a direct `cSEM::csem()` call. A notice explains the two
-    differences (paths among lower-order constructs in stage 1; a
-    reflective higher-order construct as a common factor with consistent
-    PLS in stage 2).
+    estimates equal a direct `cSEM::csem()` call. A notice explains the three
+    differences (paths among lower-order constructs in stage 1; other
+    constructs measured by their scores in stage 2; a reflective
+    higher-order construct as a common factor with consistent PLS in
+    stage 2).
 * **Path diagram:** drawn with semPlot, with interaction and higher-order
   nodes, and a *Path Diagram* settings box.
 

@@ -110,9 +110,12 @@
 }
 
 # Stage-2 model. Two approaches (option hocApproach):
-#   disjoint - the disjoint two-stage approach: indicators S_Cx (stage-1
-#              scores), the higher-order construct in Mode A (reflective) or
-#              Mode B (formative), no disattenuation;
+#   disjoint - the disjoint two-stage approach (Sarstedt et al., 2019,
+#              p. 202): the higher-order construct is measured by the
+#              stage-1 scores of its dimensions (S_Cx), in Mode A
+#              (reflective) or Mode B (formative); every other construct
+#              keeps its own indicators and mode, as in stage 1; no
+#              disattenuation;
 #   csem     - cSEM's own second-order routine reproduced with a plain call:
 #              indicators named as the stage-1 scores (Cx), the other
 #              constructs renamed Cx_temp, a reflective higher-order
@@ -129,7 +132,7 @@
 # Modo A o B, sin desatenuación) o la rutina de cSEM reproducida con una
 # llamada simple (constructos Cx_temp, orden superior reflectivo como factor
 # común, .PLS_modes = NULL y .disattenuate = TRUE).
-.pl_stage2_model <- function(hocs, paths, cmap, approach = "disjoint") {
+.pl_stage2_model <- function(hocs, paths, cmap, approach = "disjoint", model = NULL) {
     csem_like <- identical(approach, "csem")
     hmap <- stats::setNames(paste0("H", seq_along(hocs)), vapply(hocs, `[[`, "", "label"))
     prefix <- if (csem_like) "" else "S_"
@@ -145,9 +148,23 @@
         readable <- c(readable, sprintf("%s %s %s", h$label, op, paste(h$components, collapse = " + ")))
         modes[[hmap[[h$label]]]] <- if (h$type == "reflective") "modeA" else "modeB"
     }
+    # Other constructs: cSEM's routine measures them by their stage-1 score;
+    # the disjoint approach keeps their own indicators (the stage-1 lines).
+    # ES: Otros constructos: la rutina de cSEM los mide con su puntuación de
+    # la etapa 1; el enfoque disjunto conserva sus propios indicadores.
+    first <- if (!csem_like && !is.null(model)) strsplit(model$syntax, "\n", fixed = TRUE)[[1]] else character(0)
+    own <- character(0)
     for (x in others) {
-        lines <- c(lines, sprintf("%s <~ %s", cmap2[[x]], ind(x)))
-        modes[[cmap2[[x]]]] <- "modeA"
+        if (grepl(.PL_X, x, fixed = TRUE)) next
+        if (csem_like || is.null(model)) {
+            lines <- c(lines, sprintf("%s <~ %s", cmap2[[x]], ind(x)))
+            modes[[cmap2[[x]]]] <- "modeA"
+        } else {
+            m <- first[startsWith(first, paste0(cmap[[x]], " <~ ")) | startsWith(first, paste0(cmap[[x]], " =~ "))]
+            lines <- c(lines, m)
+            modes[[cmap2[[x]]]] <- model$modes[[cmap[[x]]]]
+            own <- c(own, trimws(strsplit(sub("^.*[<=]~", "", m), "+", fixed = TRUE)[[1]]))
+        }
     }
     for (to in unique(paths$to)) {
         from <- paths$from[paths$to == to]
@@ -156,19 +173,30 @@
     }
     list(syntax = paste(lines, collapse = "\n"), modes = if (csem_like) NULL else modes,
          disattenuate = csem_like, hmap = hmap, cmap2 = cmap2, ind = ind, prefix = prefix,
-         approach = approach, readable = readable)
+         approach = approach, readable = readable, own = own)
 }
 
 # Stage-2 data from stage-1 construct scores.
 # ES: Datos de la etapa 2 a partir de las puntuaciones de la etapa 1.
-.pl_stage2_data <- function(scores, m2) {
+# With the disjoint approach the other constructs' indicators come from the
+# stage-1 data (standardised by cSEM; ordinal indicators become ordered
+# again, so cSEM keeps their polychoric correlations).
+# ES: Con el enfoque disjunto los indicadores de los otros constructos
+# vienen de los datos de la etapa 1 (los ordinales vuelven a ser ordenados).
+.pl_stage2_data <- function(scores, m2, data = NULL, ordinal = FALSE) {
     d <- as.data.frame(scores)
     names(d) <- paste0(m2$prefix, colnames(scores))
+    if (length(m2$own)) {
+        x <- as.data.frame(data[, m2$own, drop = FALSE])
+        if (ordinal) for (v in names(x)) x[[v]] <- ordered(x[[v]])
+        d <- cbind(x, d)
+    }
     d
 }
 
-.pl_stage2_fit <- function(scores, m2, options) {
-    suppressWarnings(cSEM::csem(.data = .pl_stage2_data(scores, m2), .model = m2$syntax, .PLS_modes = m2$modes,
+.pl_stage2_fit <- function(scores, m2, options, data = NULL) {
+    d2 <- .pl_stage2_data(scores, m2, data, identical(options$indicatorScale, "ordinal"))
+    suppressWarnings(cSEM::csem(.data = d2, .model = m2$syntax, .PLS_modes = m2$modes,
                                 .disattenuate = m2$disattenuate, .PLS_weight_scheme_inner = options$innerScheme))
 }
 

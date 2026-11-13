@@ -9,8 +9,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             reflective = list(
                 list(label="Construct 1", vars=list())),
             formative = list(),
-            reflectiveHoc = list(),
-            formativeHoc = list(),
+            reflectiveHoc = list(
+                    list(label="Higher-order 1", components=list())),
+            formativeHoc = list(
+                    list(label="Higher-order 2", components=list())),
             hocApproach = "disjoint",
             structural = list(),
             estimator = "pls",
@@ -95,7 +97,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..reflectiveHoc <- jmvcore::OptionArray$new(
                 "reflectiveHoc",
                 reflectiveHoc,
-                default=list(),
+                default=list(
+                    list(label="Higher-order 1", components=list())),
                 template=jmvcore::OptionGroup$new(
                     "reflectiveHoc",
                     NULL,
@@ -109,7 +112,8 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..formativeHoc <- jmvcore::OptionArray$new(
                 "formativeHoc",
                 formativeHoc,
-                default=list(),
+                default=list(
+                    list(label="Higher-order 2", components=list())),
                 template=jmvcore::OptionGroup$new(
                     "formativeHoc",
                     NULL,
@@ -1633,8 +1637,10 @@ plssem <- function(
     reflective = list(
                 list(label="Construct 1", vars=list())),
     formative = list(),
-    reflectiveHoc = list(),
-    formativeHoc = list(),
+    reflectiveHoc = list(
+                    list(label="Higher-order 1", components=list())),
+    formativeHoc = list(
+                    list(label="Higher-order 2", components=list())),
     hocApproach = "disjoint",
     structural = list(),
     estimator = "pls",

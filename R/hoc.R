@@ -50,7 +50,10 @@
         for (item in options[[paste0(type, "Hoc")]]) {
             label <- trimws(if (is.null(item$label)) "" else as.character(item$label))
             comps <- unique(as.character(unlist(item$components)))
-            if (!nzchar(label) && !length(comps)) next
+            # A row without components is an empty box (the panel opens with
+            # one), not a construct.
+            # ES: Una fila sin componentes es una caja vacía, no un constructo.
+            if (!length(comps)) next
             out[[length(out) + 1]] <- list(label = label, components = comps, type = type)
         }
     }

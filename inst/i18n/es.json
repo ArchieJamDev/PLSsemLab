@@ -61,6 +61,9 @@
             "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal.": [
                 "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos lleve la fiabilidad compuesta o la AVE de su constructo por encima de su umbral; los indicadores por debajo de 0.40 son candidatos a eliminarse."
             ],
+            "%s (formative): weights of its dimensions %s.": [
+                "%s (formativo): pesos de sus dimensiones %s."
+            ],
             "%s (standardized)": [
                 "%s (estandarizado)"
             ],
@@ -70,8 +73,29 @@
             "%s, moderator (standardized)": [
                 "%s, moderador (estandarizado)"
             ],
+            "%s: AVE %s, below 0.50: on average the higher-order construct explains less than half of the variance of its dimensions.": [
+                "%s: AVE %s, menor de 0.50: en promedio, el constructo de orden superior explica menos de la mitad de la varianza de sus dimensiones."
+            ],
+            "%s: composite reliability %s and AVE %s, within the usual thresholds (Sarstedt et al., 2019).": [
+                "%s: fiabilidad compuesta %s y AVE %s, dentro de los umbrales habituales (Sarstedt et al., 2019)."
+            ],
+            "%s: composite reliability %s, above 0.95. In a higher-order construct this means its dimensions are nearly interchangeable: they overlap about as much as the items of a single scale. With two dimensions it happens easily, because the reliability rests on just two loadings. Ask whether the theory needs the dimensions as distinct facets; if it does not, a single construct may describe the data as well.": [
+                "%s: fiabilidad compuesta %s, mayor de 0.95. En un constructo de orden superior esto significa que sus dimensiones son casi intercambiables: se solapan tanto como los ítems de una sola escala. Con dos dimensiones ocurre con facilidad, porque la fiabilidad descansa en solo dos cargas. Pregúntese si la teoría necesita las dimensiones como facetas distintas; si no, un solo constructo puede describir los datos igual de bien."
+            ],
+            "%s: composite reliability %s, below 0.70: its dimensions do not hang together as one concept.": [
+                "%s: fiabilidad compuesta %s, menor de 0.70: sus dimensiones no se sostienen como un solo concepto."
+            ],
+            "%s: dimensions with a loading below 0.708: %s. A weak dimension shares little with the others; ask whether it belongs to the same higher-order concept.": [
+                "%s: dimensiones con una carga menor de 0.708: %s. Una dimensión débil comparte poco con las demás; pregúntese si pertenece al mismo concepto de orden superior."
+            ],
+            "%s: every dimension loads 0.708 or more on it (%s).": [
+                "%s: todas sus dimensiones cargan 0.708 o más (%s)."
+            ],
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
+            ],
+            "%s: VIF of 3 or more among its dimensions (%s); their weights may be unstable.": [
+                "%s: VIF de 3 o más entre sus dimensiones (%s); sus pesos pueden ser inestables."
             ],
             "+1 SD": [
                 "+1 DE"
@@ -346,6 +370,15 @@
             "Discriminant validity (HTMT) compares pairs of reflective constructs; the model has only one.": [
                 "La validez discriminante (HTMT) compara pares de constructos reflectivos; el modelo tiene solo uno."
             ],
+            "Discriminant validity in stage 2: every HTMT between a higher-order construct and the other reflective constructs is below 0.85 (%s).": [
+                "Validez discriminante en la etapa 2: todos los HTMT entre un constructo de orden superior y los demás constructos reflectivos son menores de 0.85 (%s)."
+            ],
+            "Discriminant validity in stage 2: HTMT of 0.85 or more in %s. The data barely distinguish the higher-order construct from these constructs.": [
+                "Validez discriminante en la etapa 2: HTMT de 0.85 o más en %s. Los datos apenas distinguen el constructo de orden superior de estos constructos."
+            ],
+            "Discriminant validity of higher-order constructs (HTMT, stage 2)": [
+                "Validez discriminante de los constructos de orden superior (HTMT, etapa 2)"
+            ],
             "Discriminant validity: %d of %d pair(s) of reflective constructs have HTMT below 0.85.": [
                 "Validez discriminante: %d de %d par(es) de constructos reflectivos tienen un HTMT menor de 0.85."
             ],
@@ -481,6 +514,9 @@
             "Higher-Order Constructs": [
                 "Constructos de orden superior"
             ],
+            "Higher-order constructs": [
+                "Constructos de orden superior"
+            ],
             "Higher-order constructs (%s): cSEM's second-order routine, as JASP uses it. It differs from the disjoint two-stage approach in three ways: in stage 1 the lower-order constructs also get structural paths among themselves; in stage 2 the other constructs are measured by their stage-1 scores instead of their own indicators; and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021).": [
                 "Constructos de orden superior (%s): rutina de segundo orden de cSEM, como la usa JASP. Difiere del enfoque disjunto de dos etapas en tres aspectos: en la etapa 1 los constructos de orden inferior reciben además rutas estructurales entre sí; en la etapa 2 los demás constructos se miden con su puntuación de la etapa 1 en lugar de sus propios indicadores; y en la etapa 2 un constructo de orden superior reflectivo es un factor común corregido por PLS consistente (cSEM fija allí .PLS_modes = NULL y .disattenuate = TRUE), aunque se haya elegido PLS. Elija el enfoque disjunto para seguir a Sarstedt et al. (2019) y Hair et al. (2021)."
             ],
@@ -492,6 +528,12 @@
             ],
             "Higher-order constructs are estimated with PLS in two stages; consistent PLS with higher-order constructs is not available in this version. Choose PLS as the estimator.": [
                 "Los constructos de orden superior se estiman con PLS en dos etapas; PLS consistente con constructos de orden superior no está disponible en esta versión. Elija PLS como estimador."
+            ],
+            "Higher-order constructs: %d of %d pair(s) with other reflective constructs have HTMT below 0.85 (stage 2).": [
+                "Constructos de orden superior: %d de %d par(es) con otros constructos reflectivos tienen un HTMT menor de 0.85 (etapa 2)."
+            ],
+            "Higher-order constructs: %d of %d reflective one(s) have composite reliability between 0.70 and 0.95.": [
+                "Constructos de orden superior: %d de %d reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95."
             ],
             "How to read a moderation": [
                 "Cómo leer una moderación"
@@ -732,6 +774,9 @@
             ],
             "Not computable: %s": [
                 "No computable: %s"
+            ],
+            "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it.": [
+                "No calculable: la rutina de segundo orden de cSEM mide los demás constructos con una sola puntuación en la etapa 2, así que su HTMT con el constructo de orden superior no está definido. Elija el enfoque disjunto para evaluarlo."
             ],
             "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
                 "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
@@ -994,6 +1039,9 @@
             "The higher-order construct '%s' needs at least two lower-order constructs. Drag two or more first-order constructs into it.": [
                 "El constructo de orden superior '%s' necesita al menos dos constructos de orden inferior. Arrastre a él dos o más constructos de primer orden."
             ],
+            "The HTMT table of the higher-order constructs checks each reflective higher-order construct against the other reflective constructs of the model, in stage 2, where it is measured by the scores of its dimensions (Sarstedt et al., 2019, see references). It is never compared with its own dimensions, which correlate highly by design. The thresholds are the usual ones (0.85; 0.90 for conceptually similar constructs), and with the bootstrap the test is the upper bound.": [
+                "La tabla HTMT de los constructos de orden superior compara cada constructo de orden superior reflectivo con los demás constructos reflectivos del modelo, en la etapa 2, donde se mide con las puntuaciones de sus dimensiones (Sarstedt et al., 2019, vea las referencias). Nunca se compara con sus propias dimensiones, que por diseño correlacionan alto. Los umbrales son los habituales (0.85; 0.90 para constructos conceptualmente similares), y con el bootstrap la prueba es el límite superior."
+            ],
             "The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs.": [
                 "La interacción %s tiene más de dos constructos. PLSsemLab estima interacciones de dos vías; ármela con dos constructos."
             ],
@@ -1111,11 +1159,23 @@
             "With the bootstrap, all %d paths are significant at %s%%: their intervals exclude 0.": [
                 "Con el bootstrap, las %d rutas son significativas al %s%%: sus intervalos excluyen el 0."
             ],
+            "With the bootstrap, every upper bound of these HTMT values is below 0.85: discriminant validity is established for the %d pair(s).": [
+                "Con el bootstrap, todos los límites superiores de estos HTMT son menores de 0.85: la validez discriminante queda establecida para los %d par(es)."
+            ],
             "With the bootstrap, the upper bound of HTMT reaches 0.85 or more for %s: discriminant validity is not established for these pairs, even if the estimate is lower.": [
                 "Con el bootstrap, el límite superior del HTMT alcanza 0.85 o más en %s: no hay validez discriminante establecida para estos pares, aunque la estimación sea menor."
             ],
             "With the bootstrap, the upper bound of HTMT stays below 0.85 for all %d pairs: discriminant validity is established.": [
                 "Con el bootstrap, el límite superior del HTMT queda por debajo de 0.85 en los %d pares: la validez discriminante queda establecida."
+            ],
+            "With the bootstrap, the upper bound of the HTMT reaches 0.85 or more in %s: discriminant validity is not established for these pairs.": [
+                "Con el bootstrap, el límite superior del HTMT alcanza 0.85 o más en %s: no hay validez discriminante establecida para estos pares."
+            ],
+            "With the bootstrap, these loadings of dimensions are not significant: %s.": [
+                "Con el bootstrap, estas cargas de dimensiones no son significativas: %s."
+            ],
+            "With the bootstrap, these weights of dimensions are not significant: %s. Keep a dimension whose loading is 0.50 or more: its absolute contribution matters even if its relative one does not (Hair et al., 2019).": [
+                "Con el bootstrap, estos pesos de dimensiones no son significativos: %s. Conserve una dimensión cuya carga sea de 0.50 o más: su contribución absoluta importa aunque la relativa no (Hair et al., 2019)."
             ],
             "ρA": [
                 "ρA"

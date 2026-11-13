@@ -132,15 +132,23 @@
         hl[[hh]] <- ids
         if (h$type == "formative") hv[[hh]] <- ids else hr <- c(hr, hh)
     }
+    # HTMT of the higher-order constructs with the other reflective
+    # constructs (disjoint approach only: cSEM's routine measures them by one
+    # score in stage 2).
+    # ES: HTMT de los constructos de orden superior con los otros reflectivos
+    # (solo enfoque disjunto).
+    hp <- if (identical(m2$approach, "disjoint")) .pl_hoc_htmt_pairs(hocs, smodel$blocks, paths, m2) else NULL
+    h_names <- if (is.null(hp)) character(0) else paste(hp$a, hp$b, sep = "~")
     names_all <- c(p_names, e_names, e_names, endo, v_names,
                    unlist(lapply(names(hl), function(hh) paste(hh, "=~", hl[[hh]]))),
                    unlist(lapply(names(hl), function(hh) paste(hh, "<~", hl[[hh]]))),
                    unlist(lapply(names(hv), function(hh) paste(hh, hv[[hh]], sep = "~"))),
-                   hr, hr)
+                   hr, hr, h_names)
     group <- c(rep("path", length(p_names)), rep("total", length(e_names)), rep("indirect", length(e_names)),
                rep("R2", length(endo)), rep("VIFS", length(v_names)),
                rep("hoc_loading", length(unlist(hl))), rep("hoc_weight", length(unlist(hl))),
-               rep("hoc_vif", length(unlist(hv))), rep("hoc_rhoC", length(hr)), rep("hoc_ave", length(hr)))
+               rep("hoc_vif", length(unlist(hv))), rep("hoc_rhoC", length(hr)), rep("hoc_ave", length(hr)),
+               rep("hoc_htmt", length(h_names)))
     fun <- function(scores, data) {
         f <- .pl_stage2_fit(scores, m2, options, data)
         e <- f$Estimates
@@ -158,7 +166,8 @@
           unlist(lapply(names(hl), function(hh) e$Weight_estimates[hh, hl[[hh]]])),
           unlist(lapply(names(hv), function(hh) diag(solve(e$Indicator_VCV[hv[[hh]], hv[[hh]], drop = FALSE])))),
           vapply(hr, function(hh) { l <- e$Loading_estimates[hh, hl[[hh]]]; sum(l)^2 / (sum(l)^2 + sum(1 - l^2)) }, 0),
-          vapply(hr, function(hh) mean(e$Loading_estimates[hh, hl[[hh]]]^2), 0))
+          vapply(hr, function(hh) mean(e$Loading_estimates[hh, hl[[hh]]]^2), 0),
+          if (length(h_names)) .pl_hoc_htmt(f, hp))
     }
     list(fun = function(scores, data = NULL) unname(as.numeric(fun(scores, data))), names = names_all, group = group)
 }
@@ -276,6 +285,13 @@
         out$hoc_vif <- part("hoc_vif")[, c("name", "lower", "upper")]
         out$hoc_rhoC <- part("hoc_rhoC")[, c("name", "lower", "upper")]
         out$hoc_ave <- part("hoc_ave")[, c("name", "lower", "upper")]
+        # one-sided 95% upper bound of the stage-2 HTMT (the 95th percentile)
+        # ES: límite superior unilateral al 95% del HTMT de la etapa 2
+        if (any(g == "hoc_htmt")) {
+            q90 <- cSEM::infer(merged, .quantity = "CI_percentile", .alpha = 0.10)$S2$CI_percentile
+            out$hoc_htmt <- data.frame(name = spec$s2$names[g == "hoc_htmt"], upper = unname(q90[2, g == "hoc_htmt"]),
+                                       stringsAsFactors = FALSE)
+        }
     }
     # HTMT: the one-sided 95% upper bound of Henseler et al. (2015), the 95th
     # percentile, read from cSEM's 90% two-sided interval.

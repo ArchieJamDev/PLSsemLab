@@ -264,3 +264,47 @@
     }
     list(measurement = do.call(rbind, rows), reliability = if (length(rel)) do.call(rbind, rel) else NULL)
 }
+
+# Discriminant validity of the higher-order constructs in stage 2 (Sarstedt
+# et al., 2019): HTMT between each reflective higher-order construct and
+# every other reflective construct of the structural model, never with its
+# own dimensions (they correlate highly by design). Returns a data.frame
+# (hoc, other, a, b) with the stage-2 names a and b.
+# ES: Validez discriminante de los constructos de orden superior en la
+# etapa 2: HTMT entre cada constructo de orden superior reflectivo y cada
+# otro constructo reflectivo del modelo estructural, nunca con sus propias
+# dimensiones.
+.pl_hoc_htmt_pairs <- function(hocs, blocks, paths, m2) {
+    refl_h <- Filter(function(h) h$type == "reflective", hocs)
+    if (!length(refl_h)) return(NULL)
+    dims <- unlist(lapply(hocs, `[[`, "components"))
+    in_model <- unique(c(paths$from, paths$to))
+    refl_b <- vapply(Filter(function(b) b$type == "reflective", blocks), `[[`, "", "label")
+    others <- c(setdiff(intersect(refl_b, in_model), dims), vapply(refl_h, `[[`, "", "label"))
+    rows <- list()
+    for (h in refl_h) for (o in others) {
+        if (identical(o, h$label)) next
+        if (o %in% vapply(refl_h, `[[`, "", "label") &&
+            match(o, vapply(refl_h, `[[`, "", "label")) < match(h$label, vapply(refl_h, `[[`, "", "label"))) next
+        rows[[length(rows) + 1]] <- data.frame(hoc = h$label, other = o,
+                                               a = if (is.null(m2)) NA_character_ else m2$cmap2[[h$label]],
+                                               b = if (is.null(m2)) NA_character_ else m2$cmap2[[o]],
+                                               stringsAsFactors = FALSE)
+    }
+    if (length(rows)) do.call(rbind, rows) else NULL
+}
+
+# HTMT and HTMT2 of those pairs in a stage-2 fit (NA when not computable).
+# ES: HTMT y HTMT2 de esos pares en un ajuste de la etapa 2.
+.pl_hoc_htmt <- function(fit2, pairs, type = "htmt") {
+    m <- tryCatch(cSEM::calculateHTMT(fit2, .type_htmt = type, .only_common_factors = FALSE, .absolute = FALSE),
+                  error = function(e) NULL)
+    if (is.list(m)) m <- m$htmts
+    vapply(seq_len(nrow(pairs)), function(k) {
+        ia <- match(pairs$a[k], rownames(m))
+        ib <- match(pairs$b[k], rownames(m))
+        if (is.null(m) || is.na(ia) || is.na(ib)) return(NA_real_)
+        v <- if (ia > ib) m[ia, ib] else m[ib, ia]
+        if (is.finite(v)) v else NA_real_
+    }, 0)
+}

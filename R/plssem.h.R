@@ -10,9 +10,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 list(label="Construct 1", vars=list())),
             formative = list(),
             reflectiveHoc = list(
-                    list(label="Higher-order 1", components=list())),
+                list(label="Higher-order 1", components=list())),
             formativeHoc = list(
-                    list(label="Higher-order 2", components=list())),
+                list(label="Higher-order 2", components=list())),
             hocApproach = "disjoint",
             structural = list(),
             estimator = "pls",
@@ -470,6 +470,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         hocGuide = function() private$.items[["hocGuide"]],
         hocMeasurement = function() private$.items[["hocMeasurement"]],
         hocReliability = function() private$.items[["hocReliability"]],
+        hocHtmt = function() private$.items[["hocHtmt"]],
         structuralGuide = function() private$.items[["structuralGuide"]],
         f2 = function() private$.items[["f2"]],
         vifStruct = function() private$.items[["vifStruct"]],
@@ -1142,6 +1143,60 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="assessment", 
                         `title`="Assessment", 
                         `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="hocHtmt",
+                title="Discriminant validity of higher-order constructs (HTMT, stage 2)",
+                rows=0,
+                refs=list(
+                    "sarstedt_2019",
+                    "henseler_2015"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="c1", 
+                        `title`="Higher-order construct", 
+                        `type`="text"),
+                    list(
+                        `name`="sep", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="c2", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="htmt", 
+                        `title`="HTMT", 
+                        `type`="number"),
+                    list(
+                        `name`="htmtUpper", 
+                        `title`="Upper bound", 
+                        `type`="number", 
+                        `superTitle`="HTMT", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="htmt2", 
+                        `title`="HTMT2", 
+                        `type`="number"),
+                    list(
+                        `name`="assessment", 
+                        `title`="Assessment (HTMT)", 
+                        `type`="text"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="structuralGuide",
@@ -1609,6 +1664,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$hocGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$hocMeasurement} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$hocReliability} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$hocHtmt} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$structuralGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
@@ -1638,9 +1694,9 @@ plssem <- function(
                 list(label="Construct 1", vars=list())),
     formative = list(),
     reflectiveHoc = list(
-                    list(label="Higher-order 1", components=list())),
+                list(label="Higher-order 1", components=list())),
     formativeHoc = list(
-                    list(label="Higher-order 2", components=list())),
+                list(label="Higher-order 2", components=list())),
     hocApproach = "disjoint",
     structural = list(),
     estimator = "pls",

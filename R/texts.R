@@ -121,6 +121,7 @@
             omega_two = .("A one-factor model with two indicators is not identified, so \u03c9 cannot be estimated; with two indicators, alpha (Spearman-Brown) is the usual reliability estimate."),
             omega_nonconverged = .("The one-factor CFA did not converge, so \u03c9 cannot be estimated."),
             omega_heywood = .("The one-factor CFA gave a standardized loading of 1 or more (a Heywood case), so \u03c9 is not reported."),
+            hoc_htmt_csem = .("Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it."),
             htmt_single = .("%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs."),
             htmt_signs = .("Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis."),
             failed = .("Not computable: %s"),
@@ -193,6 +194,7 @@
         # ES: Guías "Cómo leer".
         guide = list(
             hoc = .("A higher-order construct is measured by other constructs, its dimensions (for example, psychological capital by hope, efficacy, resilience and optimism). In the disjoint two-stage approach, stage 1 estimates the dimensions as ordinary constructs, linked to the constructs the higher-order construct is related to, and stage 2 treats their scores as the indicators of the higher-order construct, while the other constructs keep their own indicators (Sarstedt et al., 2019, see references). Read this table as a measurement table one level up: for a reflective higher-order construct, the loadings of its dimensions, its reliability and its AVE, judged on the usual thresholds; for a formative one, the weights of its dimensions, their significance and their VIF. The dimensions themselves are assessed in the first-order tables. Common misreading: drawing structural paths from the dimensions as well as from the higher-order construct; the dimensions only reach the rest of the model through it."),
+            hoc_htmt = .("The HTMT table of the higher-order constructs checks each reflective higher-order construct against the other reflective constructs of the model, in stage 2, where it is measured by the scores of its dimensions (Sarstedt et al., 2019, see references). It is never compared with its own dimensions, which correlate highly by design. The thresholds are the usual ones (0.85; 0.90 for conceptually similar constructs), and with the bootstrap the test is the upper bound."),
             moderation = .("An interaction X \u00d7 M asks whether the effect of X on the outcome depends on the moderator M. Its coefficient is the change in that effect when M rises by one standard deviation. The table gives the simple effect of X at three values of M (one standard deviation below the mean, the mean and one above), and the plot draws the same idea twice: the simple slopes (left) and the floodlight analysis (right), the simple effect over the whole observed range of M with its bootstrap interval. The Johnson-Neyman points mark where that interval starts or stops including 0. The first construct of the term is the predictor and the second the moderator, in the order the term was built in the panel. Common misreading: concluding there is moderation because the simple effect is significant at one value of M; moderation is the interaction coefficient itself, and its interval must exclude 0."),
             moderation_f2 = .("The f\u00b2 of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small."),
             model = .("Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number."),
@@ -225,6 +227,21 @@
         # ES: Fragmentos de interpretación.
         interp = list(
             title_measurement = .("Measurement model"),
+            title_hoc = .("Higher-order constructs"),
+            hoc_loadings_ok = .("%s: every dimension loads 0.708 or more on it (%s)."),
+            hoc_loadings_low = .("%s: dimensions with a loading below 0.708: %s. A weak dimension shares little with the others; ask whether it belongs to the same higher-order concept."),
+            hoc_loadings_ns = .("With the bootstrap, these loadings of dimensions are not significant: %s."),
+            hoc_rel_ok = .("%s: composite reliability %s and AVE %s, within the usual thresholds (Sarstedt et al., 2019)."),
+            hoc_rel_high = .("%s: composite reliability %s, above 0.95. In a higher-order construct this means its dimensions are nearly interchangeable: they overlap about as much as the items of a single scale. With two dimensions it happens easily, because the reliability rests on just two loadings. Ask whether the theory needs the dimensions as distinct facets; if it does not, a single construct may describe the data as well."),
+            hoc_rel_low = .("%s: composite reliability %s, below 0.70: its dimensions do not hang together as one concept."),
+            hoc_ave_low = .("%s: AVE %s, below 0.50: on average the higher-order construct explains less than half of the variance of its dimensions."),
+            hoc_weights = .("%s (formative): weights of its dimensions %s."),
+            hoc_weights_ns = .("With the bootstrap, these weights of dimensions are not significant: %s. Keep a dimension whose loading is 0.50 or more: its absolute contribution matters even if its relative one does not (Hair et al., 2019)."),
+            hoc_vif_high = .("%s: VIF of 3 or more among its dimensions (%s); their weights may be unstable."),
+            hoc_htmt_ok = .("Discriminant validity in stage 2: every HTMT between a higher-order construct and the other reflective constructs is below 0.85 (%s)."),
+            hoc_htmt_high = .("Discriminant validity in stage 2: HTMT of 0.85 or more in %s. The data barely distinguish the higher-order construct from these constructs."),
+            hoc_htmt_ci_ok = .("With the bootstrap, every upper bound of these HTMT values is below 0.85: discriminant validity is established for the %d pair(s)."),
+            hoc_htmt_ci_high = .("With the bootstrap, the upper bound of the HTMT reaches 0.85 or more in %s: discriminant validity is not established for these pairs."),
             title_structural = .("Structural model"),
             title_next = .("What to do now"),
             low_loadings = .("%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal."),
@@ -281,6 +298,8 @@
             vif = .("Formative indicators: the largest VIF is %s (%s)."),
             no_inference = .("No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box."),
             paths_sig = .("Structural model: %d of %d paths are significant at %s%%."),
+            hoc_rel = .("Higher-order constructs: %d of %d reflective one(s) have composite reliability between 0.70 and 0.95."),
+            hoc_htmt = .("Higher-order constructs: %d of %d pair(s) with other reflective constructs have HTMT below 0.85 (stage 2)."),
             boot_basis = .("Intervals from %d admissible of %d bootstrap resamples (seed %d); a path whose interval only just excludes 0 can change with another seed."),
             admissible_no = .("The estimates are not admissible; do not interpret them until the cause is fixed.")
         ),

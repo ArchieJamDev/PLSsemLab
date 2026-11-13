@@ -627,6 +627,57 @@ items:
         title: Assessment
         type: text
 
+
+  # HTMT of each reflective higher-order construct with the other reflective
+  # constructs, in stage 2 (rows laid out in .init()).
+  # ES: HTMT de cada constructo de orden superior reflectivo con los otros
+  # constructos reflectivos, en la etapa 2.
+  - name: hocHtmt
+    title: Discriminant validity of higher-order constructs (HTMT, stage 2)
+    type: Table
+    rows: 0
+    refs:
+      - sarstedt_2019
+      - henseler_2015
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootstrap
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: c1
+        title: Higher-order construct
+        type: text
+      - name: sep
+        title: ''
+        type: text
+      - name: c2
+        title: Construct
+        type: text
+      - name: htmt
+        title: HTMT
+        type: number
+      - name: htmtUpper
+        title: Upper bound
+        type: number
+        superTitle: HTMT
+        visible: (bootstrap)
+      - name: htmt2
+        title: HTMT2
+        type: number
+      - name: assessment
+        title: Assessment (HTMT)
+        type: text
   - name: structuralGuide
     title: How to read effect sizes, collinearity and effects
     type: Html

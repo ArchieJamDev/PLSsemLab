@@ -90,7 +90,7 @@
             if (h$type == "formative")
                 add(node[[cpt]], node[[h$label]], r$weight, "hoc", sig_of(paste(hh, "<~", ind), "hoc_weights"))
             else
-                add(node[[h$label]], node[[cpt]], r$loading, "hoc")
+                add(node[[h$label]], node[[cpt]], r$loading, "hoc", sig_of(paste(hh, "=~", ind), "hoc_loadings"))
         }
     }
     pars <- if (length(pars)) do.call(rbind, pars) else
@@ -177,6 +177,15 @@
                 if (length(pr)) mean(order_y[pr]) else 0
             }, 0)
             idx <- idx[order(-key)]
+        } else {
+            # first column: constructs that feed the same constructs stay
+            # together (e.g. the dimensions of a higher-order construct), so
+            # no other path runs between them
+            # ES: primera columna: los constructos que alimentan a los mismos
+            # quedan juntos (p. ej. las dimensiones de un constructo de orden
+            # superior), para que ninguna otra ruta pase entre ellos
+            succ <- vapply(nodes$label[idx], function(cl) paste(sort(simple$to[simple$from == cl]), collapse = "|"), "")
+            idx <- idx[order(match(succ, unique(succ)))]
         }
         idx <- c(idx[nodes$type[idx] != "interaction"], idx[nodes$type[idx] == "interaction"])
         # the first construct of a column gets its row of indicators above,
@@ -300,7 +309,7 @@
     # converge on the construct the labels would pile up), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
-    lab_pos <- ifelse(p$kind == "weight", 0.27, ifelse(p$kind == "loading", 0.73, 0.5))
+    lab_pos <- ifelse(p$kind == "weight", 0.36, ifelse(p$kind == "loading", 0.64, 0.5))
     # paths into the same construct alternate their label position so the
     # labels of converging paths do not stack
     # ES: las rutas hacia un mismo constructo alternan la posición de su

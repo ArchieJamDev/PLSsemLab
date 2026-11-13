@@ -20,6 +20,12 @@
     constructs measured by their scores in stage 2; a reflective
     higher-order construct as a common factor with consistent PLS in
     stage 2).
+  * Discriminant validity of each reflective higher-order construct with the
+    other reflective constructs: HTMT, HTMT2 and the bootstrap upper bound in
+    stage 2, never against its own dimensions. With cSEM's routine the rows
+    stay as "Not computable".
+  * The interpretation and the key findings report the higher-order
+    constructs (loadings or weights, reliability, AVE, VIF, HTMT).
 * **Path diagram:** drawn with semPlot, with interaction and higher-order
   nodes, and a *Path Diagram* settings box.
 

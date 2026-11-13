@@ -66,6 +66,16 @@ hoc <- cls$new(options = opts$new(reflective = list(list(label = "SAT", vars = p
                                   structural = list(list("QUAL"), list("SAT", "QUAL"), list(), list(), list()),
                                   bootstrap = TRUE, bootReps = 100), data = sat)
 hoc$init(); hoc$run(); draw(hoc, "diagram-hoc-LR.png")
+# Archie's bank model: Superior (Qual + Trust) and Comp predict Loy
+# ES: El modelo bancario de Archie: Superior (Qual + Trust) y Comp predicen Loy
+bk <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),
+                                                    list(label = "Comp", vars = paste0("comp_", 1:3))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 reflectiveHoc = list(list(label = "Superior", components = list("Qual", "Trust"))),
+                                 structural = list(list(), list("Superior", "Comp"), list(), list(), list()),
+                                 bootstrap = TRUE, bootReps = 100), data = d)
+bk$init(); bk$run(); draw(bk, "diagram-bank-hoc-LR.png")
+print(bk$results$hocHtmt$asDF)
 it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "SAT", vars = paste0("sat", 1:4)),
                                                     list(label = "LOY", vars = paste0("loy", 1:4))),
                                  structural = list(list(), list(), list("SAT", "IMAG", c("SAT", "IMAG"))),

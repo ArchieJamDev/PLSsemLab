@@ -179,3 +179,18 @@ test_that("cSEM's second-order routine, as an option, equals cSEM's own estimate
     pb <- b$results$paths$asDF
     expect_gt(abs(pb$estimate[pb$from == "QUAL" & pb$to == "SAT"] - p$estimate[p$from == "QUAL" & p$to == "SAT"]), 1e-4)
 })
+
+test_that("stage-2 HTMT of a higher-order construct equals cSEM on the stage-2 model", {
+    a <- runHoc("reflective")
+    ref <- directTwoStage("modeA")
+    m <- cSEM::calculateHTMT(ref$f2, .only_common_factors = FALSE, .absolute = FALSE)$htmts
+    h <- a$results$hocHtmt$asDF
+    expect_equal(h$c2, c("SAT", "LOY"))
+    expect_equal(h$htmt, c(m["SAT", "QUAL"], m["LOY", "QUAL"]), tolerance = 1e-10)
+    expect_match(paste(gsub("<[^>]+>", " ", a$results$interpretation$content)), "stage 2")
+    # cSEM's routine: rows stay, not computable
+    # ES: rutina de cSEM: las filas se quedan, no calculable
+    b <- runHoc("reflective", hocApproach = "csem")
+    expect_equal(nrow(b$results$hocHtmt$asDF), 2)
+    expect_true(all(is.na(b$results$hocHtmt$asDF$htmt) | b$results$hocHtmt$asDF$htmt == ""))
+})

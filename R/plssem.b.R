@@ -98,11 +98,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (h$type == "reflective")
                     self$results$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
             }
+            hp <- if (length(hocs)) .pl_hoc_htmt_pairs(hocs, blocks, paths, NULL) else NULL
+            for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
+                self$results$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
+                                            values = list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k]))
             if (!length(hocs))
-                for (name in c("hocGuide", "hocMeasurement", "hocReliability"))
+                for (name in c("hocGuide", "hocMeasurement", "hocReliability", "hocHtmt"))
                     self$results[[name]]$setVisible(FALSE)
             else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
                 self$results$hocReliability$setVisible(FALSE)
+            if (length(hocs) && is.null(hp))
+                self$results$hocHtmt$setVisible(FALSE)
 
             # Measurement-model quality (phase 2): rows follow the constructs
             # in the boxes; a table that does not apply to the model (no
@@ -262,6 +268,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 smodel$mcmap <- model$cmap
                 smodel$m2 <- m2
                 smodel$hocs <- hocs
+                smodel$blocks <- blocks
                 admissible <- admissible && !any(unlist(cSEM::verify(sfit)))
             }
             sest <- sfit$Estimates
@@ -277,7 +284,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.fillHtmt(quality, txt)
             private$.fillFornell(quality, txt)
             private$.fillVif(quality, txt)
-            hocq <- if (length(hocs)) private$.fillHoc(sfit, hocs, smodel, txt) else NULL
+            hocq <- if (length(hocs)) private$.fillHoc(sfit, hocs, smodel, txt, paths) else NULL
             structural <- private$.fillStructural(sfit, paths, smodel, txt)
 
             # Bootstrap (phase 3): only when "Run bootstrap" is ticked.
@@ -338,7 +345,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
                                     mod, hocq)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel)
+                                smodel, hocq)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
             private$.reproducibility(lang, smodel, prep, blocks, paths)
@@ -858,8 +865,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # Measurement of the higher-order constructs (stage 2): one row per
         # lower-order construct, and reliability of the reflective ones.
         # ES: Medida de los constructos de orden superior (etapa 2).
-        .fillHoc = function(sfit, hocs, smodel, txt) {
+        .fillHoc = function(sfit, hocs, smodel, txt, paths) {
             q <- .pl_hoc_quality(sfit, hocs, smodel$m2)
+            q$htmt <- private$.fillHocHtmt(sfit, hocs, smodel, txt, paths)
             for (k in seq_len(nrow(q$measurement))) {
                 r <- q$measurement[k, ]
                 band <- if (r$type == "formative") .pl_band_vif(r$vif) else NA_character_
@@ -879,7 +887,52 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             q
         },
 
+        # Stage-2 HTMT of the higher-order constructs. cSEM's routine measures
+        # the other constructs by a single score in stage 2, so the HTMT is
+        # not defined there (Category B: rows stay, footnote).
+        # ES: HTMT de la etapa 2 de los constructos de orden superior. La
+        # rutina de cSEM mide los otros constructos con una sola puntuación,
+        # así que ahí el HTMT no está definido (las filas se quedan).
+        .fillHocHtmt = function(sfit, hocs, smodel, txt, paths) {
+            hp <- .pl_hoc_htmt_pairs(hocs, smodel$blocks, paths, smodel$m2)
+            if (is.null(hp)) return(NULL)
+            table <- self$results$hocHtmt
+            csem_like <- !identical(smodel$m2$approach, "disjoint")
+            hp$htmt <- if (csem_like) NA_real_ else .pl_hoc_htmt(sfit, hp)
+            hp$htmt2 <- if (csem_like) NA_real_ else .pl_hoc_htmt(sfit, hp, "htmt2")
+            single <- vapply(smodel$blocks, function(b) length(b$vars) == 1, TRUE)
+            single <- vapply(smodel$blocks, `[[`, "", "label")[single]
+            for (k in seq_len(nrow(hp))) {
+                key <- paste(hp$hoc[k], hp$other[k], sep = "::")
+                band <- .pl_band_htmt(hp$htmt[k])
+                values <- list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k],
+                               assessment = if (is.na(band)) txt("labels", "not_computable") else txt("labels", band))
+                if (!is.na(hp$htmt[k])) values$htmt <- hp$htmt[k]
+                if (!is.na(hp$htmt2[k])) values$htmt2 <- hp$htmt2[k]
+                table$setRow(rowKey = key, values = values)
+                if (csem_like)
+                    table$addFootnote(rowKey = key, col = "htmt", txt("footnotes", "hoc_htmt_csem"))
+                else if (is.na(hp$htmt[k]))
+                    table$addFootnote(rowKey = key, col = "htmt", txt("footnotes", "htmt_signs"))
+                else if (hp$other[k] %in% single)
+                    table$addFootnote(rowKey = key, col = "htmt", sprintf(txt("footnotes", "htmt_single"), hp$other[k]))
+            }
+            hp
+        },
+
         .fillHocBootstrap = function(sm, hocs, smodel, txt) {
+            if (!is.null(sm$hoc_htmt))
+                for (k in seq_len(nrow(sm$hoc_htmt))) {
+                    ab <- strsplit(sm$hoc_htmt$name[k], "~", fixed = TRUE)[[1]]
+                    inv <- stats::setNames(names(smodel$m2$cmap2), smodel$m2$cmap2)
+                    key <- paste(inv[[ab[1]]], inv[[ab[2]]], sep = "::")
+                    u <- sm$hoc_htmt$upper[k]
+                    if (!is.finite(u)) next
+                    self$results$hocHtmt$setCell(rowKey = key, col = "htmtUpper", value = u)
+                    band <- if (u < 0.85) "htmt_ok_ci" else if (u < 0.90) "htmt_similar_ci" else "htmt_doubt_ci"
+                    self$results$hocHtmt$setCell(rowKey = key, col = "assessment", value = txt("labels", band))
+                    self$results$hocHtmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
+                }
             set <- function(table, key, values) for (col in names(values)) {
                 v <- values[[col]]
                 if (length(v) == 1 && is.finite(v)) table$setCell(rowKey = key, col = col, value = v)
@@ -1111,10 +1164,79 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 } else head <- paste(head, mtxt("no_boot"))
                 mlines <- c(mlines, head)
             }
+            hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
+                           if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
+        },
+
+        # Interpretation of the higher-order constructs (stage 2): loadings,
+        # reliability and AVE of the reflective ones, weights and VIF of the
+        # formative ones, and their HTMT with the other reflective constructs.
+        # ES: Interpretación de los constructos de orden superior (etapa 2).
+        .hocLines = function(txt, hocq, sm, model, listed) {
+            m2 <- model$m2
+            q <- hocq$measurement
+            out <- character(0)
+            ci_of <- function(df, name) {
+                r <- if (is.null(df)) NULL else df[df$name == name, , drop = FALSE]
+                if (!is.null(r) && nrow(r) == 1 && is.finite(r$lower)) r else NULL
+            }
+            for (h in model$hocs) {
+                r <- q[q$hoc == h$label, , drop = FALSE]
+                hh <- m2$hmap[[h$label]]
+                if (h$type == "reflective") {
+                    low <- r$loading < 0.708
+                    out <- c(out, if (any(low)) sprintf(txt("hoc_loadings_low"), h$label, listed(r$component[low], r$loading[low]))
+                                  else sprintf(txt("hoc_loadings_ok"), h$label, listed(r$component, r$loading)))
+                    if (!is.null(sm)) {
+                        ns <- vapply(r$component, function(cpt) {
+                            ci <- ci_of(sm$hoc_loadings, paste(hh, "=~", m2$ind(cpt)))
+                            !is.null(ci) && ci$lower <= 0 && ci$upper >= 0
+                        }, TRUE)
+                        if (any(ns)) out <- c(out, sprintf(txt("hoc_loadings_ns"), listed(r$component[ns], r$loading[ns])))
+                    }
+                    rel <- hocq$reliability[hocq$reliability$hoc == h$label, , drop = FALSE]
+                    if (nrow(rel)) {
+                        rc <- rel$rhoC[1]; av <- rel$ave[1]
+                        out <- c(out, if (rc > 0.95) sprintf(txt("hoc_rel_high"), h$label, .pl_fmt(rc))
+                                      else if (rc < 0.70) sprintf(txt("hoc_rel_low"), h$label, .pl_fmt(rc))
+                                      else if (av >= 0.50) sprintf(txt("hoc_rel_ok"), h$label, .pl_fmt(rc), .pl_fmt(av)))
+                        if (av < 0.50) out <- c(out, sprintf(txt("hoc_ave_low"), h$label, .pl_fmt(av)))
+                    }
+                } else {
+                    out <- c(out, sprintf(txt("hoc_weights"), h$label, listed(r$component, r$weight)))
+                    if (!is.null(sm)) {
+                        ns <- vapply(r$component, function(cpt) {
+                            ci <- ci_of(sm$hoc_weights, paste(hh, "<~", m2$ind(cpt)))
+                            !is.null(ci) && ci$lower <= 0 && ci$upper >= 0
+                        }, TRUE)
+                        if (any(ns)) out <- c(out, sprintf(txt("hoc_weights_ns"), listed(r$component[ns], r$loading[ns])))
+                    }
+                    hv <- !is.na(r$vif) & r$vif >= 3
+                    if (any(hv)) out <- c(out, sprintf(txt("hoc_vif_high"), h$label, listed(r$component[hv], r$vif[hv])))
+                }
+            }
+            hp <- hocq$htmt
+            if (!is.null(hp) && any(!is.na(hp$htmt))) {
+                pair <- paste(hp$hoc, hp$other, sep = "\u2013")
+                ok <- !is.na(hp$htmt)
+                high <- ok & hp$htmt >= 0.85
+                out <- c(out, if (any(high)) sprintf(txt("hoc_htmt_high"), listed(pair[high], hp$htmt[high]))
+                              else sprintf(txt("hoc_htmt_ok"), listed(pair[ok], hp$htmt[ok])))
+                if (!is.null(sm$hoc_htmt)) {
+                    up <- vapply(seq_len(nrow(hp)), function(k) {
+                        u <- sm$hoc_htmt$upper[sm$hoc_htmt$name == paste(hp$a[k], hp$b[k], sep = "~")]
+                        if (length(u) && is.finite(u[1])) u[1] else NA_real_
+                    }, 0)
+                    bad <- !is.na(up) & up >= 0.85
+                    out <- c(out, if (any(bad)) sprintf(txt("hoc_htmt_ci_high"), listed(pair[bad], up[bad]))
+                                  else sprintf(txt("hoc_htmt_ci_ok"), sum(!is.na(up))))
+                }
+            }
+            out
         },
 
         # Reflective indicators with a negative loading: almost always items
@@ -1145,7 +1267,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL) {
+                               model = NULL, hocq = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -1171,6 +1293,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 j <- which.max(v$vif)
                 findings <- c(findings, sprintf(txt("vif"), .pl_fmt(v$vif[j]), v$indicator[j]))
             }
+            hq <- hocq
+            if (!is.null(hq$reliability) && nrow(hq$reliability)) {
+                rc <- hq$reliability$rhoC
+                findings <- c(findings, sprintf(txt("hoc_rel"), sum(rc >= 0.70 & rc <= 0.95), length(rc)))
+            }
+            if (!is.null(hq$htmt) && any(!is.na(hq$htmt$htmt)))
+                findings <- c(findings, sprintf(txt("hoc_htmt"), sum(!is.na(hq$htmt$htmt) & hq$htmt$htmt < 0.85),
+                                                sum(!is.na(hq$htmt$htmt))))
             k <- which.max(r2$r2)
             findings <- c(findings, sprintf(txt("r2"), .pl_fmt(r2$r2[k]), r2$construct[k]))
             uncertain <- txt("no_inference")
@@ -1219,7 +1349,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$structuralGuide$setContent(.pl_html_block(c(txt("f2"), txt("vif_struct"), txt("effects"))))
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
-            self$results$hocGuide$setContent(.pl_html_block(txt("hoc")))
+            self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
         },
 
         # ---------------------------------------------------------------------

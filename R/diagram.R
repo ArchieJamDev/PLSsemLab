@@ -203,16 +203,17 @@
         # baja y sus filas van abajo, para que la ruta pase por encima.
         lay_of <- stats::setNames(nodes$layer, nodes$label)
         skip <- lay_of[simple$from] < l & lay_of[simple$to] > l
-        # A lone construct whose predictors are all placed sits at their
-        # mean height (e.g. a higher-order construct between its
-        # dimensions), unless a skipping path starts near that height.
-        # ES: Un constructo solo en su columna, con sus predictores ya
-        # ubicados, va a la altura media de ellos (p. ej. un constructo de
-        # orden superior entre sus dimensiones), salvo que una ruta que salta
-        # la columna salga cerca de esa altura.
+        # In a column crossed by a skipping path, a lone construct sits at
+        # the mean height of its predictors (e.g. a higher-order construct
+        # between its dimensions), unless the skipping path starts near that
+        # height; otherwise the column moves down (below).
+        # ES: En una columna cruzada por una ruta que la salta, un constructo
+        # solo va a la altura media de sus predictores (p. ej. un constructo
+        # de orden superior entre sus dimensiones), salvo que esa ruta salga
+        # cerca de esa altura; si no, la columna baja (abajo).
         pr <- if (l > 0 && length(idx) == 1) simple$from[simple$to == nodes$label[idx]] else character(0)
         centred <- FALSE
-        if (length(pr) && all(pr %in% names(order_y)) && all(lay_of[pr] < l)) {
+        if (any(skip) && length(pr) && all(lay_of[pr] < l)) {
             want <- mean(order_y[pr])
             near <- any(abs(order_y[simple$from[skip]] - want) < body[[nodes$label[idx]]] / 2 + 0.8)
             if (!near) {
@@ -323,11 +324,12 @@
     man_h <- max(16, min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy))
     lat_w <- max(70, min(115 * kl, 1.0 * (if (tb) 2.3 else geo$side) * ppx))
     lat_h <- max(34, min(56 * kl, 0.9 * ppy))
-    # Coefficients near the indicator on measurement arrows (where arrows
-    # converge on the construct the labels would pile up), midway on paths.
+    # Coefficients a little toward the indicator on measurement arrows
+    # (where arrows converge on the construct the labels would pile up, and
+    # right at the indicator they cover its box), midway on paths.
     # ES: Coeficientes cerca del indicador en las flechas de medida, al
     # medio en las rutas.
-    lab_pos <- ifelse(p$kind == "weight", 0.36, ifelse(p$kind == "loading", 0.64, 0.5))
+    lab_pos <- ifelse(p$kind == "weight", 0.45, ifelse(p$kind == "loading", 0.55, 0.5))
     # paths into the same construct alternate their label position so the
     # labels of converging paths do not stack
     # ES: las rutas hacia un mismo constructo alternan la posición de su

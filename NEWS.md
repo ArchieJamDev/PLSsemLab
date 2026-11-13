@@ -1,6 +1,6 @@
 # PLSsemLab 0.0.0 (development)
 
-## Phase 4: interactions and higher-order constructs (D3)
+## Phase 4: interactions and higher-order constructs (D3), closed
 
 * **Two-way interactions:** drag two constructs together into a predictor
   box. The report adds the simple effects at −1, 0 and +1 SD of the
@@ -26,6 +26,10 @@
     stay as "Not computable".
   * The interpretation and the key findings report the higher-order
     constructs (loadings or weights, reliability, AVE, VIF, HTMT).
+* **Warnings in the key findings:** pairs of constructs without
+  discriminant validity even on the lenient threshold (bootstrap upper bound
+  of the HTMT of 0.90 or more; the estimate without the bootstrap), first
+  order and higher order.
 * **Path diagram:** drawn with semPlot, with interaction and higher-order
   nodes, and a *Path Diagram* settings box.
 

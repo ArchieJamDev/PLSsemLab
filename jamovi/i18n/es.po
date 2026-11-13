@@ -1061,6 +1061,14 @@ msgid "Navy"
 msgstr "Azul marino"
 
 #: R/texts.R
+msgid "No discriminant validity: the bootstrap upper bound of the HTMT is 0.90 or more in %s. The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths."
+msgstr "Sin validez discriminante: el límite superior bootstrap del HTMT es de 0.90 o más en %s. Los datos no distinguen estos constructos ni siquiera con el umbral permisivo; resuélvalo antes de interpretar sus rutas."
+
+#: R/texts.R
+msgid "No discriminant validity: the HTMT is 0.90 or more in %s (estimate; run the bootstrap for the formal test). The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths."
+msgstr "Sin validez discriminante: el HTMT es de 0.90 o más en %s (estimación; ejecute el bootstrap para la prueba formal). Los datos no distinguen estos constructos ni siquiera con el umbral permisivo; resuélvalo antes de interpretar sus rutas."
+
+#: R/texts.R
 msgid "No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box."
 msgstr "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
 

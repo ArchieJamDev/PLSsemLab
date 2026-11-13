@@ -324,6 +324,20 @@
     man_h <- max(16, min(24 * km, 0.75 * (if (tb) 0.6 else geo$gap) * ppy))
     lat_w <- max(70, min(115 * kl, 1.0 * (if (tb) 2.3 else geo$side) * ppx))
     lat_h <- max(34, min(56 * kl, 0.9 * ppy))
+    # Room for the measurement labels: in a crowded model (wide, capped at
+    # 1100 px for the PDF export) the ellipse narrows so the gap between an
+    # indicator column and its construct keeps about 46 px, and the labels
+    # shrink when even that is not possible.
+    # ES: Espacio para las etiquetas de medida: en un modelo apretado la
+    # elipse se angosta para dejar unos 46 px entre la columna de indicadores
+    # y su constructo, y las etiquetas se achican si ni así cabe.
+    meas_cex <- 0.9
+    if (!tb) {
+        side_px <- geo$side * ppx
+        lat_w <- max(70, min(lat_w, 2 * (side_px - man_w / 2 - 46)))
+        gap_px <- side_px - man_w / 2 - lat_w / 2
+        meas_cex <- 0.9 * max(0.7, min(1, gap_px / 46))
+    }
     # Coefficients a little toward the indicator on measurement arrows
     # (where arrows converge on the construct the labels would pile up, and
     # right at the indicator they cover its box), midway on paths.
@@ -371,7 +385,7 @@
                       nCharNodes = 0, label.cex = if (is.null(opts$nodeLabelSize)) 1 else opts$nodeLabelSize,
                       label.scale = FALSE,
                       edge.label.cex = (if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize) *
-                          ifelse(p$kind == "path", 1, 0.9),
+                          ifelse(p$kind == "path", 1, meas_cex),
                       residuals = FALSE, intercepts = FALSE, thresholds = FALSE, exoCov = FALSE,
                       color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
                       border.color = ink, label.color = ink, edge.color = edge_col,

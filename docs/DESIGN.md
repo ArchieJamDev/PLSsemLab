@@ -134,6 +134,31 @@ da el efecto simple de SAT sobre LOY en todo el rango de IMAG.
 - Gráfico didáctico de pendientes simples y floodlight con la región de
   Johnson-Neyman.
 
+**Implementado en la fase 4.**
+- Interacciones de dos vías arrastrando dos constructos juntos. Efectos
+  simples a −1, 0 y +1 DE del moderador, floodlight y puntos de
+  Johnson-Neyman a partir de las réplicas bootstrap (iguales a
+  `doNonlinearEffectsAnalysis()`), f² con las bandas de Kenny (2018). ρC se
+  calcula con las cargas cuando el modelo es no lineal.
+- Constructos de orden superior reflectivos o formativos en una caja propia.
+  Por defecto, el enfoque disjunto en dos etapas de Sarstedt et al. (2019):
+  en la etapa 2 solo el constructo de orden superior se mide con las
+  puntuaciones de sus dimensiones y los demás constructos conservan sus
+  indicadores (fig. 4 del artículo). Como opción, la rutina de segundo orden
+  de cSEM (la de JASP), con un aviso de sus tres diferencias. El bootstrap
+  remuestrea ambas etapas juntas.
+- Validación: las dimensiones no pueden tener rutas propias (cSEM las acepta
+  sin aviso y las descarta de la etapa 2), cada constructo de orden superior
+  necesita dos dimensiones, no se combina con PLSc ni con interacciones.
+- Validez discriminante del constructo de orden superior con los demás
+  reflectivos en la etapa 2 (HTMT, HTMT2, límite superior bootstrap), nunca
+  con sus dimensiones. Con la rutina de cSEM no está definido y las filas
+  quedan como "No computable".
+- Los pares sin validez discriminante ni con el umbral permisivo (límite
+  superior ≥ 0,90) pasan a las advertencias de los hallazgos clave.
+- Diagrama de rutas con semPlot, con nodos de interacción y de orden
+  superior, y una caja de ajustes del diagrama.
+
 ### D4 — Rendimiento y robustez del bootstrap (E3)
 
 **Solución.** Casilla "Run" desactivada por defecto, `clearWith` estricto,
@@ -375,7 +400,7 @@ la fase 1, que es la base de todas las demás.
 | 1 | Plataforma: paquete, `0000.yaml`, catálogo i18n, CI, datasets incluidos (perdidos -99 ya declarados); interfaz de cajas con el Supplier en JS; constructor y validador del modelo; estimación con cargas, pesos y rutas | D5 | El modelo se arma con cajas, los 7 errores del E4 dan su mensaje y los números coinciden con cSEM |
 | 2 | Modelo de medida: estimador PLS/PLSc, fiabilidad (alfa, rho_A, rho_C), AVE, HTMT y HTMT2, VIF de indicadores formativos, Fornell-Larcker | D2 | Valores de COMP del E1 reproducidos; tablas con forma fija desde `.init()` |
 | 3 | Modelo estructural y bootstrap: R², f², VIF estructural, efectos directos, indirectos y totales; bootstrap por bloques con checkpoint, caché y semilla; IC de todas las medidas; diagrama de rutas, gráfico de cargas y cuadrícula HTMT en ggplot | D2, D4 | 2000 réplicas sin fallo, cancelables; IC iguales a los de cSEM |
-| 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Los dos modelos del E2 corren completos; lo no calculable sale como "No computable" con su razón |
+| 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Hecho: los dos modelos del E2 corren completos y coinciden con cSEM; lo no calculable sale como "No computable" con su razón |
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Resultados del E5 reproducidos; explicación de por qué no hay chi-cuadrado ML |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Resultados del E6 reproducidos; rango de la escala para IPMA |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |

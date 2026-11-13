@@ -1315,13 +1315,45 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 uncertain <- sprintf(txt("boot_basis"), sm$admissible, sm$runs, as.integer(self$options$bootSeed))
             }
             warnings <- c(if (!admissible) txt("admissible_no"),
-                          private$.negativeLoadings(loadings, function(section, key) .pl_text(lang, section, key)))
+                          private$.negativeLoadings(loadings, function(section, key) .pl_text(lang, section, key)),
+                          private$.htmtWarning(txt, quality, sm, model, hocq))
             section <- function(title, items)
                 paste0("<p><strong>", .pl_html_escape(title), "</strong></p>",
                        .pl_html_list(if (length(items)) items else txt("none")))
             self$results$keySummary$setContent(paste0(
                 section(txt("findings"), findings), section(txt("uncertain"), uncertain),
                 section(txt("warnings"), warnings)))
+        },
+
+        # Pairs without discriminant validity even on the lenient threshold
+        # (0.90; Henseler et al., 2015): with the bootstrap the upper bound,
+        # otherwise the estimate. First-order pairs and the stage-2 pairs of
+        # the higher-order constructs.
+        # ES: Pares sin validez discriminante ni con el umbral permisivo
+        # (0.90): con bootstrap, el límite superior; si no, la estimación.
+        .htmtWarning = function(txt, quality, sm, model, hocq) {
+            boot <- !is.null(sm)
+            lab <- character(0); val <- numeric(0)
+            h <- quality$htmt
+            mm <- if (is.null(model$mcmap)) model$cmap else model$mcmap
+            for (k in seq_len(if (is.null(h)) 0 else nrow(h))) {
+                v <- if (boot) {
+                    r <- sm$HTMT$upper[sm$HTMT$name == paste(mm[[h$c1[k]]], mm[[h$c2[k]]], sep = "~")]
+                    if (length(r)) r[1] else NA_real_
+                } else h$htmt[k]
+                if (is.finite(v) && v >= 0.90) { lab <- c(lab, paste(h$c1[k], h$c2[k], sep = "\u2013")); val <- c(val, v) }
+            }
+            hp <- hocq$htmt
+            for (k in seq_len(if (is.null(hp)) 0 else nrow(hp))) {
+                v <- if (boot) {
+                    r <- sm$hoc_htmt$upper[sm$hoc_htmt$name == paste(hp$a[k], hp$b[k], sep = "~")]
+                    if (length(r)) r[1] else NA_real_
+                } else hp$htmt[k]
+                if (is.finite(v) && v >= 0.90) { lab <- c(lab, paste(hp$hoc[k], hp$other[k], sep = "\u2013")); val <- c(val, v) }
+            }
+            if (!length(lab)) return(character(0))
+            sprintf(txt(if (boot) "htmt_fail_ci" else "htmt_fail"),
+                    paste(sprintf("%s (%s)", lab, vapply(val, .pl_fmt, "")), collapse = ", "))
         },
 
         .choices = function(lang, prep, boot = NULL) {

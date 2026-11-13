@@ -194,3 +194,20 @@ test_that("stage-2 HTMT of a higher-order construct equals cSEM on the stage-2 m
     expect_equal(nrow(b$results$hocHtmt$asDF), 2)
     expect_true(all(is.na(b$results$hocHtmt$asDF$htmt) | b$results$hocHtmt$asDF$htmt == ""))
 })
+
+test_that("pairs without discriminant validity are key-summary warnings", {
+    cls <- get("plssemClass", envir = asNamespace("PLSsemLab"))
+    opts <- get("plssemOptions", envir = asNamespace("PLSsemLab"))
+    path <- system.file("extdata", "plssemlab_bank.csv", package = "PLSsemLab")
+    if (!nzchar(path)) path <- testthat::test_path("..", "..", "data", "plssemlab_bank.csv")
+    o <- opts$new(reflective = list(block("Trust", paste0("trust_", 1:4)), block("Loy", paste0("loy_", 1:3)),
+                                    block("Comp", paste0("comp_", 1:3))),
+                  formative = list(block("Qual", paste0("qual_", c(1, 2, 4, 5, 6, 7)))),
+                  reflectiveHoc = list(list(label = "Superior", components = list("Qual", "Trust"))),
+                  structural = list(list(), list("Superior", "Comp"), list(), list(), list()))
+    a <- cls$new(options = o, data = utils::read.csv(path))
+    a$init(); a$run()
+    warn <- sub(".*Warnings", "", a$results$keySummary$content)
+    expect_match(warn, "Superior–Loy (0.928)", fixed = TRUE)
+    expect_false(grepl("Trust–Loy", warn, fixed = TRUE))
+})

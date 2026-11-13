@@ -301,7 +301,9 @@
             hoc_rel = .("Higher-order constructs: %d of %d reflective one(s) have composite reliability between 0.70 and 0.95."),
             hoc_htmt = .("Higher-order constructs: %d of %d pair(s) with other reflective constructs have HTMT below 0.85 (stage 2)."),
             boot_basis = .("Intervals from %d admissible of %d bootstrap resamples (seed %d); a path whose interval only just excludes 0 can change with another seed."),
-            admissible_no = .("The estimates are not admissible; do not interpret them until the cause is fixed.")
+            admissible_no = .("The estimates are not admissible; do not interpret them until the cause is fixed."),
+            htmt_fail_ci = .("No discriminant validity: the bootstrap upper bound of the HTMT is 0.90 or more in %s. The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths."),
+            htmt_fail = .("No discriminant validity: the HTMT is 0.90 or more in %s (estimate; run the bootstrap for the formal test). The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths.")
         ),
 
         # Reproducibility record.

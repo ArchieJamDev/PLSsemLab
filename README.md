@@ -54,10 +54,10 @@ Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
 | Phase | Content | Status |
 |---|---|---|
 | 0 | Design, experiments with cSEM for every JASP shortcoming, suite documents, logo | ✅ Done |
-| 1 | Platform, model built from boxes, model validation, first estimates | 🔄 Built, CI green — awaiting test in jamovi |
-| 2 | Measurement model: reliability, AVE, HTMT, HTMT2, VIF, Fornell-Larcker, ω, ordinal indicators | 🔄 Built, CI green — awaiting test in jamovi |
-| 3 | Structural model (f², VIF, effects), bootstrap in blocks with intervals for every measure, path diagram, loadings and HTMT plots | 🔄 Built — awaiting test in jamovi |
-| 4 | Two-way interactions (simple effects, Johnson-Neyman) and higher-order constructs (disjoint two-stage by default; cSEM's routine as an option) | 🔄 Built — awaiting test in jamovi |
+| 1 | Platform, model built from boxes, model validation, first estimates | ✅ Done |
+| 2 | Measurement model: reliability, AVE, HTMT, HTMT2, VIF, Fornell-Larcker, ω, ordinal indicators | ✅ Done |
+| 3 | Structural model (f², VIF, effects), bootstrap in blocks with intervals for every measure, path diagram, loadings and HTMT plots | ✅ Done |
+| 4 | Two-way interactions (simple effects, floodlight, Johnson-Neyman) and higher-order constructs (disjoint two-stage by default; cSEM's routine as an option), with stage-2 discriminant validity | ✅ Done |
 | 5 | Bootstrap test of overall model fit | 🗓 Planned |
 | 6 | Prediction (PLSpredict, CVPAT), mediation, IPMA | 🗓 Planned |
 | 7 | Multigroup analysis with MICOM | 🗓 Planned |

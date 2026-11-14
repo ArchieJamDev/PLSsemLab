@@ -1,0 +1,106 @@
+# Builds the PLSsemLab .jmo for jamovi on Windows (jamovi 2.7.x: R 4.5.0-x64)
+# and runs the engine probe with it in that R. The Linux .jmo carries Linux
+# shared objects (expm, RcppArmadillo, ...) that a Windows jamovi cannot
+# load: cSEM's overall fit test needs expm. The compiler finds a stand-in
+# jamovi home whose Frameworks/R points at the runner's R. The .jmo is
+# attached to the "dev-build-windows" pre-release.
+# ES: Construye el .jmo de PLSsemLab para jamovi en Windows (jamovi 2.7.x:
+# R 4.5.0-x64) y corre la sonda del motor con él en ese R. El .jmo de Linux
+# lleva objetos compartidos de Linux que un jamovi de Windows no puede
+# cargar: la prueba de ajuste global de cSEM necesita expm. El compilador
+# encuentra un jamovi sustituto cuyo Frameworks/R apunta al R del runner.
+name: Build .jmo (Windows)
+
+on:
+  workflow_dispatch:
+    inputs:
+      r_version:
+        description: 'R version of the target jamovi (jamovi 2.7.x uses 4.5.0)'
+        required: false
+        default: '4.5.0'
+      app_version:
+        description: 'jamovi version to declare'
+        required: false
+        default: '2.7.27'
+      tag:
+        description: 'Pre-release tag to attach the .jmo to'
+        required: false
+        default: 'dev-build-windows'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ inputs.r_version }}
+          use-public-rspm: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # What jamovi already ships stays out of the .jmo: install it in R's
+      # own library, which the compiler is told about (--rlibs).
+      # ES: Lo que jamovi ya trae queda fuera del .jmo: se instala en la
+      # biblioteca del R, que se le indica al compilador (--rlibs).
+      - name: Install jamovi's base packages and the compiler
+        run: |
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang', 'semPlot', 'patchwork', 'testthat'), repos = c('https://repo.jamovi.org', 'https://cloud.r-project.org'), type = 'binary')"
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev --silent
+
+      - name: Stand-in jamovi home
+        shell: pwsh
+        run: |
+          $rhome = (Rscript -e "cat(normalizePath(R.home(), winslash = '\\'))")
+          New-Item -ItemType Directory -Force -Path C:\fakejam\bin, C:\fakejam\Frameworks | Out-Null
+          Copy-Item (Get-Command node).Source C:\fakejam\bin\jamovi.exe
+          cmd /c mklink /J C:\fakejam\Frameworks\R "$rhome"
+          Get-ChildItem C:\fakejam\Frameworks\R\bin\x64\R.exe
+
+      - name: Build the .jmo
+        run: |
+          RLIB=$(Rscript -e "cat(normalizePath(.libPaths()[1], winslash = '/'))")
+          build() { node "$RUNNER_TEMP/jmc/index.js" --build . "$@" --home 'C:\fakejam' --rlibs "$RLIB" --assume-app-version "${{ inputs.app_version }}"; }
+          build
+          ls -d build/*
+          # cSEM 0.7.1 replaces the compiler snapshot's 0.6.1
+          # ES: cSEM 0.7.1 reemplaza al 0.6.1 de la instantánea
+          Rscript -e "install.packages('cSEM', lib = Sys.glob('build/R*')[1], repos = 'https://cloud.r-project.org', type = 'binary', dependencies = FALSE)"
+          rm -f *.jmo
+          build --skip-deps
+          f=$(ls *.jmo); mv "$f" "${f%.jmo}_win64.jmo"; ls -la *.jmo
+
+      - name: Check the .jmo and run the engine probe in this R
+        run: |
+          mkdir -p probe out
+          unzip -q *_win64.jmo -d probe
+          grep -E "rVersion|usesNative" probe/PLSsemLab/jamovi.yaml
+          ls probe/PLSsemLab/R/expm/libs/x64/
+          Rscript -e "cat(read.dcf('probe/PLSsemLab/R/cSEM/DESCRIPTION')[, 'Version'], '\n')"
+          RLIB=$(Rscript -e "cat(normalizePath(.libPaths()[1], winslash = '/'))")
+          R_LIBS="$PWD/probe/PLSsemLab/R;$RLIB" PL_DATA=data/plssemlab_bank.csv PL_DATA2=data/plssemlab_corp_rep.csv OUT=out \
+            Rscript tests/engine/run-in-jamovi.R
+
+      - name: Attach the .jmo to the pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.tag }}"; TAG="${TAG:-dev-build-windows}"
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" *_win64.jmo --prerelease --target "$GITHUB_SHA" \
+            --title "Development build (Windows, jamovi ${{ inputs.app_version }}, R ${{ inputs.r_version }})" \
+            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."

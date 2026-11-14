@@ -32,7 +32,7 @@ draw <- function(a, file, ...) {
     if (identical(o$diagramLayout, "treeTB"))
         sz <- list(width = max(560, min(1100, 62 * (diff(range(st$x_tb)) + 1.6) + 120)),
                    height = max(360, min(1100, 75 * (diff(range(st$y_tb)) + 1) + 170)))
-    grDevices::png(file.path("/tmp/out", file), sz$width, sz$height, res = 96)
+    grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), file), sz$width, sz$height, res = 96)
     f(".pl_plot_sem")(st, o, theme, width = sz$width, height = sz$height)
     grDevices::dev.off()
     cat(file, sz$width, "x", sz$height, "\n")
@@ -93,7 +93,7 @@ it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = p
                                  structural = list(list(), list(), list("SAT", "IMAG", c("SAT", "IMAG"))),
                                  bootstrap = TRUE, bootReps = 100), data = sat)
 it$init(); it$run(); draw(it, "diagram-interaction-LR.png")
-grDevices::png("/tmp/out/moderation.png", 760, 360, res = 96)
+grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), "moderation.png"), 760, 360, res = 96)
 print(f(".pl_plot_moderation")(it$results$moderationPlots$items[[1]]$state, ggplot2::theme_minimal(), theme)); grDevices::dev.off()
 cat("diagrams ok\n")
 cat("max RSS (MB):", as.numeric(sub("\\D+(\\d+).*", "\\1", system(paste("grep VmHWM /proc", Sys.getpid(), "status", sep = "/"), intern = TRUE))) / 1024, "\n")

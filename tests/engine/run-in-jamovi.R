@@ -85,6 +85,9 @@ fb <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  fitTest = TRUE, fitReps = 199), data = d)
 fb$init(); fb$run()
 print(fb$results$fit$asDF)
+print(fb$results$fit$getCell(rowNo = 1, "value")$footnotes)
+for (n in names(fb$results$items)) if (grepl("^\\.plssem", n)) print(fb$results$items[[n]]$content)
+print(try(cSEM::testOMF(cSEM::csem(cSEM::satisfaction, "A <~ sat1 + sat2\nB <~ loy1 + loy2\nB ~ A"), .R = 9)))
 it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "SAT", vars = paste0("sat", 1:4)),
                                                     list(label = "LOY", vars = paste0("loy", 1:4))),
                                  structural = list(list(), list(), list("SAT", "IMAG", c("SAT", "IMAG"))),

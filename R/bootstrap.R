@@ -253,11 +253,11 @@
         VIFB = if (length(spec$form_ids)) ci("VIFB", unlist(lapply(names(spec$form_ids), function(cc)
             paste(cc, spec$form_ids[[cc]], sep = "~")))),
         VIFS = if (length(spec$vifnames)) ci("VIFS", spec$vifnames),
-        # draws of the path coefficients, for simple slopes and floodlight
-        # (only with an interaction)
-        # ES: réplicas de los coeficientes de ruta, para pendientes simples y
-        # floodlight (solo con una interacción)
-        path_draws = if (isTRUE(spec$nonlinear)) {
+        # draws of the path coefficients: simple slopes and floodlight
+        # (interactions) and specific indirect effects (mediation)
+        # ES: réplicas de los coeficientes de ruta: pendientes simples y
+        # floodlight (interacciones) y efectos indirectos específicos
+        path_draws = if (is.null(spec$s2)) {
             pe <- merged$Estimates$Estimates_resample$Estimates1$Path_estimates
             m <- pe$Resampled
             colnames(m) <- names(pe$Original)
@@ -276,6 +276,11 @@
                           stringsAsFactors = FALSE)
         part <- function(x) all[g == x, , drop = FALSE]
         out$paths <- part("path")
+        rs <- merged$Estimates$Estimates_resample$Estimates1$S2$Resampled
+        if (!is.null(rs)) {
+            out$path_draws <- rs[, g == "path", drop = FALSE]
+            colnames(out$path_draws) <- spec$s2$names[g == "path"]
+        }
         out$total <- part("total")
         out$indirect <- part("indirect")
         out$R2 <- part("R2")[, c("name", "lower", "upper")]

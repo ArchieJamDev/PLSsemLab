@@ -160,6 +160,16 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             values = list(from = pairs_eff$from[k], arrow = "\u2192",
                                                           to = pairs_eff$to[k]))
 
+            # Mediation (phase 6): one row per specific indirect effect.
+            # ES: Mediación (fase 6): una fila por efecto indirecto específico.
+            chains <- .pl_mediation_chains(paths)
+            for (k in seq_len(nrow(chains)))
+                self$results$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
+            if (!nrow(chains)) {
+                self$results$mediation$setVisible(FALSE)
+                self$results$mediationGuide$setVisible(FALSE)
+            }
+
             # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
             # +1 SD) and one plot per interaction.
             # ES: Moderación (fase 4): tres filas y un gráfico por interacción.
@@ -306,6 +316,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (length(hocs)) private$.fillHocBootstrap(boot$summary, hocs, smodel, txt)
                 }
             }
+            med <- private$.fillMediation(sfit, paths, smodel, boot$summary, txt)
             mod <- if (isTRUE(model$nonlinear))
                 private$.fillModeration(fit$value, paths, model, boot$summary, txt) else NULL
 
@@ -359,9 +370,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, warn)
 
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq, omf)
+                                    mod, hocq, omf, med)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel, hocq, omf)
+                                smodel, hocq, omf, med)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
             private$.reproducibility(lang, smodel, prep, blocks, paths)
@@ -598,6 +609,34 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 status$setContent(.pl_html_block(txt("boot", "not_done")))
             }
             res
+        },
+
+        # ---------------------------------------------------------------------
+        # Mediation: specific indirect effects, their percentile bootstrap
+        # interval (from the draws of the path coefficients) and the type of
+        # mediation. Without the bootstrap only the estimates.
+        # ES: Mediación: efectos indirectos específicos, su intervalo
+        # bootstrap percentil y el tipo de mediación. Sin bootstrap, solo
+        # las estimaciones.
+        # ---------------------------------------------------------------------
+        .fillMediation = function(fit, paths, model, sm, txt) {
+            chains <- .pl_mediation_chains(paths)
+            if (!nrow(chains)) return(NULL)
+            table <- self$results$mediation
+            B <- fit$Estimates$Path_estimates
+            level <- as.numeric(self$options$ciLevel)
+            med <- .pl_mediation(chains, B, model$cmap, draws = sm$path_draws, level = level, direct_ci = sm$paths)
+            for (k in seq_len(nrow(med))) {
+                v <- list(chain = med$label[k], indirect = med$estimate[k])
+                if (!is.na(med$direct[k])) v$direct <- med$direct[k] else v$direct <- "\u2014"
+                if (!is.na(med$lower[k])) { v$se <- med$se[k]; v$lower <- med$lower[k]; v$upper <- med$upper[k] }
+                v$type <- if (is.na(med$type[k])) txt("labels", "med_needs_boot") else txt("labels", paste0("med_", med$type[k]))
+                table$setRow(rowKey = med$label[k], values = v)
+            }
+            if (any(grepl(.PL_X, paths$from, fixed = TRUE)))
+                table$setNote("inter", txt("footnotes", "med_interaction"))
+            if (!is.null(sm)) table$setNote("ci", sprintf(txt("boot", "med_note"), format(100 * level)))
+            med
         },
 
         # ---------------------------------------------------------------------
@@ -1082,7 +1121,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1233,12 +1272,29 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
             flines <- private$.fitLines(txt, omf)
+            dlines <- private$.mediationLines(txt, med)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
+                           if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
+        },
+
+        # Interpretation of the mediation: each specific indirect effect with
+        # its interval and what its type means.
+        # ES: Interpretación de la mediación.
+        .mediationLines = function(txt, med) {
+            if (is.null(med) || !nrow(med)) return(character(0))
+            if (all(is.na(med$type))) return(txt("med_no_boot"))
+            out <- character(0)
+            for (k in seq_len(nrow(med))) {
+                ci <- sprintf("[%s; %s]", .pl_fmt(med$lower[k]), .pl_fmt(med$upper[k]))
+                out <- c(out, paste(sprintf(txt("med_line"), med$label[k], .pl_fmt(med$estimate[k]), ci),
+                                    txt(paste0("med_", med$type[k]))))
+            }
+            c(out, txt("med_caution"))
         },
 
         # Interpretation of the overall fit test: exact fit kept or rejected
@@ -1365,7 +1421,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL, hocq = NULL, omf = NULL) {
+                               model = NULL, hocq = NULL, omf = NULL, med = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -1401,6 +1457,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                                 sum(!is.na(hq$htmt$htmt))))
             k <- which.max(r2$r2)
             findings <- c(findings, sprintf(txt("r2"), .pl_fmt(r2$r2[k]), r2$construct[k]))
+            if (!is.null(med) && nrow(med) && any(!is.na(med$type))) {
+                sig <- !is.na(med$lower) & (med$lower > 0 | med$upper < 0)
+                findings <- c(findings, sprintf(txt("med"), sum(sig), nrow(med)))
+            }
             if (!is.null(omf$table)) {
                 e <- omf$table[omf$table$model == "estimated", ]
                 lv <- format(100 * omf$level)
@@ -1487,6 +1547,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
             self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
+            self$results$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
             self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 

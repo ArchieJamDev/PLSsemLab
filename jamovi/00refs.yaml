@@ -195,4 +195,37 @@ refs:
         volume: '57'
         issue: '6'
         url: https://doi.org/10.1108/EJM-08-2020-0586
+
+    zhao_2010:
+        type: 'article'
+        author: 'Zhao, X., Lynch, J. G., & Chen, Q.'
+        year: 2010
+        title: 'Reconsidering Baron and Kenny: Myths and truths about mediation analysis'
+        publisher: 'Journal of Consumer Research'
+        volume: '37'
+        issue: '2'
+        pages: '197-206'
+        url: https://doi.org/10.1086/651257
+
+    nitzl_2016:
+        type: 'article'
+        author: 'Nitzl, C., Roldán, J. L., & Cepeda, G.'
+        year: 2016
+        title: 'Mediation analysis in partial least squares path modeling: Helping researchers discuss more sophisticated models'
+        publisher: 'Industrial Management & Data Systems'
+        volume: '116'
+        issue: '9'
+        pages: '1849-1864'
+        url: https://doi.org/10.1108/IMDS-07-2015-0302
+
+    preacher_2008:
+        type: 'article'
+        author: 'Preacher, K. J., & Hayes, A. F.'
+        year: 2008
+        title: 'Asymptotic and resampling strategies for assessing and comparing indirect effects in multiple mediator models'
+        publisher: 'Behavior Research Methods'
+        volume: '40'
+        issue: '3'
+        pages: '879-891'
+        url: https://doi.org/10.3758/BRM.40.3.879
 ...

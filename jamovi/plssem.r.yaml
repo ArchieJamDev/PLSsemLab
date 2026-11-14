@@ -834,6 +834,66 @@ items:
         superTitle: Total CI
         visible: (bootstrap)
 
+  # Mediation (phase 6): one row per specific indirect effect (a chain of
+  # two or more paths), laid out in .init(); hidden without chains.
+  # ES: Mediación (fase 6): una fila por efecto indirecto específico, en
+  # .init(); oculta si no hay cadenas.
+  - name: mediationGuide
+    title: How to read the mediation analysis
+    type: Html
+    visible: (showGuides)
+
+  - name: mediation
+    title: Mediation (specific indirect effects)
+    type: Table
+    rows: 0
+    refs:
+      - zhao_2010
+      - nitzl_2016
+      - preacher_2008
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootstrap
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: chain
+        title: Indirect path
+        type: text
+      - name: indirect
+        title: Indirect
+        type: number
+      - name: se
+        title: SE
+        type: number
+        visible: (bootstrap)
+      - name: lower
+        title: Lower
+        type: number
+        superTitle: Indirect CI
+        visible: (bootstrap)
+      - name: upper
+        title: Upper
+        type: number
+        superTitle: Indirect CI
+        visible: (bootstrap)
+      - name: direct
+        title: Direct (X → Y)
+        type: number
+      - name: type
+        title: Type of mediation
+        type: text
+
   # Moderation (phase 4): rows laid out in .init(), three per interaction;
   # hidden when the model has none.
   # ES: Moderación (fase 4): tres filas por interacción, en .init(); oculta

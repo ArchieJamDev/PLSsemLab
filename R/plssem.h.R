@@ -503,6 +503,8 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         f2 = function() private$.items[["f2"]],
         vifStruct = function() private$.items[["vifStruct"]],
         effects = function() private$.items[["effects"]],
+        mediationGuide = function() private$.items[["mediationGuide"]],
+        mediation = function() private$.items[["mediation"]],
         moderationGuide = function() private$.items[["moderationGuide"]],
         simpleSlopes = function() private$.items[["simpleSlopes"]],
         moderationPlots = function() private$.items[["moderationPlots"]],
@@ -1400,6 +1402,69 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `visible`="(bootstrap)"))))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="mediationGuide",
+                title="How to read the mediation analysis",
+                visible="(showGuides)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mediation",
+                title="Mediation (specific indirect effects)",
+                rows=0,
+                refs=list(
+                    "zhao_2010",
+                    "nitzl_2016",
+                    "preacher_2008"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootstrap",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="chain", 
+                        `title`="Indirect path", 
+                        `type`="text"),
+                    list(
+                        `name`="indirect", 
+                        `title`="Indirect", 
+                        `type`="number"),
+                    list(
+                        `name`="se", 
+                        `title`="SE", 
+                        `type`="number", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="lower", 
+                        `title`="Lower", 
+                        `type`="number", 
+                        `superTitle`="Indirect CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="upper", 
+                        `title`="Upper", 
+                        `type`="number", 
+                        `superTitle`="Indirect CI", 
+                        `visible`="(bootstrap)"),
+                    list(
+                        `name`="direct", 
+                        `title`="Direct (X \u2192 Y)", 
+                        `type`="number"),
+                    list(
+                        `name`="type", 
+                        `title`="Type of mediation", 
+                        `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="moderationGuide",
                 title="How to read a moderation",
                 visible="(showGuides)"))
@@ -1683,7 +1748,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,0,0),
+                version = c(0,5,1),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -1775,6 +1840,8 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$effects} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mediationGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$mediation} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$moderationGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$simpleSlopes} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$moderationPlots} \tab \tab \tab \tab \tab an array of images \cr

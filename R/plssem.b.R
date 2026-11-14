@@ -98,6 +98,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (h$type == "reflective")
                     self$results$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
             }
+            # overall fit: 4 discrepancies x estimated and saturated model
+            # ES: ajuste global: 4 discrepancias x modelo estimado y saturado
+            ltxt <- function(key) .pl_text(.pl_lang(self$options), "labels", key)
+            for (mdl in c("estimated", "saturated"))
+                for (m in names(.PL_FIT))
+                    self$results$fit$addRow(rowKey = paste(mdl, m, sep = "::"),
+                                            values = list(model = ltxt(paste0("fit_", mdl)), measure = .PL_FIT[[m]]))
+            self$results$fit$getColumn("critical")$setTitle(
+                sprintf(ltxt("fit_critical"), format(100 * as.numeric(self$options$fitLevel))))
             hp <- if (length(hocs)) .pl_hoc_htmt_pairs(hocs, blocks, paths, NULL) else NULL
             for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
                 self$results$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
@@ -299,6 +308,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             mod <- if (isTRUE(model$nonlinear))
                 private$.fillModeration(fit$value, paths, model, boot$summary, txt) else NULL
+
+            # Overall fit (phase 5): only when "Run overall fit test" is ticked.
+            # ES: Ajuste global (fase 5): solo con su casilla marcada.
+            omf <- if (self$options$fitTest)
+                private$.fitTest(fit$value, model, d, hocs, admissible, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
@@ -313,7 +327,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       if (self$options$bootstrap && is.null(boot$summary))
                           sprintf(txt("boot", "failed"), paste(boot$error, collapse = "; ")),
                       if (!is.null(boot$summary) && length(boot$error))
-                          sprintf(txt("boot", "some_failed"), paste(boot$error, collapse = "; ")))
+                          sprintf(txt("boot", "some_failed"), paste(boot$error, collapse = "; ")),
+                      if (!is.null(omf$error)) sprintf(txt("notices", "fit_failed"), paste(omf$error, collapse = "; ")),
+                      omf$warnings)
             if (!admissible) {
                 failed <- c(names(which(unlist(cSEM::verify(fit$value)))),
                             if (length(hocs)) names(which(unlist(cSEM::verify(sfit)))))
@@ -343,9 +359,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, warn)
 
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq)
+                                    mod, hocq, omf)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel, hocq)
+                                smodel, hocq, omf)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
             private$.reproducibility(lang, smodel, prep, blocks, paths)
@@ -582,6 +598,53 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 status$setContent(.pl_html_block(txt("boot", "not_done")))
             }
             res
+        },
+
+        # ---------------------------------------------------------------------
+        # Overall fit test (cached). Category B: with interactions, higher-order
+        # constructs or inadmissible estimates the rows stay, with the reason.
+        # ES: Prueba de ajuste global (en caché). Categoría B: con
+        # interacciones, orden superior o estimaciones inadmisibles las filas
+        # se quedan, con la razón.
+        # ---------------------------------------------------------------------
+        .fitTest = function(fit, model, d, hocs, admissible, txt) {
+            table <- self$results$fit
+            reason <- .pl_fit_reason(model, hocs, admissible)
+            notcomp <- function(why) {
+                for (k in seq_len(table$rowCount)) {
+                    table$setCell(rowNo = k, col = "decision", value = txt("labels", "not_computable"))
+                }
+                table$addFootnote(rowNo = 1, col = "value", why)
+                list(reason = why)
+            }
+            if (!is.null(reason)) return(notcomp(txt("footnotes", reason)))
+            reps <- as.integer(self$options$fitReps)
+            seed <- as.integer(self$options$bootSeed)
+            level <- as.numeric(self$options$fitLevel)
+            key <- list("plssem-fit-1", model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
+                        reps, seed, level, tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
+            res <- .pl_cached_bootstrap(self$results$fitCacheStore, key, function() {
+                t0 <- proc.time()[["elapsed"]]
+                r <- .pl_capture(.pl_fit_test(fit, reps, seed, level, checkpoint = function() private$.checkpoint()))
+                list(summary = r$value, error = r$error, warnings = r$warnings,
+                     seconds = proc.time()[["elapsed"]] - t0)
+            })
+            if (is.null(res$summary)) {
+                notcomp(sprintf(txt("footnotes", "fit_error"), paste(res$error, collapse = "; ")))
+                return(list(error = res$error))
+            }
+            ft <- res$summary$table
+            for (k in seq_len(nrow(ft))) {
+                table$setRow(rowKey = paste(ft$model[k], ft$measure[k], sep = "::"),
+                             values = list(value = ft$value[k], critical = ft$critical[k], p = ft$p[k],
+                                           decision = txt("labels", if (ft$reject[k]) "fit_reject" else "fit_keep")))
+            }
+            adm <- res$summary$admissible
+            table$setNote("boot", sprintf(txt("boot", "fit_note"), reps, adm[["estimated"]], adm[["saturated"]], seed,
+                                          format(100 * level), round(res$seconds)))
+            same <- isTRUE(all.equal(ft$value[ft$model == "estimated"], ft$value[ft$model == "saturated"]))
+            if (same) table$setNote("same", txt("boot", "fit_same"))
+            c(res$summary, list(same = same, level = level, warnings = res$warnings, seed = seed))
         },
 
         # Writes the bootstrap columns of every table, by internal name.
@@ -1015,7 +1078,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL, hocq = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1165,11 +1228,42 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 mlines <- c(mlines, head)
             }
             hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
+            flines <- private$.fitLines(txt, omf)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
+                           if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
+        },
+
+        # Interpretation of the overall fit test: exact fit kept or rejected
+        # for each model, the SRMR against the descriptive 0.08 rule, and
+        # what to do next.
+        # ES: Interpretación de la prueba de ajuste global.
+        .fitLines = function(txt, omf) {
+            if (is.null(omf)) return(character(0))
+            if (!is.null(omf$reason)) return(sprintf(txt("fit_none"), omf$reason))
+            if (is.null(omf$table)) return(character(0))
+            ft <- omf$table
+            lvl <- format(100 * omf$level)
+            line <- function(mdl) {
+                r <- ft[ft$model == mdl, , drop = FALSE]
+                rej <- r$measure[r$reject]
+                srmr <- r[r$measure == "SRMR", ]
+                head <- if (!length(rej)) sprintf(txt(paste0("fit_keep_", mdl)), lvl)
+                        else sprintf(txt(paste0("fit_reject_", mdl)), paste(.PL_FIT[rej], collapse = ", "), lvl)
+                paste(head, sprintf(txt("fit_srmr"), .pl_fmt(srmr$value), .pl_fmt(srmr$critical)))
+            }
+            out <- c(line("estimated"), if (!isTRUE(omf$same)) line("saturated") else txt("fit_same_interp"))
+            est <- ft[ft$model == "estimated", ]; sat <- ft[ft$model == "saturated", ]
+            srmr_e <- est$value[est$measure == "SRMR"]
+            if (any(est$reject)) {
+                out <- c(out, if (!any(sat$reject) && !isTRUE(omf$same)) txt("fit_structural_blame")
+                              else txt("fit_measurement_blame"))
+                if (srmr_e < 0.08) out <- c(out, txt("fit_srmr_low_reject"))
+            }
+            out
         },
 
         # Interpretation of the higher-order constructs (stage 2): loadings,
@@ -1267,7 +1361,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL, hocq = NULL) {
+                               model = NULL, hocq = NULL, omf = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -1303,6 +1397,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                                 sum(!is.na(hq$htmt$htmt))))
             k <- which.max(r2$r2)
             findings <- c(findings, sprintf(txt("r2"), .pl_fmt(r2$r2[k]), r2$construct[k]))
+            if (!is.null(omf$table)) {
+                e <- omf$table[omf$table$model == "estimated", ]
+                lv <- format(100 * omf$level)
+                sr <- .pl_fmt(e$value[e$measure == "SRMR"])
+                findings <- c(findings, if (any(e$reject)) sprintf(txt("fit_reject"), sum(e$reject), lv, sr)
+                                        else sprintf(txt("fit_keep"), lv, sr))
+            }
             uncertain <- txt("no_inference")
             if (!is.null(sm)) {
                 sig <- vapply(seq_len(nrow(paths)), function(i) {
@@ -1382,6 +1483,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
             self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
+            self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 
         # ---------------------------------------------------------------------
@@ -1479,6 +1581,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "boot$Information$Information_resample$Number_of_admissibles <- sum(sapply(parts, function(o) o$Information$Information_resample$Number_of_admissibles))",
                     sprintf("cSEM::summarize(boot, .alpha = %s, .ci = \"CI_percentile\")", format(1 - as.numeric(self$options$ciLevel))),
                     "# Intervals of R2, reliability, AVE, HTMT and VIF: the same resampling with .user_funs (see R/bootstrap.R in PLSsemLab)")
+            }
+            if (self$options$fitTest && is.null(.pl_fit_reason(model, model$hocs, TRUE))) {
+                args <- sprintf(".R = %d, .seed = %d, .alpha = %s", as.integer(self$options$fitReps),
+                                as.integer(self$options$bootSeed), format(1 - as.numeric(self$options$fitLevel)))
+                code <- c(code, "",
+                    "# Overall model fit: bootstrap test of exact fit, estimated and saturated model",
+                    sprintf("cSEM::testOMF(fit, %s, .saturated = FALSE)", args),
+                    sprintf("cSEM::testOMF(fit, %s, .saturated = TRUE)", args))
             }
             types <- vapply(blocks, `[[`, "", "type")
             if (any(types == "reflective")) {

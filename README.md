@@ -58,7 +58,7 @@ Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
 | 2 | Measurement model: reliability, AVE, HTMT, HTMT2, VIF, Fornell-Larcker, ω, ordinal indicators | ✅ Done |
 | 3 | Structural model (f², VIF, effects), bootstrap in blocks with intervals for every measure, path diagram, loadings and HTMT plots | ✅ Done |
 | 4 | Two-way interactions (simple effects, floodlight, Johnson-Neyman) and higher-order constructs (disjoint two-stage by default; cSEM's routine as an option), with stage-2 discriminant validity | ✅ Done |
-| 5 | Bootstrap test of overall model fit | 🗓 Planned |
+| 5 | Bootstrap test of overall model fit (estimated and saturated model, with decision and reading) | ✅ Done |
 | 6 | Prediction (PLSpredict, CVPAT), mediation, IPMA | 🗓 Planned |
 | 7 | Multigroup analysis with MICOM | 🗓 Planned |
 | 8 | Validation against cSEM, Hair et al. and JASP; stress tests | 🗓 Planned |

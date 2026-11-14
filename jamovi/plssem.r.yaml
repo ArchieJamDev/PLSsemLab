@@ -922,6 +922,60 @@ items:
         - bootSeed
         - ciLevel
 
+  # Overall model fit (phase 5): rows laid out in .init() (4 measures x
+  # estimated and saturated model).
+  # ES: Ajuste global (fase 5): filas en .init().
+  - name: fitGuide
+    title: How to read the overall fit test
+    type: Html
+    visible: (showGuides && fitTest)
+
+  - name: fit
+    title: Overall model fit (bootstrap test of exact fit)
+    type: Table
+    rows: 0
+    visible: (fitTest)
+    refs:
+      - dijkstra_2015
+      - beran_1985
+      - schuberth_2023
+      - henseler_2016
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - fitReps
+      - fitLevel
+      - bootSeed
+    columns:
+      - name: model
+        title: Model
+        type: text
+        combineBelow: true
+      - name: measure
+        title: Discrepancy
+        type: text
+      - name: value
+        title: Value
+        type: number
+      - name: critical
+        title: Critical value
+        type: number
+      - name: p
+        title: p (bootstrap)
+        type: number
+        format: zto,pvalue
+      - name: decision
+        title: Exact fit
+        type: text
+
   - name: pathDiagram
     title: Path diagram
     type: Image
@@ -1018,6 +1072,23 @@ items:
   # model or the data options change.
   # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
   - name: cacheStore
+    type: Html
+    visible: false
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+
+  # Small cache of overall-fit results, cleared with the model options.
+  # ES: Caché pequeña de resultados del ajuste global.
+  - name: fitCacheStore
     type: Html
     visible: false
     clearWith:

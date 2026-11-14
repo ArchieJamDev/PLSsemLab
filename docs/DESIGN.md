@@ -207,10 +207,22 @@ dataset de referencia salen como cuatro mensajes claros.
 
 ### D1 — Prueba de ajuste global (E5)
 
+**Actualización (noviembre de 2026).** JASP quitó el chi-cuadrado ML en
+junio de 2025 (jaspSem 0.95, commit 698bb9a) y desde entonces muestra
+`testOMF()`: el estadístico y su valor crítico, para el modelo estimado o el
+saturado según una casilla, sin decisión ni lectura; con una solución
+inadmisible la tabla da error. En "medidas adicionales" sigue mostrando CFI,
+GFI, RMSEA, NFI, NNFI e IFI, índices de la lógica ML del SEM basado en
+covarianzas, sin advertencia.
+
 **Solución.** `testOMF()` (Beran y Srivastava, 1985; Dijkstra y Henseler,
 2015): SRMR, d_G, d_L y d_ML con su valor crítico bootstrap al nivel elegido,
-modelo estimado y saturado. El chi-cuadrado ML no se muestra, y el informe
-explica por qué.
+los modelos estimado y saturado juntos, la decisión, un p bootstrap
+((r + 1)/(R + 1)) y la lectura de dónde está el desajuste (estructural si el
+saturado ajusta y el estimado no; de medida si ambos fallan). El chi-cuadrado
+ML y los índices derivados no se muestran, y la guía explica por qué. Con
+interacciones, orden superior o una solución inadmisible, las filas quedan
+como "No computable" con la razón.
 
 **Evidencia.** 3–7 s con 499 réplicas. Modelo simple (PLSc): SRMR 0,056
 frente a un valor crítico de 0,040, se rechaza el ajuste exacto aunque el
@@ -401,7 +413,7 @@ la fase 1, que es la base de todas las demás.
 | 2 | Modelo de medida: estimador PLS/PLSc, fiabilidad (alfa, rho_A, rho_C), AVE, HTMT y HTMT2, VIF de indicadores formativos, Fornell-Larcker | D2 | Valores de COMP del E1 reproducidos; tablas con forma fija desde `.init()` |
 | 3 | Modelo estructural y bootstrap: R², f², VIF estructural, efectos directos, indirectos y totales; bootstrap por bloques con checkpoint, caché y semilla; IC de todas las medidas; diagrama de rutas, gráfico de cargas y cuadrícula HTMT en ggplot | D2, D4 | 2000 réplicas sin fallo, cancelables; IC iguales a los de cSEM |
 | 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Hecho: los dos modelos del E2 corren completos y coinciden con cSEM; lo no calculable sale como "No computable" con su razón |
-| 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Resultados del E5 reproducidos; explicación de por qué no hay chi-cuadrado ML |
+| 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Hecho: valores y valores críticos iguales a `testOMF()`; explicación de por qué no hay chi-cuadrado ML ni CFI/RMSEA |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Resultados del E6 reproducidos; rango de la escala para IPMA |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |
 | 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |

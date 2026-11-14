@@ -163,4 +163,36 @@ refs:
         title: 'Moderation'
         publisher: 'Retrieved from https://davidakenny.net/cm/moderation.htm'
         url: https://davidakenny.net/cm/moderation.htm
+
+    beran_1985:
+        type: 'article'
+        author: 'Beran, R., & Srivastava, M. S.'
+        year: 1985
+        title: 'Bootstrap tests and confidence regions for functions of a covariance matrix'
+        publisher: 'The Annals of Statistics'
+        volume: '13'
+        issue: '1'
+        pages: '95-115'
+        url: https://doi.org/10.1214/aos/1176346579
+
+    henseler_2016:
+        type: 'article'
+        author: 'Henseler, J., Hubona, G., & Ray, P. A.'
+        year: 2016
+        title: 'Using PLS path modeling in new technology research: Updated guidelines'
+        publisher: 'Industrial Management & Data Systems'
+        volume: '116'
+        issue: '1'
+        pages: '2-20'
+        url: https://doi.org/10.1108/IMDS-09-2015-0382
+
+    schuberth_2023:
+        type: 'article'
+        author: 'Schuberth, F., Rademaker, M. E., & Henseler, J.'
+        year: 2023
+        title: 'Assessing the overall fit of composite models estimated by partial least squares path modeling'
+        publisher: 'European Journal of Marketing'
+        volume: '57'
+        issue: '6'
+        url: https://doi.org/10.1108/EJM-08-2020-0586
 ...

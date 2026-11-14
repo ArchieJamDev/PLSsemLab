@@ -76,6 +76,15 @@ bk <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  bootstrap = TRUE, bootReps = 100), data = d)
 bk$init(); bk$run(); draw(bk, "diagram-bank-hoc-LR.png")
 print(bk$results$hocHtmt$asDF)
+# Overall fit (phase 5) on the bank model without the higher-order construct
+# ES: Ajuste global (fase 5) en el modelo bancario sin orden superior
+fb <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),
+                                                    list(label = "Comp", vars = paste0("comp_", 1:3))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 structural = list(list("Qual"), list("Trust", "Comp"), list("Qual"), list()),
+                                 fitTest = TRUE, fitReps = 199), data = d)
+fb$init(); fb$run()
+print(fb$results$fit$asDF)
 it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "SAT", vars = paste0("sat", 1:4)),
                                                     list(label = "LOY", vars = paste0("loy", 1:4))),
                                  structural = list(list(), list(), list("SAT", "IMAG", c("SAT", "IMAG"))),

@@ -1,5 +1,18 @@
 # PLSsemLab 0.0.0 (development)
 
+## Phase 5: overall model fit (D1)
+
+* **Overall fit test** (*Model Fit* box, its own Run checkbox): the
+  bootstrap test of exact fit (Beran & Srivastava, 1985; Dijkstra &
+  Henseler, 2015) with `cSEM::testOMF()`. SRMR, d_G, d_L and d_ML against
+  their critical values, a bootstrap p-value and the decision, for the
+  estimated and the saturated model together. The interpretation says where
+  the misfit lies (structural or measurement model) and how to read a
+  rejection with a low SRMR.
+* The guide explains why there is no ML chi-square test, CFI or RMSEA.
+* With interactions, higher-order constructs or an inadmissible solution the
+  rows stay as "Not computable" with the reason.
+
 ## Phase 4: interactions and higher-order constructs (D3), closed
 
 * **Two-way interactions:** drag two constructs together into a predictor

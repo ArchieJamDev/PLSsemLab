@@ -272,6 +272,32 @@ options:
     max: 0.999
     default: 0.95
 
+  # Overall model fit (phase 5): the bootstrap test of exact fit (Beran &
+  # Srivastava, 1985; Dijkstra & Henseler, 2015) with cSEM::testOMF(), for
+  # the estimated and the saturated model. A long computation: its own Run
+  # checkbox, off by default; the seed is the bootstrap's.
+  # ES: Ajuste global (fase 5): la prueba bootstrap de ajuste exacto con
+  # cSEM::testOMF(), para el modelo estimado y el saturado. Cálculo largo:
+  # su propia casilla Ejecutar, desmarcada; la semilla es la del bootstrap.
+  - name: fitTest
+    title: Run overall fit test
+    type: Bool
+    default: false
+
+  - name: fitReps
+    title: Resamples
+    type: Integer
+    min: 99
+    max: 100000
+    default: 499
+
+  - name: fitLevel
+    title: Level of the critical value
+    type: Number
+    min: 0.8
+    max: 0.999
+    default: 0.95
+
   # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
   # cannot show).
   # ES: Diagrama de rutas dibujado por el módulo (el de cSEM usa

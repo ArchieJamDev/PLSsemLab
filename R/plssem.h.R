@@ -24,6 +24,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             bootReps = 2000,
             bootSeed = 2026,
             ciLevel = 0.95,
+            fitTest = FALSE,
+            fitReps = 499,
+            fitLevel = 0.95,
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
@@ -191,6 +194,22 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=0.5,
                 max=0.999,
                 default=0.95)
+            private$..fitTest <- jmvcore::OptionBool$new(
+                "fitTest",
+                fitTest,
+                default=FALSE)
+            private$..fitReps <- jmvcore::OptionInteger$new(
+                "fitReps",
+                fitReps,
+                min=99,
+                max=100000,
+                default=499)
+            private$..fitLevel <- jmvcore::OptionNumber$new(
+                "fitLevel",
+                fitLevel,
+                min=0.8,
+                max=0.999,
+                default=0.95)
             private$..pathDiagram <- jmvcore::OptionBool$new(
                 "pathDiagram",
                 pathDiagram,
@@ -338,6 +357,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..bootReps)
             self$.addOption(private$..bootSeed)
             self$.addOption(private$..ciLevel)
+            self$.addOption(private$..fitTest)
+            self$.addOption(private$..fitReps)
+            self$.addOption(private$..fitLevel)
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
@@ -379,6 +401,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         bootReps = function() private$..bootReps$value,
         bootSeed = function() private$..bootSeed$value,
         ciLevel = function() private$..ciLevel$value,
+        fitTest = function() private$..fitTest$value,
+        fitReps = function() private$..fitReps$value,
+        fitLevel = function() private$..fitLevel$value,
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
@@ -419,6 +444,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..bootReps = NA,
         ..bootSeed = NA,
         ..ciLevel = NA,
+        ..fitTest = NA,
+        ..fitReps = NA,
+        ..fitLevel = NA,
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
@@ -478,10 +506,13 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         moderationGuide = function() private$.items[["moderationGuide"]],
         simpleSlopes = function() private$.items[["simpleSlopes"]],
         moderationPlots = function() private$.items[["moderationPlots"]],
+        fitGuide = function() private$.items[["fitGuide"]],
+        fit = function() private$.items[["fit"]],
         pathDiagram = function() private$.items[["pathDiagram"]],
         loadingsPlot = function() private$.items[["loadingsPlot"]],
         htmtPlot = function() private$.items[["htmtPlot"]],
         cacheStore = function() private$.items[["cacheStore"]],
+        fitCacheStore = function() private$.items[["fitCacheStore"]],
         interpretation = function() private$.items[["interpretation"]],
         reproducibility = function() private$.items[["reproducibility"]],
         reproducibilityCode = function() private$.items[["reproducibilityCode"]]),
@@ -1458,6 +1489,63 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         "bootReps",
                         "bootSeed",
                         "ciLevel"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="fitGuide",
+                title="How to read the overall fit test",
+                visible="(showGuides && fitTest)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="fit",
+                title="Overall model fit (bootstrap test of exact fit)",
+                rows=0,
+                visible="(fitTest)",
+                refs=list(
+                    "dijkstra_2015",
+                    "beran_1985",
+                    "schuberth_2023",
+                    "henseler_2016"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "fitReps",
+                    "fitLevel",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="model", 
+                        `title`="Model", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="measure", 
+                        `title`="Discrepancy", 
+                        `type`="text"),
+                    list(
+                        `name`="value", 
+                        `title`="Value", 
+                        `type`="number"),
+                    list(
+                        `name`="critical", 
+                        `title`="Critical value", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p (bootstrap)", 
+                        `type`="number", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="decision", 
+                        `title`="Exact fit", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
@@ -1559,6 +1647,21 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing")))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="fitCacheStore",
+                visible=FALSE,
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing")))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="interpretation",
                 title="Applied interpretation"))
             self$add(jmvcore::Html$new(
@@ -1617,6 +1720,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param bootReps .
 #' @param bootSeed .
 #' @param ciLevel .
+#' @param fitTest .
+#' @param fitReps .
+#' @param fitLevel .
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
@@ -1672,10 +1778,13 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$moderationGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$simpleSlopes} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$moderationPlots} \tab \tab \tab \tab \tab an array of images \cr
+#'   \code{results$fitGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$fit} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$fitCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
@@ -1708,6 +1817,9 @@ plssem <- function(
     bootReps = 2000,
     bootSeed = 2026,
     ciLevel = 0.95,
+    fitTest = FALSE,
+    fitReps = 499,
+    fitLevel = 0.95,
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
@@ -1757,6 +1869,9 @@ plssem <- function(
         bootReps = bootReps,
         bootSeed = bootSeed,
         ciLevel = ciLevel,
+        fitTest = fitTest,
+        fitReps = fitReps,
+        fitLevel = fitLevel,
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,

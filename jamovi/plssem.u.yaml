@@ -294,11 +294,31 @@ children:
           - type: TextBox
             name: bootSeed
             format: number
-            enable: (bootstrap)
+            enable: (bootstrap || fitTest)
           - type: TextBox
             name: ciLevel
             format: number
             enable: (bootstrap)
+  - type: CollapseBox
+    label: Model Fit
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: fitTest
+          - type: TextBox
+            name: fitReps
+            format: number
+            enable: (fitTest)
+          - type: TextBox
+            name: fitLevel
+            format: number
+            enable: (fitTest)
+          - type: Label
+            label: The seed is the one in the Bootstrap box.
   - type: CollapseBox
     label: Plots
     collapsed: true

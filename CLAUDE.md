@@ -86,6 +86,12 @@ carry every rule below in full.
   paths among LOCs in stage 1): it is the optional "as JASP" approach.
 - cSEM accepts a path to one dimension of a second-order construct without
   warning and drops it from the reported stage 2: the module rejects it.
+- JASP removed its ML chi-square in June 2025 (jaspSem 0.95, commit
+  698bb9a): it now shows testOMF() without decision, one model at a time,
+  plus CFI/GFI/RMSEA-type indices. D1 is about reading and completeness.
+- `testOMF()` returns `Critical_value` columns in its own order and keeps
+  admissible draws in `Information$Bootstrap_values`; `"<~"` without
+  `.PLS_modes` is Mode B (pass Mode A in reference calls).
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in
   jamovi.yaml vs jamovi's `JAMOVI_R_VERSION`), else "Installed version
   needs to be updated".

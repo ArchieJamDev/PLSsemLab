@@ -328,6 +328,15 @@
             "Corporate reputation, trust, satisfaction and loyalty of 675 German bank customers (four formative and five reflective constructs) with gender, age group, education, employment, income and family status; Damberg (2023), CC BY 4.0 - see data/README.md": [
                 "Reputación corporativa, confianza, satisfacción y lealtad de 675 clientes de bancos alemanes (cuatro constructos formativos y cinco reflectivos) con sexo, grupo de edad, educación, empleo, ingreso y situación familiar; Damberg (2023), CC BY 4.0 - vea data/README.md"
             ],
+            "Critical value": [
+                "Valor crítico"
+            ],
+            "Critical value (%s%%)": [
+                "Valor crítico (%s%%)"
+            ],
+            "Critical value: the %5$s%% quantile of the bootstrap distribution of each discrepancy under exact fit (%1$d resamples; %2$d admissible for the estimated model, %3$d for the saturated one; seed %4$d is the bootstrap seed; %6$d s). p (bootstrap): (number of admissible resamples at least as large as the observed value + 1) / (admissible resamples + 1), so it is never 0.": [
+                "Valor crítico: el cuantil %5$s%% de la distribución bootstrap de cada discrepancia bajo ajuste exacto (%1$d réplicas; %2$d admisibles para el modelo estimado, %3$d para el saturado; la semilla %4$d es la del bootstrap; %6$d s). p (bootstrap): (número de réplicas admisibles al menos tan grandes como el valor observado + 1) / (réplicas admisibles + 1), así que nunca es 0."
+            ],
             "Cronbach's α": [
                 "α de Cronbach"
             ],
@@ -363,6 +372,9 @@
             ],
             "Direct, indirect and total effects": [
                 "Efectos directos, indirectos y totales"
+            ],
+            "Discrepancy": [
+                "Discrepancia"
             ],
             "Discriminant validity (HTMT)": [
                 "Validez discriminante (HTMT)"
@@ -430,6 +442,15 @@
             "Equivalent R code": [
                 "Código R equivalente"
             ],
+            "Estimated": [
+                "Estimado"
+            ],
+            "Estimated model: exact fit is rejected by %s (critical values at %s%%).": [
+                "Modelo estimado: el ajuste exacto se rechaza con %s (valores críticos al %s%%)."
+            ],
+            "Estimated model: no discrepancy rejects exact fit (critical values at %s%%).": [
+                "Modelo estimado: ninguna discrepancia rechaza el ajuste exacto (valores críticos al %s%%)."
+            ],
             "Estimation": [
                 "Estimación"
             ],
@@ -450,6 +471,9 @@
             ],
             "Every weight of the formative constructs is significant.": [
                 "Todos los pesos de los constructos formativos son significativos."
+            ],
+            "Exact fit": [
+                "Ajuste exacto"
             ],
             "Exclude cases listwise": [
                 "Excluir casos por lista"
@@ -562,6 +586,9 @@
             "How to read the model summary": [
                 "Cómo leer el resumen del modelo"
             ],
+            "How to read the overall fit test": [
+                "Cómo leer la prueba de ajuste global"
+            ],
             "How to read the path coefficients": [
                 "Cómo leer los coeficientes de ruta"
             ],
@@ -661,6 +688,9 @@
             "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator. Run the bootstrap to add its interval and the Johnson-Neyman points.": [
                 "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador. Ejecute el bootstrap para añadir su intervalo y los puntos de Johnson-Neyman."
             ],
+            "Level of the critical value": [
+                "Nivel del valor crítico"
+            ],
             "Light blue": [
                 "Azul claro"
             ],
@@ -733,6 +763,12 @@
             "Missing values: each missing value is replaced by the mean of its indicator (%d value(s) replaced). This keeps every case but shrinks the variance of the indicator; use it only when few values are missing.": [
                 "Valores perdidos: cada valor perdido se reemplaza por la media de su indicador (%d valor(es) reemplazado(s)). Así se conservan todos los casos, pero se reduce la varianza del indicador; úselo solo cuando falten pocos valores."
             ],
+            "Model": [
+                "Modelo"
+            ],
+            "Model Fit": [
+                "Ajuste del Modelo"
+            ],
             "Model summary": [
                 "Resumen del modelo"
             ],
@@ -778,14 +814,29 @@
             "Not computable": [
                 "No computable"
             ],
+            "Not computable in this version for models with higher-order constructs: the test would assess only stage 2, where the dimensions enter as fixed scores, and its reference distribution would ignore stage 1.": [
+                "No calculable en esta versión para modelos con constructos de orden superior: la prueba evaluaría solo la etapa 2, donde las dimensiones entran como puntuaciones fijas, y su distribución de referencia ignoraría la etapa 1."
+            ],
             "Not computable: %s": [
                 "No computable: %s"
             ],
             "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it.": [
                 "No calculable: la rutina de segundo orden de cSEM mide los demás constructos con una sola puntuación en la etapa 2, así que su HTMT con el constructo de orden superior no está definido. Elija el enfoque disjunto para evaluarlo."
             ],
+            "Not computable: cSEM's testOMF() stopped with: %s": [
+                "No calculable: testOMF() de cSEM se detuvo con: %s"
+            ],
+            "Not computable: the estimates are not admissible (see the notice). A fit test of an inadmissible solution has no meaning; fix the cause first.": [
+                "No calculable: las estimaciones no son admisibles (vea el aviso). Una prueba de ajuste de una solución inadmisible no tiene sentido; corrija primero la causa."
+            ],
             "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
                 "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
+            ],
+            "Not computable: with an interaction term the model implies no indicator correlation matrix, so the discrepancies of the overall fit test are not defined (cSEM; Dijkstra & Henseler, 2015).": [
+                "No calculable: con un término de interacción el modelo no implica una matriz de correlaciones de los indicadores, así que las discrepancias de la prueba de ajuste global no están definidas (cSEM; Dijkstra y Henseler, 2015)."
+            ],
+            "Not rejected": [
+                "No rechazado"
             ],
             "On average ρC differs from the ω of the one-factor CFA by %s: with consistent PLS both rest on common-factor loadings, so they should be close.": [
                 "En promedio, ρC difiere de la ω del AFC de un factor en %s: con PLS consistente ambas se basan en cargas de factor común, así que deberían ser cercanas."
@@ -814,8 +865,23 @@
             "Outcome": [
                 "Resultado"
             ],
+            "Overall fit: %d of 4 discrepancies reject exact fit of the estimated model (critical values at %s%%; SRMR %s).": [
+                "Ajuste global: %d de 4 discrepancias rechazan el ajuste exacto del modelo estimado (valores críticos al %s%%; SRMR %s)."
+            ],
+            "Overall fit: no discrepancy rejects exact fit of the estimated model (critical values at %s%%; SRMR %s).": [
+                "Ajuste global: ninguna discrepancia rechaza el ajuste exacto del modelo estimado (valores críticos al %s%%; SRMR %s)."
+            ],
+            "Overall model fit": [
+                "Ajuste global del modelo"
+            ],
+            "Overall model fit (bootstrap test of exact fit)": [
+                "Ajuste global del modelo (prueba bootstrap de ajuste exacto)"
+            ],
             "p": [
                 ""
+            ],
+            "p (bootstrap)": [
+                "p (bootstrap)"
             ],
             "p (weight)": [
                 "p (peso)"
@@ -901,6 +967,9 @@
             "Reflective indicators with a negative loading: %s. They are almost certainly items worded in the opposite direction that were not recoded. Recode them in jamovi (for a scale from 1 to k, the new value is k + 1 minus the old one) and run the analysis again: until then, the reliability, AVE and HTMT of their constructs are distorted.": [
                 "Indicadores reflectivos con carga negativa: %s. Casi con seguridad son ítems redactados en sentido opuesto que no se recodificaron. Recodifíquelos en jamovi (en una escala de 1 a k, el valor nuevo es k + 1 menos el anterior) y vuelva a ejecutar el análisis: mientras tanto, la fiabilidad, la AVE y el HTMT de sus constructos están distorsionados."
             ],
+            "Rejected": [
+                "Rechazado"
+            ],
             "reliability acceptable only in exploratory research": [
                 "fiabilidad aceptable solo en investigación exploratoria"
             ],
@@ -952,8 +1021,20 @@
             "Run bootstrap": [
                 "Ejecutar bootstrap"
             ],
+            "Run overall fit test": [
+                "Ejecutar la prueba de ajuste global"
+            ],
             "Run the bootstrap to know whether the interaction and the simple effects are significant.": [
                 "Ejecute el bootstrap para saber si la interacción y los efectos simples son significativos."
+            ],
+            "Saturated": [
+                "Saturado"
+            ],
+            "Saturated model (measurement model only): exact fit is rejected by %s (critical values at %s%%).": [
+                "Modelo saturado (solo el modelo de medida): el ajuste exacto se rechaza con %s (valores críticos al %s%%)."
+            ],
+            "Saturated model (measurement model only): no discrepancy rejects exact fit (critical values at %s%%).": [
+                "Modelo saturado (solo el modelo de medida): ninguna discrepancia rechaza el ajuste exacto (valores críticos al %s%%)."
             ],
             "SE": [
                 "EE"
@@ -993,6 +1074,9 @@
             ],
             "Spring": [
                 "Resorte"
+            ],
+            "SRMR %s against a critical value of %s.": [
+                "SRMR %s frente a un valor crítico de %s."
             ],
             "Structural model": [
                 "Modelo estructural"
@@ -1060,6 +1144,12 @@
             "The largest path is %s → %s (%s).": [
                 "La ruta más grande es %s → %s (%s)."
             ],
+            "The measurement model fits and the estimated model does not: the misfit comes from the structural model. Look for theoretically justified paths that the model leaves out, not for paths that merely improve fit.": [
+                "El modelo de medida ajusta y el estimado no: el desajuste viene del modelo estructural. Busque rutas justificadas por la teoría que el modelo deja fuera, no rutas que solo mejoren el ajuste."
+            ],
+            "The misfit is already present in the measurement model. Check indicators with low loadings or cross-loadings, and whether every indicator belongs to its construct; changing structural paths will not fix it.": [
+                "El desajuste ya está en el modelo de medida. Revise los indicadores con cargas bajas o cargas cruzadas, y si cada indicador pertenece a su constructo; cambiar rutas estructurales no lo resolverá."
+            ],
             "The model has no reflective constructs, so loadings are not used to judge indicator quality.": [
                 "El modelo no tiene constructos reflectivos, así que las cargas no se usan para juzgar la calidad de los indicadores."
             ],
@@ -1078,11 +1168,29 @@
             "The one-factor CFA gave a standardized loading of 1 or more (a Heywood case), so ω is not reported.": [
                 "El AFC de un factor dio una carga estandarizada de 1 o más (un caso Heywood), así que ω no se informa."
             ],
+            "The overall fit test asks whether the correlations among the indicators that the model implies match the observed ones exactly, apart from sampling error (Dijkstra & Henseler, 2015; Schuberth et al., 2023, see references). Four discrepancies measure the distance between the two matrices: SRMR (standardised root mean squared residual), d_G (geodesic distance), d_L (unweighted least squares distance, called d_ULS in SmartPLS) and d_ML (maximum likelihood distance). The bootstrap first transforms the data so that the model fits them exactly, then resamples them; the critical value of each discrepancy is a high quantile of its resampled values (HI95 in SmartPLS at 95%). If the observed value is above it, exact fit is rejected at that level; p (bootstrap) is, roughly, the share of resamples at least as large as the observed value. Read it with care: not rejecting does not prove the model right, and with a large sample small, unimportant misfits lead to rejection. The SRMR below 0.08 is a descriptive rule of thumb, not a test (Henseler et al., 2016). In PLS-SEM this test is a complement: the main evidence remains the measurement and structural criteria of the tables above (Hair et al., 2019).": [
+                "La prueba de ajuste global pregunta si las correlaciones entre los indicadores que implica el modelo coinciden exactamente con las observadas, salvo por el error de muestreo (Dijkstra y Henseler, 2015; Schuberth et al., 2023, vea las referencias). Cuatro discrepancias miden la distancia entre las dos matrices: SRMR (raíz del residuo cuadrático medio estandarizado), d_G (distancia geodésica), d_L (distancia de mínimos cuadrados no ponderados, llamada d_ULS en SmartPLS) y d_ML (distancia de máxima verosimilitud). El bootstrap primero transforma los datos para que el modelo los ajuste exactamente y luego los remuestrea; el valor crítico de cada discrepancia es un cuantil alto de sus valores remuestreados (HI95 en SmartPLS al 95%). Si el valor observado lo supera, se rechaza el ajuste exacto a ese nivel; el p (bootstrap) es, aproximadamente, la proporción de réplicas al menos tan grandes como el valor observado. Léala con cuidado: no rechazar no prueba que el modelo sea correcto, y con una muestra grande desajustes pequeños y sin importancia llevan al rechazo. Un SRMR menor de 0.08 es una regla descriptiva, no una prueba (Henseler et al., 2016). En PLS-SEM esta prueba es un complemento: la evidencia principal siguen siendo los criterios de medida y estructurales de las tablas anteriores (Hair et al., 2019)."
+            ],
+            "The overall fit test could not be run: %s": [
+                "No se pudo ejecutar la prueba de ajuste global: %s"
+            ],
+            "The overall fit test was not computed. %s": [
+                "La prueba de ajuste global no se calculó. %s"
+            ],
             "The p value and the percentile interval disagree for this path (a borderline case). The decision follows the interval, as recommended for PLS-SEM (Hair et al., 2019, see references); report both, and check with more resamples or another seed.": [
                 "El valor p y el intervalo percentil discrepan en esta ruta (un caso límite). La decisión sigue al intervalo, como se recomienda en PLS-SEM (Hair et al., 2019, vea las referencias); informe ambos y compruébelo con más réplicas u otra semilla."
             ],
             "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
                 "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
+            ],
+            "The saturated model is the same model here (your structural model relates every pair of constructs), so its test says the same.": [
+                "Aquí el modelo saturado es el mismo modelo (su modelo estructural relaciona cada par de constructos), así que su prueba dice lo mismo."
+            ],
+            "The seed is the one in the Bootstrap box.": [
+                "La semilla es la de la caja Bootstrap."
+            ],
+            "The SRMR is below the descriptive 0.08 rule while the test rejects exact fit. This is frequent: the test detects any departure, however small, and its power grows with the sample. Report both, and judge whether the size of the misfit matters for your conclusions.": [
+                "El SRMR está por debajo de la regla descriptiva de 0.08 mientras la prueba rechaza el ajuste exacto. Es frecuente: la prueba detecta cualquier desviación, por pequeña que sea, y su potencia crece con la muestra. Reporte ambos y juzgue si el tamaño del desajuste importa para sus conclusiones."
             ],
             "The structural model has a loop (%s). PLS-SEM estimates recursive models only, in which no construct predicts itself through others: remove one path of the loop.": [
                 "El modelo estructural tiene un ciclo (%s). PLS-SEM solo estima modelos recursivos, en los que ningún constructo se predice a sí mismo a través de otros: quite una ruta del ciclo."
@@ -1101,6 +1209,9 @@
             ],
             "Tree, top to bottom": [
                 "Árbol, de arriba abajo"
+            ],
+            "Two versions of the model are tested. The estimated model imposes your structural paths; the saturated model lets every pair of constructs correlate freely, so only the measurement model is tested. If the saturated model is not rejected and the estimated one is, the misfit lies in the structural model (for example, a missing path); if both are rejected, look first at the measurement model (indicators that belong to another construct, correlated errors not modelled).": [
+                "Se prueban dos versiones del modelo. El modelo estimado impone sus rutas estructurales; el modelo saturado deja que cada par de constructos se correlacione libremente, así que solo se prueba el modelo de medida. Si el saturado no se rechaza y el estimado sí, el desajuste está en el modelo estructural (por ejemplo, una ruta que falta); si ambos se rechazan, mire primero el modelo de medida (indicadores que pertenecen a otro constructo, errores correlacionados no modelados)."
             ],
             "Two-stage approach": [
                 "Enfoque de dos etapas"
@@ -1129,6 +1240,9 @@
             "Upper bound: the one-sided 95%% bootstrap upper bound (the 95th percentile of %d admissible resamples). Discriminant validity holds when it stays below the threshold (Henseler et al., 2015, see references).": [
                 "Límite superior: el límite superior bootstrap unilateral al 95%% (el percentil 95 de %d réplicas admisibles). Hay validez discriminante cuando queda por debajo del umbral (Henseler et al., 2015, vea las referencias)."
             ],
+            "Value": [
+                "Valor"
+            ],
             "very weak": [
                 "muy débil"
             ],
@@ -1156,6 +1270,9 @@
             "White": [
                 "Blanco"
             ],
+            "Why there is no chi-square test, CFI or RMSEA: the ML chi-square test and the indices built on it (CFI, NFI, NNFI, IFI, RMSEA, GFI) belong to covariance-based SEM, where the model is estimated by maximum likelihood and the statistic follows a chi-square distribution under multivariate normality. PLS estimates are not maximum likelihood estimates, so the statistic does not follow that distribution, and its p-value and the indices derived from it have no known meaning here; the bootstrap test above needs neither normality nor a known distribution (Dijkstra & Henseler, 2015; Schuberth et al., 2023).": [
+                "Por qué no hay prueba chi-cuadrado, CFI ni RMSEA: la prueba chi-cuadrado ML y los índices construidos sobre ella (CFI, NFI, NNFI, IFI, RMSEA, GFI) pertenecen al SEM basado en covarianzas, donde el modelo se estima por máxima verosimilitud y el estadístico sigue una distribución chi-cuadrado bajo normalidad multivariante. Las estimaciones de PLS no son de máxima verosimilitud, así que el estadístico no sigue esa distribución, y su p y los índices derivados no tienen aquí un significado conocido; la prueba bootstrap de arriba no necesita normalidad ni una distribución conocida (Dijkstra y Henseler, 2015; Schuberth et al., 2023)."
+            ],
             "With an interaction in the model, cSEM cannot build the model-implied matrix used for ρC, so ρC is computed from the loadings, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); in models without interactions this gives the same value as cSEM.": [
                 "Con una interacción en el modelo, cSEM no puede armar la matriz implicada que usa ρC, así que ρC se calcula a partir de las cargas, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); en modelos sin interacciones da el mismo valor que cSEM."
             ],
@@ -1182,6 +1299,9 @@
             ],
             "With the bootstrap, these weights of dimensions are not significant: %s. Keep a dimension whose loading is 0.50 or more: its absolute contribution matters even if its relative one does not (Hair et al., 2019).": [
                 "Con el bootstrap, estos pesos de dimensiones no son significativos: %s. Conserve una dimensión cuya carga sea de 0.50 o más: su contribución absoluta importa aunque la relativa no (Hair et al., 2019)."
+            ],
+            "Your structural model already relates every pair of constructs, so the estimated and the saturated model are the same model and both tests coincide.": [
+                "Su modelo estructural ya relaciona cada par de constructos, así que el modelo estimado y el saturado son el mismo modelo y ambas pruebas coinciden."
             ],
             "ρA": [
                 "ρA"

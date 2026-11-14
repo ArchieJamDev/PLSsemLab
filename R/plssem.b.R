@@ -172,7 +172,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 for (v in if (length(b)) b[[1]]$vars else character(0))
                     self$results$predict$addRow(rowKey = paste(cn, v, sep = "::"), values = list(construct = cn, indicator = v))
             }
-            for (cn in c("", endo)) for (bn in c("IA", "LM"))
+            alt_on <- nrow(.pl_cvpat_drop(self$options$cvpatDrop, paths)) > 0
+            for (cn in c("", endo)) for (bn in c("IA", "LM", if (alt_on) "ALT"))
                 self$results$cvpat$addRow(rowKey = paste(cn, bn, sep = "::"),
                                           values = list(construct = if (nzchar(cn)) cn else ptxt("cvpat_all"),
                                                         bench = ptxt(paste0("bench_", bn))))
@@ -756,18 +757,40 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             reps <- as.integer(self$options$predictReps)
             seed <- as.integer(self$options$bootSeed)
             if (folds > nrow(d)) return(notcomp(txt("footnotes", "predict_small")))
-            refit <- function(data) suppressWarnings(cSEM::csem(
-                .data = data, .model = model$syntax,
+            refit_with <- function(syntax) function(data) suppressWarnings(cSEM::csem(
+                .data = data, .model = syntax,
                 .PLS_modes = if (length(model$modes)) model$modes else NULL,
                 .disattenuate = self$options$estimator == "plsc",
                 .PLS_weight_scheme_inner = self$options$innerScheme))
-            key <- list("plssem-predict-1", model$syntax, model$modes, d, self$options$estimator,
-                        self$options$innerScheme, folds, reps, seed,
+            refit <- refit_with(model$syntax)
+            # Competing model: the same constructs without the left-out paths;
+            # checked on the whole sample first (it must estimate and be
+            # admissible), otherwise its rows say why.
+            # ES: Modelo competidor: los mismos constructos sin las rutas
+            # excluidas; se comprueba antes con toda la muestra.
+            drop <- .pl_cvpat_drop(self$options$cvpatDrop, paths)
+            alt_refit <- NULL
+            alt_reason <- NULL
+            alt_syntax <- NULL
+            if (nrow(drop)) {
+                keep <- paths[!(paste(paths$from, paths$to) %in% paste(drop$from, drop$to)), , drop = FALSE]
+                if (!nrow(keep)) alt_reason <- txt("footnotes", "cvpat_alt_empty")
+                else {
+                    alt_syntax <- .pl_build_syntax(blocks, keep, self$options$estimator)$syntax
+                    chk <- .pl_capture(refit_with(alt_syntax)(d))
+                    if (is.null(chk$value)) alt_reason <- sprintf(txt("footnotes", "cvpat_alt_error"), paste(chk$error, collapse = "; "))
+                    else if (sum(cSEM::verify(chk$value)) != 0) alt_reason <- txt("footnotes", "cvpat_alt_inadmissible")
+                    else alt_refit <- refit_with(alt_syntax)
+                }
+            }
+            key <- list("plssem-predict-2", model$syntax, model$modes, d, self$options$estimator,
+                        self$options$innerScheme, folds, reps, seed, alt_syntax,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
                 r <- .pl_capture(local({
-                    cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, checkpoint = function() private$.checkpoint())
+                    cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, alt_refit = alt_refit,
+                                           checkpoint = function() private$.checkpoint())
                     vinv <- stats::setNames(names(model$vmap), model$vmap)
                     endo <- unique(paths$to)
                     ind_of <- function(cn) {
@@ -803,15 +826,25 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             cv <- res$summary$cvpat
             for (k in seq_len(nrow(cv))) {
                 cn <- if (cv$group[k] == "all") "" else cv$group[k]
+                dec <- if (cv$bench[k] != "ALT") { if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no" }
+                       else if (cv$p[k] >= 0.05) "alt_same" else if (cv$diff[k] < 0) "yes" else "alt_better"
                 ct$setRow(rowKey = paste(cn, cv$bench[k], sep = "::"),
                           values = list(lossPls = cv$loss_pls[k], lossBench = cv$loss_bench[k], diff = cv$diff[k],
-                                        t = cv$t[k], p = cv$p[k],
-                                        decision = txt("labels", if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no")))
+                                        t = cv$t[k], p = cv$p[k], decision = txt("labels", dec)))
+            }
+            if (nrow(drop)) {
+                if (!is.null(alt_reason)) {
+                    for (cn in c("", unique(paths$to)))
+                        ct$setCell(rowKey = paste(cn, "ALT", sep = "::"), col = "decision", value = txt("labels", "not_computable"))
+                    ct$setNote("alt", alt_reason)
+                } else
+                    ct$setNote("alt", sprintf(txt("boot", "cvpat_alt_note"), paste(drop$from, "\u2192", drop$to, collapse = ", ")))
             }
             note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
             pt$setNote("cv", note)
             ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
-            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings))
+            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings,
+                                drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
         },
 
         # ---------------------------------------------------------------------
@@ -1517,6 +1550,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 r <- cv[cv$bench == b, ]
                 out <- c(out, sprintf(txt(if (r$p < 0.05 && r$diff < 0) "cvpat_better" else "cvpat_not"),
                                       txt(paste0("bench_long_", b)), .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
+            }
+            r <- cv[cv$bench == "ALT", ]
+            if (nrow(r) == 1) {
+                key <- if (r$p >= 0.05) "cvpat_alt_same" else if (r$diff < 0) "cvpat_alt_worse" else "cvpat_alt_better"
+                out <- c(out, sprintf(txt(key), prd$drop, .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
             }
             c(out, txt("predict_caution"))
         },

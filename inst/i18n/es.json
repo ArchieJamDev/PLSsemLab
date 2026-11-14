@@ -52,6 +52,9 @@
             "'%s' is the name of a first-order construct and of a higher-order construct. Use a different name for each.": [
                 "'%s' es el nombre de un constructo de primer orden y de uno de orden superior. Use un nombre distinto para cada uno."
             ],
+            "%1$d-fold cross-validation repeated %2$d times (folds drawn by cSEM with seeds %3$d, %3$d + 1, ...; %4$d s). Each case is predicted by a model estimated without it; results are averages over the repetitions.": [
+                "Validación cruzada de %1$d particiones repetida %2$d veces (particiones generadas por cSEM con las semillas %3$d, %3$d + 1, ...; %4$d s). Cada caso se predice con un modelo estimado sin él; los resultados son promedios sobre las repeticiones."
+            ],
             "%d case(s) with missing values were excluded; %d case(s) remain.": [
                 "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
             ],
@@ -60,6 +63,9 @@
             ],
             "%d of %d indicators of reflective constructs have a loading below 0.708 (%s). Indicators with loadings between 0.40 and 0.70 are usually kept unless removing them raises the composite reliability or the AVE of their construct above its threshold; indicators below 0.40 are candidates for removal.": [
                 "%d de %d indicadores de constructos reflectivos tienen una carga menor de 0.708 (%s). Los indicadores con cargas entre 0.40 y 0.70 suelen conservarse, salvo que quitarlos lleve la fiabilidad compuesta o la AVE de su constructo por encima de su umbral; los indicadores por debajo de 0.40 son candidatos a eliminarse."
+            ],
+            "%d of the cross-validation estimations were not admissible; their predictions were kept, as cSEM does when it is told to ignore inadmissible results. Read the prediction results with care.": [
+                "%d de las estimaciones de la validación cruzada no fueron admisibles; sus predicciones se conservaron, como hace cSEM cuando se le indica ignorar los resultados inadmisibles. Lea los resultados de predicción con cautela."
             ],
             "%s (formative): weights of its dimensions %s.": [
                 "%s (formativo): pesos de sus dimensiones %s."
@@ -90,6 +96,15 @@
             ],
             "%s: every dimension loads 0.708 or more on it (%s).": [
                 "%s: todas sus dimensiones cargan 0.708 o más (%s)."
+            ],
+            "%s: improve first %s, above-average importance with below-average performance.": [
+                "%s: mejore primero %s, con importancia por encima del promedio y desempeño por debajo."
+            ],
+            "%s: indirect effect %s, interval %s.": [
+                "%s: efecto indirecto %s, intervalo %s."
+            ],
+            "%s: no construct combines above-average importance with below-average performance.": [
+                "%s: ningún constructo combina importancia por encima del promedio con desempeño por debajo."
             ],
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
@@ -139,6 +154,9 @@
             "A higher-order construct is measured by other constructs, its dimensions (for example, psychological capital by hope, efficacy, resilience and optimism). In the disjoint two-stage approach, stage 1 estimates the dimensions as ordinary constructs, linked to the constructs the higher-order construct is related to, and stage 2 treats their scores as the indicators of the higher-order construct, while the other constructs keep their own indicators (Sarstedt et al., 2019, see references). Read this table as a measurement table one level up: for a reflective higher-order construct, the loadings of its dimensions, its reliability and its AVE, judged on the usual thresholds; for a formative one, the weights of its dimensions, their significance and their VIF. The dimensions themselves are assessed in the first-order tables. Common misreading: drawing structural paths from the dimensions as well as from the higher-order construct; the dimensions only reach the rest of the model through it.": [
                 "Un constructo de orden superior se mide con otros constructos, sus dimensiones (por ejemplo, el capital psicológico con esperanza, eficacia, resiliencia y optimismo). En el enfoque disjunto en dos etapas, la etapa 1 estima las dimensiones como constructos ordinarios, unidos a los constructos con los que se relaciona el de orden superior, y la etapa 2 trata sus puntuaciones como los indicadores del constructo de orden superior, mientras los demás constructos conservan sus propios indicadores (Sarstedt et al., 2019, vea las referencias). Lea esta tabla como una tabla de medida un nivel más arriba: en un constructo de orden superior reflectivo, las cargas de sus dimensiones, su fiabilidad y su AVE, con los umbrales habituales; en uno formativo, los pesos de sus dimensiones, su significación y su VIF. Las dimensiones mismas se evalúan en las tablas de primer orden. Lectura errónea frecuente: trazar rutas estructurales desde las dimensiones además de desde el constructo de orden superior; las dimensiones solo llegan al resto del modelo a través de él."
             ],
+            "A mediation analysis with cross-sectional data shows that the data are consistent with the proposed chain, not that the chain is causal; that rests on theory and design.": [
+                "Un análisis de mediación con datos transversales muestra que los datos son coherentes con la cadena propuesta, no que la cadena sea causal; eso descansa en la teoría y en el diseño."
+            ],
             "A negative alpha means that some indicators of the construct correlate negatively: check for reverse-coded items.": [
                 "Un alfa negativo significa que algunos indicadores del constructo correlacionan negativamente: revise si hay ítems invertidos."
             ],
@@ -147,6 +165,9 @@
             ],
             "A single indicator has no internal consistency to estimate: its reliability and AVE are 1 by definition.": [
                 "Un solo indicador no tiene consistencia interna que estimar: su fiabilidad y su AVE valen 1 por definición."
+            ],
+            "A specific indirect effect is the part of the effect of X on Y that travels through one or more mediators: the product of the path coefficients along the chain (for X → M → Y, a × b). The direct, indirect and total effects table above sums all chains between two constructs; this table separates them. Products of coefficients are not normally distributed, so their significance comes from the percentile bootstrap interval, not from a t test (Preacher & Hayes, 2008; Nitzl et al., 2016, see references). Run the bootstrap to obtain the intervals and the type of mediation.": [
+                "Un efecto indirecto específico es la parte del efecto de X sobre Y que pasa por uno o más mediadores: el producto de los coeficientes de ruta a lo largo de la cadena (para X → M → Y, a × b). La tabla de efectos directos, indirectos y totales de arriba suma todas las cadenas entre dos constructos; esta tabla las separa. Los productos de coeficientes no se distribuyen normalmente, así que su significación viene del intervalo bootstrap percentil, no de una prueba t (Preacher y Hayes, 2008; Nitzl et al., 2016, vea las referencias). Ejecute el bootstrap para obtener los intervalos y el tipo de mediación."
             ],
             "About your choices": [
                 "Acerca de sus elecciones"
@@ -165,6 +186,9 @@
             ],
             "All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators.": [
                 "Los %d indicadores de constructos reflectivos tienen una carga de 0.708 o más: cada constructo explica al menos la mitad de la varianza de sus indicadores."
+            ],
+            "All endogenous constructs": [
+                "Todos los constructos endógenos"
             ],
             "All weights of the formative constructs are positive.": [
                 "Todos los pesos de los constructos formativos son positivos."
@@ -226,6 +250,12 @@
             "Below 3: no collinearity problem": [
                 "Menor de 3: sin problema de colinealidad"
             ],
+            "Benchmark": [
+                "Referencia"
+            ],
+            "Benchmark loss": [
+                "Pérdida de la referencia"
+            ],
             "Black": [
                 "Negro"
             ],
@@ -285,6 +315,24 @@
             ],
             "Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable.": [
                 "Colinealidad de los predictores: VIF estructural de 3 o más en %s; sus coeficientes pueden ser inestables."
+            ],
+            "Competing model": [
+                "Modelo competidor"
+            ],
+            "Competing model: your model without %s, estimated on the same folds. Against it the test is two-sided (Liengaard et al., 2021): a negative difference favours your model, a positive one the competing model.": [
+                "Modelo competidor: su modelo sin %s, estimado con las mismas particiones. Frente a él la prueba es bilateral (Liengaard et al., 2021): una diferencia negativa favorece a su modelo, una positiva al modelo competidor."
+            ],
+            "Competitive (partial)": [
+                "Competitiva (parcial)"
+            ],
+            "Competitive partial mediation: the indirect and the direct effect have opposite signs, so they partly cancel each other in the total effect. Look for the theoretical reason for the opposite sign.": [
+                "Mediación parcial competitiva: el efecto indirecto y el directo tienen signos opuestos, así que se cancelan en parte en el efecto total. Busque la razón teórica del signo opuesto."
+            ],
+            "Complementary (partial)": [
+                "Complementaria (parcial)"
+            ],
+            "Complementary partial mediation: the mediator carries part of the effect, and a direct effect remains with the same sign.": [
+                "Mediación parcial complementaria: el mediador lleva parte del efecto, y queda un efecto directo del mismo signo."
             ],
             "Computed from polychoric correlations (ordinal indicators): the values refer to the reliability of the latent continuous responses assumed behind the categories, not to the observed sum score, which is usually lower (Chalmers, 2018, see references).": [
                 "Calculado con correlaciones policóricas (indicadores ordinales): los valores se refieren a la fiabilidad de las respuestas latentes continuas que se suponen detrás de las categorías, no a la del puntaje observado, que suele ser menor (Chalmers, 2018, vea las referencias)."
@@ -349,8 +397,32 @@
             "Customer satisfaction index ECSI (n=250)": [
                 "Índice de satisfacción del cliente ECSI (n=250)"
             ],
+            "CVPAT (does the model predict better than the benchmarks?)": [
+                "CVPAT (¿predice el modelo mejor que las referencias?)"
+            ],
+            "CVPAT against the competing model without %s: no significant difference (loss difference %s, t = %s, p %s). With equal predictive ability, Liengaard et al. (2021) recommend the more parsimonious model, if the theory allows it.": [
+                "CVPAT frente al modelo competidor sin %s: sin diferencia significativa (diferencia de pérdida %s, t = %s, p %s). Con igual capacidad predictiva, Liengaard et al. (2021) recomiendan el modelo más parsimonioso, si la teoría lo permite."
+            ],
+            "CVPAT against the competing model without %s: the competing model predicts significantly better (loss difference %s, t = %s, p %s); the left-out paths harm prediction.": [
+                "CVPAT frente al modelo competidor sin %s: el modelo competidor predice significativamente mejor (diferencia de pérdida %s, t = %s, p %s); las rutas excluidas perjudican la predicción."
+            ],
+            "CVPAT against the competing model without %s: your model predicts significantly better (loss difference %s, t = %s, p %s), so the left-out paths add predictive power.": [
+                "CVPAT frente al modelo competidor sin %s: su modelo predice significativamente mejor (diferencia de pérdida %s, t = %s, p %s), así que las rutas excluidas aportan capacidad predictiva."
+            ],
+            "CVPAT turns the comparison into a test (Liengaard et al., 2021; Sharma et al., 2023). For each case it averages the squared prediction errors over the indicators and the repetitions (the loss), and tests with a paired t test whether the average loss of PLS is lower than that of each benchmark: IA (indicator averages, the same naive benchmark as Q²predict) and LM. Beating IA is the minimum for a model that claims predictive relevance; beating LM is strong evidence. The test is reported for all endogenous constructs together and for each one. You can also leave out paths of your model in the Prediction box: CVPAT then compares your model with that competing model, a two-sided test of which one predicts better.": [
+                "CVPAT convierte la comparación en una prueba (Liengaard et al., 2021; Sharma et al., 2023). Para cada caso promedia los errores de predicción al cuadrado sobre los indicadores y las repeticiones (la pérdida), y prueba con una t pareada si la pérdida promedio de PLS es menor que la de cada referencia: IA (promedios de los indicadores, la misma referencia ingenua que Q²predict) y LM. Superar a IA es el mínimo para un modelo que se atribuye relevancia predictiva; superar a LM es evidencia fuerte. La prueba se informa para todos los constructos endógenos juntos y para cada uno. También puede dejar fuera rutas de su modelo en la caja Predicción: CVPAT compara entonces su modelo con ese modelo competidor, con una prueba bilateral de cuál predice mejor."
+            ],
+            "CVPAT: the model predicts significantly better than %s (loss difference %s, t = %s, p %s).": [
+                "CVPAT: el modelo predice significativamente mejor que %s (diferencia de pérdida %s, t = %s, p %s)."
+            ],
+            "CVPAT: there is no evidence that the model predicts better than %s (loss difference %s, t = %s, p %s).": [
+                "CVPAT: no hay evidencia de que el modelo prediga mejor que %s (diferencia de pérdida %s, t = %s, p %s)."
+            ],
             "Dark gray": [
                 "Gris oscuro"
+            ],
+            "Dashed lines: mean importance and mean performance of the constructs shown.": [
+                "Líneas discontinuas: importancia media y desempeño medio de los constructos mostrados."
             ],
             "Decimals": [
                 "Decimales"
@@ -369,6 +441,15 @@
             ],
             "Direct": [
                 "Directo"
+            ],
+            "Direct (X → Y)": [
+                "Directo (X → Y)"
+            ],
+            "Direct-only (no mediation)": [
+                "Solo directo (sin mediación)"
+            ],
+            "Direct-only: there is no mediation through this chain; the effect is direct.": [
+                "Solo directo: no hay mediación por esta cadena; el efecto es directo."
             ],
             "Direct, indirect and total effects": [
                 "Efectos directos, indirectos y totales"
@@ -439,6 +520,9 @@
             "Endogenous": [
                 "Endógeno"
             ],
+            "Equal": [
+                "Igual"
+            ],
             "Equivalent R code": [
                 "Código R equivalente"
             ],
@@ -496,6 +580,9 @@
             "Floodlight": [
                 "Floodlight"
             ],
+            "Folds": [
+                "Particiones"
+            ],
             "Follows the coefficient": [
                 "Según el coeficiente"
             ],
@@ -525,6 +612,9 @@
             ],
             "Fornell-Larcker criterion": [
                 "Criterio de Fornell-Larcker"
+            ],
+            "From the data (observed minimum and maximum)": [
+                "De los datos (mínimo y máximo observados)"
             ],
             "Higher-order 1": [
                 "Higher-order 1"
@@ -577,11 +667,20 @@
             "How to read loadings and weights": [
                 "Cómo leer las cargas y los pesos"
             ],
+            "How to read PLSpredict and CVPAT": [
+                "Cómo leer PLSpredict y CVPAT"
+            ],
             "How to read reliability and convergent validity": [
                 "Cómo leer la fiabilidad y la validez convergente"
             ],
             "How to read the collinearity of formative indicators": [
                 "Cómo leer la colinealidad de los indicadores formativos"
+            ],
+            "How to read the importance-performance map": [
+                "Cómo leer el mapa importancia-desempeño"
+            ],
+            "How to read the mediation analysis": [
+                "Cómo leer el análisis de mediación"
             ],
             "How to read the model summary": [
                 "Cómo leer el resumen del modelo"
@@ -603,6 +702,36 @@
             ],
             "HTMT2": [
                 "HTMT2"
+            ],
+            "IA (indicator averages)": [
+                "IA (promedios de los indicadores)"
+            ],
+            "Importance": [
+                "Importancia"
+            ],
+            "Importance (unstandardised total effect)": [
+                "Importancia (efecto total no estandarizado)"
+            ],
+            "Importance-performance map": [
+                "Mapa importancia-desempeño"
+            ],
+            "Importance-Performance Map": [
+                "Mapa Importancia-Desempeño"
+            ],
+            "Importance-performance map (IPMA)": [
+                "Mapa importancia-desempeño (IPMA)"
+            ],
+            "Importance-performance map for %s": [
+                "Mapa importancia-desempeño de %s"
+            ],
+            "Importance-performance maps": [
+                "Mapas importancia-desempeño"
+            ],
+            "Importance: unstandardised total effect on the target (the change in the target, on its scale, when the construct rises by one point). Performance: mean of the construct's unstandardised scores rescaled to 0-100 with a scale range of %s to %s (%s).": [
+                "Importancia: efecto total no estandarizado sobre el objetivo (el cambio en el objetivo, en su escala, cuando el constructo sube un punto). Desempeño: media de las puntuaciones no estandarizadas del constructo reescalada a 0-100 con un rango de escala de %s a %s (%s)."
+            ],
+            "Improve first (important, low performance)": [
+                "Mejorar primero (importante, desempeño bajo)"
             ],
             "Indicator": [
                 "Indicador"
@@ -633,6 +762,21 @@
             ],
             "Indirect CI": [
                 "IC del indirecto"
+            ],
+            "Indirect path": [
+                "Ruta indirecta"
+            ],
+            "Indirect-only (full)": [
+                "Solo indirecta (total)"
+            ],
+            "Indirect-only (full) mediation: the effect travels through the mediator, and no direct effect remains.": [
+                "Mediación solo indirecta (total): el efecto pasa por el mediador y no queda efecto directo."
+            ],
+            "Indirect; direct path not in the model": [
+                "Indirecta; la ruta directa no está en el modelo"
+            ],
+            "Indirect: product of the path coefficients of the chain. Interval: %s%% percentile bootstrap interval of that product, computed from the same resamples as the paths. The type of mediation follows Zhao et al. (2010): an effect is significant when its interval excludes 0.": [
+                "Indirecto: producto de los coeficientes de ruta de la cadena. Intervalo: intervalo bootstrap percentil al %s%% de ese producto, calculado con las mismas réplicas que las rutas. El tipo de mediación sigue a Zhao et al. (2010): un efecto es significativo cuando su intervalo excluye el 0."
             ],
             "Inner weighting scheme": [
                 "Esquema de ponderación interna"
@@ -673,6 +817,9 @@
             "jamovi theme": [
                 "Tema de jamovi"
             ],
+            "Keep up (important, high performance)": [
+                "Mantener (importante, desempeño alto)"
+            ],
             "Key findings": [
                 "Hallazgos clave"
             ],
@@ -681,6 +828,9 @@
             ],
             "Layout": [
                 "Disposición"
+            ],
+            "Left out of the competing model (CVPAT)": [
+                "Fuera del modelo competidor (CVPAT)"
             ],
             "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator with its %s%% bootstrap interval (band); vertical lines: Johnson-Neyman points, where the interval starts or stops including 0.": [
                 "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador con su intervalo bootstrap al %s%% (banda); líneas verticales: puntos de Johnson-Neyman, donde el intervalo empieza o deja de incluir el 0."
@@ -699,6 +849,12 @@
             ],
             "Light yellow": [
                 "Amarillo claro"
+            ],
+            "LM": [
+                "LM"
+            ],
+            "LM (linear model)": [
+                "LM (modelo lineal)"
             ],
             "Loading": [
                 "Carga"
@@ -724,20 +880,41 @@
             "Loadings of reflective indicators; dashed line at 0.708. Triangles: below 0.708.": [
                 "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
             ],
+            "Loss difference": [
+                "Diferencia de pérdida"
+            ],
+            "Loss: squared prediction error of each case, averaged over the indicators and the repetitions. Loss difference = PLS loss - benchmark loss (negative: PLS predicts better). One-sided paired t test (H1: PLS predicts better); PLS predicts better when p < .05 and the difference is negative.": [
+                "Pérdida: error de predicción al cuadrado de cada caso, promediado sobre los indicadores y las repeticiones. Diferencia de pérdida = pérdida de PLS - pérdida de la referencia (negativa: PLS predice mejor). Prueba t pareada unilateral (H1: PLS predice mejor); PLS predice mejor cuando p < .05 y la diferencia es negativa."
+            ],
+            "Low priority (less important, low performance)": [
+                "Baja prioridad (menos importante, desempeño bajo)"
+            ],
             "Lower": [
                 "Inferior"
+            ],
+            "Lower RMSE": [
+                "Menor RMSE"
             ],
             "Lower-order construct": [
                 "Constructo de orden inferior"
             ],
+            "MAE": [
+                "MAE"
+            ],
             "Main findings": [
                 "Hallazgos principales"
+            ],
+            "Maximum": [
+                "Máximo"
             ],
             "McDonald's ω (one-factor CFA)": [
                 "ω de McDonald (AFC de un factor)"
             ],
             "Mean": [
                 "Media"
+            ],
+            "Mean (scale)": [
+                "Media (escala)"
             ],
             "Mean of %s": [
                 "Media de %s"
@@ -753,6 +930,18 @@
             ],
             "Measurement model: %d of %d reflective indicators load 0.708 or more.": [
                 "Modelo de medida: %d de %d indicadores reflectivos cargan 0.708 o más."
+            ],
+            "Mediation": [
+                "Mediación"
+            ],
+            "Mediation (specific indirect effects)": [
+                "Mediación (efectos indirectos específicos)"
+            ],
+            "Mediation: %d of %d specific indirect effects are significant (bootstrap interval excludes 0).": [
+                "Mediación: %d de %d efectos indirectos específicos son significativos (el intervalo bootstrap excluye el 0)."
+            ],
+            "Minimum": [
+                "Mínimo"
             ],
             "Missing values": [
                 "Valores perdidos"
@@ -793,14 +982,35 @@
             "Navy": [
                 "Azul marino"
             ],
+            "Needs the bootstrap": [
+                "Necesita el bootstrap"
+            ],
+            "No": [
+                "No"
+            ],
+            "No difference": [
+                "Sin diferencia"
+            ],
             "No discriminant validity: the bootstrap upper bound of the HTMT is 0.90 or more in %s. The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths.": [
                 "Sin validez discriminante: el límite superior bootstrap del HTMT es de 0.90 o más en %s. Los datos no distinguen estos constructos ni siquiera con el umbral permisivo; resuélvalo antes de interpretar sus rutas."
             ],
             "No discriminant validity: the HTMT is 0.90 or more in %s (estimate; run the bootstrap for the formal test). The data do not distinguish these constructs even on the lenient threshold; settle this before interpreting their paths.": [
                 "Sin validez discriminante: el HTMT es de 0.90 o más en %s (estimación; ejecute el bootstrap para la prueba formal). Los datos no distinguen estos constructos ni siquiera con el umbral permisivo; resuélvalo antes de interpretar sus rutas."
             ],
+            "No effect": [
+                "Sin efecto"
+            ],
+            "No effect: neither the indirect effect through this chain nor the direct path is significant.": [
+                "Sin efecto: ni el efecto indirecto por esta cadena ni la ruta directa son significativos."
+            ],
+            "No indirect effect; direct path not in the model": [
+                "Sin efecto indirecto; la ruta directa no está en el modelo"
+            ],
             "No significance or confidence intervals: the bootstrap was not run, so the HTMT thresholds are compared with the estimate and not with its upper bound. Tick Run bootstrap in the Bootstrap box.": [
                 "Sin significación ni intervalos de confianza: no se ejecutó el bootstrap, así que los umbrales del HTMT se comparan con la estimación y no con su límite superior. Marque Ejecutar bootstrap en la caja Bootstrap."
+            ],
+            "No: the competing model predicts better": [
+                "No: el modelo competidor predice mejor"
             ],
             "Nodes and labels": [
                 "Nodos y etiquetas"
@@ -814,11 +1024,26 @@
             "Not computable": [
                 "No calculable"
             ],
+            "Not computable in this version for models with higher-order constructs: the prediction would have to repeat both stages in every fold.": [
+                "No calculable en esta versión para modelos con constructos de orden superior: la predicción tendría que repetir ambas etapas en cada partición."
+            ],
             "Not computable in this version for models with higher-order constructs: the test would assess only stage 2, where the dimensions enter as fixed scores, and its reference distribution would ignore stage 1.": [
                 "No calculable en esta versión para modelos con constructos de orden superior: la prueba evaluaría solo la etapa 2, donde las dimensiones entran como puntuaciones fijas, y su distribución de referencia ignoraría la etapa 1."
             ],
+            "Not computable in this version for models with higher-order constructs.": [
+                "No calculable en esta versión para modelos con constructos de orden superior."
+            ],
+            "Not computable with consistent PLS: the IPMA needs composite scores (Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box.": [
+                "No calculable con PLS consistente: el IPMA necesita puntuaciones de compuestos (Ringle y Sarstedt, 2016), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación."
+            ],
             "Not computable: %s": [
                 "No calculable: %s"
+            ],
+            "Not computable: cSEM predicts only from linear models, and this model has an interaction term.": [
+                "No calculable: cSEM solo predice con modelos lineales, y este modelo tiene un término de interacción."
+            ],
+            "Not computable: cSEM's doIPMA() stopped with: %s": [
+                "No calculable: doIPMA() de cSEM se detuvo con: %s"
             ],
             "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it.": [
                 "No calculable: la rutina de segundo orden de cSEM mide los demás constructos con una sola puntuación en la etapa 2, así que su HTMT con el constructo de orden superior no está definido. Elija el enfoque disjunto para evaluarlo."
@@ -826,17 +1051,44 @@
             "Not computable: cSEM's testOMF() stopped with: %s": [
                 "No calculable: testOMF() de cSEM se detuvo con: %s"
             ],
+            "Not computable: the competing model could not be estimated: %s": [
+                "No calculable: el modelo competidor no se pudo estimar: %s"
+            ],
+            "Not computable: the competing model would have no structural paths left.": [
+                "No calculable: el modelo competidor no tendría rutas estructurales."
+            ],
+            "Not computable: the cross-validation stopped with: %s": [
+                "No calculable: la validación cruzada se detuvo con: %s"
+            ],
             "Not computable: the estimates are not admissible (see the notice). A fit test of an inadmissible solution has no meaning; fix the cause first.": [
                 "No calculable: las estimaciones no son admisibles (vea el aviso). Una prueba de ajuste de una solución inadmisible no tiene sentido; corrija primero la causa."
+            ],
+            "Not computable: the estimates are not admissible (see the notice). Fix the cause first.": [
+                "No calculable: las estimaciones no son admisibles (vea el aviso). Corrija primero la causa."
+            ],
+            "Not computable: the estimates of the competing model are not admissible.": [
+                "No calculable: las estimaciones del modelo competidor no son admisibles."
             ],
             "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
                 "No calculable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
             ],
+            "Not computable: the maximum of the scale must be larger than its minimum.": [
+                "No calculable: el máximo de la escala debe ser mayor que su mínimo."
+            ],
+            "Not computable: there are more folds than cases.": [
+                "No calculable: hay más particiones que casos."
+            ],
             "Not computable: with an interaction term the model implies no indicator correlation matrix, so the discrepancies of the overall fit test are not defined (cSEM; Dijkstra & Henseler, 2015).": [
                 "No calculable: con un término de interacción el modelo no implica una matriz de correlaciones de los indicadores, así que las discrepancias de la prueba de ajuste global no están definidas (cSEM; Dijkstra y Henseler, 2015)."
             ],
+            "Not computable: with an interaction term the total effects are not constant, so the importance of a construct is not a single number.": [
+                "No calculable: con un término de interacción los efectos totales no son constantes, así que la importancia de un constructo no es un solo número."
+            ],
             "Not rejected": [
                 "No rechazado"
+            ],
+            "observed in the data": [
+                "observado en los datos"
             ],
             "On average ρC differs from the ω of the one-factor CFA by %s: with consistent PLS both rest on common-factor loadings, so they should be close.": [
                 "En promedio, ρC difiere de la ω del AFC de un factor en %s: con PLS consistente ambas se basan en cargas de factor común, así que deberían ser cercanas."
@@ -861,6 +1113,9 @@
             ],
             "Ordinal (polychoric correlations)": [
                 "Ordinales (correlaciones policóricas)"
+            ],
+            "Out-of-sample prediction": [
+                "Predicción fuera de la muestra"
             ],
             "Outcome": [
                 "Resultado"
@@ -910,6 +1165,15 @@
             "Path Diagram": [
                 "Diagrama de rutas"
             ],
+            "Paths left out of the competing model": [
+                "Rutas excluidas del modelo competidor"
+            ],
+            "Paths of the model": [
+                "Rutas del modelo"
+            ],
+            "Performance (0-100)": [
+                "Desempeño (0-100)"
+            ],
             "Plot title": [
                 "Título del gráfico"
             ],
@@ -918,6 +1182,24 @@
             ],
             "PLS": [
                 "PLS"
+            ],
+            "PLS has a lower RMSE than LM for %d of %d indicators, a minority: low predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un RMSE menor que LM en %d de %d indicadores, una minoría: capacidad predictiva baja (Shmueli et al., 2019)."
+            ],
+            "PLS has a lower RMSE than LM for %d of %d indicators, the majority or half of them: medium predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un RMSE menor que LM en %d de %d indicadores, la mayoría o la mitad: capacidad predictiva media (Shmueli et al., 2019)."
+            ],
+            "PLS has a lower RMSE than LM for %d of %d indicators: high predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un RMSE menor que LM en %d de %d indicadores: capacidad predictiva alta (Shmueli et al., 2019)."
+            ],
+            "PLS has a lower RMSE than LM for %d of %d indicators: the model lacks predictive power compared with a linear regression (Shmueli et al., 2019).": [
+                "PLS tiene un RMSE menor que LM en %d de %d indicadores: el modelo carece de capacidad predictiva frente a una regresión lineal (Shmueli et al., 2019)."
+            ],
+            "PLS loss": [
+                "Pérdida de PLS"
+            ],
+            "PLS predicts better": [
+                "PLS predice mejor"
             ],
             "PLS-SEM": [
                 "PLS-SEM"
@@ -928,8 +1210,23 @@
             "PLS-SEM Lab": [
                 "PLS-SEM Lab"
             ],
+            "PLSpredict (out-of-sample prediction of the endogenous indicators)": [
+                "PLSpredict (predicción fuera de la muestra de los indicadores endógenos)"
+            ],
+            "PLSpredict and CVPAT could not be run: %s": [
+                "No se pudieron ejecutar PLSpredict y CVPAT: %s"
+            ],
+            "PLSpredict and CVPAT were not computed. %s": [
+                "PLSpredict y CVPAT no se calcularon. %s"
+            ],
+            "PLSpredict asks how well the model predicts cases it has not seen (Shmueli et al., 2016, 2019, see references). The data are split into k folds; each fold is predicted by a model estimated on the others, and the whole procedure is repeated with new random folds. For every indicator of an endogenous construct, Q²predict compares the prediction errors with those of the naive benchmark that predicts each case by the training mean: above 0, the model predicts better than that mean. RMSE and MAE are the average sizes of the errors (in the metric of the indicator; MAE is less sensitive to a few large errors), shown for PLS and for LM, a linear regression of each indicator on all the indicators of the exogenous constructs. R² describes the sample at hand; PLSpredict says how far the model generalises.": [
+                "PLSpredict pregunta qué tan bien predice el modelo casos que no ha visto (Shmueli et al., 2016, 2019, vea las referencias). Los datos se dividen en k particiones; cada partición se predice con un modelo estimado con las demás, y todo el procedimiento se repite con nuevas particiones aleatorias. Para cada indicador de un constructo endógeno, Q²predict compara los errores de predicción con los de la referencia ingenua que predice cada caso con la media de entrenamiento: por encima de 0, el modelo predice mejor que esa media. RMSE y MAE son el tamaño promedio de los errores (en la métrica del indicador; el MAE es menos sensible a unos pocos errores grandes), para PLS y para LM, una regresión lineal de cada indicador sobre todos los indicadores de los constructos exógenos. El R² describe la muestra disponible; PLSpredict dice hasta dónde generaliza el modelo."
+            ],
             "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault. In development.": [
                 "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas. En desarrollo."
+            ],
+            "Possible overkill (less important, high performance)": [
+                "Posible exceso (menos importante, desempeño alto)"
             ],
             "Predicted %s (standardized)": [
                 "%s predicho (estandarizado)"
@@ -937,11 +1234,29 @@
             "Predicted by": [
                 "Predicho por"
             ],
+            "Prediction": [
+                "Predicción"
+            ],
+            "Prediction: Q²predict above 0 for %d of %d endogenous indicators; PLS has a lower RMSE than LM for %d.": [
+                "Predicción: Q²predict por encima de 0 en %d de %d indicadores endógenos; PLS tiene un RMSE menor que LM en %d."
+            ],
+            "Predictive power and explanatory power are different questions: a model can explain the sample well (high R²) and predict new cases poorly, or the reverse. Report both if prediction matters for your conclusions.": [
+                "La capacidad predictiva y la explicativa son preguntas distintas: un modelo puede explicar bien la muestra (R² alto) y predecir mal casos nuevos, o al revés. Informe ambas si la predicción importa para sus conclusiones."
+            ],
             "Predictor": [
                 "Predictor"
             ],
             "Predictors of each construct": [
                 "Predictores de cada constructo"
+            ],
+            "Q²predict": [
+                "Q²predict"
+            ],
+            "Q²predict is 0 or below for %s: for these indicators the model predicts no better than the training mean. The model lacks predictive relevance for them.": [
+                "Q²predict es 0 o menor en %s: para estos indicadores el modelo no predice mejor que la media de entrenamiento. El modelo carece de relevancia predictiva para ellos."
+            ],
+            "Q²predict is above 0 for all %d endogenous indicators: the model predicts unseen cases better than their training means.": [
+                "Q²predict está por encima de 0 en los %d indicadores endógenos: el modelo predice casos no vistos mejor que sus medias de entrenamiento."
             ],
             "R²": [
                 "R²"
@@ -949,8 +1264,20 @@
             "R² CI": [
                 "IC del R²"
             ],
-            "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. Mediation analysis, prediction and group comparisons come in later versions of PLSsemLab.": [
-                "Lea primero el modelo de medida y luego las rutas significativas y sus tamaños del efecto. Informe cada ruta con su coeficiente, su intervalo y su f², y diga cuántas réplicas bootstrap y qué semilla usó. El análisis de mediación, la predicción y la comparación entre grupos llegan en versiones posteriores de PLSsemLab."
+            "Range of the scale": [
+                "Rango de la escala"
+            ],
+            "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box. Group comparisons (MICOM) come in a later version of PLSsemLab.": [
+                "Lea primero el modelo de medida, luego las rutas significativas y sus tamaños de efecto. Informe cada ruta con su coeficiente, intervalo y f², y diga cuántas réplicas bootstrap y qué semilla usó. Si el modelo tiene mediadores, lea los efectos indirectos específicos; si la predicción importa, ejecute PLSpredict y CVPAT en la caja Predicción. Las comparaciones entre grupos (MICOM) llegan en una versión posterior de PLSsemLab."
+            ],
+            "Reading": [
+                "Lectura"
+            ],
+            "Reading (Shmueli et al., 2019): first check that Q²predict is above 0 for every indicator. Then compare the RMSE (or the MAE if the prediction errors are very asymmetric) of PLS with that of LM: lower for all indicators, high predictive power; for most or half of them, medium; for a minority, low; for none, the model lacks predictive power. LM is a demanding benchmark: it uses every exogenous indicator without the constraints of the model.": [
+                "Lectura (Shmueli et al., 2019): primero compruebe que Q²predict esté por encima de 0 en todos los indicadores. Luego compare el RMSE (o el MAE si los errores de predicción son muy asimétricos) de PLS con el de LM: menor en todos los indicadores, capacidad predictiva alta; en la mayoría o la mitad, media; en una minoría, baja; en ninguno, el modelo carece de capacidad predictiva. LM es una referencia exigente: usa todos los indicadores exógenos sin las restricciones del modelo."
+            ],
+            "Reading: the dashed lines are the means of importance and performance among the constructs shown. Constructs in the lower right (important, low performance) are where an improvement would raise the target most: improve them first. Upper right: keep up. Upper left: performance is high but matters little for the target (possible overkill). Lower left: low priority. The map is descriptive and rests on the model being right; it says where to look, not what to do.": [
+                "Lectura: las líneas discontinuas son las medias de importancia y desempeño entre los constructos mostrados. Los constructos de abajo a la derecha (importantes, desempeño bajo) son donde una mejora elevaría más el objetivo: mejórelos primero. Arriba a la derecha: mantener. Arriba a la izquierda: el desempeño es alto pero importa poco para el objetivo (posible exceso). Abajo a la izquierda: baja prioridad. El mapa es descriptivo y supone que el modelo es correcto; dice dónde mirar, no qué hacer."
             ],
             "Reflective": [
                 "Reflectivo"
@@ -1000,6 +1327,9 @@
             "Reliability: composite reliability is between 0.70 and 0.95 in all %d reflective construct(s) with two or more indicators.": [
                 "Fiabilidad: la fiabilidad compuesta está entre 0.70 y 0.95 en los %d constructo(s) reflectivo(s) con dos o más indicadores."
             ],
+            "Repetitions": [
+                "Repeticiones"
+            ],
             "Replace by the indicator mean": [
                 "Reemplazar por la media del indicador"
             ],
@@ -1015,6 +1345,9 @@
             "Resamples": [
                 "Réplicas"
             ],
+            "RMSE": [
+                "RMSE"
+            ],
             "Role": [
                 "Papel"
             ],
@@ -1023,6 +1356,9 @@
             ],
             "Run overall fit test": [
                 "Ejecutar la prueba de ajuste global"
+            ],
+            "Run PLSpredict and CVPAT": [
+                "Ejecutar PLSpredict y CVPAT"
             ],
             "Run the bootstrap to know whether the interaction and the simple effects are significant.": [
                 "Ejecute el bootstrap para saber si la interacción y los efectos simples son significativos."
@@ -1041,6 +1377,12 @@
             ],
             "Seed": [
                 "Semilla"
+            ],
+            "set by the user": [
+                "fijado por el usuario"
+            ],
+            "Set the minimum and maximum": [
+                "Fijar el mínimo y el máximo"
             ],
             "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. Run the bootstrap (Bootstrap box) to turn the HTMT thresholds into a test and to get the significance of paths and weights; until then, treat these estimates as descriptive.": [
                 "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. Ejecute el bootstrap (caja Bootstrap) para convertir los umbrales del HTMT en una prueba y obtener la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
@@ -1072,6 +1414,9 @@
             "Some bootstrap blocks failed and were left out: %s": [
                 "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
             ],
+            "Some indicator weights are negative, so the performance of their constructs can fall outside 0-100 and their meaning is unclear (Ringle & Sarstedt, 2016). Check those indicators before using the map.": [
+                "Algunos pesos de indicadores son negativos, así que el desempeño de sus constructos puede salir de 0-100 y su significado no es claro (Ringle y Sarstedt, 2016). Revise esos indicadores antes de usar el mapa."
+            ],
             "Spring": [
                 "Resorte"
             ],
@@ -1095,6 +1440,9 @@
             ],
             "t": [
                 ""
+            ],
+            "Target": [
+                "Objetivo"
             ],
             "The bootstrap could not be completed; see the notice at the top of the results.": [
                 "El bootstrap no pudo completarse; vea el aviso al inicio de los resultados."
@@ -1132,6 +1480,21 @@
             "The HTMT table of the higher-order constructs checks each reflective higher-order construct against the other reflective constructs of the model, in stage 2, where it is measured by the scores of its dimensions (Sarstedt et al., 2019, see references). It is never compared with its own dimensions, which correlate highly by design. The thresholds are the usual ones (0.85; 0.90 for conceptually similar constructs), and with the bootstrap the test is the upper bound.": [
                 "La tabla HTMT de los constructos de orden superior compara cada constructo de orden superior reflectivo con los demás constructos reflectivos del modelo, en la etapa 2, donde se mide con las puntuaciones de sus dimensiones (Sarstedt et al., 2019, vea las referencias). Nunca se compara con sus propias dimensiones, que por diseño correlacionan alto. Los umbrales son los habituales (0.85; 0.90 para constructos conceptualmente similares), y con el bootstrap la prueba es el límite superior."
             ],
+            "The importance-performance map (IPMA) adds a second dimension to the path coefficients (Ringle & Sarstedt, 2016, see references). For each target construct it places every construct that affects it on two axes: its importance, the unstandardised total effect on the target (direct plus indirect), and its performance, the average of its scores rescaled to 0-100. Performance only means something if all the indicators share one scale, with high values meaning better, and if the range of that scale is right; set it by hand when the data do not reach the ends of the scale.": [
+                "El mapa importancia-desempeño (IPMA) añade una segunda dimensión a los coeficientes de ruta (Ringle y Sarstedt, 2016, vea las referencias). Para cada constructo objetivo sitúa a cada constructo que lo afecta en dos ejes: su importancia, el efecto total no estandarizado sobre el objetivo (directo más indirecto), y su desempeño, el promedio de sus puntuaciones reescalado a 0-100. El desempeño solo tiene sentido si todos los indicadores comparten una escala, con valores altos que signifiquen mejor, y si el rango de esa escala es el correcto; fíjelo a mano cuando los datos no lleguen a los extremos de la escala."
+            ],
+            "The importance-performance map was not computed. %s": [
+                "El mapa importancia-desempeño no se calculó. %s"
+            ],
+            "the indicator averages (IA)": [
+                "los promedios de los indicadores (IA)"
+            ],
+            "The indirect effect is not significant, and the model has no direct path X → Y.": [
+                "El efecto indirecto no es significativo, y el modelo no tiene ruta directa X → Y."
+            ],
+            "The indirect effect is significant, but the model has no direct path X → Y, so a full mediation cannot be told apart from an omitted direct path. Add the direct path if the theory allows it.": [
+                "El efecto indirecto es significativo, pero el modelo no tiene ruta directa X → Y, así que una mediación total no se distingue de una ruta directa omitida. Añada la ruta directa si la teoría lo permite."
+            ],
             "The interaction %s has more than two constructs. PLSsemLab estimates two-way interactions; build it from two constructs.": [
                 "La interacción %s tiene más de dos constructos. PLSsemLab estima interacciones de dos vías; ármela con dos constructos."
             ],
@@ -1144,11 +1507,20 @@
             "The largest path is %s → %s (%s).": [
                 "La ruta más grande es %s → %s (%s)."
             ],
+            "the linear model (LM)": [
+                "el modelo lineal (LM)"
+            ],
+            "The map is descriptive: it assumes the model is right and that all indicators share one scale where higher means better.": [
+                "El mapa es descriptivo: supone que el modelo es correcto y que todos los indicadores comparten una escala en la que más alto significa mejor."
+            ],
             "The measurement model fits and the estimated model does not: the misfit comes from the structural model. Look for theoretically justified paths that the model leaves out, not for paths that merely improve fit.": [
                 "El modelo de medida ajusta y el estimado no: el desajuste viene del modelo estructural. Busque rutas justificadas por la teoría que el modelo deja fuera, no rutas que solo mejoren el ajuste."
             ],
             "The misfit is already present in the measurement model. Check indicators with low loadings or cross-loadings, and whether every indicator belongs to its construct; changing structural paths will not fix it.": [
                 "El desajuste ya está en el modelo de medida. Revise los indicadores con cargas bajas o cargas cruzadas, y si cada indicador pertenece a su constructo; cambiar rutas estructurales no lo resolverá."
+            ],
+            "The model has interaction terms: chains through them (conditional indirect effects, moderated mediation) are not listed in this version.": [
+                "El modelo tiene términos de interacción: las cadenas que pasan por ellos (efectos indirectos condicionales, mediación moderada) no se listan en esta versión."
             ],
             "The model has no reflective constructs, so loadings are not used to judge indicator quality.": [
                 "El modelo no tiene constructos reflectivos, así que las cargas no se usan para juzgar la calidad de los indicadores."
@@ -1158,6 +1530,9 @@
             ],
             "The model is checked before estimation; if something is missing or inconsistent, the message names the construct or indicator at fault.": [
                 "El modelo se revisa antes de estimar; si falta algo o hay una inconsistencia, el mensaje nombra el constructo o indicador con problemas."
+            ],
+            "The most important construct is %s (total effect %s): raising it one point on its scale raises %s by that amount, on its own scale.": [
+                "El constructo más importante es %s (efecto total %s): subirlo un punto en su escala sube %s en esa cantidad, en su propia escala."
             ],
             "The name '%s' is used for more than one construct. Give each construct a different name.": [
                 "El nombre '%s' se usa en más de un constructo. Dé a cada constructo un nombre distinto."
@@ -1189,6 +1564,9 @@
             "The seed is the one in the Bootstrap box.": [
                 "La semilla es la de la caja Bootstrap."
             ],
+            "The specific indirect effects are listed with their estimates only. Their significance and the type of mediation need the bootstrap: tick Run bootstrap in the Bootstrap box.": [
+                "Los efectos indirectos específicos se listan solo con sus estimaciones. Su significación y el tipo de mediación necesitan el bootstrap: marque Ejecutar bootstrap en la caja Bootstrap."
+            ],
             "The SRMR is below the descriptive 0.08 rule while the test rejects exact fit. This is frequent: the test detects any departure, however small, and its power grows with the sample. Report both, and judge whether the size of the misfit matters for your conclusions.": [
                 "El SRMR está por debajo de la regla descriptiva de 0.08 mientras la prueba rechaza el ajuste exacto. Es frecuente: la prueba detecta cualquier desviación, por pequeña que sea, y su potencia crece con la muestra. Reporte ambos y juzgue si el tamaño del desajuste importa para sus conclusiones."
             ],
@@ -1197,6 +1575,9 @@
             ],
             "The structural VIF measures how much the predictors of the same outcome overlap. Above 3, and certainly above 5, their coefficients become unstable and can even change sign (Hair et al., 2019, see references). With a single predictor there is no collinearity to assess.": [
                 "El VIF estructural mide cuánto se solapan los predictores de un mismo resultado. Por encima de 3, y sin duda por encima de 5, sus coeficientes se vuelven inestables y pueden incluso cambiar de signo (Hair et al., 2019, vea las referencias). Con un solo predictor no hay colinealidad que evaluar."
+            ],
+            "The type of mediation (Zhao et al., 2010) combines the indirect effect with the direct path X → Y. Complementary: both significant with the same sign; the mediator explains part of the effect. Competitive: both significant with opposite signs; the mediator pushes against the direct effect, and the total effect can hide both. Indirect-only (full mediation): only the indirect effect is significant. Direct-only: only the direct path is significant; there is no mediation through this chain. No effect: neither is significant. The old practice of requiring a significant total effect first (Baron & Kenny) and the VAF ratio are no longer recommended. A full mediation can only be claimed when the direct path X → Y is in the model; if it is not, the table says so.": [
+                "El tipo de mediación (Zhao et al., 2010) combina el efecto indirecto con la ruta directa X → Y. Complementaria: ambos significativos con el mismo signo; el mediador explica parte del efecto. Competitiva: ambos significativos con signos opuestos; el mediador empuja contra el efecto directo, y el efecto total puede ocultar ambos. Solo indirecta (mediación total): solo el efecto indirecto es significativo. Solo directa: solo la ruta directa es significativa; no hay mediación por esta cadena. Sin efecto: ninguno es significativo. La práctica antigua de exigir primero un efecto total significativo (Baron y Kenny) y el cociente VAF ya no se recomiendan. Solo se puede afirmar una mediación total cuando la ruta directa X → Y está en el modelo; si no lo está, la tabla lo dice."
             ],
             "Total": [
                 "Total"
@@ -1215,6 +1596,9 @@
             ],
             "Two-stage approach": [
                 "Enfoque de dos etapas"
+            ],
+            "Type of mediation": [
+                "Tipo de mediación"
             ],
             "Uncertainties": [
                 "Incertidumbres"
@@ -1299,6 +1683,9 @@
             ],
             "With the bootstrap, these weights of dimensions are not significant: %s. Keep a dimension whose loading is 0.50 or more: its absolute contribution matters even if its relative one does not (Hair et al., 2019).": [
                 "Con el bootstrap, estos pesos de dimensiones no son significativos: %s. Conserve una dimensión cuya carga sea de 0.50 o más: su contribución absoluta importa aunque la relativa no (Hair et al., 2019)."
+            ],
+            "Yes": [
+                "Sí"
             ],
             "Your structural model already relates every pair of constructs, so the estimated and the saturated model are the same model and both tests coincide.": [
                 "Su modelo estructural ya relaciona cada par de constructos, así que el modelo estimado y el saturado son el mismo modelo y ambas pruebas coinciden."

@@ -95,7 +95,56 @@ const events = {
         ui.hocSupplier.setValue(toItems(this, firstOrderNames(ui, this)));
     },
 
+    // The competing model of CVPAT (phase 6) is built by leaving out paths
+    // of the model: the supplier offers them as "Predictor → Outcome".
+    // ES: El modelo competidor de CVPAT (fase 6) se arma dejando fuera rutas
+    // del modelo: el supplier las ofrece como "Predictor → Resultado".
+    onUpdatePathSupplier: function(ui) {
+        ui.pathSupplier.setValue(toItems(this, pathNames(ui, this)));
+    },
+
     onChangeConstructSupplier: function(ui) {
+    }
+};
+
+// The simple paths of the structural rows, as "Predictor → Outcome"
+// (interaction terms left out: CVPAT works only with linear models).
+// ES: Las rutas simples de las filas, como "Predictor → Resultado".
+const pathNames = function(ui, context, rows, names) {
+    names = names || context.workspace.constructNames || constructNames(ui, context);
+    rows = rows || clone(ui.structural.value(), []);
+    let out = [];
+    for (let i = 0; i < names.length; i++)
+        for (let raw of (Array.isArray(rows[i]) ? rows[i] : [])) {
+            let t = asTerm(raw);
+            if (t !== null && t.length === 1)
+                out.push(t[0] + ' \u2192 ' + names[i]);
+        }
+    return out;
+};
+
+// Keeps the custom variables (construct names and path names) and the list
+// of left-out paths in step with the model.
+// ES: Mantiene las variables personalizadas y la lista de rutas excluidas
+// al día con el modelo.
+const syncPaths = function(ui, context, names, rows) {
+    let paths = pathNames(ui, context, rows, names);
+    let key = names.concat(paths).join('\u0001');
+    if (context.workspace.customKey !== key) {
+        context.workspace.customKey = key;
+        context.setCustomVariables(names.concat(paths).map(name => (
+            { name: name, measureType: 'none', dataType: 'none', levels: [] })));
+    }
+    if (ui.pathSupplier)
+        ui.pathSupplier.setValue(toItems(context, paths));
+    if (ui.cvpatDrop) {
+        let drop = clone(ui.cvpatDrop.value(), []);
+        let kept = drop.filter(term => {
+            let t = asTerm(term);
+            return t !== null && t.length === 1 && paths.indexOf(t[0]) !== -1;
+        });
+        if (JSON.stringify(kept) !== JSON.stringify(drop))
+            ui.cvpatDrop.setValue(kept);
     }
 };
 
@@ -265,16 +314,6 @@ const sync = function(ui, context) {
         ui.hocSupplier.setValue(toItems(context, first));
     let names = constructNames(ui, context);
 
-    // Custom variables only when the names change (SEMLj declares them on
-    // every change; once per change of names is enough and avoids
-    // refreshing the panel on every edit).
-    // ES: Variables personalizadas solo cuando cambian los nombres.
-    let key = names.join('\u0001');
-    if (context.workspace.customKey !== key) {
-        context.workspace.customKey = key;
-        context.setCustomVariables(names.map(name => (
-            { name: name, measureType: 'none', dataType: 'none', levels: [] })));
-    }
     ui.constructSupplier.setValue(toItems(context, names));
 
     // The stored rows belong to the names of the previous call (or, when the
@@ -306,6 +345,12 @@ const sync = function(ui, context) {
     }
 
     let newRows = names.map(name => cleanTerms(byName[name], name, names));
+    // Custom variables only when the names or the paths change (SEMLj
+    // declares them on every change; once per change is enough and avoids
+    // refreshing the panel on every edit).
+    // ES: Variables personalizadas solo cuando cambian los nombres o las
+    // rutas.
+    syncPaths(ui, context, names, newRows);
     if (JSON.stringify(newRows) !== JSON.stringify(rows))
         ui.structural.setValue(newRows);
     labelize(ui, names);
@@ -321,6 +366,7 @@ const cleanRows = function(ui, context) {
     let names = context.workspace.constructNames || constructNames(ui, context);
     let rows = clone(ui.structural.value(), []);
     let newRows = names.map((name, i) => cleanTerms(rows[i], name, names));
+    syncPaths(ui, context, names, newRows);
     if (JSON.stringify(newRows) !== JSON.stringify(rows))
         ui.structural.setValue(newRows);
     // Setting the value rebuilds the rows, which drops their headers.

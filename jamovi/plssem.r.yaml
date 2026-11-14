@@ -1066,6 +1066,7 @@ items:
       - missing
       - predictFolds
       - predictReps
+      - cvpatDrop
       - bootSeed
     columns:
       - name: construct
@@ -1119,6 +1120,7 @@ items:
       - missing
       - predictFolds
       - predictReps
+      - cvpatDrop
       - bootSeed
     columns:
       - name: construct

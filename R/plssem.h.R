@@ -30,6 +30,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             predictRun = FALSE,
             predictFolds = 10,
             predictReps = 10,
+            cvpatDrop = list(),
             ipma = FALSE,
             ipmaRange = "data",
             ipmaMin = 1,
@@ -233,6 +234,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=1,
                 max=100,
                 default=10)
+            private$..cvpatDrop <- jmvcore::OptionTerms$new(
+                "cvpatDrop",
+                cvpatDrop,
+                default=list())
             private$..ipma <- jmvcore::OptionBool$new(
                 "ipma",
                 ipma,
@@ -405,6 +410,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..predictRun)
             self$.addOption(private$..predictFolds)
             self$.addOption(private$..predictReps)
+            self$.addOption(private$..cvpatDrop)
             self$.addOption(private$..ipma)
             self$.addOption(private$..ipmaRange)
             self$.addOption(private$..ipmaMin)
@@ -456,6 +462,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         predictRun = function() private$..predictRun$value,
         predictFolds = function() private$..predictFolds$value,
         predictReps = function() private$..predictReps$value,
+        cvpatDrop = function() private$..cvpatDrop$value,
         ipma = function() private$..ipma$value,
         ipmaRange = function() private$..ipmaRange$value,
         ipmaMin = function() private$..ipmaMin$value,
@@ -506,6 +513,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..predictRun = NA,
         ..predictFolds = NA,
         ..predictReps = NA,
+        ..cvpatDrop = NA,
         ..ipma = NA,
         ..ipmaRange = NA,
         ..ipmaMin = NA,
@@ -1708,6 +1716,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing",
                     "predictFolds",
                     "predictReps",
+                    "cvpatDrop",
                     "bootSeed"),
                 columns=list(
                     list(
@@ -1769,6 +1778,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing",
                     "predictFolds",
                     "predictReps",
+                    "cvpatDrop",
                     "bootSeed"),
                 columns=list(
                     list(
@@ -2079,6 +2089,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param predictRun .
 #' @param predictFolds .
 #' @param predictReps .
+#' @param cvpatDrop .
 #' @param ipma .
 #' @param ipmaRange .
 #' @param ipmaMin .
@@ -2192,6 +2203,7 @@ plssem <- function(
     predictRun = FALSE,
     predictFolds = 10,
     predictReps = 10,
+    cvpatDrop = list(),
     ipma = FALSE,
     ipmaRange = "data",
     ipmaMin = 1,
@@ -2228,6 +2240,7 @@ plssem <- function(
         data <- jmvcore::marshalData(
             parent.frame())
 
+    if (inherits(cvpatDrop, "formula")) cvpatDrop <- jmvcore::decomposeFormula(cvpatDrop)
 
     options <- plssemOptions$new(
         reflective = reflective,
@@ -2251,6 +2264,7 @@ plssem <- function(
         predictRun = predictRun,
         predictFolds = predictFolds,
         predictReps = predictReps,
+        cvpatDrop = cvpatDrop,
         ipma = ipma,
         ipmaRange = ipmaRange,
         ipmaMin = ipmaMin,

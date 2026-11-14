@@ -59,7 +59,7 @@ Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
 | 3 | Structural model (f², VIF, effects), bootstrap in blocks with intervals for every measure, path diagram, loadings and HTMT plots | ✅ Done |
 | 4 | Two-way interactions (simple effects, floodlight, Johnson-Neyman) and higher-order constructs (disjoint two-stage by default; cSEM's routine as an option), with stage-2 discriminant validity | ✅ Done |
 | 5 | Bootstrap test of overall model fit (estimated and saturated model, with decision and reading) | ✅ Done |
-| 6 | Prediction (PLSpredict, CVPAT), mediation, IPMA | 🗓 Planned |
+| 6 | Mediation (specific indirect effects), PLSpredict, CVPAT (IA, LM and a competing model) and IPMA | ✅ Done |
 | 7 | Multigroup analysis with MICOM | 🗓 Planned |
 | 8 | Validation against cSEM, Hair et al. and JASP; stress tests | 🗓 Planned |
 | 9 | First public release (0.1.0) with Zenodo DOI | 🗓 Planned |

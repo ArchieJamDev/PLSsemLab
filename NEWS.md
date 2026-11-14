@@ -1,4 +1,28 @@
-# PLSsemLab 0.5.1 (development)
+# PLSsemLab 0.6.0 (development)
+
+## Phase 6: mediation, prediction and IPMA (D6)
+
+* **Mediation:** every specific indirect effect (a chain of two or more
+  paths) with its percentile bootstrap interval, computed from the same
+  resamples as the paths, and the type of mediation of Zhao et al. (2010):
+  complementary, competitive, indirect-only, direct-only or no effect. A
+  chain that is the only route between two constructs reproduces cSEM's
+  indirect effect and interval; works through higher-order constructs.
+* **PLSpredict** (*Prediction* box, its own Run checkbox): Q²predict, RMSE
+  and MAE of PLS and of the linear-model benchmark for every indicator of an
+  endogenous construct, from a k-fold cross-validation repeated r times with
+  cSEM's folds (one repetition equals `cSEM::predict()`), and the predictive
+  power reading of Shmueli et al. (2019).
+* **CVPAT** from the same cross-validation: one-sided tests against the
+  indicator averages (IA) and the linear model (LM), for all endogenous
+  constructs and for each one (Sharma et al., 2023); and, if you leave out
+  paths in the Prediction box, a two-sided test against that competing model
+  (equal to `cSEM::testCVPAT()`).
+* **IPMA** (*Importance-Performance Map* box): importance (unstandardised
+  total effects) and performance (0-100, with the scale range from the data
+  or set by hand) for every endogenous construct, a map per target and a
+  reading of what to improve first. Equal to `cSEM::doIPMA()`; not computed
+  with PLSc.
 
 ## Phase 5: overall model fit (D1)
 

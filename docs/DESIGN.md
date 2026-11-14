@@ -258,8 +258,18 @@ bajo es un resultado frecuente y debe leerse junto al tamaño de la muestra.
   salida completa.
 - La p de Henseler es unilateral: valores cerca de 0 o de 1 indican
   diferencia. El informe lo explica para no inducir a error.
-- CVPAT necesita un modelo alternativo. Propuesta: el usuario marca las rutas
-  que quiere quitar y el módulo compara ambos modelos (decisión abierta).
+- CVPAT (decidido en la fase 6): siempre frente a las referencias IA y LM
+  (prueba unilateral, Sharma et al., 2023) y, si el usuario deja fuera rutas
+  en la caja Predicción, frente a ese modelo competidor (bilateral, como
+  `testCVPAT()`). Una sola validación cruzada repetida, con las particiones
+  de cSEM (semilla + repetición − 1), alimenta PLSpredict y CVPAT.
+- `predict()` de cSEM no es reproducible con `set.seed()` y más de una
+  repetición; el módulo llama a sus particiones con semilla por repetición.
+  Su Q²predict centra los residuos (diferencia de ~1e-6 con la fórmula sin
+  centrar); el módulo usa la misma fórmula.
+- Mediación: efectos indirectos específicos por cadena con IC percentil de
+  las réplicas de las rutas y tipo de Zhao et al. (2010); JASP muestra solo
+  los efectos totales.
 
 ### Hallazgo transversal: qué significa "reflectivo"
 
@@ -414,7 +424,7 @@ la fase 1, que es la base de todas las demás.
 | 3 | Modelo estructural y bootstrap: R², f², VIF estructural, efectos directos, indirectos y totales; bootstrap por bloques con checkpoint, caché y semilla; IC de todas las medidas; diagrama de rutas, gráfico de cargas y cuadrícula HTMT en ggplot | D2, D4 | 2000 réplicas sin fallo, cancelables; IC iguales a los de cSEM |
 | 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Hecho: los dos modelos del E2 corren completos y coinciden con cSEM; lo no calculable sale como "No computable" con su razón |
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Hecho: valores y valores críticos iguales a `testOMF()`; explicación de por qué no hay chi-cuadrado ML ni CFI/RMSEA |
-| 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Resultados del E6 reproducidos; rango de la escala para IPMA |
+| 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Hecho: iguales a `predict()`, `testCVPAT()` y `doIPMA()` de cSEM; rango de la escala para IPMA; CVPAT frente a IA, LM y un modelo competidor |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |
 | 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
 | 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |

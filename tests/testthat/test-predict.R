@@ -71,3 +71,18 @@ test_that("with an interaction prediction stays as not computable", {
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictReps = 1)
     expect_true(all(a$results$predict$asDF$lower == "Not computable"))
 })
+
+test_that("CVPAT against a competing model through the options equals cSEM::testCVPAT", {
+    s <- satModel()
+    a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 10, predictReps = 1, bootSeed = 11,
+                   cvpatDrop = list("IMAG → LOY"))
+    tab <- a$results$cvpat$asDF
+    r <- tab[tab$bench == "Competing model" & tab$construct == "All endogenous constructs", ]
+    f1 <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
+    f2 <- cSEM::csem(s$d, sub("LOY ~ SAT + IMAG", "LOY ~ SAT", s$syntax, fixed = TRUE), .PLS_modes = s$modes,
+                     .disattenuate = FALSE)
+    ref <- suppressWarnings(cSEM::testCVPAT(f1, f2, .seed = 11, .cv_folds = 10))
+    expect_equal(r$t, -unname(ref$test_statistic), tolerance = 1e-8)
+    expect_equal(r$p, unname(ref$p_value), tolerance = 1e-8)
+    expect_equal(nrow(tab), 9)
+})

@@ -146,3 +146,12 @@
     }
     do.call(rbind, rows)
 }
+
+# The paths that the competing model of CVPAT leaves out, from the option
+# (terms "Predictor → Outcome"); only paths of the model are kept.
+# ES: Las rutas que el modelo competidor de CVPAT deja fuera.
+.pl_cvpat_drop <- function(terms, paths) {
+    labs <- paste(paths$from, "\u2192", paths$to)
+    sel <- unique(unlist(lapply(terms, function(t) if (length(t) == 1) t else NULL)))
+    paths[labs %in% sel, , drop = FALSE]
+}

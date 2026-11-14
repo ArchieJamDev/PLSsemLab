@@ -339,6 +339,27 @@ children:
             enable: (predictRun)
           - type: Label
             label: The seed is the one in the Bootstrap box.
+      - type: Supplier
+        label: Paths of the model
+        name: pathSupplier
+        format: term
+        persistentItems: false
+        stretchFactor: 1
+        events:
+          update: './plssem.events::onUpdatePathSupplier'
+          change: './plssem.events::onChangeConstructSupplier'
+        children:
+          - type: TargetLayoutBox
+            label: Left out of the competing model (CVPAT)
+            children:
+              - type: ListBox
+                name: cvpatDrop
+                height: small
+                isTarget: true
+                valueFilter: unique
+                enable: (predictRun)
+                template:
+                  type: TermLabel
   - type: CollapseBox
     label: Importance-Performance Map
     collapsed: true

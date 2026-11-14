@@ -95,6 +95,11 @@ carry every rule below in full.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in
   jamovi.yaml vs jamovi's `JAMOVI_R_VERSION`), else "Installed version
   needs to be updated".
+- Archie uses jamovi on Windows: build with `build-jmo-windows.yml`
+  (PLSsemLab_<v>_win64.jmo, release dev-build-windows), which also runs the
+  engine probe in that R. The Linux .jmo bundles Linux .so files (expm,
+  RcppArmadillo link libRlapack/libRblas, absent in jamovi's Linux R too):
+  testOMF() fails with it.
 - `jmc --prepare` deletes `inst/i18n/es.json`; rebuild it with
   `--i18n . --update`, fill `es.po`, then `--build . --skip-deps`.
 

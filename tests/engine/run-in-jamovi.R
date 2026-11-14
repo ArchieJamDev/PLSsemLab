@@ -97,3 +97,23 @@ grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), "moderation.png"), 760, 
 print(f(".pl_plot_moderation")(it$results$moderationPlots$items[[1]]$state, ggplot2::theme_minimal(), theme)); grDevices::dev.off()
 cat("diagrams ok\n")
 cat("max RSS (MB):", as.numeric(sub("\\D+(\\d+).*", "\\1", system(paste("grep VmHWM /proc", Sys.getpid(), "status", sep = "/"), intern = TRUE))) / 1024, "\n")
+
+# Phase 6 on the bank model: mediation, PLSpredict, CVPAT and IPMA
+# ES: Fase 6 en el modelo bancario: mediación, PLSpredict, CVPAT e IPMA
+p6 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),
+                                                    list(label = "Comp", vars = paste0("comp_", 1:3))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 structural = list(list("Qual"), list("Trust", "Comp"), list("Qual"), list()),
+                                 bootstrap = TRUE, bootReps = 200, predictRun = TRUE, predictReps = 3,
+                                 cvpatDrop = list("Comp \u2192 Loy"), ipma = TRUE), data = d)
+p6$init(); p6$run()
+print(p6$results$mediation$asDF)
+print(p6$results$predict$asDF)
+print(p6$results$cvpat$asDF)
+print(p6$results$ipmaTable$asDF)
+for (n in names(p6$results$items)) if (grepl("^\\.plssem", n)) print(p6$results$items[[n]]$content)
+grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), "ipma.png"), 560, 420, res = 96)
+item <- p6$results$ipmaPlots$get(key = "Loy")
+print(PLSsemLab:::.pl_plot_ipma(item$state, ggplot2::theme_classic(), list(color = c("#333333", "#3E6DA9"))))
+grDevices::dev.off()
+cat("phase 6 ok\n")

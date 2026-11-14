@@ -210,6 +210,7 @@
             q_keep = .("Keep up (important, high performance)"),
             q_overkill = .("Possible overkill (less important, high performance)"),
             q_low = .("Low priority (less important, low performance)"),
+            q_single = .("Only construct with an effect: nothing to compare"),
             ipma_range_data = .("observed in the data"),
             ipma_range_manual = .("set by the user"),
             ipma_title = .("Importance-performance map for %s"),

@@ -48,6 +48,9 @@
     out$quadrant <- NA_character_
     for (t in unique(out$to)) {
         k <- out$to == t
+        # one construct alone has no "above or below average"
+        # ES: un solo constructo no está "por encima o por debajo del promedio"
+        if (sum(k) == 1) { out$quadrant[k] <- "q_single"; next }
         hi_imp <- out$importance[k] >= mean(out$importance[k])
         hi_perf <- out$performance[k] >= mean(out$performance[k])
         out$quadrant[k] <- ifelse(hi_imp & !hi_perf, "q_priority",

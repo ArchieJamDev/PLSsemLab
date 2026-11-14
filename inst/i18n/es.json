@@ -1108,6 +1108,9 @@
             "Only %d cases have complete data on the indicators, too few to estimate the model. Check the missing values or use mean replacement.": [
                 "Solo %d casos tienen datos completos en los indicadores, muy pocos para estimar el modelo. Revise los valores perdidos o use el reemplazo por la media."
             ],
+            "Only construct with an effect: nothing to compare": [
+                "Único constructo con efecto: nada que comparar"
+            ],
             "Open Structural Model: every construct has a row. Drag into a construct's row the constructs that predict it. A construct whose row stays empty is exogenous (only a predictor).": [
                 "Abra Modelo estructural: cada constructo tiene una fila. Arrastre a la fila de un constructo los constructos que lo predicen. Un constructo cuya fila queda vacía es exógeno (solo predictor)."
             ],

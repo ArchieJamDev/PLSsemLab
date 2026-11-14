@@ -1520,6 +1520,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             out <- character(0)
             for (tg in unique(ip$to)) {
                 r <- ip[ip$to == tg, ]
+                if (nrow(r) == 1) next
                 pr <- r$from[r$quadrant == "q_priority"]
                 top <- r$from[which.max(r$importance)]
                 out <- c(out, if (length(pr)) sprintf(txt("ipma_priority"), tg, paste(pr, collapse = ", "))

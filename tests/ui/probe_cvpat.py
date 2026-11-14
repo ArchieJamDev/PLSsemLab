@@ -85,6 +85,13 @@ with sync_playwright() as p:
     step("Construct 1 -> predictors of Construct 2", lambda: transfer.nth(vis[-1]).click(timeout=5000))
     time.sleep(5)
     state(opts, page, "c2-path")
+    # the second row appears only after the panel updates: try again
+    # ES: la segunda fila aparece solo tras actualizar el panel: otra vez
+    step("focus Construct 2 row (again)", lambda: opts.get_by_text("drag predictors here", exact=True).nth(1).click(timeout=5000))
+    step("select Construct 1 (again)", lambda: visible_item(opts, "Construct 1").click(timeout=5000))
+    step("Construct 1 -> predictors of Construct 2 (again)", lambda: transfer.nth(4).click(timeout=5000))
+    time.sleep(6)
+    state(opts, page, "c2b-path")
     step("open Prediction", lambda: opts.get_by_text("Prediction", exact=True).first.click(timeout=5000))
     time.sleep(4)
     state(opts, page, "c3-prediction-open")

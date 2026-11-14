@@ -74,8 +74,10 @@ with sync_playwright() as p:
     step("select B", lambda: item(opts, "B").click(timeout=5000))
     step("B -> Construct 2", lambda: transfer.nth(0).click(timeout=5000))
     time.sleep(5)
+    time.sleep(6)
     state(opts, page, "c1-constructs")
-    step("focus Construct 2 row", lambda: opts.get_by_text("drag predictors here", exact=True).last.click(timeout=5000))
+    log.append("predictor boxes: " + str(opts.get_by_text("drag predictors here", exact=True).count()))
+    step("focus Construct 2 row", lambda: opts.get_by_text("drag predictors here", exact=True).nth(1).click(timeout=5000))
     step("select Construct 1 in the structural supplier", lambda: visible_item(opts, "Construct 1").click(timeout=5000))
     for i in range(transfer.count()):
         log.append(f"transfer {i} visible={transfer.nth(i).is_visible()}")

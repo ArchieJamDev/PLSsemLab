@@ -36,6 +36,12 @@ jobs:
           RS=$(docker exec jam sh -c 'command -v Rscript || find / -maxdepth 6 -name Rscript -type f 2>/dev/null | head -1')
           LIBS=$(docker exec jam sh -c 'find / -maxdepth 7 -name jmvcore -type d 2>/dev/null | grep -v /w/ | xargs -n1 dirname | sort -u | paste -sd:')
           echo "Rscript=$RS libs=$LIBS"
+          # Which BLAS/LAPACK jamovi's R has and which of the module's
+          # compiled dependencies jamovi already ships.
+          # ES: Qué BLAS/LAPACK tiene el R de jamovi y qué dependencias
+          # compiladas ya trae jamovi.
+          docker exec jam sh -c 'RH=$(dirname $(dirname $(command -v R || find / -maxdepth 6 -name R -type f | head -1))); find / -name "libR*.so*" -not -path "/proc/*" 2>/dev/null | head; find / -maxdepth 8 -type d \( -name expm -o -name RcppArmadillo \) -not -path "/w/*" 2>/dev/null | head'
+          docker exec jam sh -c 'f=$(find / -name libR.so -not -path "/proc/*" 2>/dev/null | head -1); echo $f; ldd $f | grep -i "blas\|lapack"'
           docker exec -e R_LIBS="/w/mod/PLSsemLab/R:$LIBS" -e PL_DATA=/w/data/plssemlab_bank.csv -e PL_DATA2=/w/data/plssemlab_corp_rep.csv jam "$RS" /w/tests/engine/run-in-jamovi.R; echo "exit code: $?"
       # Artifacts cannot be fetched from the cloud session, so the images
       # also go to an "engine-probe" pre-release.

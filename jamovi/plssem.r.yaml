@@ -1148,6 +1148,84 @@ items:
         title: PLS predicts better
         type: text
 
+  # Importance-performance map (phase 6): rows laid out in .init() (each
+  # endogenous construct and every construct with an effect on it); one map
+  # per target.
+  # ES: Mapa importancia-desempeño (fase 6): filas en .init(); un mapa por
+  # objetivo.
+  - name: ipmaGuide
+    title: How to read the importance-performance map
+    type: Html
+    visible: (showGuides && ipma)
+
+  - name: ipmaTable
+    title: Importance-performance map (IPMA)
+    type: Table
+    rows: 0
+    visible: (ipma)
+    refs:
+      - ringle_2016
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - ipmaRange
+      - ipmaMin
+      - ipmaMax
+    columns:
+      - name: target
+        title: Target
+        type: text
+        combineBelow: true
+      - name: construct
+        title: Construct
+        type: text
+      - name: importance
+        title: Importance
+        type: number
+      - name: perfRaw
+        title: Mean (scale)
+        type: number
+      - name: performance
+        title: Performance (0-100)
+        type: number
+      - name: quadrant
+        title: Reading
+        type: text
+
+  - name: ipmaPlots
+    title: Importance-performance maps
+    type: Array
+    items: 0
+    visible: (ipma)
+    template:
+      title: $key
+      type: Image
+      width: 560
+      height: 420
+      renderFun: .plotIpma
+      clearWith:
+        - reflective
+        - formative
+        - reflectiveHoc
+        - formativeHoc
+        - hocApproach
+        - structural
+        - estimator
+        - innerScheme
+        - indicatorScale
+        - missing
+        - ipmaRange
+        - ipmaMin
+        - ipmaMax
+
   - name: pathDiagram
     title: Path diagram
     type: Image

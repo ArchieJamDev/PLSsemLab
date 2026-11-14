@@ -30,6 +30,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             predictRun = FALSE,
             predictFolds = 10,
             predictReps = 10,
+            ipma = FALSE,
+            ipmaRange = "data",
+            ipmaMin = 1,
+            ipmaMax = 7,
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
@@ -229,6 +233,25 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=1,
                 max=100,
                 default=10)
+            private$..ipma <- jmvcore::OptionBool$new(
+                "ipma",
+                ipma,
+                default=FALSE)
+            private$..ipmaRange <- jmvcore::OptionList$new(
+                "ipmaRange",
+                ipmaRange,
+                options=list(
+                    "data",
+                    "manual"),
+                default="data")
+            private$..ipmaMin <- jmvcore::OptionNumber$new(
+                "ipmaMin",
+                ipmaMin,
+                default=1)
+            private$..ipmaMax <- jmvcore::OptionNumber$new(
+                "ipmaMax",
+                ipmaMax,
+                default=7)
             private$..pathDiagram <- jmvcore::OptionBool$new(
                 "pathDiagram",
                 pathDiagram,
@@ -382,6 +405,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..predictRun)
             self$.addOption(private$..predictFolds)
             self$.addOption(private$..predictReps)
+            self$.addOption(private$..ipma)
+            self$.addOption(private$..ipmaRange)
+            self$.addOption(private$..ipmaMin)
+            self$.addOption(private$..ipmaMax)
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
@@ -429,6 +456,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         predictRun = function() private$..predictRun$value,
         predictFolds = function() private$..predictFolds$value,
         predictReps = function() private$..predictReps$value,
+        ipma = function() private$..ipma$value,
+        ipmaRange = function() private$..ipmaRange$value,
+        ipmaMin = function() private$..ipmaMin$value,
+        ipmaMax = function() private$..ipmaMax$value,
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
@@ -475,6 +506,10 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..predictRun = NA,
         ..predictFolds = NA,
         ..predictReps = NA,
+        ..ipma = NA,
+        ..ipmaRange = NA,
+        ..ipmaMin = NA,
+        ..ipmaMax = NA,
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
@@ -541,6 +576,9 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         predictGuide = function() private$.items[["predictGuide"]],
         predict = function() private$.items[["predict"]],
         cvpat = function() private$.items[["cvpat"]],
+        ipmaGuide = function() private$.items[["ipmaGuide"]],
+        ipmaTable = function() private$.items[["ipmaTable"]],
+        ipmaPlots = function() private$.items[["ipmaPlots"]],
         pathDiagram = function() private$.items[["pathDiagram"]],
         loadingsPlot = function() private$.items[["loadingsPlot"]],
         htmtPlot = function() private$.items[["htmtPlot"]],
@@ -1767,6 +1805,85 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="decision", 
                         `title`="PLS predicts better", 
                         `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="ipmaGuide",
+                title="How to read the importance-performance map",
+                visible="(showGuides && ipma)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="ipmaTable",
+                title="Importance-performance map (IPMA)",
+                rows=0,
+                visible="(ipma)",
+                refs=list(
+                    "ringle_2016"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "ipmaRange",
+                    "ipmaMin",
+                    "ipmaMax"),
+                columns=list(
+                    list(
+                        `name`="target", 
+                        `title`="Target", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="importance", 
+                        `title`="Importance", 
+                        `type`="number"),
+                    list(
+                        `name`="perfRaw", 
+                        `title`="Mean (scale)", 
+                        `type`="number"),
+                    list(
+                        `name`="performance", 
+                        `title`="Performance (0-100)", 
+                        `type`="number"),
+                    list(
+                        `name`="quadrant", 
+                        `title`="Reading", 
+                        `type`="text"))))
+            self$add(jmvcore::Array$new(
+                options=options,
+                name="ipmaPlots",
+                title="Importance-performance maps",
+                items=0,
+                visible="(ipma)",
+                template=jmvcore::Image$new(
+                    options=options,
+                    title="$key",
+                    width=560,
+                    height=420,
+                    renderFun=".plotIpma",
+                    clearWith=list(
+                        "reflective",
+                        "formative",
+                        "reflectiveHoc",
+                        "formativeHoc",
+                        "hocApproach",
+                        "structural",
+                        "estimator",
+                        "innerScheme",
+                        "indicatorScale",
+                        "missing",
+                        "ipmaRange",
+                        "ipmaMin",
+                        "ipmaMax"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
@@ -1962,6 +2079,10 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param predictRun .
 #' @param predictFolds .
 #' @param predictReps .
+#' @param ipma .
+#' @param ipmaRange .
+#' @param ipmaMin .
+#' @param ipmaMax .
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
@@ -2024,6 +2145,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$predictGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$predict} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$cvpat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ipmaGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$ipmaTable} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ipmaPlots} \tab \tab \tab \tab \tab an array of images \cr
 #'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
@@ -2068,6 +2192,10 @@ plssem <- function(
     predictRun = FALSE,
     predictFolds = 10,
     predictReps = 10,
+    ipma = FALSE,
+    ipmaRange = "data",
+    ipmaMin = 1,
+    ipmaMax = 7,
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
@@ -2123,6 +2251,10 @@ plssem <- function(
         predictRun = predictRun,
         predictFolds = predictFolds,
         predictReps = predictReps,
+        ipma = ipma,
+        ipmaRange = ipmaRange,
+        ipmaMin = ipmaMin,
+        ipmaMax = ipmaMax,
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,

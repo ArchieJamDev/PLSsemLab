@@ -272,4 +272,15 @@ refs:
         issue: '6'
         pages: '1662-1677'
         url: https://doi.org/10.1108/EJM-08-2020-0636
+
+    ringle_2016:
+        type: 'article'
+        author: 'Ringle, C. M., & Sarstedt, M.'
+        year: 2016
+        title: 'Gain more insight from your PLS-SEM results: The importance-performance map analysis'
+        publisher: 'Industrial Management & Data Systems'
+        volume: '116'
+        issue: '9'
+        pages: '1865-1886'
+        url: https://doi.org/10.1108/IMDS-10-2015-0449
 ...

@@ -340,6 +340,27 @@ children:
           - type: Label
             label: The seed is the one in the Bootstrap box.
   - type: CollapseBox
+    label: Importance-Performance Map
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: ipma
+          - type: ComboBox
+            name: ipmaRange
+            enable: (ipma)
+          - type: TextBox
+            name: ipmaMin
+            format: number
+            enable: (ipma && ipmaRange:manual)
+          - type: TextBox
+            name: ipmaMax
+            format: number
+            enable: (ipma && ipmaRange:manual)
+  - type: CollapseBox
     label: Plots
     collapsed: true
     children:

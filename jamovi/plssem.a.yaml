@@ -323,6 +323,36 @@ options:
     max: 100
     default: 10
 
+  # Importance-performance map (phase 6): the range of the scale rescales
+  # performance to 0-100; from the data (observed minimum and maximum of the
+  # indicators) or set by the user.
+  # ES: Mapa importancia-desempeño (fase 6): el rango de la escala reescala
+  # el desempeño a 0-100; de los datos o fijado por el usuario.
+  - name: ipma
+    title: Importance-performance map (IPMA)
+    type: Bool
+    default: false
+
+  - name: ipmaRange
+    title: Range of the scale
+    type: List
+    options:
+      - name: data
+        title: From the data (observed minimum and maximum)
+      - name: manual
+        title: Set the minimum and maximum
+    default: data
+
+  - name: ipmaMin
+    title: Minimum
+    type: Number
+    default: 1
+
+  - name: ipmaMax
+    title: Maximum
+    type: Number
+    default: 7
+
   # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
   # cannot show).
   # ES: Diagrama de rutas dibujado por el módulo (el de cSEM usa

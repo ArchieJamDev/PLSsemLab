@@ -177,6 +177,19 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                           values = list(construct = if (nzchar(cn)) cn else ptxt("cvpat_all"),
                                                         bench = ptxt(paste0("bench_", bn))))
 
+            # IPMA (phase 6): each endogenous construct and every construct
+            # with an effect on it; one map per target.
+            # ES: IPMA (fase 6): cada constructo endógeno y cada constructo con
+            # efecto sobre él; un mapa por objetivo.
+            ipairs <- .pl_effect_pairs(paths)
+            for (tg in unique(paths$to[!grepl(.PL_X, paths$from, fixed = TRUE)])) {
+                k <- which(ipairs$to == tg)
+                for (j in k)
+                    self$results$ipmaTable$addRow(rowKey = paste(tg, ipairs$from[j], sep = "::"),
+                                                  values = list(target = tg, construct = ipairs$from[j]))
+                if (length(k)) self$results$ipmaPlots$addItem(key = tg)
+            }
+
             # Mediation (phase 6): one row per specific indirect effect.
             # ES: Mediación (fase 6): una fila por efecto indirecto específico.
             chains <- .pl_mediation_chains(paths)
@@ -341,6 +354,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Ajuste global (fase 5): solo con su casilla marcada.
             omf <- if (self$options$fitTest)
                 private$.fitTest(fit$value, model, d, hocs, admissible, txt) else NULL
+            ipm <- if (self$options$ipma)
+                private$.fillIpma(fit$value, model, d, blocks, paths, hocs, txt) else NULL
             prd <- if (self$options$predictRun)
                 private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
@@ -391,7 +406,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, warn)
 
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq, omf, med, prd)
+                                    mod, hocq, omf, med, prd, ipm)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
                                 smodel, hocq, omf, med, prd)
             private$.choices(lang, prep, boot)
@@ -658,6 +673,62 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$setNote("inter", txt("footnotes", "med_interaction"))
             if (!is.null(sm)) table$setNote("ci", sprintf(txt("boot", "med_note"), format(100 * level)))
             med
+        },
+
+        # ---------------------------------------------------------------------
+        # IPMA: importance (unstandardised total effects) and performance
+        # (0-100) per target; the maps are drawn from image$state.
+        # ES: IPMA: importancia y desempeño (0-100) por objetivo; los mapas se
+        # dibujan desde image$state.
+        # ---------------------------------------------------------------------
+        .fillIpma = function(fit, model, d, blocks, paths, hocs, txt) {
+            table <- self$results$ipmaTable
+            reason <- .pl_ipma_reason(model, hocs, self$options)
+            if (!is.null(reason)) {
+                for (k in seq_len(table$rowCount)) table$setCell(rowNo = k, col = "quadrant", value = txt("labels", "not_computable"))
+                table$setNote("reason", txt("footnotes", reason))
+                return(list(reason = txt("footnotes", reason)))
+            }
+            pairs <- .pl_effect_pairs(paths)
+            pairs <- pairs[pairs$to %in% paths$to[!grepl(.PL_X, paths$from, fixed = TRUE)], , drop = FALSE]
+            vars <- unlist(lapply(blocks, `[[`, "vars"))
+            vals <- unlist(lapply(d[, unname(model$vmap[vars]), drop = FALSE], function(x) as.numeric(x)))
+            range <- if (self$options$ipmaRange == "manual") c(as.numeric(self$options$ipmaMin), as.numeric(self$options$ipmaMax))
+                     else range(vals, na.rm = TRUE)
+            if (!(range[2] > range[1])) {
+                table$setNote("reason", txt("footnotes", "ipma_range"))
+                return(list(reason = txt("footnotes", "ipma_range")))
+            }
+            r <- .pl_capture(.pl_ipma(fit, pairs, model$cmap, range))
+            if (is.null(r$value)) {
+                table$setNote("reason", sprintf(txt("footnotes", "ipma_error"), paste(r$error, collapse = "; ")))
+                return(list(error = r$error))
+            }
+            ip <- r$value$table
+            for (k in seq_len(nrow(ip)))
+                table$setRow(rowKey = paste(ip$to[k], ip$from[k], sep = "::"),
+                             values = list(importance = ip$importance[k], perfRaw = ip$perf_raw[k],
+                                           performance = ip$performance[k], quadrant = txt("labels", ip$quadrant[k])))
+            table$setNote("range", sprintf(txt("boot", "ipma_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
+                                           txt("labels", paste0("ipma_range_", self$options$ipmaRange))))
+            if (isTRUE(r$value$negative)) table$setNote("negative", txt("footnotes", "ipma_negative"))
+            lang <- .pl_lang(self$options)
+            for (tg in unique(ip$to)) {
+                item <- self$results$ipmaPlots$get(key = tg)
+                k <- ip$to == tg
+                item$setState(list(points = data.frame(construct = ip$from[k], importance = ip$importance[k],
+                                                       performance = ip$performance[k], stringsAsFactors = FALSE),
+                                   title = sprintf(.pl_text(lang, "labels", "ipma_title"), tg),
+                                   x_lab = .pl_text(lang, "labels", "ipma_x"), y_lab = .pl_text(lang, "labels", "ipma_y"),
+                                   caption = .pl_text(lang, "labels", "ipma_caption")))
+            }
+            list(table = ip, range = range, negative = r$value$negative)
+        },
+
+        .plotIpma = function(image, ggtheme, theme, ...) {
+            if (is.null(image$state) || is.null(image$state$points)) return(FALSE)
+            print(.pl_plot_ipma(image$state, ggtheme, theme))
+            TRUE
         },
 
         # ---------------------------------------------------------------------
@@ -1225,7 +1296,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, ipm = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1378,11 +1449,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             flines <- private$.fitLines(txt, omf)
             dlines <- private$.mediationLines(txt, med)
             plines <- private$.predictLines(txt, prd)
+            ilines <- private$.ipmaLines(txt, ipm)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
                            if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
                            if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
+                           if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
@@ -1401,6 +1474,26 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                     txt(paste0("med_", med$type[k]))))
             }
             c(out, txt("med_caution"))
+        },
+
+        # Interpretation of the IPMA: per target, the constructs to improve
+        # first (above-average importance, below-average performance).
+        # ES: Interpretación del IPMA: por objetivo, qué mejorar primero.
+        .ipmaLines = function(txt, ipm) {
+            if (is.null(ipm)) return(character(0))
+            if (!is.null(ipm$reason)) return(sprintf(txt("ipma_none"), ipm$reason))
+            if (is.null(ipm$table)) return(character(0))
+            ip <- ipm$table
+            out <- character(0)
+            for (tg in unique(ip$to)) {
+                r <- ip[ip$to == tg, ]
+                pr <- r$from[r$quadrant == "q_priority"]
+                top <- r$from[which.max(r$importance)]
+                out <- c(out, if (length(pr)) sprintf(txt("ipma_priority"), tg, paste(pr, collapse = ", "))
+                              else sprintf(txt("ipma_no_priority"), tg),
+                         sprintf(txt("ipma_top"), top, .pl_fmt(max(r$importance)), tg))
+            }
+            c(out, txt("ipma_caution"))
         },
 
         # Interpretation of PLSpredict (Shmueli et al., 2019: Q2predict > 0,
@@ -1683,6 +1776,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
             self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
             self$results$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
+            self$results$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
             self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_power"), txt("cvpat"))))
             self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
@@ -1782,6 +1876,16 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "boot$Information$Information_resample$Number_of_admissibles <- sum(sapply(parts, function(o) o$Information$Information_resample$Number_of_admissibles))",
                     sprintf("cSEM::summarize(boot, .alpha = %s, .ci = \"CI_percentile\")", format(1 - as.numeric(self$options$ciLevel))),
                     "# Intervals of R2, reliability, AVE, HTMT and VIF: the same resampling with .user_funs (see R/bootstrap.R in PLSsemLab)")
+            }
+            if (self$options$ipma && is.null(.pl_ipma_reason(model, model$hocs, self$options))) {
+                code <- c(code, "",
+                    "# IPMA: importance = unstandardised total effects (rows: targets); performance rescaled to 0-100",
+                    "ip <- cSEM::doIPMA(fit)",
+                    "ip$Construct$Importance",
+                    if (self$options$ipmaRange == "manual")
+                        sprintf("100 * (ip$Construct$Performance - %s) / (%s - %s)", format(self$options$ipmaMin),
+                                format(self$options$ipmaMax), format(self$options$ipmaMin))
+                    else "rg <- range(unlist(lapply(d, as.numeric)), na.rm = TRUE); 100 * (ip$Construct$Performance - rg[1]) / diff(rg)")
             }
             if (self$options$predictRun && is.null(.pl_predict_reason(model, model$hocs, TRUE))) {
                 code <- c(code, "",

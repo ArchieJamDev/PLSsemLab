@@ -1,6 +1,17 @@
-# PLSsemLab 0.6.0 (development)
+# PLSsemLab 0.6.1 (development)
 
 ## Phase 6: mediation, prediction and IPMA (D6)
+
+* *How to read each table* is now ticked by default.
+* PLSpredict compares PLS with LM with the RMSE, or with the MAE when the
+  prediction errors are clearly asymmetric (|skewness| > 1); the table shows
+  both, the skewness and the metric used, and the guide explains the choice.
+* The report says that Q²predict is not the Stone-Geisser Q² of
+  blindfolding, and warns when the sample is small for the cross-validation.
+* IPMA: with the bootstrap, constructs whose total effect is not significant
+  are marked and do not set priorities; without it, a warning.
+* Mediation with several chains between two constructs, and a next step in
+  each phase-6 block of the interpretation.
 
 * **Mediation:** every specific indirect effect (a chain of two or more
   paths) with its percentile bootstrap interval, computed from the same

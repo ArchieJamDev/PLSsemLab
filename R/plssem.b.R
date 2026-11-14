@@ -356,7 +356,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             omf <- if (self$options$fitTest)
                 private$.fitTest(fit$value, model, d, hocs, admissible, txt) else NULL
             ipm <- if (self$options$ipma)
-                private$.fillIpma(fit$value, model, d, blocks, paths, hocs, txt) else NULL
+                private$.fillIpma(fit$value, model, d, blocks, paths, hocs, txt, boot$summary) else NULL
             prd <- if (self$options$predictRun)
                 private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
@@ -682,7 +682,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: IPMA: importancia y desempeño (0-100) por objetivo; los mapas se
         # dibujan desde image$state.
         # ---------------------------------------------------------------------
-        .fillIpma = function(fit, model, d, blocks, paths, hocs, txt) {
+        .fillIpma = function(fit, model, d, blocks, paths, hocs, txt, sm = NULL) {
             table <- self$results$ipmaTable
             reason <- .pl_ipma_reason(model, hocs, self$options)
             if (!is.null(reason)) {
@@ -700,7 +700,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$setNote("reason", txt("footnotes", "ipma_range"))
                 return(list(reason = txt("footnotes", "ipma_range")))
             }
-            r <- .pl_capture(.pl_ipma(fit, pairs, model$cmap, range))
+            r <- .pl_capture(.pl_ipma(fit, pairs, model$cmap, range, sm$total))
             if (is.null(r$value)) {
                 table$setNote("reason", sprintf(txt("footnotes", "ipma_error"), paste(r$error, collapse = "; ")))
                 return(list(error = r$error))
@@ -709,7 +709,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(nrow(ip)))
                 table$setRow(rowKey = paste(ip$to[k], ip$from[k], sep = "::"),
                              values = list(importance = ip$importance[k], perfRaw = ip$perf_raw[k],
-                                           performance = ip$performance[k], quadrant = txt("labels", ip$quadrant[k])))
+                                           performance = ip$performance[k],
+                                           quadrant = paste0(txt("labels", ip$quadrant[k]),
+                                                             if (isFALSE(ip$sig[k])) txt("labels", "ipma_ns_suffix") else "")))
+            if (is.null(sm)) table$setNote("sig", txt("footnotes", "ipma_no_boot"))
+            else if (any(!is.na(ip$sig) & !ip$sig)) table$setNote("sig", txt("footnotes", "ipma_ns"))
             table$setNote("range", sprintf(txt("boot", "ipma_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
                                            txt("labels", paste0("ipma_range_", self$options$ipmaRange))))
             if (isTRUE(r$value$negative)) table$setNote("negative", txt("footnotes", "ipma_negative"))
@@ -723,7 +727,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                    x_lab = .pl_text(lang, "labels", "ipma_x"), y_lab = .pl_text(lang, "labels", "ipma_y"),
                                    caption = .pl_text(lang, "labels", "ipma_caption")))
             }
-            list(table = ip, range = range, negative = r$value$negative)
+            list(table = ip, range = range, negative = r$value$negative, boot = !is.null(sm))
         },
 
         .plotIpma = function(image, ggtheme, theme, ...) {
@@ -817,10 +821,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 for (v in b[[1]]$vars) {
                     r <- m[m$indicator == v, ]
                     if (!nrow(r)) next
-                    lower <- if (r$rmse_pls < r$rmse_lm) "PLS" else if (r$rmse_pls > r$rmse_lm) "LM" else txt("labels", "equal")
+                    lower <- if (r$tie) txt("labels", "equal") else if (r$pls_better) "PLS" else "LM"
                     pt$setRow(rowKey = paste(cn, v, sep = "::"),
                               values = list(q2 = r$q2, rmsePls = r$rmse_pls, rmseLm = r$rmse_lm,
-                                            maePls = r$mae_pls, maeLm = r$mae_lm, lower = lower))
+                                            maePls = r$mae_pls, maeLm = r$mae_lm, skew = r$skew,
+                                            metric = r$metric, lower = lower))
                 }
             }
             cv <- res$summary$cvpat
@@ -842,8 +847,22 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
             pt$setNote("cv", note)
+            pt$setNote("metric", txt("boot", "predict_metric_note"))
+            pt$setNote("q2", txt("boot", "q2_not_blindfolding"))
+            # sample size for the cross-validation
+            # ES: tamaño de muestra para la validación cruzada
+            n_exog <- length(unique(unlist(lapply(setdiff(unique(paths$from), unique(paths$to)), function(cn) {
+                b <- Filter(function(x) identical(x$label, cn), blocks)
+                if (length(b)) b[[1]]$vars else character(0)
+            }))))
+            small <- .pl_predict_small(nrow(d), folds, n_exog)
+            if (small$small) {
+                msg <- sprintf(txt("footnotes", "predict_small_sample"), nrow(d), small$test, small$train, small$n_exog)
+                pt$setNote("small", msg)
+                ct$setNote("small", msg)
+            }
             ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
-            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings,
+            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings, small = small,
                                 drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
         },
 
@@ -1506,7 +1525,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 out <- c(out, paste(sprintf(txt("med_line"), med$label[k], .pl_fmt(med$estimate[k]), ci),
                                     txt(paste0("med_", med$type[k]))))
             }
-            c(out, txt("med_caution"))
+            multi <- any(duplicated(paste(med$from, med$to)))
+            c(out, if (multi) txt("med_multiple"), txt("med_caution"), txt("med_next"))
         },
 
         # Interpretation of the IPMA: per target, the constructs to improve
@@ -1521,13 +1541,16 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (tg in unique(ip$to)) {
                 r <- ip[ip$to == tg, ]
                 if (nrow(r) == 1) next
-                pr <- r$from[r$quadrant == "q_priority"]
+                ns <- !is.na(r$sig) & !r$sig
+                pr <- r$from[r$quadrant == "q_priority" & !ns]
+                pr_ns <- r$from[r$quadrant == "q_priority" & ns]
                 top <- r$from[which.max(r$importance)]
                 out <- c(out, if (length(pr)) sprintf(txt("ipma_priority"), tg, paste(pr, collapse = ", "))
                               else sprintf(txt("ipma_no_priority"), tg),
+                         if (length(pr_ns)) sprintf(txt("ipma_priority_ns"), paste(pr_ns, collapse = ", ")),
                          sprintf(txt("ipma_top"), top, .pl_fmt(max(r$importance)), tg))
             }
-            c(out, txt("ipma_caution"))
+            c(out, if (!isTRUE(ipm$boot)) txt("ipma_no_boot_interp"), txt("ipma_caution"), txt("ipma_next"))
         },
 
         # Interpretation of PLSpredict (Shmueli et al., 2019: Q2predict > 0,
@@ -1543,9 +1566,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             neg <- m$q2 <= 0
             out <- c(out, if (any(neg)) sprintf(txt("q2_neg"), paste(m$indicator[neg], collapse = ", "))
                           else sprintf(txt("q2_pos"), nrow(m)))
-            k <- sum(m$rmse_pls < m$rmse_lm); n <- nrow(m)
+            k <- sum(m$pls_better); n <- nrow(m)
             level <- if (k == n) "power_high" else if (k >= n / 2) "power_medium" else if (k > 0) "power_low" else "power_none"
             out <- c(out, sprintf(txt(level), k, n))
+            asym <- m$indicator[m$metric == "MAE"]
+            if (length(asym)) out <- c(out, sprintf(txt("predict_mae_used"), paste(asym, collapse = ", ")))
             cv <- prd$cvpat[prd$cvpat$group == "all", ]
             for (b in c("IA", "LM")) {
                 r <- cv[cv$bench == b, ]
@@ -1557,7 +1582,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 key <- if (r$p >= 0.05) "cvpat_alt_same" else if (r$diff < 0) "cvpat_alt_worse" else "cvpat_alt_better"
                 out <- c(out, sprintf(txt(key), prd$drop, .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
             }
-            c(out, txt("predict_caution"))
+            if (isTRUE(prd$small$small))
+                out <- c(out, sprintf(txt("predict_small_interp"), prd$small$test, prd$small$train, prd$small$n_exog))
+            ia <- cv[cv$bench == "IA", ]
+            c(out, txt("predict_caution"),
+              txt(if (any(m$q2 <= 0) || !(ia$p < 0.05 && ia$diff < 0)) "predict_next_weak" else "predict_next"))
         },
 
         # Interpretation of the overall fit test: exact fit kept or rejected
@@ -1726,7 +1755,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (!is.null(prd$metrics)) {
                 m <- prd$metrics
-                findings <- c(findings, sprintf(txt("predict"), sum(m$q2 > 0), nrow(m), sum(m$rmse_pls < m$rmse_lm)))
+                findings <- c(findings, sprintf(txt("predict"), sum(m$q2 > 0), nrow(m), sum(m$pls_better)))
             }
             if (!is.null(omf$table)) {
                 e <- omf$table[omf$table$model == "estimated", ]
@@ -1816,7 +1845,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
             self$results$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
             self$results$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
-            self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_power"), txt("cvpat"))))
+            self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
+                                                                 txt("predict_power"), txt("cvpat"))))
             self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 

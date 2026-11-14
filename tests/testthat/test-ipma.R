@@ -34,3 +34,11 @@ test_that("IPMA with consistent PLS stays as not computable", {
     a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, estimator = "plsc")
     expect_true(all(a$results$ipmaTable$asDF$quadrant == "Not computable"))
 })
+
+test_that("IPMA warns without the bootstrap and tests importance with it", {
+    a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE)
+    expect_true("sig" %in% names(a$results$ipmaTable$notes))
+    b <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, bootstrap = TRUE, bootReps = 100, bootSeed = 1)
+    expect_match(gsub("<[^>]+>", " ", b$results$interpretation$content), "Importance-performance map")
+    expect_false(grepl("These priorities are untested", b$results$interpretation$content, fixed = TRUE))
+})

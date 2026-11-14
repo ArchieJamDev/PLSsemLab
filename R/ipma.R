@@ -37,7 +37,7 @@
 # of the scale. Returns a data.frame (target, construct, importance,
 # perf_raw, performance, quadrant) and whether some weight is negative.
 # ES: Importancia y desempeño por objetivo y predictor.
-.pl_ipma <- function(fit, pairs, cmap, range) {
+.pl_ipma <- function(fit, pairs, cmap, range, total_ci = NULL) {
     ip <- suppressWarnings(cSEM::doIPMA(fit))
     imp <- ip$Construct$Importance
     perf <- ip$Construct$Performance
@@ -57,6 +57,16 @@
                                   ifelse(hi_imp & hi_perf, "q_keep",
                                          ifelse(!hi_imp & hi_perf, "q_overkill", "q_low")))
     }
+    # significance of the importance: the bootstrap interval of the total
+    # effect (NA without the bootstrap)
+    # ES: significación de la importancia: el intervalo bootstrap del efecto
+    # total (NA sin bootstrap)
+    out$sig <- NA
+    if (!is.null(total_ci))
+        out$sig <- mapply(function(t, f) {
+            r <- total_ci[total_ci$name == paste(cmap[[t]], "~", cmap[[f]]), , drop = FALSE]
+            if (nrow(r) == 1 && is.finite(r$lower)) r$lower > 0 || r$upper < 0 else NA
+        }, pairs$to, pairs$from)
     w <- fit$Estimates$Weight_estimates
     list(table = out, negative = any(w < 0))
 }

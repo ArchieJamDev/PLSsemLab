@@ -1095,8 +1095,14 @@ items:
         title: LM
         type: number
         superTitle: MAE
+      - name: skew
+        title: Error skewness
+        type: number
+      - name: metric
+        title: Metric
+        type: text
       - name: lower
-        title: Lower RMSE
+        title: Lower error
         type: text
 
   - name: cvpat

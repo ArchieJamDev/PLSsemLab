@@ -86,3 +86,17 @@ test_that("CVPAT against a competing model through the options equals cSEM::test
     expect_equal(r$p, unname(ref$p_value), tolerance = 1e-8)
     expect_equal(nrow(tab), 9)
 })
+
+test_that("the comparison with LM uses the MAE when the errors are asymmetric", {
+    s <- satModel()
+    a <- runPlssem(s$d, s$m, predictRun = TRUE, predictReps = 2, bootSeed = 3)
+    tab <- a$results$predict$asDF
+    expect_true(all(tab$metric == ifelse(abs(tab$skew) > 1, "MAE", "RMSE")))
+    better <- ifelse(tab$metric == "MAE", tab$maePls < tab$maeLm, tab$rmsePls < tab$rmseLm)
+    expect_equal(tab$lower, ifelse(better, "PLS", "LM"))
+    expect_true(all(c("metric", "q2") %in% names(a$results$predict$notes)))
+    # 250 cases, 10 folds: 25 per fold and 225 training cases for 5 predictors of LM
+    # ES: 250 casos, 10 particiones: 25 por partición, 225 de entrenamiento
+    expect_false("small" %in% names(a$results$predict$notes))
+    expect_true(PLSsemLab:::.pl_predict_small(120, 10, 11)$small)
+})

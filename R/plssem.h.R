@@ -57,7 +57,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             omegaCfa = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
-            showGuides = FALSE,
+            showGuides = TRUE,
             showRepro = TRUE, ...) {
 
             super$initialize(
@@ -383,7 +383,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..showGuides <- jmvcore::OptionBool$new(
                 "showGuides",
                 showGuides,
-                default=FALSE)
+                default=TRUE)
             private$..showRepro <- jmvcore::OptionBool$new(
                 "showRepro",
                 showRepro,
@@ -1753,8 +1753,16 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `type`="number", 
                         `superTitle`="MAE"),
                     list(
+                        `name`="skew", 
+                        `title`="Error skewness", 
+                        `type`="number"),
+                    list(
+                        `name`="metric", 
+                        `title`="Metric", 
+                        `type`="text"),
+                    list(
                         `name`="lower", 
-                        `title`="Lower RMSE", 
+                        `title`="Lower error", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -2046,7 +2054,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,5,1),
+                version = c(0,6,0),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2230,7 +2238,7 @@ plssem <- function(
     omegaCfa = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
-    showGuides = FALSE,
+    showGuides = TRUE,
     showRepro = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))

@@ -13,6 +13,9 @@
             "—": [
                 "—"
             ],
+            "; total effect not significant": [
+                "; efecto total no significativo"
+            ],
             "'%s' appears in the structural model but is not defined as a construct with indicators.": [
                 "'%s' aparece en el modelo estructural, pero no está definido como un constructo con indicadores."
             ],
@@ -75,6 +78,9 @@
             ],
             "%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs.": [
                 "%s tiene un solo indicador: cSEM toma su correlación dentro del constructo como 1 (fiabilidad perfecta), así que este HTMT es un límite inferior del solapamiento entre los dos constructos."
+            ],
+            "%s would also be a priority by position on the map, but its total effect is not significant: do not base a decision on it.": [
+                "%s también sería prioritario por su posición en el mapa, pero su efecto total no es significativo: no base una decisión en él."
             ],
             "%s, moderator (standardized)": [
                 "%s, moderador (estandarizado)"
@@ -526,6 +532,9 @@
             "Equivalent R code": [
                 "Código R equivalente"
             ],
+            "Error skewness": [
+                "Asimetría del error"
+            ],
             "Estimated": [
                 "Estimado"
             ],
@@ -585,6 +594,9 @@
             ],
             "Follows the coefficient": [
                 "Según el coeficiente"
+            ],
+            "For %s the prediction errors are clearly asymmetric, so the comparison with LM uses the MAE instead of the RMSE.": [
+                "En %s los errores de predicción son claramente asimétricos, así que la comparación con LM usa el MAE en lugar del RMSE."
             ],
             "Formative": [
                 "Formativo"
@@ -892,8 +904,8 @@
             "Lower": [
                 "Inferior"
             ],
-            "Lower RMSE": [
-                "Menor RMSE"
+            "Lower error": [
+                "Menor error"
             ],
             "Lower-order construct": [
                 "Constructo de orden inferior"
@@ -940,6 +952,12 @@
             "Mediation: %d of %d specific indirect effects are significant (bootstrap interval excludes 0).": [
                 "Mediación: %d de %d efectos indirectos específicos son significativos (el intervalo bootstrap excluye el 0)."
             ],
+            "Metric": [
+                "Métrica"
+            ],
+            "Metric: the comparison of PLS with LM uses the RMSE, or the MAE when the prediction errors of PLS are clearly asymmetric (|skewness| > 1, a rule of thumb of this module), as Shmueli et al. (2019) recommend.": [
+                "Métrica: la comparación de PLS con LM usa el RMSE, o el MAE cuando los errores de predicción de PLS son claramente asimétricos (|asimetría| > 1, una regla práctica de este módulo), como recomiendan Shmueli et al. (2019)."
+            ],
             "Minimum": [
                 "Mínimo"
             ],
@@ -984,6 +1002,18 @@
             ],
             "Needs the bootstrap": [
                 "Necesita el bootstrap"
+            ],
+            "Next step: for the priority constructs, look at the indicator weights and loadings to see which concrete aspects (the indicators) drive their performance, and check that their total effects are significant.": [
+                "Siguiente paso: para los constructos prioritarios, mire los pesos y cargas de sus indicadores para ver qué aspectos concretos (los indicadores) impulsan su desempeño, y compruebe que sus efectos totales sean significativos."
+            ],
+            "Next step: report each specific indirect effect with its interval and type of mediation, and discuss the mediators in light of the theory that proposed them; a significant indirect effect supports the chain only as far as the design allows causal claims.": [
+                "Siguiente paso: informe cada efecto indirecto específico con su intervalo y su tipo de mediación, y discuta los mediadores a la luz de la teoría que los propuso; un efecto indirecto significativo respalda la cadena solo hasta donde el diseño permite afirmaciones causales."
+            ],
+            "Next step: report Q²predict, the RMSE or MAE comparison with LM and the CVPAT results, with the folds, repetitions and seed. If prediction is a goal of the study, discuss the indicators where LM predicts better.": [
+                "Siguiente paso: informe Q²predict, la comparación de RMSE o MAE con LM y los resultados de CVPAT, con las particiones, repeticiones y semilla. Si la predicción es un objetivo del estudio, discuta los indicadores en los que LM predice mejor."
+            ],
+            "Next step: the model does not show predictive relevance for every indicator. Present the model as explanatory rather than predictive, or revise the indicators and constructs with the weakest predictions; do not claim predictive power.": [
+                "Siguiente paso: el modelo no muestra relevancia predictiva en todos los indicadores. Presente el modelo como explicativo más que predictivo, o revise los indicadores y constructos con las peores predicciones; no afirme capacidad predictiva."
             ],
             "No": [
                 "No"
@@ -1186,17 +1216,17 @@
             "PLS": [
                 "PLS"
             ],
-            "PLS has a lower RMSE than LM for %d of %d indicators, a minority: low predictive power (Shmueli et al., 2019).": [
-                "PLS tiene un RMSE menor que LM en %d de %d indicadores, una minoría: capacidad predictiva baja (Shmueli et al., 2019)."
+            "PLS has a lower prediction error than LM (RMSE, or MAE where the errors are asymmetric) for %d of %d indicators, a minority: low predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un error de predicción menor que LM (RMSE, o MAE donde los errores son asimétricos) en %d de %d indicadores, una minoría: capacidad predictiva baja (Shmueli et al., 2019)."
             ],
-            "PLS has a lower RMSE than LM for %d of %d indicators, the majority or half of them: medium predictive power (Shmueli et al., 2019).": [
-                "PLS tiene un RMSE menor que LM en %d de %d indicadores, la mayoría o la mitad: capacidad predictiva media (Shmueli et al., 2019)."
+            "PLS has a lower prediction error than LM (RMSE, or MAE where the errors are asymmetric) for %d of %d indicators, the majority or half of them: medium predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un error de predicción menor que LM (RMSE, o MAE donde los errores son asimétricos) en %d de %d indicadores, la mayoría o la mitad: capacidad predictiva media (Shmueli et al., 2019)."
             ],
-            "PLS has a lower RMSE than LM for %d of %d indicators: high predictive power (Shmueli et al., 2019).": [
-                "PLS tiene un RMSE menor que LM en %d de %d indicadores: capacidad predictiva alta (Shmueli et al., 2019)."
+            "PLS has a lower prediction error than LM (RMSE, or MAE where the errors are asymmetric) for %d of %d indicators: high predictive power (Shmueli et al., 2019).": [
+                "PLS tiene un error de predicción menor que LM (RMSE, o MAE donde los errores son asimétricos) en %d de %d indicadores: capacidad predictiva alta (Shmueli et al., 2019)."
             ],
-            "PLS has a lower RMSE than LM for %d of %d indicators: the model lacks predictive power compared with a linear regression (Shmueli et al., 2019).": [
-                "PLS tiene un RMSE menor que LM en %d de %d indicadores: el modelo carece de capacidad predictiva frente a una regresión lineal (Shmueli et al., 2019)."
+            "PLS has a lower prediction error than LM (RMSE, or MAE where the errors are asymmetric) for %d of %d indicators: the model lacks predictive power compared with a linear regression (Shmueli et al., 2019).": [
+                "PLS tiene un error de predicción menor que LM (RMSE, o MAE donde los errores son asimétricos) en %d de %d indicadores: el modelo carece de capacidad predictiva frente a una regresión lineal (Shmueli et al., 2019)."
             ],
             "PLS loss": [
                 "Pérdida de PLS"
@@ -1240,8 +1270,8 @@
             "Prediction": [
                 "Predicción"
             ],
-            "Prediction: Q²predict above 0 for %d of %d endogenous indicators; PLS has a lower RMSE than LM for %d.": [
-                "Predicción: Q²predict por encima de 0 en %d de %d indicadores endógenos; PLS tiene un RMSE menor que LM en %d."
+            "Prediction: Q²predict above 0 for %d of %d endogenous indicators; PLS has a lower prediction error than LM for %d.": [
+                "Predicción: Q²predict por encima de 0 en %d de %d indicadores endógenos; PLS tiene un error de predicción menor que LM en %d."
             ],
             "Predictive power and explanatory power are different questions: a model can explain the sample well (high R²) and predict new cases poorly, or the reverse. Report both if prediction matters for your conclusions.": [
                 "La capacidad predictiva y la explicativa son preguntas distintas: un modelo puede explicar bien la muestra (R² alto) y predecir mal casos nuevos, o al revés. Informe ambas si la predicción importa para sus conclusiones."
@@ -1260,6 +1290,12 @@
             ],
             "Q²predict is above 0 for all %d endogenous indicators: the model predicts unseen cases better than their training means.": [
                 "Q²predict está por encima de 0 en los %d indicadores endógenos: el modelo predice casos no vistos mejor que sus medias de entrenamiento."
+            ],
+            "Q²predict is not the Q² that older PLS-SEM texts report. That one, the Stone-Geisser Q², comes from blindfolding: it hides single data points and predicts them with a model estimated on the same cases, so it measures in-sample predictive relevance and mixes explanation with prediction. Q²predict predicts whole cases that were left out of the estimation, which is a true out-of-sample test (Shmueli et al., 2016). Values from the two are not comparable.": [
+                "Q²predict no es el Q² que informan los textos de PLS-SEM más antiguos. Ese, el Q² de Stone-Geisser, viene del blindfolding: oculta datos sueltos y los predice con un modelo estimado con los mismos casos, así que mide la relevancia predictiva dentro de la muestra y mezcla explicación con predicción. Q²predict predice casos completos que quedaron fuera de la estimación, una verdadera prueba fuera de la muestra (Shmueli et al., 2016). Los valores de ambos no son comparables."
+            ],
+            "Q²predict is not the Stone-Geisser Q² of blindfolding: that one omits data points and predicts them from the same sample (in-sample), while Q²predict predicts cases left out of the estimation (out-of-sample).": [
+                "Q²predict no es el Q² de Stone-Geisser del blindfolding: ese omite datos y los predice con la misma muestra (dentro de la muestra), mientras que Q²predict predice casos que quedaron fuera de la estimación (fuera de la muestra)."
             ],
             "R²": [
                 "R²"
@@ -1351,8 +1387,14 @@
             "RMSE": [
                 "RMSE"
             ],
+            "RMSE or MAE? Both measure the typical size of the prediction errors in the metric of the indicator. The RMSE (root mean squared error) squares the errors before averaging, so a few large errors weigh a lot; the MAE (mean absolute error) gives every error its own weight. When the errors are roughly symmetric, the RMSE is the usual choice; when they are clearly asymmetric (long tail on one side), the MAE describes the typical error better (Shmueli et al., 2019). The table shows both, the skewness of the PLS errors and the metric used for each indicator.": [
+                "¿RMSE o MAE? Ambos miden el tamaño típico de los errores de predicción en la métrica del indicador. El RMSE (raíz del error cuadrático medio) eleva los errores al cuadrado antes de promediar, así que unos pocos errores grandes pesan mucho; el MAE (error absoluto medio) da a cada error su propio peso. Cuando los errores son aproximadamente simétricos, el RMSE es la elección habitual; cuando son claramente asimétricos (cola larga hacia un lado), el MAE describe mejor el error típico (Shmueli et al., 2019). La tabla muestra ambos, la asimetría de los errores de PLS y la métrica usada en cada indicador."
+            ],
             "Role": [
                 "Papel"
+            ],
+            "Rows marked “total effect not significant” have a total effect whose bootstrap interval includes 0: their importance cannot be told apart from none, so they should not set priorities.": [
+                "Las filas marcadas con «efecto total no significativo» tienen un efecto total cuyo intervalo bootstrap incluye el 0: su importancia no se distingue de ninguna, así que no deberían fijar prioridades."
             ],
             "Run bootstrap": [
                 "Ejecutar bootstrap"
@@ -1413,6 +1455,9 @@
             ],
             "Single predictor: no collinearity": [
                 "Predictor único: sin colinealidad"
+            ],
+            "Small sample for the cross-validation: %d cases, %d per held-out fold and %d per training set for %d predictors of LM. With fewer than 20 cases per fold or fewer than 10 training cases per predictor of LM (rules of thumb of this module) the metrics vary from one set of folds to another and CVPAT has little power: read the results as indicative, use fewer folds or more repetitions, or collect more data.": [
+                "Muestra pequeña para la validación cruzada: %d casos, %d por partición de prueba y %d por conjunto de entrenamiento para %d predictores de LM. Con menos de 20 casos por partición o menos de 10 casos de entrenamiento por predictor de LM (reglas prácticas de este módulo) las métricas varían de un conjunto de particiones a otro y CVPAT tiene poca potencia: lea los resultados como orientativos, use menos particiones o más repeticiones, o reúna más datos."
             ],
             "Some bootstrap blocks failed and were left out: %s": [
                 "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
@@ -1561,6 +1606,9 @@
             "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
                 "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
             ],
+            "The sample is small for the cross-validation (%d cases per held-out fold, %d per training set, %d predictors of LM): the prediction metrics and CVPAT are unstable and have little power. Treat them as indicative.": [
+                "La muestra es pequeña para la validación cruzada (%d casos por partición de prueba, %d por conjunto de entrenamiento, %d predictores de LM): las métricas de predicción y CVPAT son inestables y tienen poca potencia. Tómelos como orientativos."
+            ],
             "The saturated model is the same model here (your structural model relates every pair of constructs), so its test says the same.": [
                 "Aquí el modelo saturado es el mismo modelo (su modelo estructural relaciona cada par de constructos), así que su prueba dice lo mismo."
             ],
@@ -1581,6 +1629,9 @@
             ],
             "The type of mediation (Zhao et al., 2010) combines the indirect effect with the direct path X → Y. Complementary: both significant with the same sign; the mediator explains part of the effect. Competitive: both significant with opposite signs; the mediator pushes against the direct effect, and the total effect can hide both. Indirect-only (full mediation): only the indirect effect is significant. Direct-only: only the direct path is significant; there is no mediation through this chain. No effect: neither is significant. The old practice of requiring a significant total effect first (Baron & Kenny) and the VAF ratio are no longer recommended. A full mediation can only be claimed when the direct path X → Y is in the model; if it is not, the table says so.": [
                 "El tipo de mediación (Zhao et al., 2010) combina el efecto indirecto con la ruta directa X → Y. Complementaria: ambos significativos con el mismo signo; el mediador explica parte del efecto. Competitiva: ambos significativos con signos opuestos; el mediador empuja contra el efecto directo, y el efecto total puede ocultar ambos. Solo indirecta (mediación total): solo el efecto indirecto es significativo. Solo directa: solo la ruta directa es significativa; no hay mediación por esta cadena. Sin efecto: ninguno es significativo. La práctica antigua de exigir primero un efecto total significativo (Baron y Kenny) y el cociente VAF ya no se recomiendan. Solo se puede afirmar una mediación total cuando la ruta directa X → Y está en el modelo; si no lo está, la tabla lo dice."
+            ],
+            "These priorities are untested: without the bootstrap a construct can look important while its total effect does not differ from 0. Run the bootstrap before acting on them.": [
+                "Estas prioridades no están probadas: sin el bootstrap un constructo puede parecer importante aunque su efecto total no difiera de 0. Ejecute el bootstrap antes de actuar sobre ellas."
             ],
             "Total": [
                 "Total"
@@ -1663,6 +1714,9 @@
             "With an interaction in the model, cSEM cannot build the model-implied matrix used for ρC, so ρC is computed from the loadings, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); in models without interactions this gives the same value as cSEM.": [
                 "Con una interacción en el modelo, cSEM no puede armar la matriz implicada que usa ρC, así que ρC se calcula a partir de las cargas, (Σλ)² / ((Σλ)² + Σ(1 − λ²)); en modelos sin interacciones da el mismo valor que cSEM."
             ],
+            "With several chains between the same two constructs, each specific indirect effect is the part that travels through its own mediators, and their sum is the total indirect effect of the effects table. A specific effect can be non-significant while the total indirect effect is significant (several small paths add up), or the reverse (paths with opposite signs cancel out): read both.": [
+                "Con varias cadenas entre los mismos dos constructos, cada efecto indirecto específico es la parte que pasa por sus propios mediadores, y su suma es el efecto indirecto total de la tabla de efectos. Un efecto específico puede no ser significativo mientras el indirecto total sí lo es (varias rutas pequeñas se suman), o al revés (rutas con signos opuestos se cancelan): lea ambos."
+            ],
             "With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s.": [
                 "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."
             ],
@@ -1686,6 +1740,9 @@
             ],
             "With the bootstrap, these weights of dimensions are not significant: %s. Keep a dimension whose loading is 0.50 or more: its absolute contribution matters even if its relative one does not (Hair et al., 2019).": [
                 "Con el bootstrap, estos pesos de dimensiones no son significativos: %s. Conserve una dimensión cuya carga sea de 0.50 o más: su contribución absoluta importa aunque la relativa no (Hair et al., 2019)."
+            ],
+            "Without the bootstrap the importance values are not tested: a construct can look important with a total effect that does not differ from 0. Run the bootstrap before deciding priorities.": [
+                "Sin el bootstrap los valores de importancia no están probados: un constructo puede parecer importante con un efecto total que no difiere de 0. Ejecute el bootstrap antes de decidir prioridades."
             ],
             "Yes": [
                 "Sí"

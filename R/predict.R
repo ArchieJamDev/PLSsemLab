@@ -103,17 +103,41 @@
 # ES: Métricas de PLSpredict por indicador, promediadas sobre repeticiones;
 # Q2_predict con los residuos centrados, como calculateq2() de cSEM.
 .pl_predict_metrics <- function(cv) {
+    skew <- function(e) apply(e, 2, function(x) { x <- x - mean(x); mean(x^3) / mean(x^2)^1.5 })
     per <- lapply(cv$res, function(x) data.frame(
         indicator = colnames(x$PLS),
         q2 = 1 - colSums(sweep(x$PLS, 2, colMeans(x$PLS))^2) / colSums(sweep(x$IA, 2, colMeans(x$IA))^2),
         rmse_pls = sqrt(colMeans(x$PLS^2)), rmse_lm = sqrt(colMeans(x$LM^2)),
         mae_pls = colMeans(abs(x$PLS)), mae_lm = colMeans(abs(x$LM)),
+        skew = skew(x$PLS),
         stringsAsFactors = FALSE))
     m <- per[[1]]
-    for (v in c("q2", "rmse_pls", "rmse_lm", "mae_pls", "mae_lm"))
+    for (v in c("q2", "rmse_pls", "rmse_lm", "mae_pls", "mae_lm", "skew"))
         m[[v]] <- rowMeans(sapply(per, `[[`, v))
+    # The metric that compares PLS with LM (Shmueli et al., 2019): RMSE, or
+    # MAE when the prediction errors are clearly asymmetric (|skewness| > 1,
+    # the module's rule of thumb), since the RMSE then weighs a few large
+    # errors too much.
+    # ES: La métrica que compara PLS con LM: RMSE, o MAE si los errores de
+    # predicción son claramente asimétricos (|asimetría| > 1).
+    m$metric <- ifelse(abs(m$skew) > 1, "MAE", "RMSE")
+    m$pls_better <- ifelse(m$metric == "MAE", m$mae_pls < m$mae_lm, m$rmse_pls < m$rmse_lm)
+    m$tie <- ifelse(m$metric == "MAE", m$mae_pls == m$mae_lm, m$rmse_pls == m$rmse_lm)
     rownames(m) <- NULL
     m
+}
+
+# Whether the sample is small for the cross-validation: fewer than 20 cases
+# in each held-out fold, or fewer than 10 training cases per predictor of
+# the linear-model benchmark (the indicators of the exogenous constructs).
+# Rules of thumb of the module, stated as such in the report.
+# ES: Si la muestra es pequeña para la validación cruzada: menos de 20 casos
+# por partición de prueba o menos de 10 casos de entrenamiento por predictor
+# del modelo lineal. Reglas prácticas del módulo.
+.pl_predict_small <- function(n, folds, n_exog) {
+    test <- floor(n / folds)
+    train <- n - ceiling(n / folds)
+    list(small = test < 20 || train < 10 * n_exog, test = test, train = train, n_exog = n_exog)
 }
 
 # CVPAT: the loss of each case is its squared prediction error averaged over

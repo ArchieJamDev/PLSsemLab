@@ -93,7 +93,7 @@ jobs:
           ls probe/PLSsemLab/R/expm/libs/x64/
           Rscript -e "cat(read.dcf('probe/PLSsemLab/R/cSEM/DESCRIPTION')[, 'Version'], '\n')"
           RLIB=$(Rscript -e "cat(normalizePath(.libPaths()[1], winslash = '/'))")
-          R_LIBS="$PWD/probe/PLSsemLab/R;$RLIB" PL_DATA=data/plssemlab_bank.csv PL_DATA2=data/plssemlab_corp_rep.csv OUT=out \
+          R_LIBS="$(cygpath -m "$PWD")/probe/PLSsemLab/R;$RLIB" PL_DATA=data/plssemlab_bank.csv PL_DATA2=data/plssemlab_corp_rep.csv OUT=out \
             Rscript tests/engine/run-in-jamovi.R
 
       - name: Attach the .jmo to the pre-release

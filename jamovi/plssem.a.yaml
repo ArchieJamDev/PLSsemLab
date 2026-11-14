@@ -298,6 +298,31 @@ options:
     max: 0.999
     default: 0.95
 
+  # Out-of-sample prediction (phase 6): PLSpredict and CVPAT from one
+  # repeated k-fold cross-validation. Long: its own Run checkbox; the seed
+  # is the bootstrap's.
+  # ES: Predicción fuera de la muestra (fase 6): PLSpredict y CVPAT a partir
+  # de una validación cruzada repetida. Larga: su propia casilla Ejecutar;
+  # la semilla es la del bootstrap.
+  - name: predictRun
+    title: Run PLSpredict and CVPAT
+    type: Bool
+    default: false
+
+  - name: predictFolds
+    title: Folds
+    type: Integer
+    min: 2
+    max: 20
+    default: 10
+
+  - name: predictReps
+    title: Repetitions
+    type: Integer
+    min: 1
+    max: 100
+    default: 10
+
   # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
   # cannot show).
   # ES: Diagrama de rutas dibujado por el módulo (el de cSEM usa

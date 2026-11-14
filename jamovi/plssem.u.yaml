@@ -294,7 +294,7 @@ children:
           - type: TextBox
             name: bootSeed
             format: number
-            enable: (bootstrap || fitTest)
+            enable: (bootstrap || fitTest || predictRun)
           - type: TextBox
             name: ciLevel
             format: number
@@ -317,6 +317,26 @@ children:
             name: fitLevel
             format: number
             enable: (fitTest)
+          - type: Label
+            label: The seed is the one in the Bootstrap box.
+  - type: CollapseBox
+    label: Prediction
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: predictRun
+          - type: TextBox
+            name: predictFolds
+            format: number
+            enable: (predictRun)
+          - type: TextBox
+            name: predictReps
+            format: number
+            enable: (predictRun)
           - type: Label
             label: The seed is the one in the Bootstrap box.
   - type: CollapseBox

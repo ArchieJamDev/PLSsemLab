@@ -1036,6 +1036,118 @@ items:
         title: Exact fit
         type: text
 
+  # Out-of-sample prediction (phase 6): rows laid out in .init() (one per
+  # indicator of an endogenous construct; CVPAT: all endogenous constructs
+  # and each one, against IA and LM).
+  # ES: Predicción fuera de la muestra (fase 6): filas en .init().
+  - name: predictGuide
+    title: How to read PLSpredict and CVPAT
+    type: Html
+    visible: (showGuides && predictRun)
+
+  - name: predict
+    title: PLSpredict (out-of-sample prediction of the endogenous indicators)
+    type: Table
+    rows: 0
+    visible: (predictRun)
+    refs:
+      - shmueli_2016
+      - shmueli_2019
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - predictFolds
+      - predictReps
+      - bootSeed
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+        combineBelow: true
+      - name: indicator
+        title: Indicator
+        type: text
+      - name: q2
+        title: Q²predict
+        type: number
+      - name: rmsePls
+        title: PLS
+        type: number
+        superTitle: RMSE
+      - name: rmseLm
+        title: LM
+        type: number
+        superTitle: RMSE
+      - name: maePls
+        title: PLS
+        type: number
+        superTitle: MAE
+      - name: maeLm
+        title: LM
+        type: number
+        superTitle: MAE
+      - name: lower
+        title: Lower RMSE
+        type: text
+
+  - name: cvpat
+    title: CVPAT (does the model predict better than the benchmarks?)
+    type: Table
+    rows: 0
+    visible: (predictRun)
+    refs:
+      - liengaard_2021
+      - sharma_2023
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - predictFolds
+      - predictReps
+      - bootSeed
+    columns:
+      - name: construct
+        title: Construct
+        type: text
+        combineBelow: true
+      - name: bench
+        title: Benchmark
+        type: text
+      - name: lossPls
+        title: PLS loss
+        type: number
+      - name: lossBench
+        title: Benchmark loss
+        type: number
+      - name: diff
+        title: Loss difference
+        type: number
+      - name: t
+        title: t
+        type: number
+      - name: p
+        title: p
+        type: number
+        format: zto,pvalue
+      - name: decision
+        title: PLS predicts better
+        type: text
+
   - name: pathDiagram
     title: Path diagram
     type: Image
@@ -1149,6 +1261,21 @@ items:
   # Small cache of overall-fit results, cleared with the model options.
   # ES: Caché pequeña de resultados del ajuste global.
   - name: fitCacheStore
+    type: Html
+    visible: false
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+
+  - name: predictCacheStore
     type: Html
     visible: false
     clearWith:

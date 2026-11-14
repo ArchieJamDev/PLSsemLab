@@ -27,6 +27,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             fitTest = FALSE,
             fitReps = 499,
             fitLevel = 0.95,
+            predictRun = FALSE,
+            predictFolds = 10,
+            predictReps = 10,
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
@@ -210,6 +213,22 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 min=0.8,
                 max=0.999,
                 default=0.95)
+            private$..predictRun <- jmvcore::OptionBool$new(
+                "predictRun",
+                predictRun,
+                default=FALSE)
+            private$..predictFolds <- jmvcore::OptionInteger$new(
+                "predictFolds",
+                predictFolds,
+                min=2,
+                max=20,
+                default=10)
+            private$..predictReps <- jmvcore::OptionInteger$new(
+                "predictReps",
+                predictReps,
+                min=1,
+                max=100,
+                default=10)
             private$..pathDiagram <- jmvcore::OptionBool$new(
                 "pathDiagram",
                 pathDiagram,
@@ -360,6 +379,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..fitTest)
             self$.addOption(private$..fitReps)
             self$.addOption(private$..fitLevel)
+            self$.addOption(private$..predictRun)
+            self$.addOption(private$..predictFolds)
+            self$.addOption(private$..predictReps)
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
@@ -404,6 +426,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fitTest = function() private$..fitTest$value,
         fitReps = function() private$..fitReps$value,
         fitLevel = function() private$..fitLevel$value,
+        predictRun = function() private$..predictRun$value,
+        predictFolds = function() private$..predictFolds$value,
+        predictReps = function() private$..predictReps$value,
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
@@ -447,6 +472,9 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..fitTest = NA,
         ..fitReps = NA,
         ..fitLevel = NA,
+        ..predictRun = NA,
+        ..predictFolds = NA,
+        ..predictReps = NA,
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
@@ -510,11 +538,15 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         moderationPlots = function() private$.items[["moderationPlots"]],
         fitGuide = function() private$.items[["fitGuide"]],
         fit = function() private$.items[["fit"]],
+        predictGuide = function() private$.items[["predictGuide"]],
+        predict = function() private$.items[["predict"]],
+        cvpat = function() private$.items[["cvpat"]],
         pathDiagram = function() private$.items[["pathDiagram"]],
         loadingsPlot = function() private$.items[["loadingsPlot"]],
         htmtPlot = function() private$.items[["htmtPlot"]],
         cacheStore = function() private$.items[["cacheStore"]],
         fitCacheStore = function() private$.items[["fitCacheStore"]],
+        predictCacheStore = function() private$.items[["predictCacheStore"]],
         interpretation = function() private$.items[["interpretation"]],
         reproducibility = function() private$.items[["reproducibility"]],
         reproducibilityCode = function() private$.items[["reproducibilityCode"]]),
@@ -1611,6 +1643,130 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="decision", 
                         `title`="Exact fit", 
                         `type`="text"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="predictGuide",
+                title="How to read PLSpredict and CVPAT",
+                visible="(showGuides && predictRun)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="predict",
+                title="PLSpredict (out-of-sample prediction of the endogenous indicators)",
+                rows=0,
+                visible="(predictRun)",
+                refs=list(
+                    "shmueli_2016",
+                    "shmueli_2019"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "predictFolds",
+                    "predictReps",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="indicator", 
+                        `title`="Indicator", 
+                        `type`="text"),
+                    list(
+                        `name`="q2", 
+                        `title`="Q\u00B2predict", 
+                        `type`="number"),
+                    list(
+                        `name`="rmsePls", 
+                        `title`="PLS", 
+                        `type`="number", 
+                        `superTitle`="RMSE"),
+                    list(
+                        `name`="rmseLm", 
+                        `title`="LM", 
+                        `type`="number", 
+                        `superTitle`="RMSE"),
+                    list(
+                        `name`="maePls", 
+                        `title`="PLS", 
+                        `type`="number", 
+                        `superTitle`="MAE"),
+                    list(
+                        `name`="maeLm", 
+                        `title`="LM", 
+                        `type`="number", 
+                        `superTitle`="MAE"),
+                    list(
+                        `name`="lower", 
+                        `title`="Lower RMSE", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="cvpat",
+                title="CVPAT (does the model predict better than the benchmarks?)",
+                rows=0,
+                visible="(predictRun)",
+                refs=list(
+                    "liengaard_2021",
+                    "sharma_2023"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "predictFolds",
+                    "predictReps",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="bench", 
+                        `title`="Benchmark", 
+                        `type`="text"),
+                    list(
+                        `name`="lossPls", 
+                        `title`="PLS loss", 
+                        `type`="number"),
+                    list(
+                        `name`="lossBench", 
+                        `title`="Benchmark loss", 
+                        `type`="number"),
+                    list(
+                        `name`="diff", 
+                        `title`="Loss difference", 
+                        `type`="number"),
+                    list(
+                        `name`="t", 
+                        `title`="t", 
+                        `type`="number"),
+                    list(
+                        `name`="p", 
+                        `title`="p", 
+                        `type`="number", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="decision", 
+                        `title`="PLS predicts better", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
@@ -1727,6 +1883,21 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing")))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="predictCacheStore",
+                visible=FALSE,
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing")))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="interpretation",
                 title="Applied interpretation"))
             self$add(jmvcore::Html$new(
@@ -1788,6 +1959,9 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param fitTest .
 #' @param fitReps .
 #' @param fitLevel .
+#' @param predictRun .
+#' @param predictFolds .
+#' @param predictReps .
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
@@ -1847,11 +2021,15 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$moderationPlots} \tab \tab \tab \tab \tab an array of images \cr
 #'   \code{results$fitGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$predictGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$predict} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$cvpat} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fitCacheStore} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$predictCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
@@ -1887,6 +2065,9 @@ plssem <- function(
     fitTest = FALSE,
     fitReps = 499,
     fitLevel = 0.95,
+    predictRun = FALSE,
+    predictFolds = 10,
+    predictReps = 10,
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
@@ -1939,6 +2120,9 @@ plssem <- function(
         fitTest = fitTest,
         fitReps = fitReps,
         fitLevel = fitLevel,
+        predictRun = predictRun,
+        predictFolds = predictFolds,
+        predictReps = predictReps,
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,

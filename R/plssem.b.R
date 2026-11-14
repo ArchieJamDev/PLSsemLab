@@ -160,6 +160,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             values = list(from = pairs_eff$from[k], arrow = "\u2192",
                                                           to = pairs_eff$to[k]))
 
+            # Prediction (phase 6): one row per indicator of an endogenous
+            # construct; CVPAT: all endogenous constructs and each one, against
+            # IA and LM.
+            # ES: Predicción (fase 6): una fila por indicador de un constructo
+            # endógeno; CVPAT: todos y cada uno, frente a IA y LM.
+            ptxt <- function(key) .pl_text(.pl_lang(self$options), "labels", key)
+            endo <- unique(paths$to)
+            for (cn in endo) {
+                b <- Filter(function(x) identical(x$label, cn), blocks)
+                for (v in if (length(b)) b[[1]]$vars else character(0))
+                    self$results$predict$addRow(rowKey = paste(cn, v, sep = "::"), values = list(construct = cn, indicator = v))
+            }
+            for (cn in c("", endo)) for (bn in c("IA", "LM"))
+                self$results$cvpat$addRow(rowKey = paste(cn, bn, sep = "::"),
+                                          values = list(construct = if (nzchar(cn)) cn else ptxt("cvpat_all"),
+                                                        bench = ptxt(paste0("bench_", bn))))
+
             # Mediation (phase 6): one row per specific indirect effect.
             # ES: Mediación (fase 6): una fila por efecto indirecto específico.
             chains <- .pl_mediation_chains(paths)
@@ -324,6 +341,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Ajuste global (fase 5): solo con su casilla marcada.
             omf <- if (self$options$fitTest)
                 private$.fitTest(fit$value, model, d, hocs, admissible, txt) else NULL
+            prd <- if (self$options$predictRun)
+                private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
@@ -340,6 +359,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       if (!is.null(boot$summary) && length(boot$error))
                           sprintf(txt("boot", "some_failed"), paste(boot$error, collapse = "; ")),
                       if (!is.null(omf$error)) sprintf(txt("notices", "fit_failed"), paste(omf$error, collapse = "; ")),
+                      if (!is.null(prd$error)) sprintf(txt("notices", "predict_failed"), paste(prd$error, collapse = "; ")),
+                      if (isTRUE(prd$inadmissible > 0)) sprintf(txt("notices", "predict_inadmissible_folds"), prd$inadmissible),
                       omf$warnings)
             if (!admissible) {
                 failed <- c(names(which(unlist(cSEM::verify(fit$value)))),
@@ -370,9 +391,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, warn)
 
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq, omf, med)
+                                    mod, hocq, omf, med, prd)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel, hocq, omf, med)
+                                smodel, hocq, omf, med, prd)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
             private$.reproducibility(lang, smodel, prep, blocks, paths)
@@ -637,6 +658,89 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$setNote("inter", txt("footnotes", "med_interaction"))
             if (!is.null(sm)) table$setNote("ci", sprintf(txt("boot", "med_note"), format(100 * level)))
             med
+        },
+
+        # ---------------------------------------------------------------------
+        # PLSpredict and CVPAT (cached), from one repeated cross-validation.
+        # Category B: interactions, higher-order constructs, inadmissible
+        # estimates.
+        # ES: PLSpredict y CVPAT (en caché), de una validación cruzada
+        # repetida. Categoría B: interacciones, orden superior, estimaciones
+        # inadmisibles.
+        # ---------------------------------------------------------------------
+        .prediction = function(fit, model, d, blocks, paths, hocs, admissible, txt) {
+            pt <- self$results$predict
+            ct <- self$results$cvpat
+            reason <- .pl_predict_reason(model, hocs, admissible)
+            notcomp <- function(why) {
+                for (tab in list(pt, ct)) {
+                    col <- if (identical(tab, pt)) "lower" else "decision"
+                    for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = col, value = txt("labels", "not_computable"))
+                    tab$setNote("reason", why)
+                }
+                list(reason = why)
+            }
+            if (!is.null(reason)) return(notcomp(txt("footnotes", reason)))
+            folds <- as.integer(self$options$predictFolds)
+            reps <- as.integer(self$options$predictReps)
+            seed <- as.integer(self$options$bootSeed)
+            if (folds > nrow(d)) return(notcomp(txt("footnotes", "predict_small")))
+            refit <- function(data) suppressWarnings(cSEM::csem(
+                .data = data, .model = model$syntax,
+                .PLS_modes = if (length(model$modes)) model$modes else NULL,
+                .disattenuate = self$options$estimator == "plsc",
+                .PLS_weight_scheme_inner = self$options$innerScheme))
+            key <- list("plssem-predict-1", model$syntax, model$modes, d, self$options$estimator,
+                        self$options$innerScheme, folds, reps, seed,
+                        tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
+            res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
+                t0 <- proc.time()[["elapsed"]]
+                r <- .pl_capture(local({
+                    cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, checkpoint = function() private$.checkpoint())
+                    vinv <- stats::setNames(names(model$vmap), model$vmap)
+                    endo <- unique(paths$to)
+                    ind_of <- function(cn) {
+                        b <- Filter(function(x) identical(x$label, cn), blocks)
+                        unname(model$vmap[b[[1]]$vars])
+                    }
+                    groups <- c(list(all = unique(unlist(lapply(endo, ind_of)))),
+                                stats::setNames(lapply(endo, ind_of), endo))
+                    m <- .pl_predict_metrics(cv)
+                    m$indicator <- vinv[m$indicator]
+                    list(metrics = m, cvpat = .pl_cvpat(cv, groups), inadmissible = cv$inadmissible)
+                }))
+                list(summary = r$value, error = r$error, warnings = r$warnings,
+                     seconds = proc.time()[["elapsed"]] - t0)
+            })
+            if (is.null(res$summary)) {
+                notcomp(sprintf(txt("footnotes", "predict_error"), paste(res$error, collapse = "; ")))
+                return(list(error = res$error))
+            }
+            m <- res$summary$metrics
+            endo <- unique(paths$to)
+            for (cn in endo) {
+                b <- Filter(function(x) identical(x$label, cn), blocks)
+                for (v in b[[1]]$vars) {
+                    r <- m[m$indicator == v, ]
+                    if (!nrow(r)) next
+                    lower <- if (r$rmse_pls < r$rmse_lm) "PLS" else if (r$rmse_pls > r$rmse_lm) "LM" else txt("labels", "equal")
+                    pt$setRow(rowKey = paste(cn, v, sep = "::"),
+                              values = list(q2 = r$q2, rmsePls = r$rmse_pls, rmseLm = r$rmse_lm,
+                                            maePls = r$mae_pls, maeLm = r$mae_lm, lower = lower))
+                }
+            }
+            cv <- res$summary$cvpat
+            for (k in seq_len(nrow(cv))) {
+                cn <- if (cv$group[k] == "all") "" else cv$group[k]
+                ct$setRow(rowKey = paste(cn, cv$bench[k], sep = "::"),
+                          values = list(lossPls = cv$loss_pls[k], lossBench = cv$loss_bench[k], diff = cv$diff[k],
+                                        t = cv$t[k], p = cv$p[k],
+                                        decision = txt("labels", if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no")))
+            }
+            note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
+            pt$setNote("cv", note)
+            ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
+            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings))
         },
 
         # ---------------------------------------------------------------------
@@ -1121,7 +1225,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1273,10 +1377,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
             flines <- private$.fitLines(txt, omf)
             dlines <- private$.mediationLines(txt, med)
+            plines <- private$.predictLines(txt, prd)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
                            if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
+                           if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
@@ -1295,6 +1401,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                     txt(paste0("med_", med$type[k]))))
             }
             c(out, txt("med_caution"))
+        },
+
+        # Interpretation of PLSpredict (Shmueli et al., 2019: Q2predict > 0,
+        # then the share of indicators where PLS has a lower RMSE than LM)
+        # and CVPAT (the overall test against IA and LM).
+        # ES: Interpretación de PLSpredict y CVPAT.
+        .predictLines = function(txt, prd) {
+            if (is.null(prd)) return(character(0))
+            if (!is.null(prd$reason)) return(sprintf(txt("predict_none"), prd$reason))
+            if (is.null(prd$metrics)) return(character(0))
+            m <- prd$metrics
+            out <- character(0)
+            neg <- m$q2 <= 0
+            out <- c(out, if (any(neg)) sprintf(txt("q2_neg"), paste(m$indicator[neg], collapse = ", "))
+                          else sprintf(txt("q2_pos"), nrow(m)))
+            k <- sum(m$rmse_pls < m$rmse_lm); n <- nrow(m)
+            level <- if (k == n) "power_high" else if (k >= n / 2) "power_medium" else if (k > 0) "power_low" else "power_none"
+            out <- c(out, sprintf(txt(level), k, n))
+            cv <- prd$cvpat[prd$cvpat$group == "all", ]
+            for (b in c("IA", "LM")) {
+                r <- cv[cv$bench == b, ]
+                out <- c(out, sprintf(txt(if (r$p < 0.05 && r$diff < 0) "cvpat_better" else "cvpat_not"),
+                                      txt(paste0("bench_long_", b)), .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
+            }
+            c(out, txt("predict_caution"))
         },
 
         # Interpretation of the overall fit test: exact fit kept or rejected
@@ -1421,7 +1552,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL, hocq = NULL, omf = NULL, med = NULL) {
+                               model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -1460,6 +1591,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(med) && nrow(med) && any(!is.na(med$type))) {
                 sig <- !is.na(med$lower) & (med$lower > 0 | med$upper < 0)
                 findings <- c(findings, sprintf(txt("med"), sum(sig), nrow(med)))
+            }
+            if (!is.null(prd$metrics)) {
+                m <- prd$metrics
+                findings <- c(findings, sprintf(txt("predict"), sum(m$q2 > 0), nrow(m), sum(m$rmse_pls < m$rmse_lm)))
             }
             if (!is.null(omf$table)) {
                 e <- omf$table[omf$table$model == "estimated", ]
@@ -1548,6 +1683,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
             self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
             self$results$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
+            self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_power"), txt("cvpat"))))
             self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 
@@ -1646,6 +1782,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "boot$Information$Information_resample$Number_of_admissibles <- sum(sapply(parts, function(o) o$Information$Information_resample$Number_of_admissibles))",
                     sprintf("cSEM::summarize(boot, .alpha = %s, .ci = \"CI_percentile\")", format(1 - as.numeric(self$options$ciLevel))),
                     "# Intervals of R2, reliability, AVE, HTMT and VIF: the same resampling with .user_funs (see R/bootstrap.R in PLSsemLab)")
+            }
+            if (self$options$predictRun && is.null(.pl_predict_reason(model, model$hocs, TRUE))) {
+                code <- c(code, "",
+                    "# PLSpredict: each repetition uses cSEM's folds with seed + repetition - 1",
+                    sprintf("pred <- lapply(seq_len(%d), function(r) cSEM::predict(fit, .benchmark = \"lm\", .cv_folds = %d, .r = 1, .seed = %d + r - 1))",
+                            as.integer(self$options$predictReps), as.integer(self$options$predictFolds),
+                            as.integer(self$options$bootSeed)),
+                    "Reduce(`+`, lapply(pred, function(p) p$Prediction_metrics[, c(\"Q2_predict\", \"RMSE_target\", \"RMSE_benchmark\", \"MAE_target\", \"MAE_benchmark\")])) / length(pred)",
+                    "# CVPAT against IA and LM: paired t test on the per-case losses of the same residuals (see R/predict.R in PLSsemLab)")
             }
             if (self$options$fitTest && is.null(.pl_fit_reason(model, model$hocs, TRUE))) {
                 args <- sprintf(".R = %d, .seed = %d, .alpha = %s", as.integer(self$options$fitReps),

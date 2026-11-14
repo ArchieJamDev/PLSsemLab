@@ -480,3 +480,11 @@
     if (length(x) == 0 || is.na(x)) return("")
     formatC(x, format = "f", digits = 3)
 }
+
+# A p-value for running text, with its relation sign: "< 0.001" or
+# "= 0.321" (texts write "p %s").
+# ES: Un valor p para el texto, con su signo: "< 0.001" o "= 0.321".
+.pl_fmt_p <- function(p) {
+    if (!is.finite(p)) return("= NA")
+    if (p < 0.001) "< 0.001" else paste("=", formatC(p, format = "f", digits = 3))
+}

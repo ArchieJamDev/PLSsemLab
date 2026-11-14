@@ -228,4 +228,48 @@ refs:
         issue: '3'
         pages: '879-891'
         url: https://doi.org/10.3758/BRM.40.3.879
+
+    shmueli_2016:
+        type: 'article'
+        author: 'Shmueli, G., Ray, S., Velasquez Estrada, J. M., & Chatla, S. B.'
+        year: 2016
+        title: 'The elephant in the room: Predictive performance of PLS models'
+        publisher: 'Journal of Business Research'
+        volume: '69'
+        issue: '10'
+        pages: '4552-4564'
+        url: https://doi.org/10.1016/j.jbusres.2016.03.049
+
+    shmueli_2019:
+        type: 'article'
+        author: 'Shmueli, G., Sarstedt, M., Hair, J. F., Cheah, J.-H., Ting, H., Vaithilingam, S., & Ringle, C. M.'
+        year: 2019
+        title: 'Predictive model assessment in PLS-SEM: Guidelines for using PLSpredict'
+        publisher: 'European Journal of Marketing'
+        volume: '53'
+        issue: '11'
+        pages: '2322-2347'
+        url: https://doi.org/10.1108/EJM-02-2019-0189
+
+    liengaard_2021:
+        type: 'article'
+        author: 'Liengaard, B. D., Sharma, P. N., Hult, G. T. M., Jensen, M. B., Sarstedt, M., Hair, J. F., & Ringle, C. M.'
+        year: 2021
+        title: 'Prediction: Coveted, yet forsaken? Introducing a cross-validated predictive ability test in partial least squares path modeling'
+        publisher: 'Decision Sciences'
+        volume: '52'
+        issue: '2'
+        pages: '362-392'
+        url: https://doi.org/10.1111/deci.12445
+
+    sharma_2023:
+        type: 'article'
+        author: 'Sharma, P. N., Liengaard, B. D., Hair, J. F., Sarstedt, M., & Ringle, C. M.'
+        year: 2023
+        title: 'Predictive model assessment and selection in composite-based modeling using PLS-SEM: Extensions and guidelines for using CVPAT'
+        publisher: 'European Journal of Marketing'
+        volume: '57'
+        issue: '6'
+        pages: '1662-1677'
+        url: https://doi.org/10.1108/EJM-08-2020-0636
 ...

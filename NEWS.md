@@ -1,4 +1,4 @@
-# PLSsemLab 0.5.0 (development)
+# PLSsemLab 0.5.1 (development)
 
 ## Phase 5: overall model fit (D1)
 

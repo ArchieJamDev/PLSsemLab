@@ -1134,7 +1134,7 @@ msgstr "Ninguna."
 
 #: R/texts.R
 msgid "Not computable"
-msgstr "No computable"
+msgstr "No calculable"
 
 #: R/texts.R
 msgid "Not computable in this version for models with higher-order constructs: the test would assess only stage 2, where the dimensions enter as fixed scores, and its reference distribution would ignore stage 1."
@@ -1142,7 +1142,7 @@ msgstr "No calculable en esta versión para modelos con constructos de orden sup
 
 #: R/texts.R
 msgid "Not computable: %s"
-msgstr "No computable: %s"
+msgstr "No calculable: %s"
 
 #: R/texts.R
 msgid "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it."
@@ -1158,7 +1158,7 @@ msgstr "No calculable: las estimaciones no son admisibles (vea el aviso). Una pr
 
 #: R/texts.R
 msgid "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis."
-msgstr "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
+msgstr "No calculable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
 
 #: R/texts.R
 msgid "Not computable: with an interaction term the model implies no indicator correlation matrix, so the discrepancies of the overall fit test are not defined (cSEM; Dijkstra & Henseler, 2015)."

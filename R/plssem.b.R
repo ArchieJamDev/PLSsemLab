@@ -614,7 +614,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 for (k in seq_len(table$rowCount)) {
                     table$setCell(rowNo = k, col = "decision", value = txt("labels", "not_computable"))
                 }
-                table$addFootnote(rowNo = 1, col = "value", why)
+                # a table note (keyed), not a cell footnote: the analysis can
+                # run several times and footnotes would pile up
+                # ES: una nota de la tabla (con clave), no una nota de celda:
+                # el análisis puede correr varias veces y se acumularían
+                table$setNote("reason", why)
                 list(reason = why)
             }
             if (!is.null(reason)) return(notcomp(txt("footnotes", reason)))

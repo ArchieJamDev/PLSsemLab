@@ -812,13 +812,13 @@
                 "Ninguna."
             ],
             "Not computable": [
-                "No computable"
+                "No calculable"
             ],
             "Not computable in this version for models with higher-order constructs: the test would assess only stage 2, where the dimensions enter as fixed scores, and its reference distribution would ignore stage 1.": [
                 "No calculable en esta versión para modelos con constructos de orden superior: la prueba evaluaría solo la etapa 2, donde las dimensiones entran como puntuaciones fijas, y su distribución de referencia ignoraría la etapa 1."
             ],
             "Not computable: %s": [
-                "No computable: %s"
+                "No calculable: %s"
             ],
             "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it.": [
                 "No calculable: la rutina de segundo orden de cSEM mide los demás constructos con una sola puntuación en la etapa 2, así que su HTMT con el constructo de orden superior no está definido. Elija el enfoque disjunto para evaluarlo."
@@ -830,7 +830,7 @@
                 "No calculable: las estimaciones no son admisibles (vea el aviso). Una prueba de ajuste de una solución inadmisible no tiene sentido; corrija primero la causa."
             ],
             "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
-                "No computable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
+                "No calculable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
             ],
             "Not computable: with an interaction term the model implies no indicator correlation matrix, so the discrepancies of the overall fit test are not defined (cSEM; Dijkstra & Henseler, 2015).": [
                 "No calculable: con un término de interacción el modelo no implica una matriz de correlaciones de los indicadores, así que las discrepancias de la prueba de ajuste global no están definidas (cSEM; Dijkstra y Henseler, 2015)."

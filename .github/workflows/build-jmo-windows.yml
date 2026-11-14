@@ -65,10 +65,11 @@ jobs:
       - name: Stand-in jamovi home
         shell: pwsh
         run: |
-          $rhome = (Rscript -e "cat(normalizePath(R.home(), winslash = '\\'))")
+          $rhome = (& Rscript -e "cat(normalizePath(R.home(), winslash = '/'))" | Out-String).Trim()
+          Write-Host "R home: $rhome"
           New-Item -ItemType Directory -Force -Path C:\fakejam\bin, C:\fakejam\Frameworks | Out-Null
           Copy-Item (Get-Command node).Source C:\fakejam\bin\jamovi.exe
-          cmd /c mklink /J C:\fakejam\Frameworks\R "$rhome"
+          New-Item -ItemType Junction -Path C:\fakejam\Frameworks\R -Target $rhome | Out-Null
           Get-ChildItem C:\fakejam\Frameworks\R\bin\x64\R.exe
 
       - name: Build the .jmo

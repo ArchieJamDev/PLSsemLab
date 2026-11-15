@@ -79,26 +79,29 @@ with sync_playwright() as p:
     state(opts, page, "i1-constructs")
     def menu_texts():
         return opts.evaluate("""() => [...document.querySelectorAll('*')].filter(e => e.offsetParent !== null && e.children.length === 0 && /Interaction|Main Effects|All .* way/i.test(e.textContent)).map(e => e.className + ':' + e.textContent.trim()).slice(0, 20)""")
-    for attempt in (1, 2):
-        step(f"focus Construct 3 row ({attempt})", lambda: opts.get_by_text("drag predictors here", exact=True).last.click(timeout=5000))
-        step(f"select Construct 1 ({attempt})", lambda: visible_item(opts, "Construct 1").click(timeout=5000))
-        step(f"ctrl-select Construct 2 ({attempt})", lambda: visible_item(opts, "Construct 2").click(modifiers=["Control"], timeout=5000))
-        time.sleep(2)
-        state(opts, page, f"i2-selected-{attempt}")
-        vis = [i for i in range(transfer.count()) if transfer.nth(i).is_visible()]
-        log.append(f"visible transfers: {vis}")
-        log.append("menu before click: " + json.dumps(menu_texts(), ensure_ascii=False))
-        step(f"click transfer ({attempt})", lambda: transfer.nth(vis[-1]).click(timeout=5000))
-        time.sleep(2)
-        state(opts, page, f"i3-after-click-{attempt}")
-        log.append("menu after click: " + json.dumps(menu_texts(), ensure_ascii=False))
-        hit = opts.get_by_text(re.compile("^Interaction$"))
-        if hit.count():
-            step("choose Interaction", lambda: hit.first.click(timeout=5000))
-            time.sleep(5)
-            state(opts, page, "i4-interaction-chosen")
-            break
-        time.sleep(5)
+    step("focus Construct 3 row", lambda: opts.get_by_text("Construct 3 \u2190", exact=False).last.click(timeout=5000))
+    time.sleep(2)
+    step("select Construct 1", lambda: visible_item(opts, "Construct 1").click(timeout=5000))
+    step("ctrl-select Construct 2", lambda: visible_item(opts, "Construct 2").click(modifiers=["Control"], timeout=5000))
+    time.sleep(2)
+    state(opts, page, "i2-selected")
+    # the second transfer button (an arrow with a small triangle) opens the
+    # Interactions menu
+    # ES: el segundo botón de transferencia abre el menú de interacciones
+    btns = opts.evaluate("""() => [...document.querySelectorAll('button, [role=button], .jmv-variable-transfer, [class*=transfer]')].filter(e => e.offsetParent !== null).map(e => { const r = e.getBoundingClientRect(); return e.tagName + '.' + e.className + '@' + Math.round(r.x) + ',' + Math.round(r.y) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height); })""")
+    log.append("buttons: " + json.dumps(btns)[:2500])
+    fr = page.frame_locator("iframe").first
+    box = opts.frame_element().bounding_box()
+    step("open the Interactions menu", lambda: page.mouse.click(box["x"] + 296, box["y"] + 598))
+    time.sleep(2)
+    state(opts, page, "i3-menu")
+    vis = [opts.get_by_text("Interaction", exact=True).nth(i) for i in range(opts.get_by_text("Interaction", exact=True).count())]
+    vis = [v for v in vis if v.is_visible()]
+    log.append(f"visible Interaction entries: {len(vis)}")
+    if vis:
+        step("choose Interaction", lambda: vis[0].click(timeout=5000))
+        time.sleep(6)
+        state(opts, page, "i4-interaction-chosen")
     log.append("options: " + json.dumps(opts.evaluate("""() => [...document.querySelectorAll('.silky-option-listbox')].map(e => e.innerText.replace(/\\n+/g, ' / ').slice(0, 300))"""), ensure_ascii=False)[:3000])
     browser.close()
 

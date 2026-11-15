@@ -72,10 +72,19 @@ with sync_playwright() as p:
     step("open Multigroup Analysis", lambda: opts.get_by_text("Multigroup Analysis", exact=True).first.click(timeout=5000))
     time.sleep(4)
     state(opts, page, "m1-box-open")
-    step("select C in the group supplier", lambda: visible_item(opts, "C").click(timeout=5000))
+    def last_visible(text):
+        loc = opts.locator(".silky-list-item-value").filter(has_text=re.compile("^" + re.escape(text) + "$"))
+        vis = [i for i in range(loc.count()) if loc.nth(i).is_visible()]
+        log.append(f"'{text}' items: {loc.count()}, visible: {vis}")
+        return loc.nth(vis[-1])
+    step("select C in the group supplier", lambda: last_visible("C").click(timeout=5000))
     vis = [i for i in range(transfer.count()) if transfer.nth(i).is_visible()]
     log.append(f"visible transfers: {vis}")
     step("C -> Grouping Variable", lambda: transfer.nth(vis[-1]).click(timeout=5000))
+    time.sleep(4)
+    state(opts, page, "m1b-after-transfer")
+    step("select B (a second variable must replace or be refused)", lambda: last_visible("B").click(timeout=5000))
+    step("B -> Grouping Variable", lambda: transfer.nth(vis[-1]).click(timeout=5000))
     time.sleep(4)
     step("tick Run multigroup analysis", lambda: opts.get_by_text("Run multigroup analysis", exact=True).first.click(timeout=5000))
     time.sleep(6)

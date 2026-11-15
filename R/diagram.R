@@ -126,7 +126,7 @@
     xy <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars)
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
-    tb <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
+    tb <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars, gap = 1.3, step = 0.9, side = 1.7,
                          row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 1.4)
     list(vars = vars, pars = pars, mods = mods, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),

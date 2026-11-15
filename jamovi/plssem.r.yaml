@@ -1234,6 +1234,179 @@ items:
         - ipmaMin
         - ipmaMax
 
+  # Multigroup analysis (phase 7): rows laid out in .init() from the levels
+  # of the grouping variable (groups; pairs x constructs for MICOM; pairs x
+  # paths for the differences).
+  # ES: Análisis multigrupo (fase 7): filas en .init() a partir de los
+  # niveles de la variable de agrupación.
+  - name: mgaGuide
+    title: How to read the multigroup analysis
+    type: Html
+    visible: (showGuides && mgaRun)
+
+  - name: mgaGroups
+    title: Groups
+    type: Table
+    rows: 0
+    visible: (mgaRun)
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - groupVar
+      - mgaPerm
+      - mgaBoot
+      - mgaAdjust
+      - bootSeed
+    columns:
+      - name: group
+        title: Group
+        type: text
+      - name: n
+        title: N
+        type: integer
+      - name: admissible
+        title: Admissible estimates
+        type: text
+
+  - name: micom
+    title: Measurement invariance of composites (MICOM)
+    type: Table
+    rows: 0
+    visible: (mgaRun)
+    refs:
+      - henseler_2016b
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - groupVar
+      - mgaPerm
+      - mgaBoot
+      - mgaAdjust
+      - bootSeed
+    columns:
+      - name: comparison
+        title: Comparison
+        type: text
+        combineBelow: true
+      - name: construct
+        title: Construct
+        type: text
+      - name: c
+        title: c
+        type: number
+        superTitle: Step 2 (compositional)
+      - name: c5
+        title: 5% quantile
+        type: number
+        superTitle: Step 2 (compositional)
+      - name: pC
+        title: p
+        type: number
+        format: zto,pvalue
+        superTitle: Step 2 (compositional)
+      - name: meanDiff
+        title: Mean difference
+        type: number
+        superTitle: Step 3 (means and variances)
+      - name: pMean
+        title: p
+        type: number
+        format: zto,pvalue
+        superTitle: Step 3 (means and variances)
+      - name: logVar
+        title: Log variance ratio
+        type: number
+        superTitle: Step 3 (means and variances)
+      - name: pVar
+        title: p
+        type: number
+        format: zto,pvalue
+        superTitle: Step 3 (means and variances)
+      - name: invariance
+        title: Invariance
+        type: text
+
+  - name: mga
+    title: Path differences between groups
+    type: Table
+    rows: 0
+    visible: (mgaRun)
+    refs:
+      - chin_2010
+      - henseler_2009
+      - sarstedt_2011
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - groupVar
+      - mgaPerm
+      - mgaBoot
+      - mgaAdjust
+      - bootSeed
+    columns:
+      - name: comparison
+        title: Comparison
+        type: text
+        combineBelow: true
+      - name: from
+        title: Predictor
+        type: text
+      - name: arrow
+        title: ''
+        type: text
+      - name: to
+        title: Outcome
+        type: text
+      - name: est1
+        title: First group
+        type: number
+      - name: est2
+        title: Second group
+        type: number
+      - name: diff
+        title: Difference
+        type: number
+      - name: pPerm
+        title: p (permutation)
+        type: number
+        format: zto,pvalue
+      - name: pOne
+        title: P(first ≤ second)
+        type: number
+        superTitle: PLS-MGA
+      - name: pHens
+        title: p (two-sided)
+        type: number
+        format: zto,pvalue
+        superTitle: PLS-MGA
+      - name: decision
+        title: Decision
+        type: text
+
   - name: pathDiagram
     title: Path diagram
     type: Image
@@ -1375,6 +1548,25 @@ items:
       - innerScheme
       - indicatorScale
       - missing
+
+  - name: mgaCacheStore
+    type: Html
+    visible: false
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - groupVar
+      - mgaPerm
+      - mgaBoot
+      - bootSeed
 
   - name: interpretation
     title: Applied interpretation

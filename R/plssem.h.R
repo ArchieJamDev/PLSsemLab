@@ -35,6 +35,11 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             ipmaRange = "data",
             ipmaMin = 1,
             ipmaMax = 7,
+            groupVar = NULL,
+            mgaRun = FALSE,
+            mgaPerm = 1000,
+            mgaBoot = 1000,
+            mgaAdjust = "none",
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
@@ -257,6 +262,39 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "ipmaMax",
                 ipmaMax,
                 default=7)
+            private$..groupVar <- jmvcore::OptionVariable$new(
+                "groupVar",
+                groupVar,
+                suggested=list(
+                    "nominal",
+                    "ordinal"),
+                permitted=list(
+                    "factor"),
+                default=NULL)
+            private$..mgaRun <- jmvcore::OptionBool$new(
+                "mgaRun",
+                mgaRun,
+                default=FALSE)
+            private$..mgaPerm <- jmvcore::OptionInteger$new(
+                "mgaPerm",
+                mgaPerm,
+                min=99,
+                max=100000,
+                default=1000)
+            private$..mgaBoot <- jmvcore::OptionInteger$new(
+                "mgaBoot",
+                mgaBoot,
+                min=99,
+                max=100000,
+                default=1000)
+            private$..mgaAdjust <- jmvcore::OptionList$new(
+                "mgaAdjust",
+                mgaAdjust,
+                options=list(
+                    "none",
+                    "holm",
+                    "bonferroni"),
+                default="none")
             private$..pathDiagram <- jmvcore::OptionBool$new(
                 "pathDiagram",
                 pathDiagram,
@@ -415,6 +453,11 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..ipmaRange)
             self$.addOption(private$..ipmaMin)
             self$.addOption(private$..ipmaMax)
+            self$.addOption(private$..groupVar)
+            self$.addOption(private$..mgaRun)
+            self$.addOption(private$..mgaPerm)
+            self$.addOption(private$..mgaBoot)
+            self$.addOption(private$..mgaAdjust)
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
@@ -467,6 +510,11 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ipmaRange = function() private$..ipmaRange$value,
         ipmaMin = function() private$..ipmaMin$value,
         ipmaMax = function() private$..ipmaMax$value,
+        groupVar = function() private$..groupVar$value,
+        mgaRun = function() private$..mgaRun$value,
+        mgaPerm = function() private$..mgaPerm$value,
+        mgaBoot = function() private$..mgaBoot$value,
+        mgaAdjust = function() private$..mgaAdjust$value,
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
@@ -518,6 +566,11 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..ipmaRange = NA,
         ..ipmaMin = NA,
         ..ipmaMax = NA,
+        ..groupVar = NA,
+        ..mgaRun = NA,
+        ..mgaPerm = NA,
+        ..mgaBoot = NA,
+        ..mgaAdjust = NA,
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
@@ -587,12 +640,17 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ipmaGuide = function() private$.items[["ipmaGuide"]],
         ipmaTable = function() private$.items[["ipmaTable"]],
         ipmaPlots = function() private$.items[["ipmaPlots"]],
+        mgaGuide = function() private$.items[["mgaGuide"]],
+        mgaGroups = function() private$.items[["mgaGroups"]],
+        micom = function() private$.items[["micom"]],
+        mga = function() private$.items[["mga"]],
         pathDiagram = function() private$.items[["pathDiagram"]],
         loadingsPlot = function() private$.items[["loadingsPlot"]],
         htmtPlot = function() private$.items[["htmtPlot"]],
         cacheStore = function() private$.items[["cacheStore"]],
         fitCacheStore = function() private$.items[["fitCacheStore"]],
         predictCacheStore = function() private$.items[["predictCacheStore"]],
+        mgaCacheStore = function() private$.items[["mgaCacheStore"]],
         interpretation = function() private$.items[["interpretation"]],
         reproducibility = function() private$.items[["reproducibility"]],
         reproducibilityCode = function() private$.items[["reproducibilityCode"]]),
@@ -1902,6 +1960,198 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         "ipmaRange",
                         "ipmaMin",
                         "ipmaMax"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="mgaGuide",
+                title="How to read the multigroup analysis",
+                visible="(showGuides && mgaRun)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mgaGroups",
+                title="Groups",
+                rows=0,
+                visible="(mgaRun)",
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "groupVar",
+                    "mgaPerm",
+                    "mgaBoot",
+                    "mgaAdjust",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="group", 
+                        `title`="Group", 
+                        `type`="text"),
+                    list(
+                        `name`="n", 
+                        `title`="N", 
+                        `type`="integer"),
+                    list(
+                        `name`="admissible", 
+                        `title`="Admissible estimates", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="micom",
+                title="Measurement invariance of composites (MICOM)",
+                rows=0,
+                visible="(mgaRun)",
+                refs=list(
+                    "henseler_2016b"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "groupVar",
+                    "mgaPerm",
+                    "mgaBoot",
+                    "mgaAdjust",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="comparison", 
+                        `title`="Comparison", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="construct", 
+                        `title`="Construct", 
+                        `type`="text"),
+                    list(
+                        `name`="c", 
+                        `title`="c", 
+                        `type`="number", 
+                        `superTitle`="Step 2 (compositional)"),
+                    list(
+                        `name`="c5", 
+                        `title`="5% quantile", 
+                        `type`="number", 
+                        `superTitle`="Step 2 (compositional)"),
+                    list(
+                        `name`="pC", 
+                        `title`="p", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `superTitle`="Step 2 (compositional)"),
+                    list(
+                        `name`="meanDiff", 
+                        `title`="Mean difference", 
+                        `type`="number", 
+                        `superTitle`="Step 3 (means and variances)"),
+                    list(
+                        `name`="pMean", 
+                        `title`="p", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `superTitle`="Step 3 (means and variances)"),
+                    list(
+                        `name`="logVar", 
+                        `title`="Log variance ratio", 
+                        `type`="number", 
+                        `superTitle`="Step 3 (means and variances)"),
+                    list(
+                        `name`="pVar", 
+                        `title`="p", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `superTitle`="Step 3 (means and variances)"),
+                    list(
+                        `name`="invariance", 
+                        `title`="Invariance", 
+                        `type`="text"))))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="mga",
+                title="Path differences between groups",
+                rows=0,
+                visible="(mgaRun)",
+                refs=list(
+                    "chin_2010",
+                    "henseler_2009",
+                    "sarstedt_2011"),
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "groupVar",
+                    "mgaPerm",
+                    "mgaBoot",
+                    "mgaAdjust",
+                    "bootSeed"),
+                columns=list(
+                    list(
+                        `name`="comparison", 
+                        `title`="Comparison", 
+                        `type`="text", 
+                        `combineBelow`=TRUE),
+                    list(
+                        `name`="from", 
+                        `title`="Predictor", 
+                        `type`="text"),
+                    list(
+                        `name`="arrow", 
+                        `title`="", 
+                        `type`="text"),
+                    list(
+                        `name`="to", 
+                        `title`="Outcome", 
+                        `type`="text"),
+                    list(
+                        `name`="est1", 
+                        `title`="First group", 
+                        `type`="number"),
+                    list(
+                        `name`="est2", 
+                        `title`="Second group", 
+                        `type`="number"),
+                    list(
+                        `name`="diff", 
+                        `title`="Difference", 
+                        `type`="number"),
+                    list(
+                        `name`="pPerm", 
+                        `title`="p (permutation)", 
+                        `type`="number", 
+                        `format`="zto,pvalue"),
+                    list(
+                        `name`="pOne", 
+                        `title`="P(first \u2264 second)", 
+                        `type`="number", 
+                        `superTitle`="PLS-MGA"),
+                    list(
+                        `name`="pHens", 
+                        `title`="p (two-sided)", 
+                        `type`="number", 
+                        `format`="zto,pvalue", 
+                        `superTitle`="PLS-MGA"),
+                    list(
+                        `name`="decision", 
+                        `title`="Decision", 
+                        `type`="text"))))
             self$add(jmvcore::Image$new(
                 options=options,
                 name="pathDiagram",
@@ -2033,6 +2283,25 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing")))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="mgaCacheStore",
+                visible=FALSE,
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "groupVar",
+                    "mgaPerm",
+                    "mgaBoot",
+                    "bootSeed")))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="interpretation",
                 title="Applied interpretation"))
             self$add(jmvcore::Html$new(
@@ -2054,7 +2323,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,6,0),
+                version = c(0,6,1),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2102,6 +2371,11 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param ipmaRange .
 #' @param ipmaMin .
 #' @param ipmaMax .
+#' @param groupVar .
+#' @param mgaRun .
+#' @param mgaPerm .
+#' @param mgaBoot .
+#' @param mgaAdjust .
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
@@ -2167,12 +2441,17 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$ipmaGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$ipmaTable} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ipmaPlots} \tab \tab \tab \tab \tab an array of images \cr
+#'   \code{results$mgaGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$mgaGroups} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$micom} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mga} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fitCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$predictCacheStore} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$mgaCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
@@ -2216,6 +2495,11 @@ plssem <- function(
     ipmaRange = "data",
     ipmaMin = 1,
     ipmaMax = 7,
+    groupVar = NULL,
+    mgaRun = FALSE,
+    mgaPerm = 1000,
+    mgaBoot = 1000,
+    mgaAdjust = "none",
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
@@ -2244,10 +2528,13 @@ plssem <- function(
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("plssem requires jmvcore to be installed (restart may be required)")
 
+    if ( ! missing(groupVar)) groupVar <- jmvcore::resolveQuo(jmvcore::enquo(groupVar))
     if (missing(data))
         data <- jmvcore::marshalData(
-            parent.frame())
+            parent.frame(),
+            `if`( ! missing(groupVar), groupVar, NULL))
 
+    for (v in groupVar) if (v %in% names(data)) data[[v]] <- as.factor(data[[v]])
     if (inherits(cvpatDrop, "formula")) cvpatDrop <- jmvcore::decomposeFormula(cvpatDrop)
 
     options <- plssemOptions$new(
@@ -2277,6 +2564,11 @@ plssem <- function(
         ipmaRange = ipmaRange,
         ipmaMin = ipmaMin,
         ipmaMax = ipmaMax,
+        groupVar = groupVar,
+        mgaRun = mgaRun,
+        mgaPerm = mgaPerm,
+        mgaBoot = mgaBoot,
+        mgaAdjust = mgaAdjust,
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,

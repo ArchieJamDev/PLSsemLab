@@ -94,3 +94,14 @@ reproCode <- function(a) {
     code <- gsub("<[^>]+>", "", a$results$reproducibilityCode$content)
     gsub("&gt;", ">", gsub("&lt;", "<", gsub("&amp;", "&", code, fixed = TRUE), fixed = TRUE), fixed = TRUE)
 }
+
+# Runs a direct cSEM call with R's default random number generator, as the
+# module does (a direct cSEM bootstrap in an earlier test leaves
+# L'Ecuyer-CMRG set in the session).
+# ES: Ejecuta una llamada directa a cSEM con el generador por defecto de R,
+# como hace el módulo.
+withDefaultRng <- function(expr) {
+    restore <- PLSsemLab:::.pl_rng_guard()
+    on.exit(restore())
+    expr
+}

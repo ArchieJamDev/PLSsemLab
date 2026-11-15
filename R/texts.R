@@ -97,6 +97,8 @@
         # Notices (Category B, never block).
         # ES: Avisos (Categoría B, nunca bloquean).
         notices = list(
+            mga_missing_group = .("%1$d case(s) without a value of %2$s were left out of the multigroup analysis."),
+            mga_failed = .("The multigroup analysis could not be run: %s"),
             hoc_csem = .("Higher-order constructs (%s): cSEM's second-order routine, as JASP uses it. It differs from the disjoint two-stage approach in three ways: in stage 1 the lower-order constructs also get structural paths among themselves; in stage 2 the other constructs are measured by their stage-1 scores instead of their own indicators; and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021)."),
             hoc_two_stage = .("Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; in stage 2 the stage-1 scores of the dimensions measure the higher-order construct, and every other construct keeps its own indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together."),
             rhoc_loadings = .("With an interaction in the model, cSEM cannot build the model-implied matrix used for \u03c1C, so \u03c1C is computed from the loadings, (\u03a3\u03bb)\u00b2 / ((\u03a3\u03bb)\u00b2 + \u03a3(1 \u2212 \u03bb\u00b2)); in models without interactions this gives the same value as cSEM."),
@@ -118,6 +120,16 @@
         # Footnotes of cells that cannot be computed (Category B).
         # ES: Notas al pie de celdas que no se pueden calcular (Categoría B).
         footnotes = list(
+            mga_hoc = .("Not computable in this version for models with higher-order constructs: both stages would have to be repeated in every group and in every permutation."),
+            mga_group_indicator = .("Not computable: the grouping variable %s is also an indicator of the model. Choose a variable that is not in the model."),
+            mga_one_group = .("Not computable: the grouping variable %s has fewer than two groups with cases."),
+            mga_many_groups = .("Not computable: the grouping variable %1$s has %2$d groups, and this module compares at most %3$d (with more, the pairwise comparisons multiply and each group gets small). Merge categories or choose another variable."),
+            mga_small_group = .("Not computable: %1$s. Each group needs at least %2$d cases (a minimum of this module) to estimate the model on its own; merge small categories or collect more data."),
+            mga_inadmissible = .("Not computable: the estimates are not admissible in %s (see the Groups table). Fix the cause first."),
+            mga_error = .("Not computable: cSEM stopped with: %s"),
+            micom_plsc = .("Not computable with consistent PLS: MICOM is defined for composites (Henseler, Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box to test the invariance of the composites; for common factors, invariance is usually tested with a multigroup CFA."),
+            micom_ordinal = .("Not computable with ordinal indicators: cSEM's testMICOM() builds the scores from the raw category codes and stops. The path differences are still computed."),
+            micom_error = .("Not computable: cSEM's testMICOM() stopped with: %s"),
             single_reliability = .("A single indicator has no internal consistency to estimate: its reliability and AVE are 1 by definition."),
             single_vif = .("A construct with a single indicator has no collinearity among its indicators."),
             ordinal_note = .("Computed from polychoric correlations (ordinal indicators): the values refer to the reliability of the latent continuous responses assumed behind the categories, not to the observed sum score, which is usually lower (Chalmers, 2018, see references)."),
@@ -159,6 +171,14 @@
         # Bootstrap status and table notes.
         # ES: Estado del bootstrap y notas de las tablas.
         boot = list(
+            micom_note = .("Step 1 (configural invariance) holds by construction: every group uses the same indicators, the same data treatment and the same algorithm settings. Step 2: c is the correlation between the scores built with the weights of each group; compositional invariance holds when c is not significantly below 1 (one-sided permutation p of .05 or more, that is, c above the 5%% quantile of its permutation distribution). Step 3: difference of the means and log of the ratio of the variances of the standardised pooled scores (first group minus second), with two-sided permutation p. %1$d permutations (%2$d admissible), seed %3$d, %4$d s."),
+            micom_invariance_note = .("Invariance: None, step 2 fails and the construct cannot be compared across these groups; Partial, step 2 holds and the paths can be compared; Full, step 3 also holds and the groups could be pooled (Henseler, Ringle & Sarstedt, 2016)."),
+            micom_single = .("Single indicator (%s): c = 1 by definition, so compositional invariance holds trivially."),
+            mgd_note = .("Difference = first group minus second group. Permutation test (Chin & Dibbern, 2010): %1$d permutations (%2$d admissible). PLS-MGA (Henseler et al., 2009): %3$d bootstrap resamples per group. cSEM returns P(first \u2264 second), a one-sided value: near 0 the path is larger in the first group, near 1 in the second. The two-sided p = 2 \u00d7 min(P, 1 \u2212 P) is used for the decision, at .05 for both tests. Seed %4$d, %5$d s."),
+            mgd_smartpls = .("SmartPLS reads PLS-MGA as significant when P < .05 or P > .95, which amounts to a two-sided level of .10; near those limits the two programs can disagree."),
+            mgd_adjust = .("The p values of both tests are corrected for %1$d comparisons (%2$s method), over every path and pair of groups. P(first \u2264 second) is shown uncorrected."),
+            mgd_micom_fail = .("Compositional invariance was not established (MICOM step 2) for %s: a difference in a path that involves these constructs may come from the constructs meaning something different in each group, not from a different relationship."),
+            mga_groups_note = .("Each group is estimated on its own, with the settings of the Estimation box."),
             running = .("Bootstrap running: %d of %d resamples done. Changing any option stops it."),
             fit_note = .("Critical value: the %5$s%% quantile of the bootstrap distribution of each discrepancy under exact fit (%1$d resamples; %2$d admissible for the estimated model, %3$d for the saturated one; seed %4$d is the bootstrap seed; %6$d s). p (bootstrap): (number of admissible resamples at least as large as the observed value + 1) / (admissible resamples + 1), so it is never 0."),
             predict_note = .("%1$d-fold cross-validation repeated %2$d times (folds drawn by cSEM with seeds %3$d, %3$d + 1, ...; %4$d s). Each case is predicted by a model estimated without it; results are averages over the repetitions."),
@@ -182,6 +202,18 @@
         # Table cells and labels.
         # ES: Celdas y etiquetas de las tablas.
         labels = list(
+            mga_first = .("First group"),
+            mga_second = .("Second group"),
+            mga_vs = .("%1$s vs %2$s"),
+            inv_none = .("None"),
+            inv_partial = .("Partial"),
+            inv_full = .("Full"),
+            mgd_both = .("Yes (both tests)"),
+            mgd_perm_only = .("Permutation test only"),
+            mgd_hens_only = .("PLS-MGA only"),
+            mgd_none = .("No"),
+            adjust_holm = .("Holm"),
+            adjust_bonferroni = .("Bonferroni"),
             reflective = .("Reflective"),
             formative = .("Formative"),
             exogenous = .("Exogenous"),
@@ -261,6 +293,10 @@
         # "How to read" guides.
         # ES: Guías "Cómo leer".
         guide = list(
+            mga = .("A multigroup analysis asks whether the relationships of the model differ between groups, for example between men and women or between two types of customers. It has two parts. First, MICOM (Henseler, Ringle & Sarstedt, 2016, see references) checks that each construct means the same in every group: comparing paths between groups whose constructs are built differently compares different things. Then the paths are compared, pair of groups by pair of groups."),
+            micom = .("MICOM has three steps. Step 1, configural invariance: the same indicators, data treatment and algorithm in every group; the module guarantees it. Step 2, compositional invariance: the weights of each group build the same composite. c is the correlation between the scores computed with the weights of one group and those computed with the weights of the other; if c is not significantly below 1 (permutation p of .05 or more), step 2 holds. Step 3: equal means and equal variances of the composites in both groups, also tested by permutation. Reading: if step 2 fails, the construct cannot be compared (no invariance); if step 2 holds, its paths can be compared (partial invariance); if step 3 also holds, the groups could be pooled and analysed together (full invariance). A non-significant result means that no difference was detected, not that the groups are proven equal."),
+            mgd = .("The two tests of path differences answer the same question in different ways. The permutation test (Chin & Dibbern, 2010) reassigns the cases to the groups at random many times; the difference is significant when chance alone rarely produces one as large. PLS-MGA (Henseler et al., 2009; Sarstedt et al., 2011) compares the bootstrap distributions of the path in each group. cSEM gives the probability that the path of the first group is not larger than that of the second, a one-sided value: near 0 the first group's path is larger, near 1 the second's, around 0.5 there is no difference. The table turns it into a two-sided p, comparable with that of the permutation test. When both tests agree, the conclusion is firmer; when only one is significant, report both and treat the difference as tentative."),
+            mga_cautions = .("Cautions. Each group must, on its own, have enough cases for the model: with small groups only large differences reach significance, so a non-significant difference is not evidence that the paths are equal. Comparing many paths and pairs of groups multiplies the chance of a false positive: use the correction of the Multigroup Analysis box if the comparisons are confirmatory, or present them as exploratory. The groups are observed, not assigned at random: a difference describes the groups, and does not show that belonging to a group causes it. Groups defined by an observed variable do not rule out other, unobserved differences between the cases (unobserved heterogeneity), which this module does not test."),
             hoc = .("A higher-order construct is measured by other constructs, its dimensions (for example, psychological capital by hope, efficacy, resilience and optimism). In the disjoint two-stage approach, stage 1 estimates the dimensions as ordinary constructs, linked to the constructs the higher-order construct is related to, and stage 2 treats their scores as the indicators of the higher-order construct, while the other constructs keep their own indicators (Sarstedt et al., 2019, see references). Read this table as a measurement table one level up: for a reflective higher-order construct, the loadings of its dimensions, its reliability and its AVE, judged on the usual thresholds; for a formative one, the weights of its dimensions, their significance and their VIF. The dimensions themselves are assessed in the first-order tables. Common misreading: drawing structural paths from the dimensions as well as from the higher-order construct; the dimensions only reach the rest of the model through it."),
             hoc_htmt = .("The HTMT table of the higher-order constructs checks each reflective higher-order construct against the other reflective constructs of the model, in stage 2, where it is measured by the scores of its dimensions (Sarstedt et al., 2019, see references). It is never compared with its own dimensions, which correlate highly by design. The thresholds are the usual ones (0.85; 0.90 for conceptually similar constructs), and with the bootstrap the test is the upper bound."),
             fit = .("The overall fit test asks whether the correlations among the indicators that the model implies match the observed ones exactly, apart from sampling error (Dijkstra & Henseler, 2015; Schuberth et al., 2023, see references). Four discrepancies measure the distance between the two matrices: SRMR (standardised root mean squared residual), d_G (geodesic distance), d_L (unweighted least squares distance, called d_ULS in SmartPLS) and d_ML (maximum likelihood distance). The bootstrap first transforms the data so that the model fits them exactly, then resamples them; the critical value of each discrepancy is a high quantile of its resampled values (HI95 in SmartPLS at 95%). If the observed value is above it, exact fit is rejected at that level; p (bootstrap) is, roughly, the share of resamples at least as large as the observed value. Read it with care: not rejecting does not prove the model right, and with a large sample small, unimportant misfits lead to rejection. The SRMR below 0.08 is a descriptive rule of thumb, not a test (Henseler et al., 2016). In PLS-SEM this test is a complement: the main evidence remains the measurement and structural criteria of the tables above (Hair et al., 2019)."),
@@ -306,6 +342,23 @@
         # Interpretation fragments.
         # ES: Fragmentos de interpretación.
         interp = list(
+            title_mga = .("Multigroup analysis"),
+            mga_none = .("The multigroup analysis was not computed. %s"),
+            mga_groups = .("Groups compared by %1$s: %2$s."),
+            micom_full = .("%s: full invariance for every construct (MICOM steps 2 and 3 hold). The paths can be compared and, if the theory allows it, the groups could be pooled."),
+            micom_partial = .("%1$s: partial invariance (step 2 holds for every construct); step 3 fails for %2$s, so the groups differ in the mean or the variance of these constructs. Compare the paths, but do not pool the groups."),
+            micom_none = .("%1$s: no compositional invariance for %2$s (step 2 fails). These constructs are not formed the same way in both groups, so differences in their paths cannot be interpreted; review their indicators and weights in each group."),
+            micom_not = .("MICOM was not computed: %s Without it, read the path differences with care: they assume that each construct means the same in every group."),
+            mgd_sig = .("%1$s: the path %2$s differs between the groups (%3$s): %4$s in %5$s, %6$s in %7$s."),
+            mgd_tests_both = .("both tests"),
+            mgd_tests_perm = .("permutation test only"),
+            mgd_tests_hens = .("PLS-MGA only"),
+            mgd_no_diff = .("%s: no path differs significantly between the groups in either test."),
+            mgd_disagree = .("Only one of the two tests finds a difference for %s: treat it as tentative and report both p values."),
+            mgd_small = .("The smallest group has %d cases: with groups of this size only large differences reach significance, so a path that does not differ significantly is not shown to be equal."),
+            mgd_multiple = .("%d path comparisons were made without correction: if no path differed, about one in twenty would still be significant by chance. Treat isolated differences as exploratory, or choose the Holm correction."),
+            mga_caution = .("The groups are observed, not assigned at random: a difference describes the groups and does not show that belonging to a group causes it."),
+            mga_next = .("Next step: report MICOM (steps 2 and 3) before the path differences, then each difference with the coefficients of both groups, the p values of both tests, the number of permutations and resamples, and the seed."),
             title_measurement = .("Measurement model"),
             title_hoc = .("Higher-order constructs"),
             title_fit = .("Overall model fit"),
@@ -404,7 +457,7 @@
             f2_tiny = .("Effect sizes: f\u00b2 below 0.02 for %s: removing these predictors barely changes the R\u00b2 of their outcome."),
             vifs_ok = .("Collinearity of predictors: every structural VIF is below 3."),
             vifs_high = .("Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable."),
-            next_steps_boot = .("Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f\u00b2, and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box. Group comparisons (MICOM) come in a later version of PLSsemLab."),
+            next_steps_boot = .("Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f\u00b2, and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box; to compare groups, use the Multigroup Analysis box."),
             vif_high = .("Collinearity of formative indicators: VIF of 3 or more for %s. Their weights may be unstable; interpret them with care."),
             strongest = .("The largest path is %s \u2192 %s (%s)."),
             r2_line = .("%s: R\u00b2 = %s (%s)."),
@@ -419,6 +472,8 @@
         # Key findings.
         # ES: Hallazgos clave.
         key = list(
+            mga = .("Multigroup (%1$s): invariance at least partial for %2$d of %3$d constructs; %4$d of %5$d path comparisons significant in both tests."),
+            mga_no_micom = .("Multigroup (%1$s): %2$d of %3$d path comparisons significant in both tests (MICOM not computed)."),
             findings = .("Main findings"),
             uncertain = .("Uncertainties"),
             warnings = .("Warnings"),

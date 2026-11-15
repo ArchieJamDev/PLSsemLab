@@ -55,8 +55,23 @@
             "'%s' is the name of a first-order construct and of a higher-order construct. Use a different name for each.": [
                 "'%s' es el nombre de un constructo de primer orden y de uno de orden superior. Use un nombre distinto para cada uno."
             ],
+            "%1$d case(s) without a value of %2$s were left out of the multigroup analysis.": [
+                "%1$d caso(s) sin valor en %2$s quedaron fuera del análisis multigrupo."
+            ],
             "%1$d-fold cross-validation repeated %2$d times (folds drawn by cSEM with seeds %3$d, %3$d + 1, ...; %4$d s). Each case is predicted by a model estimated without it; results are averages over the repetitions.": [
                 "Validación cruzada de %1$d particiones repetida %2$d veces (particiones generadas por cSEM con las semillas %3$d, %3$d + 1, ...; %4$d s). Cada caso se predice con un modelo estimado sin él; los resultados son promedios sobre las repeticiones."
+            ],
+            "%1$s vs %2$s": [
+                "%1$s frente a %2$s"
+            ],
+            "%1$s: no compositional invariance for %2$s (step 2 fails). These constructs are not formed the same way in both groups, so differences in their paths cannot be interpreted; review their indicators and weights in each group.": [
+                "%1$s: no hay invarianza composicional para %2$s (falla el paso 2). Estos constructos no se forman de la misma manera en ambos grupos, así que las diferencias en sus rutas no se pueden interpretar; revise sus indicadores y pesos en cada grupo."
+            ],
+            "%1$s: partial invariance (step 2 holds for every construct); step 3 fails for %2$s, so the groups differ in the mean or the variance of these constructs. Compare the paths, but do not pool the groups.": [
+                "%1$s: invarianza parcial (el paso 2 se cumple en todos los constructos); el paso 3 falla en %2$s, así que los grupos difieren en la media o en la varianza de estos constructos. Compare las rutas, pero no junte los grupos."
+            ],
+            "%1$s: the path %2$s differs between the groups (%3$s): %4$s in %5$s, %6$s in %7$s.": [
+                "%1$s: la ruta %2$s difiere entre los grupos (%3$s): %4$s en %5$s, %6$s en %7$s."
             ],
             "%d case(s) with missing values were excluded; %d case(s) remain.": [
                 "Se excluyeron %d caso(s) con valores perdidos; quedan %d caso(s)."
@@ -69,6 +84,9 @@
             ],
             "%d of the cross-validation estimations were not admissible; their predictions were kept, as cSEM does when it is told to ignore inadmissible results. Read the prediction results with care.": [
                 "%d de las estimaciones de la validación cruzada no fueron admisibles; sus predicciones se conservaron, como hace cSEM cuando se le indica ignorar los resultados inadmisibles. Lea los resultados de predicción con cautela."
+            ],
+            "%d path comparisons were made without correction: if no path differed, about one in twenty would still be significant by chance. Treat isolated differences as exploratory, or choose the Holm correction.": [
+                "Se hicieron %d comparaciones de rutas sin corrección: aunque ninguna ruta difiriera, alrededor de una de cada veinte saldría significativa por azar. Trate las diferencias aisladas como exploratorias, o elija la corrección de Holm."
             ],
             "%s (formative): weights of its dimensions %s.": [
                 "%s (formativo): pesos de sus dimensiones %s."
@@ -103,6 +121,9 @@
             "%s: every dimension loads 0.708 or more on it (%s).": [
                 "%s: todas sus dimensiones cargan 0.708 o más (%s)."
             ],
+            "%s: full invariance for every construct (MICOM steps 2 and 3 hold). The paths can be compared and, if the theory allows it, the groups could be pooled.": [
+                "%s: invarianza total en todos los constructos (se cumplen los pasos 2 y 3 de MICOM). Las rutas se pueden comparar y, si la teoría lo permite, los grupos se podrían juntar."
+            ],
             "%s: improve first %s, above-average importance with below-average performance.": [
                 "%s: mejore primero %s, con importancia por encima del promedio y desempeño por debajo."
             ],
@@ -111,6 +132,9 @@
             ],
             "%s: no construct combines above-average importance with below-average performance.": [
                 "%s: ningún constructo combina importancia por encima del promedio con desempeño por debajo."
+            ],
+            "%s: no path differs significantly between the groups in either test.": [
+                "%s: ninguna ruta difiere significativamente entre los grupos en ninguna de las dos pruebas."
             ],
             "%s: R² = %s (%s).": [
                 "%s: R² = %s (%s)."
@@ -151,6 +175,9 @@
             "5 or more: critical collinearity": [
                 "5 o más: colinealidad crítica"
             ],
+            "5% quantile": [
+                "Cuantil del 5%"
+            ],
             "A construct with a single indicator has no collinearity among its indicators.": [
                 "Un constructo con un solo indicador no tiene colinealidad entre sus indicadores."
             ],
@@ -162,6 +189,9 @@
             ],
             "A mediation analysis with cross-sectional data shows that the data are consistent with the proposed chain, not that the chain is causal; that rests on theory and design.": [
                 "Un análisis de mediación con datos transversales muestra que los datos son coherentes con la cadena propuesta, no que la cadena sea causal; eso descansa en la teoría y en el diseño."
+            ],
+            "A multigroup analysis asks whether the relationships of the model differ between groups, for example between men and women or between two types of customers. It has two parts. First, MICOM (Henseler, Ringle & Sarstedt, 2016, see references) checks that each construct means the same in every group: comparing paths between groups whose constructs are built differently compares different things. Then the paths are compared, pair of groups by pair of groups.": [
+                "Un análisis multigrupo pregunta si las relaciones del modelo difieren entre grupos, por ejemplo entre hombres y mujeres o entre dos tipos de clientes. Tiene dos partes. Primero, MICOM (Henseler, Ringle y Sarstedt, 2016, ver referencias) comprueba que cada constructo signifique lo mismo en todos los grupos: comparar rutas entre grupos cuyos constructos se forman de manera distinta es comparar cosas distintas. Después se comparan las rutas, par de grupos por par de grupos."
             ],
             "A negative alpha means that some indicators of the construct correlate negatively: check for reverse-coded items.": [
                 "Un alfa negativo significa que algunos indicadores del constructo correlacionan negativamente: revise si hay ítems invertidos."
@@ -189,6 +219,9 @@
             ],
             "Adjusted R²": [
                 "R² ajustado"
+            ],
+            "Admissible estimates": [
+                "Estimaciones admisibles"
             ],
             "All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators.": [
                 "Los %d indicadores de constructos reflectivos tienen una carga de 0.708 o más: cada constructo explica al menos la mitad de la varianza de sus indicadores."
@@ -265,8 +298,14 @@
             "Black": [
                 "Negro"
             ],
+            "Bonferroni": [
+                "Bonferroni"
+            ],
             "Bootstrap": [
                 "Bootstrap"
+            ],
+            "Bootstrap resamples per group (PLS-MGA)": [
+                "Remuestras bootstrap por grupo (PLS-MGA)"
             ],
             "Bootstrap running: %d of %d resamples done. Changing any option stops it.": [
                 "Bootstrap en curso: %d de %d réplicas hechas. Cambiar cualquier opción lo detiene."
@@ -280,8 +319,17 @@
             "Bootstrap: not run. The tables show estimates without significance; tick Run bootstrap in the Bootstrap box to add intervals, standard errors and p values.": [
                 "Bootstrap: no ejecutado. Las tablas muestran estimaciones sin significación; marque Ejecutar bootstrap en la caja Bootstrap para añadir intervalos, errores estándar y valores p."
             ],
+            "both tests": [
+                "ambas pruebas"
+            ],
+            "c": [
+                "c"
+            ],
             "Caption": [
                 "Pie del gráfico"
+            ],
+            "Cautions. Each group must, on its own, have enough cases for the model: with small groups only large differences reach significance, so a non-significant difference is not evidence that the paths are equal. Comparing many paths and pairs of groups multiplies the chance of a false positive: use the correction of the Multigroup Analysis box if the comparisons are confirmatory, or present them as exploratory. The groups are observed, not assigned at random: a difference describes the groups, and does not show that belonging to a group causes it. Groups defined by an observed variable do not rule out other, unobserved differences between the cases (unobserved heterogeneity), which this module does not test.": [
+                "Cautelas. Cada grupo, por sí solo, debe tener casos suficientes para el modelo: con grupos pequeños solo las diferencias grandes alcanzan significación, así que una diferencia no significativa no es evidencia de que las rutas sean iguales. Comparar muchas rutas y pares de grupos multiplica la probabilidad de un falso positivo: use la corrección de la caja Análisis multigrupo si las comparaciones son confirmatorias, o preséntelas como exploratorias. Los grupos se observan, no se asignan al azar: una diferencia describe a los grupos y no muestra que pertenecer a uno de ellos la cause. Los grupos definidos por una variable observada no descartan otras diferencias no observadas entre los casos (heterogeneidad no observada), que este módulo no prueba."
             ],
             "Centroid": [
                 "Centroide"
@@ -322,6 +370,9 @@
             "Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable.": [
                 "Colinealidad de los predictores: VIF estructural de 3 o más en %s; sus coeficientes pueden ser inestables."
             ],
+            "Comparison": [
+                "Comparación"
+            ],
             "Competing model": [
                 "Modelo competidor"
             ],
@@ -339,6 +390,9 @@
             ],
             "Complementary partial mediation: the mediator carries part of the effect, and a direct effect remains with the same sign.": [
                 "Mediación parcial complementaria: el mediador lleva parte del efecto, y queda un efecto directo del mismo signo."
+            ],
+            "Compositional invariance was not established (MICOM step 2) for %s: a difference in a path that involves these constructs may come from the constructs meaning something different in each group, not from a different relationship.": [
+                "No se estableció la invarianza composicional (paso 2 de MICOM) para %s: una diferencia en una ruta que involucre estos constructos puede deberse a que los constructos significan algo distinto en cada grupo, no a una relación distinta."
             ],
             "Computed from polychoric correlations (ordinal indicators): the values refer to the reliability of the latent continuous responses assumed behind the categories, not to the observed sum score, which is usually lower (Chalmers, 2018, see references).": [
                 "Calculado con correlaciones policóricas (indicadores ordinales): los valores se refieren a la fiabilidad de las respuestas latentes continuas que se suponen detrás de las categorías, no a la del puntaje observado, que suele ser menor (Chalmers, 2018, vea las referencias)."
@@ -381,6 +435,9 @@
             ],
             "Corporate reputation, trust, satisfaction and loyalty of 675 German bank customers (four formative and five reflective constructs) with gender, age group, education, employment, income and family status; Damberg (2023), CC BY 4.0 - see data/README.md": [
                 "Reputación corporativa, confianza, satisfacción y lealtad de 675 clientes de bancos alemanes (cuatro constructos formativos y cinco reflectivos) con sexo, grupo de edad, educación, empleo, ingreso y situación familiar; Damberg (2023), CC BY 4.0 - vea data/README.md"
+            ],
+            "Correction for multiple comparisons": [
+                "Corrección por comparaciones múltiples"
             ],
             "Critical value": [
                 "Valor crítico"
@@ -433,6 +490,9 @@
             "Decimals": [
                 "Decimales"
             ],
+            "Decision": [
+                "Decisión"
+            ],
             "Define at least two constructs, each with at least one indicator.": [
                 "Defina al menos dos constructos, cada uno con al menos un indicador."
             ],
@@ -441,6 +501,12 @@
             ],
             "Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation.": [
                 "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
+            ],
+            "Difference": [
+                "Diferencia"
+            ],
+            "Difference = first group minus second group. Permutation test (Chin & Dibbern, 2010): %1$d permutations (%2$d admissible). PLS-MGA (Henseler et al., 2009): %3$d bootstrap resamples per group. cSEM returns P(first ≤ second), a one-sided value: near 0 the path is larger in the first group, near 1 in the second. The two-sided p = 2 × min(P, 1 − P) is used for the decision, at .05 for both tests. Seed %4$d, %5$d s.": [
+                "Diferencia = primer grupo menos segundo grupo. Prueba de permutación (Chin y Dibbern, 2010): %1$d permutaciones (%2$d admisibles). PLS-MGA (Henseler et al., 2009): %3$d réplicas bootstrap por grupo. cSEM devuelve P(primero ≤ segundo), un valor unilateral: cerca de 0 la ruta es mayor en el primer grupo, cerca de 1 en el segundo. Para la decisión se usa la p bilateral = 2 × mín(P, 1 − P), a .05 en ambas pruebas. Semilla %4$d, %5$d s."
             ],
             "Dimension of %s": [
                 "Dimensión de %s"
@@ -504,6 +570,9 @@
             ],
             "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a large coefficient as significant. Significance needs the bootstrap (Bootstrap box): a path is significant at the chosen level when its interval excludes 0.": [
                 "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. El R² es la proporción de la varianza del resultado explicada por sus predictores. Lectura errónea frecuente: tratar un coeficiente grande como significativo. La significación requiere el bootstrap (caja Bootstrap): una ruta es significativa al nivel elegido cuando su intervalo excluye el 0."
+            ],
+            "Each group is estimated on its own, with the settings of the Estimation box.": [
+                "Cada grupo se estima por separado, con las opciones de la caja Estimación."
             ],
             "Each row is one construct: how it is measured (reflective or formative), how many indicators it has, and its role in the structural model. Exogenous constructs are only predictors; endogenous constructs are predicted by at least one other construct. Check that this table describes the model you intended before reading any number.": [
                 "Cada fila es un constructo: cómo se mide (reflectivo o formativo), cuántos indicadores tiene y su papel en el modelo estructural. Los constructos exógenos solo son predictores; los endógenos son predichos por al menos otro constructo. Compruebe que esta tabla describe el modelo que quería antes de leer cualquier número."
@@ -583,6 +652,9 @@
             "Factorial": [
                 "Factorial"
             ],
+            "First group": [
+                "Primer grupo"
+            ],
             "First-order constructs": [
                 "Constructos de primer orden"
             ],
@@ -628,6 +700,21 @@
             "From the data (observed minimum and maximum)": [
                 "De los datos (mínimo y máximo observados)"
             ],
+            "Full": [
+                "Total"
+            ],
+            "Group": [
+                "Grupo"
+            ],
+            "Grouping Variable": [
+                "Variable de agrupación"
+            ],
+            "Groups": [
+                "Grupos"
+            ],
+            "Groups compared by %1$s: %2$s.": [
+                "Grupos comparados según %1$s: %2$s."
+            ],
             "Higher-order 1": [
                 "Higher-order 1"
             ],
@@ -660,6 +747,9 @@
             ],
             "Higher-order constructs: %d of %d reflective one(s) have composite reliability between 0.70 and 0.95.": [
                 "Constructos de orden superior: %d de %d reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95."
+            ],
+            "Holm": [
+                "Holm"
             ],
             "How to read a moderation": [
                 "Cómo leer una moderación"
@@ -696,6 +786,9 @@
             ],
             "How to read the model summary": [
                 "Cómo leer el resumen del modelo"
+            ],
+            "How to read the multigroup analysis": [
+                "Cómo leer el análisis multigrupo"
             ],
             "How to read the overall fit test": [
                 "Cómo leer la prueba de ajuste global"
@@ -817,6 +910,12 @@
             "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples.": [
                 "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
             ],
+            "Invariance": [
+                "Invarianza"
+            ],
+            "Invariance: None, step 2 fails and the construct cannot be compared across these groups; Partial, step 2 holds and the paths can be compared; Full, step 3 also holds and the groups could be pooled (Henseler, Ringle & Sarstedt, 2016).": [
+                "Invarianza: Ninguna, falla el paso 2 y el constructo no se puede comparar entre estos grupos; Parcial, se cumple el paso 2 y las rutas se pueden comparar; Total, también se cumple el paso 3 y los grupos se podrían juntar (Henseler, Ringle y Sarstedt, 2016)."
+            ],
             "Its bootstrap interval excludes 0: %s moderates the effect of %s on %s.": [
                 "Su intervalo bootstrap excluye el 0: %s modera el efecto de %s sobre %s."
             ],
@@ -892,6 +991,9 @@
             "Loadings of reflective indicators; dashed line at 0.708. Triangles: below 0.708.": [
                 "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
             ],
+            "Log variance ratio": [
+                "Log. de la razón de varianzas"
+            ],
             "Loss difference": [
                 "Diferencia de pérdida"
             ],
@@ -928,11 +1030,17 @@
             "Mean (scale)": [
                 "Media (escala)"
             ],
+            "Mean difference": [
+                "Diferencia de medias"
+            ],
             "Mean of %s": [
                 "Media de %s"
             ],
             "Mean replacement cannot be used with ordinal indicators: the mean of an ordinal indicator is usually not one of its categories. Choose Exclude cases listwise in Missing values, or treat the indicators as continuous.": [
                 "El reemplazo por la media no puede usarse con indicadores ordinales: la media de un indicador ordinal casi nunca es una de sus categorías. Elija Excluir casos por lista en Valores perdidos, o trate los indicadores como continuos."
+            ],
+            "Measurement invariance of composites (MICOM)": [
+                "Invarianza de medida de los compuestos (MICOM)"
             ],
             "Measurement model": [
                 "Modelo de medida"
@@ -957,6 +1065,12 @@
             ],
             "Metric: the comparison of PLS with LM uses the RMSE, or the MAE when the prediction errors of PLS are clearly asymmetric (|skewness| > 1, a rule of thumb of this module), as Shmueli et al. (2019) recommend.": [
                 "Métrica: la comparación de PLS con LM usa el RMSE, o el MAE cuando los errores de predicción de PLS son claramente asimétricos (|asimetría| > 1, una regla práctica de este módulo), como recomiendan Shmueli et al. (2019)."
+            ],
+            "MICOM has three steps. Step 1, configural invariance: the same indicators, data treatment and algorithm in every group; the module guarantees it. Step 2, compositional invariance: the weights of each group build the same composite. c is the correlation between the scores computed with the weights of one group and those computed with the weights of the other; if c is not significantly below 1 (permutation p of .05 or more), step 2 holds. Step 3: equal means and equal variances of the composites in both groups, also tested by permutation. Reading: if step 2 fails, the construct cannot be compared (no invariance); if step 2 holds, its paths can be compared (partial invariance); if step 3 also holds, the groups could be pooled and analysed together (full invariance). A non-significant result means that no difference was detected, not that the groups are proven equal.": [
+                "MICOM tiene tres pasos. Paso 1, invarianza configural: los mismos indicadores, tratamiento de los datos y algoritmo en todos los grupos; el módulo lo garantiza. Paso 2, invarianza composicional: los pesos de cada grupo forman el mismo compuesto. c es la correlación entre las puntuaciones calculadas con los pesos de un grupo y las calculadas con los pesos del otro; si c no es significativamente menor que 1 (p de permutación de .05 o más), el paso 2 se cumple. Paso 3: medias iguales y varianzas iguales de los compuestos en ambos grupos, también por permutación. Lectura: si falla el paso 2, el constructo no se puede comparar (sin invarianza); si se cumple el paso 2, sus rutas se pueden comparar (invarianza parcial); si además se cumple el paso 3, los grupos se podrían juntar y analizar como uno solo (invarianza total). Un resultado no significativo significa que no se detectó una diferencia, no que se haya demostrado que los grupos son iguales."
+            ],
+            "MICOM was not computed: %s Without it, read the path differences with care: they assume that each construct means the same in every group.": [
+                "MICOM no se calculó: %s Sin él, lea con cuidado las diferencias de rutas: suponen que cada constructo significa lo mismo en todos los grupos."
             ],
             "Minimum": [
                 "Mínimo"
@@ -997,6 +1111,21 @@
             "Moderator at": [
                 "Moderador en"
             ],
+            "Multigroup (%1$s): %2$d of %3$d path comparisons significant in both tests (MICOM not computed).": [
+                "Multigrupo (%1$s): %2$d de %3$d comparaciones de rutas significativas en ambas pruebas (MICOM no calculado)."
+            ],
+            "Multigroup (%1$s): invariance at least partial for %2$d of %3$d constructs; %4$d of %5$d path comparisons significant in both tests.": [
+                "Multigrupo (%1$s): invarianza al menos parcial en %2$d de %3$d constructos; %4$d de %5$d comparaciones de rutas significativas en ambas pruebas."
+            ],
+            "Multigroup analysis": [
+                "Análisis multigrupo"
+            ],
+            "Multigroup Analysis": [
+                "Análisis multigrupo"
+            ],
+            "N": [
+                "N"
+            ],
             "Navy": [
                 "Azul marino"
             ],
@@ -1008,6 +1137,9 @@
             ],
             "Next step: report each specific indirect effect with its interval and type of mediation, and discuss the mediators in light of the theory that proposed them; a significant indirect effect supports the chain only as far as the design allows causal claims.": [
                 "Siguiente paso: informe cada efecto indirecto específico con su intervalo y su tipo de mediación, y discuta los mediadores a la luz de la teoría que los propuso; un efecto indirecto significativo respalda la cadena solo hasta donde el diseño permite afirmaciones causales."
+            ],
+            "Next step: report MICOM (steps 2 and 3) before the path differences, then each difference with the coefficients of both groups, the p values of both tests, the number of permutations and resamples, and the seed.": [
+                "Siguiente paso: informe MICOM (pasos 2 y 3) antes que las diferencias de rutas, y luego cada diferencia con los coeficientes de ambos grupos, las p de ambas pruebas, el número de permutaciones y de réplicas, y la semilla."
             ],
             "Next step: report Q²predict, the RMSE or MAE comparison with LM and the CVPAT results, with the folds, repetitions and seed. If prediction is a goal of the study, discuss the indicators where LM predicts better.": [
                 "Siguiente paso: informe Q²predict, la comparación de RMSE o MAE con LM y los resultados de CVPAT, con las particiones, repeticiones y semilla. Si la predicción es un objetivo del estudio, discuta los indicadores en los que LM predice mejor."
@@ -1048,11 +1180,17 @@
             "Non-significant paths dashed": [
                 "Rutas no significativas discontinuas"
             ],
+            "None": [
+                "Ninguna"
+            ],
             "None.": [
                 "Ninguna."
             ],
             "Not computable": [
                 "No calculable"
+            ],
+            "Not computable in this version for models with higher-order constructs: both stages would have to be repeated in every group and in every permutation.": [
+                "No calculable en esta versión para modelos con constructos de orden superior: habría que repetir ambas etapas en cada grupo y en cada permutación."
             ],
             "Not computable in this version for models with higher-order constructs: the prediction would have to repeat both stages in every fold.": [
                 "No calculable en esta versión para modelos con constructos de orden superior: la predicción tendría que repetir ambas etapas en cada partición."
@@ -1063,8 +1201,17 @@
             "Not computable in this version for models with higher-order constructs.": [
                 "No calculable en esta versión para modelos con constructos de orden superior."
             ],
+            "Not computable with consistent PLS: MICOM is defined for composites (Henseler, Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box to test the invariance of the composites; for common factors, invariance is usually tested with a multigroup CFA.": [
+                "No calculable con PLS consistente: MICOM se define para compuestos (Henseler, Ringle y Sarstedt, 2016), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación para probar la invarianza de los compuestos; con factores comunes, la invarianza suele probarse con un AFC multigrupo."
+            ],
             "Not computable with consistent PLS: the IPMA needs composite scores (Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box.": [
                 "No calculable con PLS consistente: el IPMA necesita puntuaciones de compuestos (Ringle y Sarstedt, 2016), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación."
+            ],
+            "Not computable with ordinal indicators: cSEM's testMICOM() builds the scores from the raw category codes and stops. The path differences are still computed.": [
+                "No calculable con indicadores ordinales: testMICOM() de cSEM forma las puntuaciones con los códigos brutos de las categorías y se detiene. Las diferencias de rutas sí se calculan."
+            ],
+            "Not computable: %1$s. Each group needs at least %2$d cases (a minimum of this module) to estimate the model on its own; merge small categories or collect more data.": [
+                "No calculable: %1$s. Cada grupo necesita al menos %2$d casos (un mínimo de este módulo) para estimar el modelo por sí solo; junte las categorías pequeñas o reúna más datos."
             ],
             "Not computable: %s": [
                 "No calculable: %s"
@@ -1072,11 +1219,17 @@
             "Not computable: cSEM predicts only from linear models, and this model has an interaction term.": [
                 "No calculable: cSEM solo predice con modelos lineales, y este modelo tiene un término de interacción."
             ],
+            "Not computable: cSEM stopped with: %s": [
+                "No calculable: cSEM se detuvo con: %s"
+            ],
             "Not computable: cSEM's doIPMA() stopped with: %s": [
                 "No calculable: doIPMA() de cSEM se detuvo con: %s"
             ],
             "Not computable: cSEM's second-order routine measures the other constructs by a single score in stage 2, so their HTMT with the higher-order construct is not defined. Choose the disjoint approach to assess it.": [
                 "No calculable: la rutina de segundo orden de cSEM mide los demás constructos con una sola puntuación en la etapa 2, así que su HTMT con el constructo de orden superior no está definido. Elija el enfoque disjunto para evaluarlo."
+            ],
+            "Not computable: cSEM's testMICOM() stopped with: %s": [
+                "No calculable: testMICOM() de cSEM se detuvo con: %s"
             ],
             "Not computable: cSEM's testOMF() stopped with: %s": [
                 "No calculable: testOMF() de cSEM se detuvo con: %s"
@@ -1096,8 +1249,20 @@
             "Not computable: the estimates are not admissible (see the notice). Fix the cause first.": [
                 "No calculable: las estimaciones no son admisibles (vea el aviso). Corrija primero la causa."
             ],
+            "Not computable: the estimates are not admissible in %s (see the Groups table). Fix the cause first.": [
+                "No calculable: las estimaciones no son admisibles en %s (vea la tabla Grupos). Corrija primero la causa."
+            ],
             "Not computable: the estimates of the competing model are not admissible.": [
                 "No calculable: las estimaciones del modelo competidor no son admisibles."
+            ],
+            "Not computable: the grouping variable %1$s has %2$d groups, and this module compares at most %3$d (with more, the pairwise comparisons multiply and each group gets small). Merge categories or choose another variable.": [
+                "No calculable: la variable de agrupación %1$s tiene %2$d grupos, y este módulo compara como máximo %3$d (con más, las comparaciones por pares se multiplican y cada grupo queda pequeño). Junte categorías o elija otra variable."
+            ],
+            "Not computable: the grouping variable %s has fewer than two groups with cases.": [
+                "No calculable: la variable de agrupación %s tiene menos de dos grupos con casos."
+            ],
+            "Not computable: the grouping variable %s is also an indicator of the model. Choose a variable that is not in the model.": [
+                "No calculable: la variable de agrupación %s también es un indicador del modelo. Elija una variable que no esté en el modelo."
             ],
             "Not computable: the indicators of these constructs correlate with mixed signs. Check for reverse-coded items and recode them before the analysis.": [
                 "No calculable: los indicadores de estos constructos correlacionan con signos mezclados. Revise si hay ítems invertidos y recodifíquelos antes del análisis."
@@ -1141,6 +1306,9 @@
             "Only construct with an effect: nothing to compare": [
                 "Único constructo con efecto: nada que comparar"
             ],
+            "Only one of the two tests finds a difference for %s: treat it as tentative and report both p values.": [
+                "Solo una de las dos pruebas encuentra una diferencia en %s: tómela como tentativa e informe ambas p."
+            ],
             "Open Structural Model: every construct has a row. Drag into a construct's row the constructs that predict it. A construct whose row stays empty is exogenous (only a predictor).": [
                 "Abra Modelo estructural: cada constructo tiene una fila. Arrastre a la fila de un constructo los constructos que lo predicen. Un constructo cuya fila queda vacía es exógeno (solo predictor)."
             ],
@@ -1166,16 +1334,28 @@
                 "Ajuste global del modelo (prueba bootstrap de ajuste exacto)"
             ],
             "p": [
-                ""
+                "p"
             ],
             "p (bootstrap)": [
                 "p (bootstrap)"
+            ],
+            "p (permutation)": [
+                "p (permutación)"
+            ],
+            "p (two-sided)": [
+                "p (bilateral)"
             ],
             "p (weight)": [
                 "p (peso)"
             ],
             "p values come from cSEM: t = estimate / bootstrap standard error.": [
                 "Los valores p vienen de cSEM: t = estimación / error estándar bootstrap."
+            ],
+            "P(first ≤ second)": [
+                "P(primero ≤ segundo)"
+            ],
+            "Partial": [
+                "Parcial"
             ],
             "Partial least squares structural equation modeling: reflective and formative constructs built from boxes, model validation before estimation, loadings and weights, reliability, convergent and discriminant validity, collinearity of formative indicators, paths and explained variance, with plain-language interpretation.": [
                 "Modelado de ecuaciones estructurales por mínimos cuadrados parciales: constructos reflectivos y formativos armados con cajas, validación del modelo antes de estimar, cargas y pesos, fiabilidad, validez convergente y discriminante, colinealidad de los indicadores formativos, rutas y varianza explicada, con interpretación en lenguaje claro."
@@ -1198,6 +1378,9 @@
             "Path Diagram": [
                 "Diagrama de rutas"
             ],
+            "Path differences between groups": [
+                "Diferencias de rutas entre grupos"
+            ],
             "Paths left out of the competing model": [
                 "Rutas excluidas del modelo competidor"
             ],
@@ -1206,6 +1389,15 @@
             ],
             "Performance (0-100)": [
                 "Desempeño (0-100)"
+            ],
+            "Permutation test only": [
+                "Solo la prueba de permutación"
+            ],
+            "permutation test only": [
+                "solo la prueba de permutación"
+            ],
+            "Permutations (MICOM and permutation test)": [
+                "Permutaciones (MICOM y prueba de permutación)"
             ],
             "Plot title": [
                 "Título del gráfico"
@@ -1233,6 +1425,12 @@
             ],
             "PLS predicts better": [
                 "PLS predice mejor"
+            ],
+            "PLS-MGA": [
+                "PLS-MGA"
+            ],
+            "PLS-MGA only": [
+                "Solo PLS-MGA"
             ],
             "PLS-SEM": [
                 "PLS-SEM"
@@ -1306,8 +1504,8 @@
             "Range of the scale": [
                 "Rango de la escala"
             ],
-            "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box. Group comparisons (MICOM) come in a later version of PLSsemLab.": [
-                "Lea primero el modelo de medida, luego las rutas significativas y sus tamaños de efecto. Informe cada ruta con su coeficiente, intervalo y f², y diga cuántas réplicas bootstrap y qué semilla usó. Si el modelo tiene mediadores, lea los efectos indirectos específicos; si la predicción importa, ejecute PLSpredict y CVPAT en la caja Predicción. Las comparaciones entre grupos (MICOM) llegan en una versión posterior de PLSsemLab."
+            "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box; to compare groups, use the Multigroup Analysis box.": [
+                "Lea primero el modelo de medida, luego las rutas significativas y sus tamaños de efecto. Informe cada ruta con su coeficiente, intervalo y f², e indique cuántas réplicas bootstrap y qué semilla usó. Si el modelo tiene mediadores, lea los efectos indirectos específicos; si la predicción importa, ejecute PLSpredict y CVPAT en la caja Predicción; para comparar grupos, use la caja Análisis multigrupo."
             ],
             "Reading": [
                 "Lectura"
@@ -1399,6 +1597,9 @@
             "Run bootstrap": [
                 "Ejecutar bootstrap"
             ],
+            "Run multigroup analysis": [
+                "Ejecutar análisis multigrupo"
+            ],
             "Run overall fit test": [
                 "Ejecutar la prueba de ajuste global"
             ],
@@ -1419,6 +1620,9 @@
             ],
             "SE": [
                 "EE"
+            ],
+            "Second group": [
+                "Segundo grupo"
             ],
             "Seed": [
                 "Semilla"
@@ -1453,11 +1657,17 @@
             "Simple slopes": [
                 "Pendientes simples"
             ],
+            "Single indicator (%s): c = 1 by definition, so compositional invariance holds trivially.": [
+                "Indicador único (%s): c = 1 por definición, así que la invarianza composicional se cumple trivialmente."
+            ],
             "Single predictor: no collinearity": [
                 "Predictor único: sin colinealidad"
             ],
             "Small sample for the cross-validation: %d cases, %d per held-out fold and %d per training set for %d predictors of LM. With fewer than 20 cases per fold or fewer than 10 training cases per predictor of LM (rules of thumb of this module) the metrics vary from one set of folds to another and CVPAT has little power: read the results as indicative, use fewer folds or more repetitions, or collect more data.": [
                 "Muestra pequeña para la validación cruzada: %d casos, %d por partición de prueba y %d por conjunto de entrenamiento para %d predictores de LM. Con menos de 20 casos por partición o menos de 10 casos de entrenamiento por predictor de LM (reglas prácticas de este módulo) las métricas varían de un conjunto de particiones a otro y CVPAT tiene poca potencia: lea los resultados como orientativos, use menos particiones o más repeticiones, o reúna más datos."
+            ],
+            "SmartPLS reads PLS-MGA as significant when P < .05 or P > .95, which amounts to a two-sided level of .10; near those limits the two programs can disagree.": [
+                "SmartPLS considera significativo PLS-MGA cuando P < .05 o P > .95, lo que equivale a un nivel bilateral de .10; cerca de esos límites los dos programas pueden discrepar."
             ],
             "Some bootstrap blocks failed and were left out: %s": [
                 "Algunos bloques del bootstrap fallaron y se dejaron fuera: %s"
@@ -1470,6 +1680,15 @@
             ],
             "SRMR %s against a critical value of %s.": [
                 "SRMR %s frente a un valor crítico de %s."
+            ],
+            "Step 1 (configural invariance) holds by construction: every group uses the same indicators, the same data treatment and the same algorithm settings. Step 2: c is the correlation between the scores built with the weights of each group; compositional invariance holds when c is not significantly below 1 (one-sided permutation p of .05 or more, that is, c above the 5%% quantile of its permutation distribution). Step 3: difference of the means and log of the ratio of the variances of the standardised pooled scores (first group minus second), with two-sided permutation p. %1$d permutations (%2$d admissible), seed %3$d, %4$d s.": [
+                "El paso 1 (invarianza configural) se cumple por construcción: todos los grupos usan los mismos indicadores, el mismo tratamiento de los datos y las mismas opciones del algoritmo. Paso 2: c es la correlación entre las puntuaciones formadas con los pesos de cada grupo; la invarianza composicional se cumple cuando c no es significativamente menor que 1 (p de permutación unilateral de .05 o más, es decir, c por encima del cuantil del 5%% de su distribución de permutación). Paso 3: diferencia de las medias y logaritmo de la razón de las varianzas de las puntuaciones estandarizadas conjuntas (primer grupo menos segundo), con p de permutación bilateral. %1$d permutaciones (%2$d admisibles), semilla %3$d, %4$d s."
+            ],
+            "Step 2 (compositional)": [
+                "Paso 2 (composicional)"
+            ],
+            "Step 3 (means and variances)": [
+                "Paso 3 (medias y varianzas)"
             ],
             "Structural model": [
                 "Modelo estructural"
@@ -1487,7 +1706,7 @@
                 "sustancial"
             ],
             "t": [
-                ""
+                "t"
             ],
             "Target": [
                 "Objetivo"
@@ -1518,6 +1737,9 @@
             ],
             "The f² of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small.": [
                 "El f² de una interacción se juzga con umbrales menores que el de otras rutas: 0.005, 0.01 y 0.025 para pequeño, mediano y grande (Kenny, 2018; Hair et al., 2021, vea las referencias), porque los efectos moderadores suelen ser pequeños."
+            ],
+            "The groups are observed, not assigned at random: a difference describes the groups and does not show that belonging to a group causes it.": [
+                "Los grupos se observan, no se asignan al azar: una diferencia describe a los grupos y no muestra que pertenecer a uno de ellos la cause."
             ],
             "The higher-order construct '%s' is part of an interaction. Interactions with higher-order constructs are not available in this version.": [
                 "El constructo de orden superior '%s' forma parte de una interacción. Las interacciones con constructos de orden superior no están disponibles en esta versión."
@@ -1582,6 +1804,12 @@
             "The most important construct is %s (total effect %s): raising it one point on its scale raises %s by that amount, on its own scale.": [
                 "El constructo más importante es %s (efecto total %s): subirlo un punto en su escala sube %s en esa cantidad, en su propia escala."
             ],
+            "The multigroup analysis could not be run: %s": [
+                "No se pudo ejecutar el análisis multigrupo: %s"
+            ],
+            "The multigroup analysis was not computed. %s": [
+                "El análisis multigrupo no se calculó. %s"
+            ],
             "The name '%s' is used for more than one construct. Give each construct a different name.": [
                 "El nombre '%s' se usa en más de un constructo. Dé a cada constructo un nombre distinto."
             ],
@@ -1603,6 +1831,9 @@
             "The p value and the percentile interval disagree for this path (a borderline case). The decision follows the interval, as recommended for PLS-SEM (Hair et al., 2019, see references); report both, and check with more resamples or another seed.": [
                 "El valor p y el intervalo percentil discrepan en esta ruta (un caso límite). La decisión sigue al intervalo, como se recomienda en PLS-SEM (Hair et al., 2019, vea las referencias); informe ambos y compruébelo con más réplicas u otra semilla."
             ],
+            "The p values of both tests are corrected for %1$d comparisons (%2$s method), over every path and pair of groups. P(first ≤ second) is shown uncorrected.": [
+                "Las p de ambas pruebas se corrigen por %1$d comparaciones (método de %2$s), sobre todas las rutas y pares de grupos. P(primero ≤ segundo) se muestra sin corregir."
+            ],
             "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
                 "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
             ],
@@ -1615,6 +1846,9 @@
             "The seed is the one in the Bootstrap box.": [
                 "La semilla es la de la caja Bootstrap."
             ],
+            "The smallest group has %d cases: with groups of this size only large differences reach significance, so a path that does not differ significantly is not shown to be equal.": [
+                "El grupo más pequeño tiene %d casos: con grupos de este tamaño solo las diferencias grandes alcanzan significación, así que una ruta que no difiere significativamente no queda demostrada como igual."
+            ],
             "The specific indirect effects are listed with their estimates only. Their significance and the type of mediation need the bootstrap: tick Run bootstrap in the Bootstrap box.": [
                 "Los efectos indirectos específicos se listan solo con sus estimaciones. Su significación y el tipo de mediación necesitan el bootstrap: marque Ejecutar bootstrap en la caja Bootstrap."
             ],
@@ -1626,6 +1860,9 @@
             ],
             "The structural VIF measures how much the predictors of the same outcome overlap. Above 3, and certainly above 5, their coefficients become unstable and can even change sign (Hair et al., 2019, see references). With a single predictor there is no collinearity to assess.": [
                 "El VIF estructural mide cuánto se solapan los predictores de un mismo resultado. Por encima de 3, y sin duda por encima de 5, sus coeficientes se vuelven inestables y pueden incluso cambiar de signo (Hair et al., 2019, vea las referencias). Con un solo predictor no hay colinealidad que evaluar."
+            ],
+            "The two tests of path differences answer the same question in different ways. The permutation test (Chin & Dibbern, 2010) reassigns the cases to the groups at random many times; the difference is significant when chance alone rarely produces one as large. PLS-MGA (Henseler et al., 2009; Sarstedt et al., 2011) compares the bootstrap distributions of the path in each group. cSEM gives the probability that the path of the first group is not larger than that of the second, a one-sided value: near 0 the first group's path is larger, near 1 the second's, around 0.5 there is no difference. The table turns it into a two-sided p, comparable with that of the permutation test. When both tests agree, the conclusion is firmer; when only one is significant, report both and treat the difference as tentative.": [
+                "Las dos pruebas de diferencias de rutas responden la misma pregunta de maneras distintas. La prueba de permutación (Chin y Dibbern, 2010) reasigna los casos a los grupos al azar muchas veces; la diferencia es significativa cuando el azar rara vez produce una tan grande. PLS-MGA (Henseler et al., 2009; Sarstedt et al., 2011) compara las distribuciones bootstrap de la ruta en cada grupo. cSEM da la probabilidad de que la ruta del primer grupo no sea mayor que la del segundo, un valor unilateral: cerca de 0 la ruta del primer grupo es mayor, cerca de 1 la del segundo, y alrededor de 0,5 no hay diferencia. La tabla la convierte en una p bilateral, comparable con la de la prueba de permutación. Cuando ambas pruebas coinciden, la conclusión es más firme; cuando solo una es significativa, informe ambas y trate la diferencia como tentativa."
             ],
             "The type of mediation (Zhao et al., 2010) combines the indirect effect with the direct path X → Y. Complementary: both significant with the same sign; the mediator explains part of the effect. Competitive: both significant with opposite signs; the mediator pushes against the direct effect, and the total effect can hide both. Indirect-only (full mediation): only the indirect effect is significant. Direct-only: only the direct path is significant; there is no mediation through this chain. No effect: neither is significant. The old practice of requiring a significant total effect first (Baron & Kenny) and the VAF ratio are no longer recommended. A full mediation can only be claimed when the direct path X → Y is in the model; if it is not, the table says so.": [
                 "El tipo de mediación (Zhao et al., 2010) combina el efecto indirecto con la ruta directa X → Y. Complementaria: ambos significativos con el mismo signo; el mediador explica parte del efecto. Competitiva: ambos significativos con signos opuestos; el mediador empuja contra el efecto directo, y el efecto total puede ocultar ambos. Solo indirecta (mediación total): solo el efecto indirecto es significativo. Solo directa: solo la ruta directa es significativa; no hay mediación por esta cadena. Sin efecto: ninguno es significativo. La práctica antigua de exigir primero un efecto total significativo (Baron y Kenny) y el cociente VAF ya no se recomiendan. Solo se puede afirmar una mediación total cuando la ruta directa X → Y está en el modelo; si no lo está, la tabla lo dice."
@@ -1746,6 +1983,9 @@
             ],
             "Yes": [
                 "Sí"
+            ],
+            "Yes (both tests)": [
+                "Sí (ambas pruebas)"
             ],
             "Your structural model already relates every pair of constructs, so the estimated and the saturated model are the same model and both tests coincide.": [
                 "Su modelo estructural ya relaciona cada par de constructos, así que el modelo estimado y el saturado son el mismo modelo y ambas pruebas coinciden."

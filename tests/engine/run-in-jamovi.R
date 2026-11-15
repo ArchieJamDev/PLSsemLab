@@ -117,3 +117,19 @@ item <- p6$results$ipmaPlots$get(key = "Loy")
 print(PLSsemLab:::.pl_plot_ipma(item$state, ggplot2::theme_classic(), list(color = c("#333333", "#3E6DA9"))))
 grDevices::dev.off()
 cat("phase 6 ok\n")
+
+# Phase 7 on the bank model: multigroup analysis by gender (MICOM, MGD)
+# ES: Fase 7 en el modelo bancario: análisis multigrupo por género
+d$gender <- factor(d$gender)
+p7 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),
+                                                    list(label = "Comp", vars = paste0("comp_", 1:3))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 structural = list(list("Qual"), list("Trust", "Comp"), list("Qual"), list()),
+                                 groupVar = "gender", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, mgaAdjust = "holm"), data = d)
+t7 <- system.time({ p7$init(); p7$run() })
+print(t7)
+print(p7$results$mgaGroups$asDF)
+print(p7$results$micom$asDF)
+print(p7$results$mga$asDF)
+for (n in names(p7$results$items)) if (grepl("^\\.plssem", n)) print(p7$results$items[[n]]$content)
+cat("phase 7 ok\n")

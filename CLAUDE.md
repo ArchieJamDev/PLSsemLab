@@ -92,6 +92,21 @@ carry every rule below in full.
 - `testOMF()` returns `Critical_value` columns in its own order and keeps
   admissible draws in `Information$Bootstrap_values`; `"<~"` without
   `.PLS_modes` is Mode B (pass Mode A in reference calls).
+- Multigroup (phase 7): JASP (Nov 2026) only estimates the model per group;
+  no MICOM, no difference tests. `testMGD()`'s Henseler p is
+  P(first ≤ second), one-sided; the module reports 2·min(P, 1−P) (cSEM's
+  own decision rule); SmartPLS's .05/.95 rule is a two-sided .10 level.
+  The group column is `PLgroup` with labels G01..Gk (cSEM rejects dots;
+  sign of differences = level order). `testMICOM()` stops with ordinal
+  indicators; PLSc is inadmissible in corp_rep's Contract group. E6 is
+  reproduced exactly only with its group order (1 = 125 cases first).
+- cSEM's bootstrap (future.seed) leaves `RNGkind()` = L'Ecuyer-CMRG in the
+  session; jamovi keeps one R session, so later set.seed() + sample()
+  (MICOM, Chin, CV folds) changed. Every resampling routine runs under
+  `.pl_rng_guard()` (default generator, previous one restored); tests wrap
+  direct cSEM calls in `withDefaultRng()`.
+- R's `$` partially matches list names (`s$micom` returns `s$micom_error`
+  when `micom` is absent): read cached summaries with `[[ ]]`.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in
   jamovi.yaml vs jamovi's `JAMOVI_R_VERSION`), else "Installed version
   needs to be updated".

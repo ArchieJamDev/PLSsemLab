@@ -1,4 +1,39 @@
-# PLSsemLab 0.6.1 (development)
+# PLSsemLab 0.7.0 (development)
+
+## Phase 7: multigroup analysis (D6)
+
+* **Multigroup Analysis** box (its own Run checkbox): a grouping variable,
+  permutations, bootstrap resamples per group and an optional correction
+  for multiple comparisons (Holm, Bonferroni). The seed is the bootstrap's.
+* **Groups** table: cases per group and whether each group's estimates are
+  admissible (cases without a group value are left out, with a notice).
+* **MICOM** (Henseler, Ringle & Sarstedt, 2016): step 1 guaranteed by the
+  module; step 2 (c, its 5% permutation quantile and p) and step 3 (mean
+  difference and log variance ratio with permutation p) for every pair of
+  groups and construct, with the verdict none / partial / full. Equal to
+  `cSEM::testMICOM()`; not computed with PLSc (common factors) or ordinal
+  indicators, where the path differences are still computed.
+* **Path differences**: the coefficient in each group, the difference, the
+  permutation test (Chin & Dibbern, 2010) and PLS-MGA (Henseler et al.,
+  2009) with cSEM's one-sided P(first ≤ second) and its two-sided p, and a
+  decision that says when only one test finds a difference. Equal to
+  `cSEM::testMGD()`. Notes explain the one-sided value, SmartPLS's
+  .05/.95 rule (a two-sided .10 level) and which paths involve constructs
+  without compositional invariance.
+* Guide, interpretation (MICOM per pair, significant differences with both
+  coefficients, disagreement between tests, small groups, multiple
+  comparisons, observed groups), key finding and equivalent R code.
+* Not computable (rows kept, with the reason) with higher-order constructs,
+  fewer than two groups, more than 10 groups, a group under 10 cases or
+  inadmissible estimates in a group.
+* The comparison by type of service of experiment E6 is reproduced exactly.
+* **Reproducibility fix (also phases 5 and 6):** cSEM's bootstrap leaves
+  the L'Ecuyer-CMRG generator set in the R session, and jamovi keeps one
+  session, so after a bootstrap the permutations and the cross-validation
+  folds no longer matched the equivalent R code. Every resampling routine
+  now runs with R's default generator and restores the previous one.
+
+# PLSsemLab 0.6.1
 
 ## Phase 6: mediation, prediction and IPMA (D6)
 

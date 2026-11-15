@@ -191,6 +191,33 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (length(k)) self$results$ipmaPlots$addItem(key = tg)
             }
 
+            # Multigroup analysis (phase 7): one row per group, per pair of
+            # groups and construct (MICOM) and per pair and path. With two
+            # groups the coefficient columns carry the group names.
+            # ES: Análisis multigrupo (fase 7): una fila por grupo, por par y
+            # constructo (MICOM) y por par y ruta.
+            gv <- self$options$groupVar
+            if (self$options$mgaRun && !is.null(gv) && nzchar(gv)) {
+                lev <- .pl_mga_levels(self$data[[gv]])
+                for (g in lev) self$results$mgaGroups$addRow(rowKey = g, values = list(group = g))
+                if (length(lev) >= 2 && length(lev) <= .PL_MGA_MAX_GROUPS) {
+                    prs <- utils::combn(lev, 2, simplify = FALSE)
+                    for (k in seq_along(prs)) {
+                        cmp <- sprintf(ptxt("mga_vs"), prs[[k]][1], prs[[k]][2])
+                        for (cn in labels)
+                            self$results$micom$addRow(rowKey = paste(k, cn, sep = "::"),
+                                                      values = list(comparison = cmp, construct = cn))
+                        for (j in seq_len(nrow(paths)))
+                            self$results$mga$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                                comparison = cmp, from = paths$from[j], arrow = "\u2192", to = paths$to[j]))
+                    }
+                    if (length(lev) == 2) {
+                        self$results$mga$getColumn("est1")$setTitle(lev[1])
+                        self$results$mga$getColumn("est2")$setTitle(lev[2])
+                    }
+                }
+            }
+
             # Mediation (phase 6): one row per specific indirect effect.
             # ES: Mediación (fase 6): una fila por efecto indirecto específico.
             chains <- .pl_mediation_chains(paths)
@@ -359,6 +386,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 private$.fillIpma(fit$value, model, d, blocks, paths, hocs, txt, boot$summary) else NULL
             prd <- if (self$options$predictRun)
                 private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
+            gv <- self$options$groupVar
+            mga <- if (self$options$mgaRun && !is.null(gv) && nzchar(gv))
+                private$.multigroup(model, d, blocks, paths, hocs, txt) else NULL
             private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
             private$.preparePlots(loadings, quality, boot$summary, model, txt)
 
@@ -377,7 +407,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       if (!is.null(omf$error)) sprintf(txt("notices", "fit_failed"), paste(omf$error, collapse = "; ")),
                       if (!is.null(prd$error)) sprintf(txt("notices", "predict_failed"), paste(prd$error, collapse = "; ")),
                       if (isTRUE(prd$inadmissible > 0)) sprintf(txt("notices", "predict_inadmissible_folds"), prd$inadmissible),
-                      omf$warnings)
+                      if (!is.null(mga$error)) sprintf(txt("notices", "mga_failed"), paste(mga$error, collapse = "; ")),
+                      omf$warnings, mga$warnings)
             if (!admissible) {
                 failed <- c(names(which(unlist(cSEM::verify(fit$value)))),
                             if (length(hocs)) names(which(unlist(cSEM::verify(sfit)))))
@@ -389,6 +420,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 info <- c(info, sprintf(txt("notices", "dropped"), prep$n_dropped, prep$n_used))
             if (prep$n_replaced > 0)
                 info <- c(info, sprintf(txt("notices", "replaced"), prep$n_replaced, prep$n_cases_replaced))
+            if (isTRUE(mga$n_missing > 0))
+                info <- c(info, sprintf(txt("notices", "mga_missing_group"), mga$n_missing, self$options$groupVar))
 
             few <- names(categories)[categories <= 5]
             many <- names(categories)[categories > 10]
@@ -407,9 +440,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, warn)
 
             private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq, omf, med, prd, ipm)
+                                    mod, hocq, omf, med, prd, ipm, mga)
             private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel, hocq, omf, med, prd)
+                                smodel, hocq, omf, med, prd, mga)
             private$.choices(lang, prep, boot)
             private$.guides(lang)
             private$.reproducibility(lang, smodel, prep, blocks, paths)
@@ -864,6 +897,203 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
             c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings, small = small,
                                 drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
+        },
+
+        # ---------------------------------------------------------------------
+        # Multigroup analysis (cached): the model in each group, MICOM and the
+        # path differences. Category B: when it cannot run, the rows stay with
+        # the reason; MICOM alone can be "Not computable" (PLSc, ordinal) while
+        # the path differences are still computed.
+        # ES: Análisis multigrupo (en caché): el modelo en cada grupo, MICOM y
+        # las diferencias de rutas. Categoría B: si no puede correr, las filas
+        # se quedan con la razón; MICOM solo puede quedar "No calculable"
+        # mientras las diferencias sí se calculan.
+        # ---------------------------------------------------------------------
+        .multigroup = function(model, d, blocks, paths, hocs, txt) {
+            gt <- self$results$mgaGroups
+            mt <- self$results[["micom"]]
+            dt <- self$results$mga
+            lab <- function(key) txt("labels", key)
+            gv <- self$options$groupVar
+            lev <- .pl_mga_levels(self$data[[gv]])
+            g <- self$data[[gv]][as.integer(rownames(d))]
+            mg <- .pl_mga_data(d, g, lev)
+            n <- stats::setNames(unname(mg$n), lev)
+            for (k in seq_along(lev)) gt$setRow(rowKey = lev[k], values = list(n = n[[k]]))
+            notcomp <- function(why, tables = list(mt, dt)) {
+                for (tab in tables) {
+                    col <- if (identical(tab, mt)) "invariance" else "decision"
+                    for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = col, value = lab("not_computable"))
+                    tab$setNote("reason", why)
+                }
+            }
+            r <- .pl_mga_reason(hocs, gv, unlist(lapply(blocks, `[[`, "vars")), n)
+            if (!is.null(r)) {
+                why <- do.call(sprintf, c(list(txt("footnotes", r$key)), r$args))
+                notcomp(why)
+                return(list(reason = why, n_missing = mg$n_missing))
+            }
+            fit <- .pl_capture(cSEM::csem(
+                .data = mg$data, .model = model$syntax, .id = "PLgroup",
+                .PLS_modes = if (length(model$modes)) model$modes else NULL,
+                .disattenuate = self$options$estimator == "plsc",
+                .PLS_weight_scheme_inner = self$options$innerScheme))
+            if (!is.null(fit$error)) {
+                why <- sprintf(txt("footnotes", "mga_error"), paste(fit$error, collapse = "; "))
+                notcomp(why)
+                return(list(reason = why, error = fit$error, n_missing = mg$n_missing))
+            }
+            fg <- fit$value
+            adm <- vapply(mg$ids, function(id) sum(cSEM::verify(fg[[id]])) == 0, TRUE)
+            for (k in seq_along(lev))
+                gt$setRow(rowKey = lev[k], values = list(admissible = lab(if (adm[[k]]) "yes" else "no")))
+            gt$setNote("est", txt("boot", "mga_groups_note"))
+            if (!all(adm)) {
+                why <- sprintf(txt("footnotes", "mga_inadmissible"), paste(lev[!adm], collapse = ", "))
+                notcomp(why)
+                return(list(reason = why, n_missing = mg$n_missing))
+            }
+            perms <- as.integer(self$options$mgaPerm)
+            boots <- as.integer(self$options$mgaBoot)
+            seed <- as.integer(self$options$bootSeed)
+            adjust <- self$options$mgaAdjust
+            micom_reason <- .pl_micom_reason(self$options$estimator, self$options$indicatorScale)
+            compare <- .pl_mga_compare(paths, model$cmap)
+            key <- list("plssem-mga-1", model$syntax, model$modes, mg$data, self$options$estimator,
+                        self$options$innerScheme, perms, boots, seed, micom_reason,
+                        tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
+            res <- .pl_cached_bootstrap(self$results$mgaCacheStore, key, function() {
+                out <- list()
+                warn <- character(0)
+                if (is.null(micom_reason)) {
+                    private$.checkpoint()
+                    t0 <- proc.time()[["elapsed"]]
+                    m <- .pl_capture(.pl_micom(fg, perms, seed))
+                    out$micom <- m$value
+                    out$micom_error <- m$error
+                    out$s_micom <- proc.time()[["elapsed"]] - t0
+                    warn <- c(warn, m$warnings)
+                }
+                private$.checkpoint()
+                t0 <- proc.time()[["elapsed"]]
+                m <- .pl_capture(.pl_mgd(fg, compare, perms, boots, seed))
+                out$mgd <- m$value
+                out$mgd_error <- m$error
+                out$s_mgd <- proc.time()[["elapsed"]] - t0
+                list(summary = out, warnings = unique(c(warn, m$warnings)))
+            })
+            s <- res$summary
+            cinv <- stats::setNames(names(model$cmap), unname(model$cmap))
+            prs <- .pl_mga_pairs(mg$ids)
+            cmp_of <- function(k) sprintf(lab("mga_vs"), mg$labels[[prs[[k]][1]]], mg$labels[[prs[[k]][2]]])
+            out <- list(group = gv, labels = lev, n = n, n_missing = mg$n_missing, adjust = adjust,
+                        warnings = res$warnings, perms = perms, boots = boots, seed = seed)
+
+            # MICOM
+            # ES: MICOM
+            if (!is.null(micom_reason)) {
+                out$why_micom <- txt("footnotes", micom_reason)
+                notcomp(out$why_micom, list(mt))
+            } else if (is.null(s[["micom"]])) {
+                out$why_micom <- sprintf(txt("footnotes", "micom_error"), paste(s$micom_error, collapse = "; "))
+                notcomp(out$why_micom, list(mt))
+            } else {
+                mi <- s[["micom"]]$table
+                mi$label <- unname(cinv[mi$construct])
+                mi$comparison <- vapply(mi$pair, cmp_of, "")
+                for (k in seq_len(nrow(mi)))
+                    mt$setRow(rowKey = paste(mi$pair[k], mi$label[k], sep = "::"), values = list(
+                        c = mi$c[k], c5 = mi$c5[k], pC = mi$p_c[k], meanDiff = mi$mean[k], pMean = mi$p_mean[k],
+                        logVar = mi$var[k], pVar = mi$p_var[k], invariance = lab(mi$verdict[k])))
+                mt$setNote("micom", sprintf(txt("boot", "micom_note"), perms, s[["micom"]]$admissible, seed, round(s$s_micom)))
+                mt$setNote("inv", txt("boot", "micom_invariance_note"))
+                single <- vapply(Filter(function(b) length(b$vars) == 1, blocks), `[[`, "", "label")
+                if (length(single))
+                    mt$setNote("single", sprintf(txt("boot", "micom_single"), paste(single, collapse = ", ")))
+                out$micom <- mi
+            }
+
+            # Path differences
+            # ES: Diferencias de rutas
+            if (is.null(s[["mgd"]])) {
+                why <- sprintf(txt("footnotes", "mga_error"), paste(s$mgd_error, collapse = "; "))
+                notcomp(why, list(dt))
+                out$reason <- why
+                out$error <- s$mgd_error
+                return(out)
+            }
+            tab <- .pl_mgd_adjust(s[["mgd"]]$table, adjust)
+            tab$decision <- .pl_mgd_decision(tab$p_perm, tab$p_hens)
+            names_j <- vapply(seq_len(nrow(paths)), function(j)
+                paste(model$cmap[[paths$to[j]]], "~", model$cmap[[paths$from[j]]]), "")
+            tab$j <- match(tab$name, names_j)
+            tab$label <- paste(paths$from[tab$j], "→", paths$to[tab$j])
+            tab$comparison <- vapply(tab$pair, cmp_of, "")
+            tab$l1 <- unname(mg$labels[tab$g1])
+            tab$l2 <- unname(mg$labels[tab$g2])
+            for (k in seq_len(nrow(tab)))
+                dt$setRow(rowKey = paste(tab$pair[k], tab$j[k], sep = "::"), values = list(
+                    est1 = tab$est1[k], est2 = tab$est2[k], diff = tab$diff[k], pPerm = tab$p_perm[k],
+                    pOne = tab$p_one[k], pHens = tab$p_hens[k], decision = lab(tab$decision[k])))
+            dt$setNote("mgd", sprintf(txt("boot", "mgd_note"), perms, s[["mgd"]]$admissible_perm, boots, seed, round(s$s_mgd)))
+            dt$setNote("smartpls", txt("boot", "mgd_smartpls"))
+            if (adjust != "none")
+                dt$setNote("adjust", sprintf(txt("boot", "mgd_adjust"), nrow(tab), lab(paste0("adjust_", adjust))))
+            # Paths that involve a construct without compositional invariance
+            # in that pair of groups (MICOM step 2).
+            # ES: Rutas con un constructo sin invarianza composicional.
+            if (!is.null(out$micom)) {
+                bad <- out$micom[out$micom$verdict == "inv_none", , drop = FALSE]
+                if (nrow(bad)) {
+                    parts <- vapply(unique(bad$pair), function(k)
+                        sprintf("%s (%s)", paste(bad$label[bad$pair == k], collapse = ", "), cmp_of(k)), "")
+                    out$fail_micom <- sprintf(txt("boot", "mgd_micom_fail"), paste(parts, collapse = "; "))
+                    dt$setNote("micom", out$fail_micom)
+                }
+            }
+            out$mgd <- tab
+            out
+        },
+
+        # Interpretation of the multigroup analysis: the groups, MICOM per
+        # pair of groups, the path differences and the cautions.
+        # ES: Interpretación del análisis multigrupo.
+        .mgaLines = function(txt, mga) {
+            if (is.null(mga)) return(character(0))
+            if (!is.null(mga$reason) && is.null(mga$mgd)) return(sprintf(txt("mga_none"), mga$reason))
+            out <- sprintf(txt("mga_groups"), mga$group,
+                           paste(sprintf("%s (n = %d)", mga$labels, mga$n), collapse = ", "))
+            if (!is.null(mga$micom)) {
+                mi <- mga$micom
+                for (cmp in unique(mi$comparison)) {
+                    r <- mi[mi$comparison == cmp, , drop = FALSE]
+                    none <- r$label[r$verdict == "inv_none"]
+                    part <- r$label[r$verdict == "inv_partial"]
+                    out <- c(out, if (length(none)) sprintf(txt("micom_none"), cmp, paste(none, collapse = ", "))
+                                  else if (length(part)) sprintf(txt("micom_partial"), cmp, paste(part, collapse = ", "))
+                                  else sprintf(txt("micom_full"), cmp))
+                }
+            } else out <- c(out, sprintf(txt("micom_not"), mga$why_micom))
+            t <- mga$mgd
+            tests <- c(mgd_both = "mgd_tests_both", mgd_perm_only = "mgd_tests_perm", mgd_hens_only = "mgd_tests_hens")
+            for (cmp in unique(t$comparison)) {
+                r <- t[t$comparison == cmp, , drop = FALSE]
+                sig <- r$decision != "mgd_none"
+                if (!any(sig)) out <- c(out, sprintf(txt("mgd_no_diff"), cmp))
+                for (k in which(sig))
+                    out <- c(out, sprintf(txt("mgd_sig"), cmp, r$label[k], txt(tests[[r$decision[k]]]),
+                                          .pl_fmt(r$est1[k]), r$l1[k], .pl_fmt(r$est2[k]), r$l2[k]))
+            }
+            dis <- t$decision %in% c("mgd_perm_only", "mgd_hens_only")
+            if (any(dis)) {
+                many <- length(unique(t$comparison)) > 1
+                items <- if (many) sprintf("%s (%s)", t$label[dis], t$comparison[dis]) else t$label[dis]
+                out <- c(out, sprintf(txt("mgd_disagree"), paste(items, collapse = ", ")))
+            }
+            if (!is.null(mga$fail_micom)) out <- c(out, mga$fail_micom)
+            if (min(mga$n) < 100) out <- c(out, sprintf(txt("mgd_small"), min(mga$n)))
+            if (mga$adjust == "none" && nrow(t) > 1) out <- c(out, sprintf(txt("mgd_multiple"), nrow(t)))
+            c(out, txt("mga_caution"), txt("mga_next"))
         },
 
         # ---------------------------------------------------------------------
@@ -1348,7 +1578,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación: qué ocurrió, por qué, qué significa, qué hacer.
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
-                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, ipm = NULL) {
+                                   model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, ipm = NULL,
+                                   mga = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1502,12 +1733,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             dlines <- private$.mediationLines(txt, med)
             plines <- private$.predictLines(txt, prd)
             ilines <- private$.ipmaLines(txt, ipm)
+            glines <- private$.mgaLines(txt, mga)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
                            if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
                            if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
                            if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
+                           if (length(glines)) .pl_html_block(glines, txt("title_mga")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
@@ -1713,7 +1946,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL) {
+                               model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, mga = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -1756,6 +1989,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(prd$metrics)) {
                 m <- prd$metrics
                 findings <- c(findings, sprintf(txt("predict"), sum(m$q2 > 0), nrow(m), sum(m$pls_better)))
+            }
+            if (!is.null(mga$mgd)) {
+                both <- sum(mga$mgd$decision == "mgd_both")
+                findings <- c(findings, if (!is.null(mga$micom))
+                    sprintf(txt("mga"), mga$group, sum(mga$micom$verdict != "inv_none"), nrow(mga$micom), both, nrow(mga$mgd))
+                else sprintf(txt("mga_no_micom"), mga$group, both, nrow(mga$mgd)))
             }
             if (!is.null(omf$table)) {
                 e <- omf$table[omf$table$model == "estimated", ]
@@ -1847,6 +2086,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
             self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
                                                                  txt("predict_power"), txt("cvpat"))))
+            self$results$mgaGuide$setContent(.pl_html_block(c(txt("mga"), txt("micom"), txt("mgd"), txt("mga_cautions"))))
             self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 
@@ -1964,6 +2204,34 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             as.integer(self$options$bootSeed)),
                     "Reduce(`+`, lapply(pred, function(p) p$Prediction_metrics[, c(\"Q2_predict\", \"RMSE_target\", \"RMSE_benchmark\", \"MAE_target\", \"MAE_benchmark\")])) / length(pred)",
                     "# CVPAT against IA and LM: paired t test on the per-case losses of the same residuals (see R/predict.R in PLSsemLab)")
+            }
+            gv <- self$options$groupVar
+            if (self$options$mgaRun && !is.null(gv) && nzchar(gv) && is.null(model$hocs)) {
+                # The same internal group names as the module (G01..Gk in the
+                # order of the levels), so the sign of each difference matches.
+                # ES: Los mismos nombres internos de grupo que el módulo.
+                lev <- .pl_mga_levels(self$data[[gv]])
+                perms <- as.integer(self$options$mgaPerm)
+                seed <- as.integer(self$options$bootSeed)
+                code <- c(code, "",
+                    "# Multigroup analysis: the model in each group; groups named G01..Gk in the order of the levels",
+                    sprintf("lev <- c(%s)", paste(q(lev), collapse = ", ")),
+                    sprintf("k <- match(as.character(data[[%s]])[as.integer(rownames(d))], lev)", q(gv)),
+                    "dg <- d[!is.na(k), ]",
+                    "dg$PLgroup <- sprintf(\"G%02d\", k[!is.na(k)])",
+                    sprintf("fit_g <- cSEM::csem(dg, model, .id = \"PLgroup\", .PLS_modes = %s, .disattenuate = %s,", modes,
+                            if (self$options$estimator == "plsc") "TRUE" else "FALSE"),
+                    sprintf("                    .PLS_weight_scheme_inner = \"%s\")", self$options$innerScheme),
+                    if (is.null(.pl_micom_reason(self$options$estimator, self$options$indicatorScale)))
+                        sprintf("cSEM::testMICOM(fit_g, .R = %d, .seed = %d)", perms, seed),
+                    sprintf("mgd <- cSEM::testMGD(fit_g, .approach_mgd = c(\"Henseler\", \"Chin\"), .R_permutation = %d, .R_bootstrap = %d, .seed = %d,",
+                            perms, as.integer(self$options$mgaBoot), seed),
+                    sprintf("                     .parameters_to_compare = \"%s\")", gsub("\n", "\\\\n", .pl_mga_compare(paths, model$cmap))),
+                    "mgd$Chin$P_value$none  # permutation p",
+                    "lapply(mgd$Henseler$P_value$none, function(P) 2 * pmin(P, 1 - P))  # PLS-MGA, two-sided p",
+                    if (self$options$mgaAdjust != "none")
+                        sprintf("# correction: stats::p.adjust(p, method = \"%s\") over every path and pair, each test on its own",
+                                self$options$mgaAdjust))
             }
             if (self$options$fitTest && is.null(.pl_fit_reason(model, model$hocs, TRUE))) {
                 args <- sprintf(".R = %d, .seed = %d, .alpha = %s", as.integer(self$options$fitReps),

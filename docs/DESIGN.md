@@ -425,7 +425,7 @@ la fase 1, que es la base de todas las demás.
 | 4 | Constructos de segundo orden e interacciones de dos vías, con pendientes simples, floodlight y Johnson-Neyman | D3 | Hecho: los dos modelos del E2 corren completos y coinciden con cSEM; lo no calculable sale como "No computable" con su razón |
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Hecho: valores y valores críticos iguales a `testOMF()`; explicación de por qué no hay chi-cuadrado ML ni CFI/RMSEA |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Hecho: iguales a `predict()`, `testCVPAT()` y `doIPMA()` de cSEM; rango de la escala para IPMA; CVPAT frente a IA, LM y un modelo competidor |
-| 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Comparación por tipo de servicio del E6 reproducida |
+| 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Hecho: iguales a `testMICOM()` y `testMGD()`; comparación por tipo de servicio del E6 reproducida exactamente (con el orden de grupos del E6); p bilateral de PLS-MGA y nota sobre la regla .05/.95 de SmartPLS |
 | 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
 | 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |
 | 10 | Versión 1.0.0 y envío a la biblioteca de jamovi | — | Revisión de jamovi atendida |

@@ -27,7 +27,7 @@ name: plssem
 title: PLS-SEM
 menuGroup: PLS-SEM Lab
 menuTitle: PLS-SEM
-version: '0.6.1'
+version: '0.7.0'
 jas: '1.2'
 
 description:
@@ -361,6 +361,53 @@ options:
     title: Maximum
     type: Number
     default: 7
+
+  # Multigroup analysis (phase 7): MICOM and the path differences between
+  # the groups of a grouping variable. Long: its own Run checkbox; the seed
+  # is the bootstrap's.
+  # ES: Análisis multigrupo (fase 7): MICOM y diferencias de rutas entre los
+  # grupos de una variable de agrupación. Largo: su propia casilla Ejecutar;
+  # la semilla es la del bootstrap.
+  - name: groupVar
+    title: Grouping Variable
+    type: Variable
+    suggested:
+      - nominal
+      - ordinal
+    permitted:
+      - factor
+    default:
+
+  - name: mgaRun
+    title: Run multigroup analysis
+    type: Bool
+    default: false
+
+  - name: mgaPerm
+    title: Permutations (MICOM and permutation test)
+    type: Integer
+    min: 99
+    max: 100000
+    default: 1000
+
+  - name: mgaBoot
+    title: Bootstrap resamples per group (PLS-MGA)
+    type: Integer
+    min: 99
+    max: 100000
+    default: 1000
+
+  - name: mgaAdjust
+    title: Correction for multiple comparisons
+    type: List
+    options:
+      - name: none
+        title: None
+      - name: holm
+        title: Holm
+      - name: bonferroni
+        title: Bonferroni
+    default: none
 
   # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
   # cannot show).

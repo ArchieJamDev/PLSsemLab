@@ -488,3 +488,35 @@
     if (!is.finite(p)) return("= NA")
     if (p < 0.001) "< 0.001" else paste("=", formatC(p, format = "f", digits = 3))
 }
+
+# -----------------------------------------------------------------------------
+# .pl_rng_guard()
+#
+# Sets R's default random number generator (Mersenne-Twister, Inversion,
+# Rejection) and returns a function that restores the previous generator and
+# its state. cSEM's bootstrap seeds future's L'Ecuyer-CMRG streams and leaves
+# that generator set in the session; jamovi keeps one R session, so after a
+# bootstrap every set.seed() + sample() of cSEM (MICOM, the permutation test,
+# the cross-validation folds) would give other draws than the same call in a
+# fresh R, and than the equivalent R code of the report. Every resampling
+# routine of the module runs under this guard.
+# ES: Fija el generador aleatorio por defecto de R y devuelve una función que
+# restaura el anterior y su estado. El bootstrap de cSEM deja fijado
+# L'Ecuyer-CMRG en la sesión; jamovi mantiene una sola sesión de R, así que
+# después de un bootstrap cada set.seed() + sample() de cSEM daría otras
+# extracciones que la misma llamada en un R nuevo y que el código R
+# equivalente. Toda rutina de remuestreo del módulo corre con esta guarda.
+# -----------------------------------------------------------------------------
+.pl_rng_guard <- function() {
+    env <- globalenv()
+    had <- exists(".Random.seed", envir = env, inherits = FALSE)
+    old_seed <- if (had) get(".Random.seed", envir = env, inherits = FALSE) else NULL
+    old_kind <- RNGkind()
+    RNGkind("Mersenne-Twister", "Inversion", "Rejection")
+    function() {
+        RNGkind(old_kind[1], old_kind[2], old_kind[3])
+        if (had) assign(".Random.seed", old_seed, envir = env)
+        else if (exists(".Random.seed", envir = env, inherits = FALSE)) rm(".Random.seed", envir = env)
+        invisible(NULL)
+    }
+}

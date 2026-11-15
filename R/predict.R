@@ -45,6 +45,8 @@
 # ES: Residuos de validación cruzada, por repetición, para PLS, LM, IA y ALT.
 .pl_cv_residuals <- function(fit, d, refit, folds, reps, seed, alt_refit = NULL,
                              checkpoint = function() NULL) {
+    restore_rng <- .pl_rng_guard()
+    on.exit(restore_rng(), add = TRUE)
     ids <- rownames(d)
     out <- list()
     inadmissible <- 0

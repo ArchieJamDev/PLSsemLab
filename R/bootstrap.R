@@ -177,6 +177,8 @@
 # ES: Corre los bloques y llama a progress(hechas, total) después de cada
 # uno (quien llama envía los resultados y revisa si hay que reiniciar).
 .pl_run_bootstrap <- function(fit, funs, reps, seed, progress = NULL) {
+    restore_rng <- .pl_rng_guard()
+    on.exit(restore_rng(), add = TRUE)
     n_blocks <- ceiling(reps / .PL_BLOCK)
     objs <- list()
     errors <- character(0)

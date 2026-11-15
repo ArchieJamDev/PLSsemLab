@@ -283,4 +283,44 @@ refs:
         issue: '9'
         pages: '1865-1886'
         url: https://doi.org/10.1108/IMDS-10-2015-0449
+
+    henseler_2016b:
+        type: 'article'
+        author: 'Henseler, J., Ringle, C. M., & Sarstedt, M.'
+        year: 2016
+        title: 'Testing measurement invariance of composites using partial least squares'
+        publisher: 'International Marketing Review'
+        volume: '33'
+        issue: '3'
+        pages: '405-431'
+        url: https://doi.org/10.1108/IMR-09-2014-0304
+
+    chin_2010:
+        type: 'chapter'
+        author: 'Chin, W. W., & Dibbern, J.'
+        year: 2010
+        title: 'An introduction to a permutation based procedure for multi-group PLS analysis: Results of tests of differences on simulated data and a cross cultural analysis of the sourcing of information system services between Germany and the USA'
+        publisher: 'In V. Esposito Vinzi, W. W. Chin, J. Henseler, & H. Wang (Eds.), Handbook of partial least squares (pp. 171-193). Springer'
+        url: https://doi.org/10.1007/978-3-540-32827-8_8
+
+    henseler_2009:
+        type: 'article'
+        author: 'Henseler, J., Ringle, C. M., & Sinkovics, R. R.'
+        year: 2009
+        title: 'The use of partial least squares path modeling in international marketing'
+        publisher: 'Advances in International Marketing'
+        volume: '20'
+        pages: '277-319'
+        url: https://doi.org/10.1108/S1474-7979(2009)0000020014
+
+    sarstedt_2011:
+        type: 'article'
+        author: 'Sarstedt, M., Henseler, J., & Ringle, C. M.'
+        year: 2011
+        title: 'Multigroup analysis in partial least squares (PLS) path modeling: Alternative methods and empirical results'
+        publisher: 'Advances in International Marketing'
+        volume: '22'
+        pages: '195-218'
+        url: https://doi.org/10.1108/S1474-7979(2011)0000022012
+
 ...

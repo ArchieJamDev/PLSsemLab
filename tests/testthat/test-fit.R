@@ -34,7 +34,7 @@ test_that("overall fit equals cSEM::testOMF() for the estimated and the saturate
     f <- cSEM::csem(d, model, .PLS_modes = list(IMAG = "modeA", SAT = "modeA", LOY = "modeA"),
                     .disattenuate = FALSE)
     for (sat in c(FALSE, TRUE)) {
-        t <- cSEM::testOMF(f, .R = 99, .seed = 7, .alpha = 0.05, .saturated = sat)
+        t <- withDefaultRng(cSEM::testOMF(f, .R = 99, .seed = 7, .alpha = 0.05, .saturated = sat))
         rows <- tab[(if (sat) 5:8 else 1:4), ]
         expect_equal(rows$value, unname(t$Test_statistic[c("SRMR", "dG", "dL", "dML")]), tolerance = 1e-10)
         expect_equal(rows$critical, unname(t$Critical_value[c("SRMR", "dG", "dL", "dML"), 1]), tolerance = 1e-10)

@@ -36,7 +36,7 @@ test_that("PLSpredict equals cSEM::predict with one repetition", {
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 10, predictReps = 1, bootSeed = 11)
     tab <- a$results$predict$asDF
     f <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
-    p <- suppressWarnings(cSEM::predict(f, .benchmark = "lm", .cv_folds = 10, .r = 1, .seed = 11))$Prediction_metrics
+    p <- withDefaultRng(suppressWarnings(cSEM::predict(f, .benchmark = "lm", .cv_folds = 10, .r = 1, .seed = 11)))$Prediction_metrics
     p <- p[match(tab$indicator, p$Name), ]
     expect_equal(tab$q2, p$Q2_predict, tolerance = 1e-8)
     expect_equal(tab$rmsePls, p$RMSE_target, tolerance = 1e-8)
@@ -52,7 +52,7 @@ test_that("CVPAT of two models equals cSEM::testCVPAT", {
     f1 <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
     alt <- sub("LOY ~ SAT + IMAG", "LOY ~ SAT", s$syntax, fixed = TRUE)
     f2 <- cSEM::csem(s$d, alt, .PLS_modes = s$modes, .disattenuate = FALSE)
-    ref <- suppressWarnings(cSEM::testCVPAT(f1, f2, .seed = 11, .cv_folds = 10))
+    ref <- withDefaultRng(suppressWarnings(cSEM::testCVPAT(f1, f2, .seed = 11, .cv_folds = 10)))
     refit <- function(data, syn) cSEM::csem(data, syn, .PLS_modes = s$modes, .disattenuate = FALSE)
     cv <- PLSsemLab:::.pl_cv_residuals(f1, s$d, function(x) refit(x, s$syntax), 10, 1, 11,
                                        alt_refit = function(x) refit(x, alt))
@@ -81,7 +81,7 @@ test_that("CVPAT against a competing model through the options equals cSEM::test
     f1 <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
     f2 <- cSEM::csem(s$d, sub("LOY ~ SAT + IMAG", "LOY ~ SAT", s$syntax, fixed = TRUE), .PLS_modes = s$modes,
                      .disattenuate = FALSE)
-    ref <- suppressWarnings(cSEM::testCVPAT(f1, f2, .seed = 11, .cv_folds = 10))
+    ref <- withDefaultRng(suppressWarnings(cSEM::testCVPAT(f1, f2, .seed = 11, .cv_folds = 10)))
     expect_equal(r$t, -unname(ref$test_statistic), tolerance = 1e-8)
     expect_equal(r$p, unname(ref$p_value), tolerance = 1e-8)
     expect_equal(nrow(tab), 9)

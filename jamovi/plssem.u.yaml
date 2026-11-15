@@ -294,7 +294,7 @@ children:
           - type: TextBox
             name: bootSeed
             format: number
-            enable: (bootstrap || fitTest || predictRun)
+            enable: (bootstrap || fitTest || predictRun || mgaRun)
           - type: TextBox
             name: ciLevel
             format: number
@@ -381,6 +381,40 @@ children:
             name: ipmaMax
             format: number
             enable: (ipma && ipmaRange:manual)
+  - type: CollapseBox
+    label: Multigroup Analysis
+    collapsed: true
+    children:
+      - type: VariableSupplier
+        persistentItems: false
+        stretchFactor: 1
+        children:
+          - type: TargetLayoutBox
+            label: Grouping Variable
+            children:
+              - type: VariablesListBox
+                name: groupVar
+                maxItemCount: 1
+                isTarget: true
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: mgaRun
+          - type: TextBox
+            name: mgaPerm
+            format: number
+            enable: (mgaRun)
+          - type: TextBox
+            name: mgaBoot
+            format: number
+            enable: (mgaRun)
+          - type: ComboBox
+            name: mgaAdjust
+            enable: (mgaRun)
+          - type: Label
+            label: The seed is the one in the Bootstrap box.
   - type: CollapseBox
     label: Plots
     collapsed: true

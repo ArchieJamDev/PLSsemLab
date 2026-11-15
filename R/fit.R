@@ -48,6 +48,8 @@
 # bootstrap admisibles al menos tan grandes como el observado + 1) /
 # (valores admisibles + 1), que nunca es 0.
 .pl_fit_test <- function(fit, reps, seed, level, checkpoint = function() NULL) {
+    restore_rng <- .pl_rng_guard()
+    on.exit(restore_rng(), add = TRUE)
     rows <- list()
     adm <- c()
     for (sat in c(FALSE, TRUE)) {

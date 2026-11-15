@@ -25,7 +25,7 @@ directFit <- function(data, syntax, estimator) {
 }
 
 pathTable <- function(a) {
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     stats::setNames(p$estimate, paste(p$from, p$to, sep = "->"))
 }
 
@@ -51,12 +51,12 @@ test_that("PLS estimates of the extended model equal a direct cSEM call", {
         ft <- strsplit(nm, "->", fixed = TRUE)[[1]]
         expect_equal(unname(got[nm]), ref$Path_estimates[ft[2], ft[1]], tolerance = 1e-10, info = nm)
     }
-    m <- a$results$measurement$asDF
+    m <- a$results$measurementSection$measurement$asDF
     for (k in seq_len(nrow(m))) {
         expect_equal(m$loading[k], ref$Loading_estimates[m$construct[k], m$indicator[k]], tolerance = 1e-10)
         expect_equal(m$weight[k], ref$Weight_estimates[m$construct[k], m$indicator[k]], tolerance = 1e-10)
     }
-    r2 <- a$results$r2$asDF
+    r2 <- a$results$structuralSection$r2$asDF
     expect_equal(r2$r2, unname(ref$R2[r2$construct]), tolerance = 1e-10)
 
     # Values of the design experiments (E1/E3), rounded to 3 decimals.
@@ -93,7 +93,7 @@ test_that("the report blocks are filled and the reproducibility code runs", {
     a <- runPlssem(data, simpleModel(), showGuides = TRUE)
     for (name in c("keySummary", "choicesGuide", "modelGuide", "measurementGuide", "pathsGuide",
                    "interpretation", "reproducibility"))
-        expect_true(nzchar(a$results[[name]]$content), info = name)
+        expect_true(nzchar(a$.__enclos_env__$private$.item(name)$content), info = name)
     expect_false(a$results$intro$visible)
 
     # The equivalent R code reproduces the module's path coefficients.
@@ -102,5 +102,5 @@ test_that("the report blocks are filled and the reproducibility code runs", {
     env$data <- data
     eval(parse(text = reproCode(a)), envir = env)
     p <- env$fit$Estimates$Path_estimates
-    expect_equal(sort(unname(p[p != 0])), sort(a$results$paths$asDF$estimate), tolerance = 1e-10)
+    expect_equal(sort(unname(p[p != 0])), sort(a$results$structuralSection$paths$asDF$estimate), tolerance = 1e-10)
 })

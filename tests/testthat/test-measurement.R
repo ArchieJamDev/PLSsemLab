@@ -49,7 +49,7 @@ test_that("reliability, AVE, HTMT and VIF of the extended model equal direct cSE
     ref <- cSEM::csem(d, extendedSyntax, .disattenuate = FALSE)
     ref_c <- cSEM::csem(d, extendedSyntax, .disattenuate = TRUE)
 
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     multi <- c("COMP", "LIKE", "CUSL")
     expect_equal(rel$construct, c("COMP", "LIKE", "CUSA", "CUSL"))
     expect_equal(byRow(rel, "alpha")[multi], cSEM::calculateRhoT(ref)[multi], tolerance = 1e-10)
@@ -62,7 +62,7 @@ test_that("reliability, AVE, HTMT and VIF of the extended model equal direct cSE
     expect_equal(round(unlist(rel[1, c("alpha", "rhoA", "rhoC", "ave")]), 3),
                  c(alpha = 0.776, rhoA = 0.786, rhoC = 0.869, ave = 0.688))
 
-    h <- a$results$htmt$asDF
+    h <- a$results$measurementSection$htmt$asDF
     href <- cSEM::calculateHTMT(ref)$htmts
     h2ref <- cSEM::calculateHTMT(ref, .type_htmt = "htmt2")$htmts
     expect_equal(nrow(h), 6)
@@ -72,7 +72,7 @@ test_that("reliability, AVE, HTMT and VIF of the extended model equal direct cSE
     }
     expect_equal(round(h$htmt[h$c1 == "COMP" & h$c2 == "LIKE"], 3), 0.780)
 
-    v <- a$results$vif$asDF
+    v <- a$results$measurementSection$vif$asDF
     vref <- cSEM::calculateVIFModeB(ref)
     expect_equal(nrow(v), 21)
     for (k in seq_len(nrow(v)))
@@ -90,7 +90,7 @@ test_that("with PLSc, rho_A and rho_C come from the consistent estimation", {
       CUSL =~ cusl_1 + cusl_2 + cusl_3
       CUSA ~ COMP + LIKE
       CUSL ~ COMP + LIKE + CUSA", .disattenuate = TRUE)
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     multi <- c("COMP", "LIKE", "CUSL")
     expect_equal(byRow(rel, "rhoA")[multi], ref$Estimates$Reliabilities[multi], tolerance = 1e-10)
     expect_equal(byRow(rel, "rhoC")[multi], cSEM::calculateRhoC(ref)[multi], tolerance = 1e-10)
@@ -98,26 +98,26 @@ test_that("with PLSc, rho_A and rho_C come from the consistent estimation", {
 
 test_that("a single-indicator construct keeps its row, marked as not computable", {
     a <- runPlssem(corpRepData(), simpleModel())
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     cusa <- rel[rel$construct == "CUSA", ]
     expect_equal(cusa$assessment, "Not computable")
     expect_true(is.na(cusa$rhoC) || identical(cusa$rhoC, ""))
     # The HTMT of CUSA is shown, with a footnote: it is a lower bound.
     # ES: El HTMT de CUSA se muestra, con una nota: es un límite inferior.
-    h <- a$results$htmt$asDF
+    h <- a$results$measurementSection$htmt$asDF
     expect_true(all(is.finite(h$htmt)))
 })
 
 test_that("tables keep their shape and hide only when they do not apply", {
     a <- runPlssem(corpRepData(), simpleModel())
-    expect_false(a$results$vif$visible)
-    expect_false(a$results$fornell$visible)
-    expect_true(a$results$htmt$visible)
+    expect_false(a$results$measurementSection$vif$visible)
+    expect_false(a$results$measurementSection$fornell$visible)
+    expect_true(a$results$measurementSection$htmt$visible)
 
     b <- runPlssem(corpRepData(), simpleModel(), fornellLarcker = TRUE)
-    fl <- b$results$fornell$asDF
+    fl <- b$results$measurementSection$fornell$asDF
     expect_equal(dim(fl), c(4, 5))
-    ave <- byRow(b$results$reliability$asDF, "ave")
+    ave <- byRow(b$results$measurementSection$reliability$asDF, "ave")
     expect_equal(fl$c1[1], sqrt(ave[["COMP"]]), tolerance = 1e-10)
 })
 
@@ -125,9 +125,9 @@ test_that("a reverse-coded indicator is caught: negative alpha and HTMT not comp
     data <- corpRepData()
     data$comp_2 <- 8 - data$comp_2
     a <- runPlssem(data, simpleModel())
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     expect_lt(rel$alpha[rel$construct == "COMP"], 0)
-    h <- a$results$htmt$asDF
+    h <- a$results$measurementSection$htmt$asDF
     comp <- h[h$c1 == "COMP" | h$c2 == "COMP", ]
     expect_true(all(comp$assessment == "Not computable"))
     expect_false(any(grepl("monotrait|Intra-block", noticesOf(a))))
@@ -138,9 +138,9 @@ test_that("a model without reflective constructs explains why there is no reliab
               formative = list(block("QUAL", paste0("qual_", 1:8)), block("PERF", paste0("perf_", 1:5))),
               structural = list(srow("PERF", "QUAL"), srow("QUAL")))
     a <- runPlssem(corpRepData(), m)
-    expect_false(a$results$reliability$visible)
+    expect_false(a$results$measurementSection$reliability$visible)
     expect_true(any(grepl("no reflective constructs", noticesOf(a))))
-    expect_equal(nrow(a$results$vif$asDF), 13)
+    expect_equal(nrow(a$results$measurementSection$vif$asDF), 13)
 })
 
 test_that("the reproducibility code reproduces reliability, rho_A and HTMT", {
@@ -149,7 +149,7 @@ test_that("the reproducibility code reproduces reliability, rho_A and HTMT", {
     env <- new.env()
     env$data <- data
     out <- utils::capture.output(eval(parse(text = reproCode(a)), envir = env))
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     rhoC <- cSEM::calculateRhoC(env$fit, .only_common_factors = FALSE)
     expect_equal(unname(rhoC[c("C1", "C2", "C4")]), rel$rhoC[c(1, 2, 4)], tolerance = 1e-10)
     expect_equal(unname(env$fit_c$Estimates$Reliabilities[c("C1", "C2", "C4")]), rel$rhoA[c(1, 2, 4)],
@@ -160,7 +160,7 @@ test_that("the measurement report is translated", {
     withr::local_envvar(c(LANGUAGE = "es"))
     a <- runPlssem(corpRepData(), simpleModel())
     expect_match(a$results$interpretation$content, "Fiabilidad")
-    expect_equal(a$results$reliability$asDF$assessment[2], "fiabilidad satisfactoria; AVE adecuada")
+    expect_equal(a$results$measurementSection$reliability$asDF$assessment[2], "fiabilidad satisfactoria; AVE adecuada")
 })
 
 # -----------------------------------------------------------------------------
@@ -180,14 +180,14 @@ test_that("omega equals a direct one-factor CFA, continuous and ordinal", {
     comp <- data[stats::complete.cases(data[, -c(1, 2)]), paste0("comp_", 1:3)]
     for (scale in c("continuous", "ordinal")) {
         a <- runPlssem(data, simpleModel(), omegaCfa = TRUE, indicatorScale = scale)
-        rel <- a$results$reliability$asDF
+        rel <- a$results$measurementSection$reliability$asDF
         expect_equal(rel$omega[rel$construct == "COMP"], omegaDirect(comp, scale == "ordinal"),
                      tolerance = 1e-8, info = scale)
     }
     # E1 values: omega close to rho_C of consistent PLS, below rho_C of PLS.
     # ES: omega cerca de rho_C de PLSc y por debajo de rho_C de PLS.
     a <- runPlssem(data, simpleModel(), omegaCfa = TRUE)
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     expect_equal(round(rel$omega[1], 3), 0.784)
     expect_true(all(rel$rhoC[-3] > rel$omega[-3]))
     expect_match(a$results$interpretation$content, "exceeds the")
@@ -197,7 +197,7 @@ test_that("omega of a two-indicator construct is not computable, with its reason
     m <- simpleModel()
     m$reflective[[1]] <- block("COMP", c("comp_1", "comp_2"))
     a <- runPlssem(corpRepData(), m, omegaCfa = TRUE)
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     expect_true(is.na(rel$omega[1]) || identical(rel$omega[1], ""))
     expect_true(is.finite(rel$omega[2]))
 })
@@ -209,21 +209,21 @@ test_that("ordinal indicators use polychoric correlations in every criterion", {
     for (v in names(d)) d[[v]] <- ordered(d[[v]])
     ref <- cSEM::csem(d, extendedSyntax, .disattenuate = FALSE)
     expect_equal(ref$Information$Type_of_indicator_correlation, "polychoric")
-    rel <- a$results$reliability$asDF
+    rel <- a$results$measurementSection$reliability$asDF
     multi <- c("COMP", "LIKE", "CUSL")
     expect_equal(byRow(rel, "alpha")[multi], cSEM::calculateRhoT(ref)[multi], tolerance = 1e-8)
     expect_equal(byRow(rel, "rhoC")[multi], cSEM::calculateRhoC(ref)[multi], tolerance = 1e-8)
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     expect_equal(p$estimate[p$from == "QUAL" & p$to == "COMP"], ref$Estimates$Path_estimates["COMP", "QUAL"],
                  tolerance = 1e-8)
     # VIF from the polychoric correlations, not from the raw category codes.
     # ES: VIF desde las policóricas, no desde los códigos crudos.
     q <- paste0("qual_", 1:8)
-    v <- a$results$vif$asDF
+    v <- a$results$measurementSection$vif$asDF
     expect_equal(v$vif[v$construct == "QUAL"], unname(diag(solve(ref$Estimates$Indicator_VCV[q, q]))),
                  tolerance = 1e-8)
     expect_true(all(v$vif[v$construct == "QUAL"] > cSEM::calculateVIFModeB(ref)["QUAL", q]))
-    expect_match(a$results$reliability$notes$ordinal$note, "polychoric")
+    expect_match(a$results$measurementSection$reliability$notes$ordinal$note, "polychoric")
 })
 
 test_that("ordinal indicators with mean replacement are refused with the reason", {
@@ -272,6 +272,6 @@ test_that("the bundled bank data run with formative and reflective constructs", 
                           srow("LOY", "TRUST", "SAT", "COMP", "LIKE")))
     a <- runPlssem(bank, m)
     expect_true(any(grepl("3 case\\(s\\) with missing values were excluded; 672", noticesOf(a))))
-    expect_equal(nrow(a$results$vif$asDF), 20)
-    expect_equal(round(a$results$r2$asDF$r2[a$results$r2$asDF$construct == "COMP"], 3), 0.742)
+    expect_equal(nrow(a$results$measurementSection$vif$asDF), 20)
+    expect_equal(round(a$results$structuralSection$r2$asDF$r2[a$results$structuralSection$r2$asDF$construct == "COMP"], 3), 0.742)
 })

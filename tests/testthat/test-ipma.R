@@ -16,7 +16,7 @@
 
 test_that("IPMA equals cSEM::doIPMA rescaled to 0-100", {
     a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, ipmaRange = "manual", ipmaMin = 1, ipmaMax = 7)
-    tab <- a$results$ipmaTable$asDF
+    tab <- a$results$ipmaSection$ipmaTable$asDF
     env <- new.env(); env$data <- corpRepData()
     utils::capture.output(eval(parse(text = reproCode(a)), envir = env))
     ip <- cSEM::doIPMA(env$fit)
@@ -27,17 +27,17 @@ test_that("IPMA equals cSEM::doIPMA rescaled to 0-100", {
         expect_equal(tab$performance[k], 100 * (ip$Construct$Performance[[cm[[tab$construct[k]]]]] - 1) / 6,
                      tolerance = 1e-10)
     }
-    expect_equal(length(a$results$ipmaPlots$items), 2)
+    expect_equal(length(a$results$ipmaSection$ipmaPlots$items), 2)
 })
 
 test_that("IPMA with consistent PLS stays as not computable", {
     a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, estimator = "plsc")
-    expect_true(all(a$results$ipmaTable$asDF$quadrant == "Not computable"))
+    expect_true(all(a$results$ipmaSection$ipmaTable$asDF$quadrant == "Not computable"))
 })
 
 test_that("IPMA warns without the bootstrap and tests importance with it", {
     a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE)
-    expect_true("sig" %in% names(a$results$ipmaTable$notes))
+    expect_true("sig" %in% names(a$results$ipmaSection$ipmaTable$notes))
     b <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, bootstrap = TRUE, bootReps = 100, bootSeed = 1)
     expect_match(gsub("<[^>]+>", " ", b$results$interpretation$content), "Importance-performance map")
     expect_false(grepl("These priorities are untested", b$results$interpretation$content, fixed = TRUE))

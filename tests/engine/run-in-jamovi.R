@@ -21,14 +21,14 @@ o <- opts$new(reflective = list(list(label = "Like", vars = c("like_1", "like_2"
 a <- cls$new(options = o, data = d)
 a$init(); cat("init ok\n")
 a$run(); cat("run ok\n")
-print(a$results$paths$asDF)
+print(a$results$structuralSection$paths$asDF)
 theme <- list(color = c("#333333", "#6B9DE8"), fill = c("#FFFFFF", "#E6E6E6"))
 f <- function(n) get(n, envir = asNamespace("PLSsemLab"))
 cat("semPlot", format(utils::packageVersion("semPlot")), find.package("semPlot"), "\n")
 draw <- function(a, file, ...) {
-    st <- a$results$pathDiagram$state
+    st <- a$results$plotsSection$pathDiagram$state
     o <- utils::modifyList(list(diagramLayout = "treeLR", edgeLabels = TRUE, diagramCaption = TRUE, diagramTitle = ""), list(...))
-    sz <- list(width = a$results$pathDiagram$width, height = a$results$pathDiagram$height)
+    sz <- list(width = a$results$plotsSection$pathDiagram$width, height = a$results$plotsSection$pathDiagram$height)
     if (identical(o$diagramLayout, "treeTB"))
         sz <- list(width = max(560, min(1100, 62 * (diff(range(st$x_tb)) + 1.6) + 120)),
                    height = max(360, min(1100, 75 * (diff(range(st$y_tb)) + 1) + 170)))
@@ -75,7 +75,7 @@ bk <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  structural = list(list(), list("Superior", "Comp"), list(), list(), list()),
                                  bootstrap = TRUE, bootReps = 100), data = d)
 bk$init(); bk$run(); draw(bk, "diagram-bank-hoc-LR.png")
-print(bk$results$hocHtmt$asDF)
+print(bk$results$measurementSection$hocHtmt$asDF)
 # Overall fit (phase 5) on the bank model without the higher-order construct
 # ES: Ajuste global (fase 5) en el modelo bancario sin orden superior
 fb <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),
@@ -84,8 +84,8 @@ fb <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  structural = list(list("Qual"), list("Trust", "Comp"), list("Qual"), list()),
                                  fitTest = TRUE, fitReps = 199), data = d)
 fb$init(); fb$run()
-print(fb$results$fit$asDF)
-print(fb$results$fit$getCell(rowNo = 1, "value")$footnotes)
+print(fb$results$fitSection$fit$asDF)
+print(fb$results$fitSection$fit$getCell(rowNo = 1, "value")$footnotes)
 for (n in names(fb$results$items)) if (grepl("^\\.plssem", n)) print(fb$results$items[[n]]$content)
 print(try(cSEM::testOMF(cSEM::csem(cSEM::satisfaction, "A <~ sat1 + sat2\nB <~ loy1 + loy2\nB ~ A"), .R = 9)))
 it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = paste0("imag", 1:5)), list(label = "SAT", vars = paste0("sat", 1:4)),
@@ -94,7 +94,7 @@ it <- cls$new(options = opts$new(reflective = list(list(label = "IMAG", vars = p
                                  bootstrap = TRUE, bootReps = 100), data = sat)
 it$init(); it$run(); draw(it, "diagram-interaction-LR.png")
 grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), "moderation.png"), 760, 360, res = 96)
-print(f(".pl_plot_moderation")(it$results$moderationPlots$items[[1]]$state, ggplot2::theme_minimal(), theme)); grDevices::dev.off()
+print(f(".pl_plot_moderation")(it$results$structuralSection$moderationPlots$items[[1]]$state, ggplot2::theme_minimal(), theme)); grDevices::dev.off()
 cat("diagrams ok\n")
 cat("max RSS (MB):", as.numeric(sub("\\D+(\\d+).*", "\\1", system(paste("grep VmHWM /proc", Sys.getpid(), "status", sep = "/"), intern = TRUE))) / 1024, "\n")
 
@@ -107,13 +107,13 @@ p6 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  bootstrap = TRUE, bootReps = 200, predictRun = TRUE, predictReps = 3,
                                  cvpatDrop = list("Comp \u2192 Loy"), ipma = TRUE), data = d)
 p6$init(); p6$run()
-print(p6$results$mediation$asDF)
-print(p6$results$predict$asDF)
-print(p6$results$cvpat$asDF)
-print(p6$results$ipmaTable$asDF)
+print(p6$results$structuralSection$mediation$asDF)
+print(p6$results$predictSection$predict$asDF)
+print(p6$results$predictSection$cvpat$asDF)
+print(p6$results$ipmaSection$ipmaTable$asDF)
 for (n in names(p6$results$items)) if (grepl("^\\.plssem", n)) print(p6$results$items[[n]]$content)
 grDevices::png(file.path(Sys.getenv("OUT", "/tmp/out"), "ipma.png"), 560, 420, res = 96)
-item <- p6$results$ipmaPlots$get(key = "Loy")
+item <- p6$results$ipmaSection$ipmaPlots$get(key = "Loy")
 print(PLSsemLab:::.pl_plot_ipma(item$state, ggplot2::theme_classic(), list(color = c("#333333", "#3E6DA9"))))
 grDevices::dev.off()
 cat("phase 6 ok\n")
@@ -128,8 +128,8 @@ p7 <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  groupVar = "gender", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, mgaAdjust = "holm"), data = d)
 t7 <- system.time({ p7$init(); p7$run() })
 print(t7)
-print(p7$results$mgaGroups$asDF)
-print(p7$results$micom$asDF)
-print(p7$results$mga$asDF)
+print(p7$results$mgaSection$mgaGroups$asDF)
+print(p7$results$mgaSection$micom$asDF)
+print(p7$results$mgaSection$mga$asDF)
 for (n in names(p7$results$items)) if (grepl("^\\.plssem", n)) print(p7$results$items[[n]]$content)
 cat("phase 7 ok\n")

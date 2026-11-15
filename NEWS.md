@@ -1,4 +1,12 @@
-# PLSsemLab 0.7.1 (development)
+# PLSsemLab 0.7.2 (development)
+
+* The report is organised in sections with headings, so the reader can find
+  each part: Measurement model, Structural model, Overall model fit,
+  Out-of-sample prediction, Importance-performance map, Multigroup analysis
+  and Plots (jamovi Groups; the optional sections appear only when they
+  are run).
+
+# PLSsemLab 0.7.1
 
 * Fix: ticking Run multigroup analysis in jamovi stopped with "rowKey not
   found". jamovi runs `.init()` with the header of the data only (no rows),

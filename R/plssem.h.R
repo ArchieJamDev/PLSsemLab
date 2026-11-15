@@ -605,48 +605,13 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         keySummary = function() private$.items[["keySummary"]],
         bootStatus = function() private$.items[["bootStatus"]],
         choicesGuide = function() private$.items[["choicesGuide"]],
-        modelGuide = function() private$.items[["modelGuide"]],
-        model = function() private$.items[["model"]],
-        measurementGuide = function() private$.items[["measurementGuide"]],
-        measurement = function() private$.items[["measurement"]],
-        reliabilityGuide = function() private$.items[["reliabilityGuide"]],
-        reliability = function() private$.items[["reliability"]],
-        htmtGuide = function() private$.items[["htmtGuide"]],
-        htmt = function() private$.items[["htmt"]],
-        fornell = function() private$.items[["fornell"]],
-        vifGuide = function() private$.items[["vifGuide"]],
-        vif = function() private$.items[["vif"]],
-        pathsGuide = function() private$.items[["pathsGuide"]],
-        paths = function() private$.items[["paths"]],
-        r2 = function() private$.items[["r2"]],
-        hocGuide = function() private$.items[["hocGuide"]],
-        hocMeasurement = function() private$.items[["hocMeasurement"]],
-        hocReliability = function() private$.items[["hocReliability"]],
-        hocHtmt = function() private$.items[["hocHtmt"]],
-        structuralGuide = function() private$.items[["structuralGuide"]],
-        f2 = function() private$.items[["f2"]],
-        vifStruct = function() private$.items[["vifStruct"]],
-        effects = function() private$.items[["effects"]],
-        mediationGuide = function() private$.items[["mediationGuide"]],
-        mediation = function() private$.items[["mediation"]],
-        moderationGuide = function() private$.items[["moderationGuide"]],
-        simpleSlopes = function() private$.items[["simpleSlopes"]],
-        moderationPlots = function() private$.items[["moderationPlots"]],
-        fitGuide = function() private$.items[["fitGuide"]],
-        fit = function() private$.items[["fit"]],
-        predictGuide = function() private$.items[["predictGuide"]],
-        predict = function() private$.items[["predict"]],
-        cvpat = function() private$.items[["cvpat"]],
-        ipmaGuide = function() private$.items[["ipmaGuide"]],
-        ipmaTable = function() private$.items[["ipmaTable"]],
-        ipmaPlots = function() private$.items[["ipmaPlots"]],
-        mgaGuide = function() private$.items[["mgaGuide"]],
-        mgaGroups = function() private$.items[["mgaGroups"]],
-        micom = function() private$.items[["micom"]],
-        mga = function() private$.items[["mga"]],
-        pathDiagram = function() private$.items[["pathDiagram"]],
-        loadingsPlot = function() private$.items[["loadingsPlot"]],
-        htmtPlot = function() private$.items[["htmtPlot"]],
+        measurementSection = function() private$.items[["measurementSection"]],
+        structuralSection = function() private$.items[["structuralSection"]],
+        fitSection = function() private$.items[["fitSection"]],
+        predictSection = function() private$.items[["predictSection"]],
+        ipmaSection = function() private$.items[["ipmaSection"]],
+        mgaSection = function() private$.items[["mgaSection"]],
+        plotsSection = function() private$.items[["plotsSection"]],
         cacheStore = function() private$.items[["cacheStore"]],
         fitCacheStore = function() private$.items[["fitCacheStore"]],
         predictCacheStore = function() private$.items[["predictCacheStore"]],
@@ -680,1562 +645,1674 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="choicesGuide",
                 title="About your choices",
                 visible="(showChoicesGuide)"))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="modelGuide",
-                title="How to read the model summary",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="model",
-                title="Model summary",
-                rows=0,
-                refs=list(
-                    "csem_pkg",
-                    "hair_2021"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="measurement", 
-                        `title`="Measurement model", 
-                        `type`="text"),
-                    list(
-                        `name`="indicators", 
-                        `title`="Indicators", 
-                        `type`="integer"),
-                    list(
-                        `name`="role", 
-                        `title`="Role", 
-                        `type`="text"),
-                    list(
-                        `name`="predictors", 
-                        `title`="Predicted by", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="measurementGuide",
-                title="How to read loadings and weights",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="measurement",
-                title="Loadings and weights",
-                rows=0,
-                refs=list(
-                    "tenenhaus_2005",
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="indicator", 
-                        `title`="Indicator", 
-                        `type`="text"),
-                    list(
-                        `name`="loading", 
-                        `title`="Loading", 
-                        `type`="number"),
-                    list(
-                        `name`="loadLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Loading CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="loadUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Loading CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weight", 
-                        `title`="Weight", 
-                        `type`="number"),
-                    list(
-                        `name`="weightLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Weight CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weightUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Weight CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weightP", 
-                        `title`="p (weight)", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `visible`="(bootstrap)"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="reliabilityGuide",
-                title="How to read reliability and convergent validity",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="reliability",
-                title="Reliability and convergent validity",
-                rows=0,
-                refs=list(
-                    "hair_2019",
-                    "dijkstra_2015",
-                    "mcdonald_1999",
-                    "schuberth_2018",
-                    "chalmers_2018"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel",
-                    "omegaCfa"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="alpha", 
-                        `title`="Cronbach's \u03B1", 
-                        `type`="number"),
-                    list(
-                        `name`="rhoA", 
-                        `title`="\u03C1A", 
-                        `type`="number"),
-                    list(
-                        `name`="rhoC", 
-                        `title`="\u03C1C", 
-                        `type`="number"),
-                    list(
-                        `name`="rhoCLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="\u03C1C CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="rhoCUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="\u03C1C CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="omega", 
-                        `title`="\u03C9 (CFA)", 
-                        `type`="number", 
-                        `visible`="(omegaCfa)"),
-                    list(
-                        `name`="ave", 
-                        `title`="AVE", 
-                        `type`="number"),
-                    list(
-                        `name`="aveLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="AVE CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="aveUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="AVE CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="htmtGuide",
-                title="How to read discriminant validity",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="htmt",
-                title="Discriminant validity (HTMT)",
-                rows=0,
-                refs=list(
-                    "henseler_2015",
-                    "roemer_2021"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="c1", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="sep", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="c2", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="htmt", 
-                        `title`="HTMT", 
-                        `type`="number"),
-                    list(
-                        `name`="htmtUpper", 
-                        `title`="Upper bound", 
-                        `type`="number", 
-                        `superTitle`="HTMT", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="htmt2", 
-                        `title`="HTMT2", 
-                        `type`="number"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment (HTMT)", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="fornell",
-                title="Fornell-Larcker criterion",
-                rows=0,
-                visible="(fornellLarcker)",
-                refs=list(
-                    "fornell_1981",
-                    "henseler_2015"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "fornellLarcker"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="vifGuide",
-                title="How to read the collinearity of formative indicators",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="vif",
-                title="Collinearity of formative indicators",
-                rows=0,
-                refs=list(
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="indicator", 
-                        `title`="Indicator", 
-                        `type`="text"),
-                    list(
-                        `name`="vif", 
-                        `title`="VIF", 
-                        `type`="number"),
-                    list(
-                        `name`="vifLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="vifUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="pathsGuide",
-                title="How to read the path coefficients",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="paths",
-                title="Path coefficients",
-                rows=0,
-                refs=list(
-                    "hair_2019",
-                    "dijkstra_2015"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="from", 
-                        `title`="Predictor", 
-                        `type`="text"),
-                    list(
-                        `name`="arrow", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="to", 
-                        `title`="Outcome", 
-                        `type`="text"),
-                    list(
-                        `name`="estimate", 
-                        `title`="Coefficient", 
-                        `type`="number"),
-                    list(
-                        `name`="se", 
-                        `title`="SE", 
-                        `type`="number", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="t", 
-                        `title`="t", 
-                        `type`="number", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="lower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Coefficient CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="upper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Coefficient CI", 
-                        `visible`="(bootstrap)"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="r2",
-                title="Explained variance",
-                rows=0,
-                refs=list(
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="r2", 
-                        `title`="R\u00B2", 
-                        `type`="number"),
-                    list(
-                        `name`="r2Lower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="R\u00B2 CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="r2Upper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="R\u00B2 CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="r2adj", 
-                        `title`="Adjusted R\u00B2", 
-                        `type`="number"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="hocGuide",
-                title="How to read higher-order constructs",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="hocMeasurement",
-                title="Higher-order constructs (stage 2)",
-                rows=0,
-                refs=list(
-                    "sarstedt_2019",
-                    "hair_2021"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="hoc", 
-                        `title`="Higher-order construct", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="component", 
-                        `title`="Lower-order construct", 
-                        `type`="text"),
-                    list(
-                        `name`="loading", 
-                        `title`="Loading", 
-                        `type`="number"),
-                    list(
-                        `name`="loadLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Loading CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="loadUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Loading CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weight", 
-                        `title`="Weight", 
-                        `type`="number"),
-                    list(
-                        `name`="weightLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Weight CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weightUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Weight CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="weightP", 
-                        `title`="p (weight)", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="vif", 
-                        `title`="VIF", 
-                        `type`="number"),
-                    list(
-                        `name`="vifLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="vifUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="vifAssessment", 
-                        `title`="Assessment (VIF)", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="hocReliability",
-                title="Reliability of reflective higher-order constructs",
-                rows=0,
-                refs=list(
-                    "sarstedt_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="hoc", 
-                        `title`="Higher-order construct", 
-                        `type`="text"),
-                    list(
-                        `name`="alpha", 
-                        `title`="Cronbach's \u03B1", 
-                        `type`="number"),
-                    list(
-                        `name`="rhoC", 
-                        `title`="\u03C1C", 
-                        `type`="number"),
-                    list(
-                        `name`="rhoCLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="\u03C1C CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="rhoCUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="\u03C1C CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="ave", 
-                        `title`="AVE", 
-                        `type`="number"),
-                    list(
-                        `name`="aveLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="AVE CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="aveUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="AVE CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="hocHtmt",
-                title="Discriminant validity of higher-order constructs (HTMT, stage 2)",
-                rows=0,
-                refs=list(
-                    "sarstedt_2019",
-                    "henseler_2015"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="c1", 
-                        `title`="Higher-order construct", 
-                        `type`="text"),
-                    list(
-                        `name`="sep", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="c2", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="htmt", 
-                        `title`="HTMT", 
-                        `type`="number"),
-                    list(
-                        `name`="htmtUpper", 
-                        `title`="Upper bound", 
-                        `type`="number", 
-                        `superTitle`="HTMT", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="htmt2", 
-                        `title`="HTMT2", 
-                        `type`="number"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment (HTMT)", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="structuralGuide",
-                title="How to read effect sizes, collinearity and effects",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="f2",
-                title="Effect size (f\u00B2)",
-                rows=0,
-                refs=list(
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing"),
-                columns=list(
-                    list(
-                        `name`="from", 
-                        `title`="Predictor", 
-                        `type`="text"),
-                    list(
-                        `name`="arrow", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="to", 
-                        `title`="Outcome", 
-                        `type`="text"),
-                    list(
-                        `name`="f2", 
-                        `title`="f\u00B2", 
-                        `type`="number"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="vifStruct",
-                title="Collinearity of predictors (structural VIF)",
-                rows=0,
-                refs=list(
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="from", 
-                        `title`="Predictor", 
-                        `type`="text"),
-                    list(
-                        `name`="arrow", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="to", 
-                        `title`="Outcome", 
-                        `type`="text"),
-                    list(
-                        `name`="vif", 
-                        `title`="VIF", 
-                        `type`="number"),
-                    list(
-                        `name`="vifLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="vifUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="VIF CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="assessment", 
-                        `title`="Assessment", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="effects",
-                title="Direct, indirect and total effects",
-                rows=0,
-                refs=list(
-                    "hair_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="from", 
-                        `title`="Predictor", 
-                        `type`="text"),
-                    list(
-                        `name`="arrow", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="to", 
-                        `title`="Outcome", 
-                        `type`="text"),
-                    list(
-                        `name`="direct", 
-                        `title`="Direct", 
-                        `type`="number"),
-                    list(
-                        `name`="indirect", 
-                        `title`="Indirect", 
-                        `type`="number"),
-                    list(
-                        `name`="indLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Indirect CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="indUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Indirect CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="total", 
-                        `title`="Total", 
-                        `type`="number"),
-                    list(
-                        `name`="totLower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Total CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="totUpper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Total CI", 
-                        `visible`="(bootstrap)"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="mediationGuide",
-                title="How to read the mediation analysis",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="mediation",
-                title="Mediation (specific indirect effects)",
-                rows=0,
-                refs=list(
-                    "zhao_2010",
-                    "nitzl_2016",
-                    "preacher_2008"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="chain", 
-                        `title`="Indirect path", 
-                        `type`="text"),
-                    list(
-                        `name`="indirect", 
-                        `title`="Indirect", 
-                        `type`="number"),
-                    list(
-                        `name`="se", 
-                        `title`="SE", 
-                        `type`="number", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="lower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Indirect CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="upper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Indirect CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="direct", 
-                        `title`="Direct (X \u2192 Y)", 
-                        `type`="number"),
-                    list(
-                        `name`="type", 
-                        `title`="Type of mediation", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="moderationGuide",
-                title="How to read a moderation",
-                visible="(showGuides)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="simpleSlopes",
-                title="Simple effects (moderation)",
-                rows=0,
-                refs=list(
-                    "hair_2021",
-                    "kenny_2018"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel"),
-                columns=list(
-                    list(
-                        `name`="term", 
-                        `title`="Interaction", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="effect", 
-                        `title`="Effect", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="level", 
-                        `title`="Moderator at", 
-                        `type`="text"),
-                    list(
-                        `name`="slope", 
-                        `title`="Simple effect", 
-                        `type`="number"),
-                    list(
-                        `name`="se", 
-                        `title`="SE", 
-                        `type`="number", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="lower", 
-                        `title`="Lower", 
-                        `type`="number", 
-                        `superTitle`="Simple effect CI", 
-                        `visible`="(bootstrap)"),
-                    list(
-                        `name`="upper", 
-                        `title`="Upper", 
-                        `type`="number", 
-                        `superTitle`="Simple effect CI", 
-                        `visible`="(bootstrap)"))))
-            self$add(jmvcore::Array$new(
-                options=options,
-                name="moderationPlots",
-                title="Moderation",
-                items=0,
-                visible="(moderationPlot)",
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=760,
-                    height=360,
-                    renderFun=".plotModeration",
-                    clearWith=list(
-                        "reflective",
-                        "formative",
-                        "reflectiveHoc",
-                        "formativeHoc",
-                        "hocApproach",
-                        "structural",
-                        "estimator",
-                        "innerScheme",
-                        "indicatorScale",
-                        "missing",
-                        "bootstrap",
-                        "bootReps",
-                        "bootSeed",
-                        "ciLevel"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="fitGuide",
-                title="How to read the overall fit test",
-                visible="(showGuides && fitTest)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="fit",
-                title="Overall model fit (bootstrap test of exact fit)",
-                rows=0,
-                visible="(fitTest)",
-                refs=list(
-                    "dijkstra_2015",
-                    "beran_1985",
-                    "schuberth_2023",
-                    "henseler_2016"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "fitReps",
-                    "fitLevel",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="model", 
-                        `title`="Model", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="measure", 
-                        `title`="Discrepancy", 
-                        `type`="text"),
-                    list(
-                        `name`="value", 
-                        `title`="Value", 
-                        `type`="number"),
-                    list(
-                        `name`="critical", 
-                        `title`="Critical value", 
-                        `type`="number"),
-                    list(
-                        `name`="p", 
-                        `title`="p (bootstrap)", 
-                        `type`="number", 
-                        `format`="zto,pvalue"),
-                    list(
-                        `name`="decision", 
-                        `title`="Exact fit", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="predictGuide",
-                title="How to read PLSpredict and CVPAT",
-                visible="(showGuides && predictRun)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="predict",
-                title="PLSpredict (out-of-sample prediction of the endogenous indicators)",
-                rows=0,
-                visible="(predictRun)",
-                refs=list(
-                    "shmueli_2016",
-                    "shmueli_2019"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "predictFolds",
-                    "predictReps",
-                    "cvpatDrop",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="indicator", 
-                        `title`="Indicator", 
-                        `type`="text"),
-                    list(
-                        `name`="q2", 
-                        `title`="Q\u00B2predict", 
-                        `type`="number"),
-                    list(
-                        `name`="rmsePls", 
-                        `title`="PLS", 
-                        `type`="number", 
-                        `superTitle`="RMSE"),
-                    list(
-                        `name`="rmseLm", 
-                        `title`="LM", 
-                        `type`="number", 
-                        `superTitle`="RMSE"),
-                    list(
-                        `name`="maePls", 
-                        `title`="PLS", 
-                        `type`="number", 
-                        `superTitle`="MAE"),
-                    list(
-                        `name`="maeLm", 
-                        `title`="LM", 
-                        `type`="number", 
-                        `superTitle`="MAE"),
-                    list(
-                        `name`="skew", 
-                        `title`="Error skewness", 
-                        `type`="number"),
-                    list(
-                        `name`="metric", 
-                        `title`="Metric", 
-                        `type`="text"),
-                    list(
-                        `name`="lower", 
-                        `title`="Lower error", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="cvpat",
-                title="CVPAT (does the model predict better than the benchmarks?)",
-                rows=0,
-                visible="(predictRun)",
-                refs=list(
-                    "liengaard_2021",
-                    "sharma_2023"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "predictFolds",
-                    "predictReps",
-                    "cvpatDrop",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="bench", 
-                        `title`="Benchmark", 
-                        `type`="text"),
-                    list(
-                        `name`="lossPls", 
-                        `title`="PLS loss", 
-                        `type`="number"),
-                    list(
-                        `name`="lossBench", 
-                        `title`="Benchmark loss", 
-                        `type`="number"),
-                    list(
-                        `name`="diff", 
-                        `title`="Loss difference", 
-                        `type`="number"),
-                    list(
-                        `name`="t", 
-                        `title`="t", 
-                        `type`="number"),
-                    list(
-                        `name`="p", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue"),
-                    list(
-                        `name`="decision", 
-                        `title`="PLS predicts better", 
-                        `type`="text"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="ipmaGuide",
-                title="How to read the importance-performance map",
-                visible="(showGuides && ipma)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="ipmaTable",
-                title="Importance-performance map (IPMA)",
-                rows=0,
-                visible="(ipma)",
-                refs=list(
-                    "ringle_2016"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "ipmaRange",
-                    "ipmaMin",
-                    "ipmaMax"),
-                columns=list(
-                    list(
-                        `name`="target", 
-                        `title`="Target", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="importance", 
-                        `title`="Importance", 
-                        `type`="number"),
-                    list(
-                        `name`="perfRaw", 
-                        `title`="Mean (scale)", 
-                        `type`="number"),
-                    list(
-                        `name`="performance", 
-                        `title`="Performance (0-100)", 
-                        `type`="number"),
-                    list(
-                        `name`="quadrant", 
-                        `title`="Reading", 
-                        `type`="text"))))
-            self$add(jmvcore::Array$new(
-                options=options,
-                name="ipmaPlots",
-                title="Importance-performance maps",
-                items=0,
-                visible="(ipma)",
-                template=jmvcore::Image$new(
-                    options=options,
-                    title="$key",
-                    width=560,
-                    height=420,
-                    renderFun=".plotIpma",
-                    clearWith=list(
-                        "reflective",
-                        "formative",
-                        "reflectiveHoc",
-                        "formativeHoc",
-                        "hocApproach",
-                        "structural",
-                        "estimator",
-                        "innerScheme",
-                        "indicatorScale",
-                        "missing",
-                        "ipmaRange",
-                        "ipmaMin",
-                        "ipmaMax"))))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="mgaGuide",
-                title="How to read the multigroup analysis",
-                visible="(showGuides && mgaRun)"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="mgaGroups",
-                title="Groups",
-                rows=0,
-                visible="(mgaRun)",
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "groupVar",
-                    "mgaPerm",
-                    "mgaBoot",
-                    "mgaAdjust",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="group", 
-                        `title`="Group", 
-                        `type`="text"),
-                    list(
-                        `name`="n", 
-                        `title`="N", 
-                        `type`="integer"),
-                    list(
-                        `name`="admissible", 
-                        `title`="Admissible estimates", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="micom",
-                title="Measurement invariance of composites (MICOM)",
-                rows=0,
-                visible="(mgaRun)",
-                refs=list(
-                    "henseler_2016b"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "groupVar",
-                    "mgaPerm",
-                    "mgaBoot",
-                    "mgaAdjust",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="comparison", 
-                        `title`="Comparison", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="construct", 
-                        `title`="Construct", 
-                        `type`="text"),
-                    list(
-                        `name`="c", 
-                        `title`="c", 
-                        `type`="number", 
-                        `superTitle`="Step 2 (compositional)"),
-                    list(
-                        `name`="c5", 
-                        `title`="5% quantile", 
-                        `type`="number", 
-                        `superTitle`="Step 2 (compositional)"),
-                    list(
-                        `name`="pC", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `superTitle`="Step 2 (compositional)"),
-                    list(
-                        `name`="meanDiff", 
-                        `title`="Mean difference", 
-                        `type`="number", 
-                        `superTitle`="Step 3 (means and variances)"),
-                    list(
-                        `name`="pMean", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `superTitle`="Step 3 (means and variances)"),
-                    list(
-                        `name`="logVar", 
-                        `title`="Log variance ratio", 
-                        `type`="number", 
-                        `superTitle`="Step 3 (means and variances)"),
-                    list(
-                        `name`="pVar", 
-                        `title`="p", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `superTitle`="Step 3 (means and variances)"),
-                    list(
-                        `name`="invariance", 
-                        `title`="Invariance", 
-                        `type`="text"))))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="mga",
-                title="Path differences between groups",
-                rows=0,
-                visible="(mgaRun)",
-                refs=list(
-                    "chin_2010",
-                    "henseler_2009",
-                    "sarstedt_2011"),
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "groupVar",
-                    "mgaPerm",
-                    "mgaBoot",
-                    "mgaAdjust",
-                    "bootSeed"),
-                columns=list(
-                    list(
-                        `name`="comparison", 
-                        `title`="Comparison", 
-                        `type`="text", 
-                        `combineBelow`=TRUE),
-                    list(
-                        `name`="from", 
-                        `title`="Predictor", 
-                        `type`="text"),
-                    list(
-                        `name`="arrow", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="to", 
-                        `title`="Outcome", 
-                        `type`="text"),
-                    list(
-                        `name`="est1", 
-                        `title`="First group", 
-                        `type`="number"),
-                    list(
-                        `name`="est2", 
-                        `title`="Second group", 
-                        `type`="number"),
-                    list(
-                        `name`="diff", 
-                        `title`="Difference", 
-                        `type`="number"),
-                    list(
-                        `name`="pPerm", 
-                        `title`="p (permutation)", 
-                        `type`="number", 
-                        `format`="zto,pvalue"),
-                    list(
-                        `name`="pOne", 
-                        `title`="P(first \u2264 second)", 
-                        `type`="number", 
-                        `superTitle`="PLS-MGA"),
-                    list(
-                        `name`="pHens", 
-                        `title`="p (two-sided)", 
-                        `type`="number", 
-                        `format`="zto,pvalue", 
-                        `superTitle`="PLS-MGA"),
-                    list(
-                        `name`="decision", 
-                        `title`="Decision", 
-                        `type`="text"))))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="pathDiagram",
-                title="Path diagram",
-                width=700,
-                height=460,
-                renderFun=".plotPaths",
-                visible="(pathDiagram)",
-                clearWith=list(
-                    "diagramLayout",
-                    "diagramTitle",
-                    "diagramIndicators",
-                    "diagramCaption",
-                    "latentSize",
-                    "manifestSize",
-                    "nodeLabelSize",
-                    "latentFill",
-                    "manifestFill",
-                    "edgeWidth",
-                    "edgeColor",
-                    "nonsigDashed",
-                    "edgeLabels",
-                    "edgeLabelSize",
-                    "edgeDigits",
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="loadingsPlot",
-                title="Loadings of reflective indicators",
-                width=600,
-                height=400,
-                renderFun=".plotLoadings",
-                visible="(loadingsPlot)",
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel")))
-            self$add(jmvcore::Image$new(
-                options=options,
-                name="htmtPlot",
-                title="Discriminant validity (HTMT)",
-                width=520,
-                height=420,
-                renderFun=".plotHtmt",
-                visible="(htmtPlot)",
-                clearWith=list(
-                    "reflective",
-                    "formative",
-                    "reflectiveHoc",
-                    "formativeHoc",
-                    "hocApproach",
-                    "structural",
-                    "estimator",
-                    "innerScheme",
-                    "indicatorScale",
-                    "missing",
-                    "bootstrap",
-                    "bootReps",
-                    "bootSeed",
-                    "ciLevel")))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    modelGuide = function() private$.items[["modelGuide"]],
+                    model = function() private$.items[["model"]],
+                    measurementGuide = function() private$.items[["measurementGuide"]],
+                    measurement = function() private$.items[["measurement"]],
+                    reliabilityGuide = function() private$.items[["reliabilityGuide"]],
+                    reliability = function() private$.items[["reliability"]],
+                    htmtGuide = function() private$.items[["htmtGuide"]],
+                    htmt = function() private$.items[["htmt"]],
+                    fornell = function() private$.items[["fornell"]],
+                    vifGuide = function() private$.items[["vifGuide"]],
+                    vif = function() private$.items[["vif"]],
+                    hocGuide = function() private$.items[["hocGuide"]],
+                    hocMeasurement = function() private$.items[["hocMeasurement"]],
+                    hocReliability = function() private$.items[["hocReliability"]],
+                    hocHtmt = function() private$.items[["hocHtmt"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="measurementSection",
+                            title="Measurement model")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="modelGuide",
+                            title="How to read the model summary",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="model",
+                            title="Model summary",
+                            rows=0,
+                            refs=list(
+                                "csem_pkg",
+                                "hair_2021"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="measurement", 
+                                    `title`="Measurement model", 
+                                    `type`="text"),
+                                list(
+                                    `name`="indicators", 
+                                    `title`="Indicators", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="role", 
+                                    `title`="Role", 
+                                    `type`="text"),
+                                list(
+                                    `name`="predictors", 
+                                    `title`="Predicted by", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="measurementGuide",
+                            title="How to read loadings and weights",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="measurement",
+                            title="Loadings and weights",
+                            rows=0,
+                            refs=list(
+                                "tenenhaus_2005",
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="indicator", 
+                                    `title`="Indicator", 
+                                    `type`="text"),
+                                list(
+                                    `name`="loading", 
+                                    `title`="Loading", 
+                                    `type`="number"),
+                                list(
+                                    `name`="loadLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Loading CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="loadUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Loading CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weight", 
+                                    `title`="Weight", 
+                                    `type`="number"),
+                                list(
+                                    `name`="weightLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Weight CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weightUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Weight CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weightP", 
+                                    `title`="p (weight)", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `visible`="(bootstrap)"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="reliabilityGuide",
+                            title="How to read reliability and convergent validity",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="reliability",
+                            title="Reliability and convergent validity",
+                            rows=0,
+                            refs=list(
+                                "hair_2019",
+                                "dijkstra_2015",
+                                "mcdonald_1999",
+                                "schuberth_2018",
+                                "chalmers_2018"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel",
+                                "omegaCfa"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="alpha", 
+                                    `title`="Cronbach's \u03B1", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rhoA", 
+                                    `title`="\u03C1A", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rhoC", 
+                                    `title`="\u03C1C", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rhoCLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="\u03C1C CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="rhoCUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="\u03C1C CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="omega", 
+                                    `title`="\u03C9 (CFA)", 
+                                    `type`="number", 
+                                    `visible`="(omegaCfa)"),
+                                list(
+                                    `name`="ave", 
+                                    `title`="AVE", 
+                                    `type`="number"),
+                                list(
+                                    `name`="aveLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="AVE CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="aveUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="AVE CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="htmtGuide",
+                            title="How to read discriminant validity",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="htmt",
+                            title="Discriminant validity (HTMT)",
+                            rows=0,
+                            refs=list(
+                                "henseler_2015",
+                                "roemer_2021"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="c1", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="sep", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="c2", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="htmt", 
+                                    `title`="HTMT", 
+                                    `type`="number"),
+                                list(
+                                    `name`="htmtUpper", 
+                                    `title`="Upper bound", 
+                                    `type`="number", 
+                                    `superTitle`="HTMT", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="htmt2", 
+                                    `title`="HTMT2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment (HTMT)", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="fornell",
+                            title="Fornell-Larcker criterion",
+                            rows=0,
+                            visible="(fornellLarcker)",
+                            refs=list(
+                                "fornell_1981",
+                                "henseler_2015"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "fornellLarcker"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="vifGuide",
+                            title="How to read the collinearity of formative indicators",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="vif",
+                            title="Collinearity of formative indicators",
+                            rows=0,
+                            refs=list(
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="indicator", 
+                                    `title`="Indicator", 
+                                    `type`="text"),
+                                list(
+                                    `name`="vif", 
+                                    `title`="VIF", 
+                                    `type`="number"),
+                                list(
+                                    `name`="vifLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="vifUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="hocGuide",
+                            title="How to read higher-order constructs",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="hocMeasurement",
+                            title="Higher-order constructs (stage 2)",
+                            rows=0,
+                            refs=list(
+                                "sarstedt_2019",
+                                "hair_2021"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="hoc", 
+                                    `title`="Higher-order construct", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="component", 
+                                    `title`="Lower-order construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="loading", 
+                                    `title`="Loading", 
+                                    `type`="number"),
+                                list(
+                                    `name`="loadLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Loading CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="loadUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Loading CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weight", 
+                                    `title`="Weight", 
+                                    `type`="number"),
+                                list(
+                                    `name`="weightLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Weight CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weightUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Weight CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="weightP", 
+                                    `title`="p (weight)", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="vif", 
+                                    `title`="VIF", 
+                                    `type`="number"),
+                                list(
+                                    `name`="vifLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="vifUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="vifAssessment", 
+                                    `title`="Assessment (VIF)", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="hocReliability",
+                            title="Reliability of reflective higher-order constructs",
+                            rows=0,
+                            refs=list(
+                                "sarstedt_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="hoc", 
+                                    `title`="Higher-order construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="alpha", 
+                                    `title`="Cronbach's \u03B1", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rhoC", 
+                                    `title`="\u03C1C", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rhoCLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="\u03C1C CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="rhoCUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="\u03C1C CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="ave", 
+                                    `title`="AVE", 
+                                    `type`="number"),
+                                list(
+                                    `name`="aveLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="AVE CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="aveUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="AVE CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="hocHtmt",
+                            title="Discriminant validity of higher-order constructs (HTMT, stage 2)",
+                            rows=0,
+                            refs=list(
+                                "sarstedt_2019",
+                                "henseler_2015"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="c1", 
+                                    `title`="Higher-order construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="sep", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="c2", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="htmt", 
+                                    `title`="HTMT", 
+                                    `type`="number"),
+                                list(
+                                    `name`="htmtUpper", 
+                                    `title`="Upper bound", 
+                                    `type`="number", 
+                                    `superTitle`="HTMT", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="htmt2", 
+                                    `title`="HTMT2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment (HTMT)", 
+                                    `type`="text"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    pathsGuide = function() private$.items[["pathsGuide"]],
+                    paths = function() private$.items[["paths"]],
+                    r2 = function() private$.items[["r2"]],
+                    structuralGuide = function() private$.items[["structuralGuide"]],
+                    f2 = function() private$.items[["f2"]],
+                    vifStruct = function() private$.items[["vifStruct"]],
+                    effects = function() private$.items[["effects"]],
+                    mediationGuide = function() private$.items[["mediationGuide"]],
+                    mediation = function() private$.items[["mediation"]],
+                    moderationGuide = function() private$.items[["moderationGuide"]],
+                    simpleSlopes = function() private$.items[["simpleSlopes"]],
+                    moderationPlots = function() private$.items[["moderationPlots"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="structuralSection",
+                            title="Structural model")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="pathsGuide",
+                            title="How to read the path coefficients",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="paths",
+                            title="Path coefficients",
+                            rows=0,
+                            refs=list(
+                                "hair_2019",
+                                "dijkstra_2015"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="from", 
+                                    `title`="Predictor", 
+                                    `type`="text"),
+                                list(
+                                    `name`="arrow", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="to", 
+                                    `title`="Outcome", 
+                                    `type`="text"),
+                                list(
+                                    `name`="estimate", 
+                                    `title`="Coefficient", 
+                                    `type`="number"),
+                                list(
+                                    `name`="se", 
+                                    `title`="SE", 
+                                    `type`="number", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="t", 
+                                    `title`="t", 
+                                    `type`="number", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="lower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Coefficient CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="upper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Coefficient CI", 
+                                    `visible`="(bootstrap)"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="r2",
+                            title="Explained variance",
+                            rows=0,
+                            refs=list(
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="r2", 
+                                    `title`="R\u00B2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="r2Lower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="R\u00B2 CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="r2Upper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="R\u00B2 CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="r2adj", 
+                                    `title`="Adjusted R\u00B2", 
+                                    `type`="number"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="structuralGuide",
+                            title="How to read effect sizes, collinearity and effects",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="f2",
+                            title="Effect size (f\u00B2)",
+                            rows=0,
+                            refs=list(
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing"),
+                            columns=list(
+                                list(
+                                    `name`="from", 
+                                    `title`="Predictor", 
+                                    `type`="text"),
+                                list(
+                                    `name`="arrow", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="to", 
+                                    `title`="Outcome", 
+                                    `type`="text"),
+                                list(
+                                    `name`="f2", 
+                                    `title`="f\u00B2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="vifStruct",
+                            title="Collinearity of predictors (structural VIF)",
+                            rows=0,
+                            refs=list(
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="from", 
+                                    `title`="Predictor", 
+                                    `type`="text"),
+                                list(
+                                    `name`="arrow", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="to", 
+                                    `title`="Outcome", 
+                                    `type`="text"),
+                                list(
+                                    `name`="vif", 
+                                    `title`="VIF", 
+                                    `type`="number"),
+                                list(
+                                    `name`="vifLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="vifUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="VIF CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="assessment", 
+                                    `title`="Assessment", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="effects",
+                            title="Direct, indirect and total effects",
+                            rows=0,
+                            refs=list(
+                                "hair_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="from", 
+                                    `title`="Predictor", 
+                                    `type`="text"),
+                                list(
+                                    `name`="arrow", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="to", 
+                                    `title`="Outcome", 
+                                    `type`="text"),
+                                list(
+                                    `name`="direct", 
+                                    `title`="Direct", 
+                                    `type`="number"),
+                                list(
+                                    `name`="indirect", 
+                                    `title`="Indirect", 
+                                    `type`="number"),
+                                list(
+                                    `name`="indLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Indirect CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="indUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Indirect CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="total", 
+                                    `title`="Total", 
+                                    `type`="number"),
+                                list(
+                                    `name`="totLower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Total CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="totUpper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Total CI", 
+                                    `visible`="(bootstrap)"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="mediationGuide",
+                            title="How to read the mediation analysis",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="mediation",
+                            title="Mediation (specific indirect effects)",
+                            rows=0,
+                            refs=list(
+                                "zhao_2010",
+                                "nitzl_2016",
+                                "preacher_2008"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="chain", 
+                                    `title`="Indirect path", 
+                                    `type`="text"),
+                                list(
+                                    `name`="indirect", 
+                                    `title`="Indirect", 
+                                    `type`="number"),
+                                list(
+                                    `name`="se", 
+                                    `title`="SE", 
+                                    `type`="number", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="lower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Indirect CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="upper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Indirect CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="direct", 
+                                    `title`="Direct (X \u2192 Y)", 
+                                    `type`="number"),
+                                list(
+                                    `name`="type", 
+                                    `title`="Type of mediation", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="moderationGuide",
+                            title="How to read a moderation",
+                            visible="(showGuides)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="simpleSlopes",
+                            title="Simple effects (moderation)",
+                            rows=0,
+                            refs=list(
+                                "hair_2021",
+                                "kenny_2018"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="term", 
+                                    `title`="Interaction", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="effect", 
+                                    `title`="Effect", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="level", 
+                                    `title`="Moderator at", 
+                                    `type`="text"),
+                                list(
+                                    `name`="slope", 
+                                    `title`="Simple effect", 
+                                    `type`="number"),
+                                list(
+                                    `name`="se", 
+                                    `title`="SE", 
+                                    `type`="number", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="lower", 
+                                    `title`="Lower", 
+                                    `type`="number", 
+                                    `superTitle`="Simple effect CI", 
+                                    `visible`="(bootstrap)"),
+                                list(
+                                    `name`="upper", 
+                                    `title`="Upper", 
+                                    `type`="number", 
+                                    `superTitle`="Simple effect CI", 
+                                    `visible`="(bootstrap)"))))
+                        self$add(jmvcore::Array$new(
+                            options=options,
+                            name="moderationPlots",
+                            title="Moderation",
+                            items=0,
+                            visible="(moderationPlot)",
+                            template=jmvcore::Image$new(
+                                options=options,
+                                title="$key",
+                                width=760,
+                                height=360,
+                                renderFun=".plotModeration",
+                                clearWith=list(
+                                    "reflective",
+                                    "formative",
+                                    "reflectiveHoc",
+                                    "formativeHoc",
+                                    "hocApproach",
+                                    "structural",
+                                    "estimator",
+                                    "innerScheme",
+                                    "indicatorScale",
+                                    "missing",
+                                    "bootstrap",
+                                    "bootReps",
+                                    "bootSeed",
+                                    "ciLevel"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    fitGuide = function() private$.items[["fitGuide"]],
+                    fit = function() private$.items[["fit"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="fitSection",
+                            title="Overall model fit")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="fitGuide",
+                            title="How to read the overall fit test",
+                            visible="(showGuides && fitTest)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="fit",
+                            title="Overall model fit (bootstrap test of exact fit)",
+                            rows=0,
+                            visible="(fitTest)",
+                            refs=list(
+                                "dijkstra_2015",
+                                "beran_1985",
+                                "schuberth_2023",
+                                "henseler_2016"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "fitReps",
+                                "fitLevel",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="model", 
+                                    `title`="Model", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="measure", 
+                                    `title`="Discrepancy", 
+                                    `type`="text"),
+                                list(
+                                    `name`="value", 
+                                    `title`="Value", 
+                                    `type`="number"),
+                                list(
+                                    `name`="critical", 
+                                    `title`="Critical value", 
+                                    `type`="number"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p (bootstrap)", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="decision", 
+                                    `title`="Exact fit", 
+                                    `type`="text"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    predictGuide = function() private$.items[["predictGuide"]],
+                    predict = function() private$.items[["predict"]],
+                    cvpat = function() private$.items[["cvpat"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="predictSection",
+                            title="Out-of-sample prediction")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="predictGuide",
+                            title="How to read PLSpredict and CVPAT",
+                            visible="(showGuides && predictRun)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="predict",
+                            title="PLSpredict (out-of-sample prediction of the endogenous indicators)",
+                            rows=0,
+                            visible="(predictRun)",
+                            refs=list(
+                                "shmueli_2016",
+                                "shmueli_2019"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "predictFolds",
+                                "predictReps",
+                                "cvpatDrop",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="indicator", 
+                                    `title`="Indicator", 
+                                    `type`="text"),
+                                list(
+                                    `name`="q2", 
+                                    `title`="Q\u00B2predict", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rmsePls", 
+                                    `title`="PLS", 
+                                    `type`="number", 
+                                    `superTitle`="RMSE"),
+                                list(
+                                    `name`="rmseLm", 
+                                    `title`="LM", 
+                                    `type`="number", 
+                                    `superTitle`="RMSE"),
+                                list(
+                                    `name`="maePls", 
+                                    `title`="PLS", 
+                                    `type`="number", 
+                                    `superTitle`="MAE"),
+                                list(
+                                    `name`="maeLm", 
+                                    `title`="LM", 
+                                    `type`="number", 
+                                    `superTitle`="MAE"),
+                                list(
+                                    `name`="skew", 
+                                    `title`="Error skewness", 
+                                    `type`="number"),
+                                list(
+                                    `name`="metric", 
+                                    `title`="Metric", 
+                                    `type`="text"),
+                                list(
+                                    `name`="lower", 
+                                    `title`="Lower error", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="cvpat",
+                            title="CVPAT (does the model predict better than the benchmarks?)",
+                            rows=0,
+                            visible="(predictRun)",
+                            refs=list(
+                                "liengaard_2021",
+                                "sharma_2023"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "predictFolds",
+                                "predictReps",
+                                "cvpatDrop",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="bench", 
+                                    `title`="Benchmark", 
+                                    `type`="text"),
+                                list(
+                                    `name`="lossPls", 
+                                    `title`="PLS loss", 
+                                    `type`="number"),
+                                list(
+                                    `name`="lossBench", 
+                                    `title`="Benchmark loss", 
+                                    `type`="number"),
+                                list(
+                                    `name`="diff", 
+                                    `title`="Loss difference", 
+                                    `type`="number"),
+                                list(
+                                    `name`="t", 
+                                    `title`="t", 
+                                    `type`="number"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="decision", 
+                                    `title`="PLS predicts better", 
+                                    `type`="text"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    ipmaGuide = function() private$.items[["ipmaGuide"]],
+                    ipmaTable = function() private$.items[["ipmaTable"]],
+                    ipmaPlots = function() private$.items[["ipmaPlots"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="ipmaSection",
+                            title="Importance-performance map")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="ipmaGuide",
+                            title="How to read the importance-performance map",
+                            visible="(showGuides && ipma)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="ipmaTable",
+                            title="Importance-performance map (IPMA)",
+                            rows=0,
+                            visible="(ipma)",
+                            refs=list(
+                                "ringle_2016"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "ipmaRange",
+                                "ipmaMin",
+                                "ipmaMax"),
+                            columns=list(
+                                list(
+                                    `name`="target", 
+                                    `title`="Target", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="importance", 
+                                    `title`="Importance", 
+                                    `type`="number"),
+                                list(
+                                    `name`="perfRaw", 
+                                    `title`="Mean (scale)", 
+                                    `type`="number"),
+                                list(
+                                    `name`="performance", 
+                                    `title`="Performance (0-100)", 
+                                    `type`="number"),
+                                list(
+                                    `name`="quadrant", 
+                                    `title`="Reading", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Array$new(
+                            options=options,
+                            name="ipmaPlots",
+                            title="Importance-performance maps",
+                            items=0,
+                            visible="(ipma)",
+                            template=jmvcore::Image$new(
+                                options=options,
+                                title="$key",
+                                width=560,
+                                height=420,
+                                renderFun=".plotIpma",
+                                clearWith=list(
+                                    "reflective",
+                                    "formative",
+                                    "reflectiveHoc",
+                                    "formativeHoc",
+                                    "hocApproach",
+                                    "structural",
+                                    "estimator",
+                                    "innerScheme",
+                                    "indicatorScale",
+                                    "missing",
+                                    "ipmaRange",
+                                    "ipmaMin",
+                                    "ipmaMax"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    mgaGuide = function() private$.items[["mgaGuide"]],
+                    mgaGroups = function() private$.items[["mgaGroups"]],
+                    micom = function() private$.items[["micom"]],
+                    mga = function() private$.items[["mga"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="mgaSection",
+                            title="Multigroup analysis")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="mgaGuide",
+                            title="How to read the multigroup analysis",
+                            visible="(showGuides && mgaRun)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="mgaGroups",
+                            title="Groups",
+                            rows=0,
+                            visible="(mgaRun)",
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "groupVar",
+                                "mgaPerm",
+                                "mgaBoot",
+                                "mgaAdjust",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="group", 
+                                    `title`="Group", 
+                                    `type`="text"),
+                                list(
+                                    `name`="n", 
+                                    `title`="N", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="admissible", 
+                                    `title`="Admissible estimates", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="micom",
+                            title="Measurement invariance of composites (MICOM)",
+                            rows=0,
+                            visible="(mgaRun)",
+                            refs=list(
+                                "henseler_2016b"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "groupVar",
+                                "mgaPerm",
+                                "mgaBoot",
+                                "mgaAdjust",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="comparison", 
+                                    `title`="Comparison", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="construct", 
+                                    `title`="Construct", 
+                                    `type`="text"),
+                                list(
+                                    `name`="c", 
+                                    `title`="c", 
+                                    `type`="number", 
+                                    `superTitle`="Step 2 (compositional)"),
+                                list(
+                                    `name`="c5", 
+                                    `title`="5% quantile", 
+                                    `type`="number", 
+                                    `superTitle`="Step 2 (compositional)"),
+                                list(
+                                    `name`="pC", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `superTitle`="Step 2 (compositional)"),
+                                list(
+                                    `name`="meanDiff", 
+                                    `title`="Mean difference", 
+                                    `type`="number", 
+                                    `superTitle`="Step 3 (means and variances)"),
+                                list(
+                                    `name`="pMean", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `superTitle`="Step 3 (means and variances)"),
+                                list(
+                                    `name`="logVar", 
+                                    `title`="Log variance ratio", 
+                                    `type`="number", 
+                                    `superTitle`="Step 3 (means and variances)"),
+                                list(
+                                    `name`="pVar", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `superTitle`="Step 3 (means and variances)"),
+                                list(
+                                    `name`="invariance", 
+                                    `title`="Invariance", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="mga",
+                            title="Path differences between groups",
+                            rows=0,
+                            visible="(mgaRun)",
+                            refs=list(
+                                "chin_2010",
+                                "henseler_2009",
+                                "sarstedt_2011"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "groupVar",
+                                "mgaPerm",
+                                "mgaBoot",
+                                "mgaAdjust",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="comparison", 
+                                    `title`="Comparison", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="from", 
+                                    `title`="Predictor", 
+                                    `type`="text"),
+                                list(
+                                    `name`="arrow", 
+                                    `title`="", 
+                                    `type`="text"),
+                                list(
+                                    `name`="to", 
+                                    `title`="Outcome", 
+                                    `type`="text"),
+                                list(
+                                    `name`="est1", 
+                                    `title`="First group", 
+                                    `type`="number"),
+                                list(
+                                    `name`="est2", 
+                                    `title`="Second group", 
+                                    `type`="number"),
+                                list(
+                                    `name`="diff", 
+                                    `title`="Difference", 
+                                    `type`="number"),
+                                list(
+                                    `name`="pPerm", 
+                                    `title`="p (permutation)", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="pOne", 
+                                    `title`="P(first \u2264 second)", 
+                                    `type`="number", 
+                                    `superTitle`="PLS-MGA"),
+                                list(
+                                    `name`="pHens", 
+                                    `title`="p (two-sided)", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `superTitle`="PLS-MGA"),
+                                list(
+                                    `name`="decision", 
+                                    `title`="Decision", 
+                                    `type`="text"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
+                    pathDiagram = function() private$.items[["pathDiagram"]],
+                    loadingsPlot = function() private$.items[["loadingsPlot"]],
+                    htmtPlot = function() private$.items[["htmtPlot"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="plotsSection",
+                            title="Plots")
+                        self$add(jmvcore::Image$new(
+                            options=options,
+                            name="pathDiagram",
+                            title="Path diagram",
+                            width=700,
+                            height=460,
+                            renderFun=".plotPaths",
+                            visible="(pathDiagram)",
+                            clearWith=list(
+                                "diagramLayout",
+                                "diagramTitle",
+                                "diagramIndicators",
+                                "diagramCaption",
+                                "latentSize",
+                                "manifestSize",
+                                "nodeLabelSize",
+                                "latentFill",
+                                "manifestFill",
+                                "edgeWidth",
+                                "edgeColor",
+                                "nonsigDashed",
+                                "edgeLabels",
+                                "edgeLabelSize",
+                                "edgeDigits",
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel")))
+                        self$add(jmvcore::Image$new(
+                            options=options,
+                            name="loadingsPlot",
+                            title="Loadings of reflective indicators",
+                            width=600,
+                            height=400,
+                            renderFun=".plotLoadings",
+                            visible="(loadingsPlot)",
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel")))
+                        self$add(jmvcore::Image$new(
+                            options=options,
+                            name="htmtPlot",
+                            title="Discriminant validity (HTMT)",
+                            width=520,
+                            height=420,
+                            renderFun=".plotHtmt",
+                            visible="(htmtPlot)",
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "bootstrap",
+                                "bootReps",
+                                "bootSeed",
+                                "ciLevel")))}))$new(options=options))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="cacheStore",
@@ -2323,7 +2400,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,6,1),
+                version = c(0,7,1),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2406,48 +2483,48 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$keySummary} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$bootStatus} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$choicesGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$modelGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$model} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$measurementGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$measurement} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$reliabilityGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$reliability} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$htmtGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$htmt} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$fornell} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$vifGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$vif} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$pathsGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$paths} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$r2} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$hocGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$hocMeasurement} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$hocReliability} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$hocHtmt} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$structuralGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$f2} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$vifStruct} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$effects} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$mediationGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$mediation} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$moderationGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$simpleSlopes} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$moderationPlots} \tab \tab \tab \tab \tab an array of images \cr
-#'   \code{results$fitGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$fit} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$predictGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$predict} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$cvpat} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$ipmaGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$ipmaTable} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$ipmaPlots} \tab \tab \tab \tab \tab an array of images \cr
-#'   \code{results$mgaGuide} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$mgaGroups} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$micom} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$mga} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$pathDiagram} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
-#'   \code{results$htmtPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$measurementSection$modelGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$model} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$measurementGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$measurement} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$reliabilityGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$reliability} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$htmtGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$htmt} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$fornell} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$vifGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$vif} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$hocGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$measurementSection$hocMeasurement} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$hocReliability} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$measurementSection$hocHtmt} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$pathsGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$structuralSection$paths} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$r2} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$structuralGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$structuralSection$f2} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$vifStruct} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$effects} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$mediationGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$structuralSection$mediation} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$moderationGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$structuralSection$simpleSlopes} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$structuralSection$moderationPlots} \tab \tab \tab \tab \tab an array \cr
+#'   \code{results$fitSection$fitGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$fitSection$fit} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$predictSection$predictGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$predictSection$predict} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$predictSection$cvpat} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ipmaSection$ipmaGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$ipmaSection$ipmaTable} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ipmaSection$ipmaPlots} \tab \tab \tab \tab \tab an array \cr
+#'   \code{results$mgaSection$mgaGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$mgaSection$mgaGroups} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mgaSection$micom} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mgaSection$mga} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$plotsSection$pathDiagram} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plotsSection$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
+#'   \code{results$plotsSection$htmtPlot} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fitCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$predictCacheStore} \tab \tab \tab \tab \tab a html \cr
@@ -2456,12 +2533,6 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
 #' }
-#'
-#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
-#'
-#' \code{results$model$asDF}
-#'
-#' \code{as.data.frame(results$model)}
 #'
 #' @export
 plssem <- function(

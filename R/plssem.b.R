@@ -76,48 +76,48 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             labels <- vapply(blocks, `[[`, "", "label")
             paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks, hocs))
             for (i in seq_along(blocks)) {
-                self$results$model$addRow(rowKey = i, values = list(construct = blocks[[i]]$label))
+                self$results$measurementSection$model$addRow(rowKey = i, values = list(construct = blocks[[i]]$label))
                 for (v in blocks[[i]]$vars)
-                    self$results$measurement$addRow(rowKey = paste(i, v, sep = "::"),
+                    self$results$measurementSection$measurement$addRow(rowKey = paste(i, v, sep = "::"),
                                                     values = list(construct = blocks[[i]]$label, indicator = v))
             }
             for (k in seq_len(nrow(paths)))
-                self$results$paths$addRow(rowKey = k, values = list(from = paths$from[k], arrow = "\u2192",
+                self$results$structuralSection$paths$addRow(rowKey = k, values = list(from = paths$from[k], arrow = "\u2192",
                                                                     to = paths$to[k]))
             for (to in unique(paths$to))
-                self$results$r2$addRow(rowKey = to, values = list(construct = to))
+                self$results$structuralSection$r2$addRow(rowKey = to, values = list(construct = to))
             # Higher-order constructs (phase 4): a row in the model summary
             # and one per lower-order construct in their measurement table.
             # ES: Constructos de orden superior (fase 4).
             for (j in seq_along(hocs)) {
                 h <- hocs[[j]]
-                self$results$model$addRow(rowKey = paste0("hoc", j), values = list(construct = h$label))
+                self$results$measurementSection$model$addRow(rowKey = paste0("hoc", j), values = list(construct = h$label))
                 for (cpt in h$components)
-                    self$results$hocMeasurement$addRow(rowKey = paste(h$label, cpt, sep = "::"),
+                    self$results$measurementSection$hocMeasurement$addRow(rowKey = paste(h$label, cpt, sep = "::"),
                                                        values = list(hoc = h$label, component = cpt))
                 if (h$type == "reflective")
-                    self$results$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
+                    self$results$measurementSection$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
             }
             # overall fit: 4 discrepancies x estimated and saturated model
             # ES: ajuste global: 4 discrepancias x modelo estimado y saturado
             ltxt <- function(key) .pl_text(.pl_lang(self$options), "labels", key)
             for (mdl in c("estimated", "saturated"))
                 for (m in names(.PL_FIT))
-                    self$results$fit$addRow(rowKey = paste(mdl, m, sep = "::"),
+                    self$results$fitSection$fit$addRow(rowKey = paste(mdl, m, sep = "::"),
                                             values = list(model = ltxt(paste0("fit_", mdl)), measure = .PL_FIT[[m]]))
-            self$results$fit$getColumn("critical")$setTitle(
+            self$results$fitSection$fit$getColumn("critical")$setTitle(
                 sprintf(ltxt("fit_critical"), format(100 * as.numeric(self$options$fitLevel))))
             hp <- if (length(hocs)) .pl_hoc_htmt_pairs(hocs, blocks, paths, NULL) else NULL
             for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
-                self$results$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
+                self$results$measurementSection$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
                                             values = list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k]))
             if (!length(hocs))
                 for (name in c("hocGuide", "hocMeasurement", "hocReliability", "hocHtmt"))
-                    self$results[[name]]$setVisible(FALSE)
+                    private$.item(name)$setVisible(FALSE)
             else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
-                self$results$hocReliability$setVisible(FALSE)
+                self$results$measurementSection$hocReliability$setVisible(FALSE)
             if (length(hocs) && is.null(hp))
-                self$results$hocHtmt$setVisible(FALSE)
+                self$results$measurementSection$hocHtmt$setVisible(FALSE)
 
             # Measurement-model quality (phase 2): rows follow the constructs
             # in the boxes; a table that does not apply to the model (no
@@ -128,21 +128,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # oculta con su guía y la interpretación explica por qué.
             refl <- labels[vapply(blocks, function(b) b$type == "reflective", TRUE)]
             for (r in refl)
-                self$results$reliability$addRow(rowKey = r, values = list(construct = r))
+                self$results$measurementSection$reliability$addRow(rowKey = r, values = list(construct = r))
             if (length(refl) >= 2) {
                 pairs <- utils::combn(refl, 2)
                 for (k in seq_len(ncol(pairs)))
-                    self$results$htmt$addRow(rowKey = paste(pairs[, k], collapse = "::"),
+                    self$results$measurementSection$htmt$addRow(rowKey = paste(pairs[, k], collapse = "::"),
                                              values = list(c1 = pairs[1, k], sep = "\u2013", c2 = pairs[2, k]))
             }
             for (i in seq_along(refl)) {
-                self$results$fornell$addColumn(name = paste0("c", i), title = refl[i], type = "number")
-                self$results$fornell$addRow(rowKey = refl[i], values = list(construct = refl[i]))
+                self$results$measurementSection$fornell$addColumn(name = paste0("c", i), title = refl[i], type = "number")
+                self$results$measurementSection$fornell$addRow(rowKey = refl[i], values = list(construct = refl[i]))
             }
             for (i in seq_along(blocks)) {
                 if (blocks[[i]]$type != "formative") next
                 for (v in blocks[[i]]$vars)
-                    self$results$vif$addRow(rowKey = paste(i, v, sep = "::"),
+                    self$results$measurementSection$vif$addRow(rowKey = paste(i, v, sep = "::"),
                                             values = list(construct = blocks[[i]]$label, indicator = v))
             }
             # Structural tables (phase 3): f² and VIF per path, effects per
@@ -151,12 +151,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # por par de constructos unidos por al menos una ruta.
             for (k in seq_len(nrow(paths))) {
                 row <- list(from = paths$from[k], arrow = "\u2192", to = paths$to[k])
-                self$results$f2$addRow(rowKey = k, values = row)
-                self$results$vifStruct$addRow(rowKey = k, values = row)
+                self$results$structuralSection$f2$addRow(rowKey = k, values = row)
+                self$results$structuralSection$vifStruct$addRow(rowKey = k, values = row)
             }
             pairs_eff <- .pl_effect_pairs(paths)
             for (k in seq_len(nrow(pairs_eff)))
-                self$results$effects$addRow(rowKey = paste(pairs_eff$from[k], pairs_eff$to[k], sep = "::"),
+                self$results$structuralSection$effects$addRow(rowKey = paste(pairs_eff$from[k], pairs_eff$to[k], sep = "::"),
                                             values = list(from = pairs_eff$from[k], arrow = "\u2192",
                                                           to = pairs_eff$to[k]))
 
@@ -170,11 +170,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (cn in endo) {
                 b <- Filter(function(x) identical(x$label, cn), blocks)
                 for (v in if (length(b)) b[[1]]$vars else character(0))
-                    self$results$predict$addRow(rowKey = paste(cn, v, sep = "::"), values = list(construct = cn, indicator = v))
+                    self$results$predictSection$predict$addRow(rowKey = paste(cn, v, sep = "::"), values = list(construct = cn, indicator = v))
             }
             alt_on <- nrow(.pl_cvpat_drop(self$options$cvpatDrop, paths)) > 0
             for (cn in c("", endo)) for (bn in c("IA", "LM", if (alt_on) "ALT"))
-                self$results$cvpat$addRow(rowKey = paste(cn, bn, sep = "::"),
+                self$results$predictSection$cvpat$addRow(rowKey = paste(cn, bn, sep = "::"),
                                           values = list(construct = if (nzchar(cn)) cn else ptxt("cvpat_all"),
                                                         bench = ptxt(paste0("bench_", bn))))
 
@@ -186,9 +186,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (tg in unique(paths$to[!grepl(.PL_X, paths$from, fixed = TRUE)])) {
                 k <- which(ipairs$to == tg)
                 for (j in k)
-                    self$results$ipmaTable$addRow(rowKey = paste(tg, ipairs$from[j], sep = "::"),
+                    self$results$ipmaSection$ipmaTable$addRow(rowKey = paste(tg, ipairs$from[j], sep = "::"),
                                                   values = list(target = tg, construct = ipairs$from[j]))
-                if (length(k)) self$results$ipmaPlots$addItem(key = tg)
+                if (length(k)) self$results$ipmaSection$ipmaPlots$addItem(key = tg)
             }
 
             # Multigroup analysis (phase 7): one row per group, per pair of
@@ -204,10 +204,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Mediación (fase 6): una fila por efecto indirecto específico.
             chains <- .pl_mediation_chains(paths)
             for (k in seq_len(nrow(chains)))
-                self$results$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
+                self$results$structuralSection$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
             if (!nrow(chains)) {
-                self$results$mediation$setVisible(FALSE)
-                self$results$mediationGuide$setVisible(FALSE)
+                self$results$structuralSection$mediation$setVisible(FALSE)
+                self$results$structuralSection$mediationGuide$setVisible(FALSE)
             }
 
             # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
@@ -220,21 +220,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(nrow(inter))) {
                 parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
                 for (j in 1:3)
-                    self$results$simpleSlopes$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                    self$results$structuralSection$simpleSlopes$addRow(rowKey = paste(k, j, sep = "::"), values = list(
                         term = paste(inter$from[k], "\u2192", inter$to[k]),
                         effect = paste(parts[1], "\u2192", inter$to[k]),
                         level = sprintf(lv[j], parts[2])))
-                self$results$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
+                self$results$structuralSection$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
             }
             if (!nrow(inter))
                 for (name in c("moderationGuide", "simpleSlopes", "moderationPlots"))
-                    self$results[[name]]$setVisible(FALSE)
+                    private$.item(name)$setVisible(FALSE)
 
             hide <- c(if (length(refl) == 0) c("reliability", "reliabilityGuide", "fornell"),
                       if (length(refl) < 2) c("htmt", "htmtGuide"),
                       if (!any(vapply(blocks, function(b) b$type == "formative", TRUE))) c("vif", "vifGuide"))
             for (name in hide)
-                self$results[[name]]$setVisible(FALSE)
+                private$.item(name)$setVisible(FALSE)
         },
 
         .run = function() {
@@ -439,7 +439,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .fillReliability = function(quality, txt) {
             rel <- quality$reliability
             if (is.null(rel)) return()
-            table <- self$results$reliability
+            table <- self$results$measurementSection$reliability
             if (self$options$estimator == "pls")
                 table$setNote("rhoA", txt("footnotes", "rho_a_pls"))
             if (self$options$indicatorScale == "ordinal")
@@ -486,7 +486,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .fillHtmt = function(quality, txt) {
             h <- quality$htmt
             if (is.null(h)) return()
-            table <- self$results$htmt
+            table <- self$results$measurementSection$htmt
             for (k in seq_len(nrow(h))) {
                 key <- paste(h$c1[k], h$c2[k], sep = "::")
                 band <- .pl_band_htmt(h$htmt[k])
@@ -510,7 +510,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .fillFornell = function(quality, txt) {
             if (!self$options$fornellLarcker || is.null(quality$fl)) return()
-            table <- self$results$fornell
+            table <- self$results$measurementSection$fornell
             cr <- quality$fl$cor
             s <- quality$fl$sqrt_ave
             n <- nrow(cr)
@@ -535,7 +535,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .fillVif = function(quality, txt) {
             v <- quality$vif
             if (is.null(v)) return()
-            table <- self$results$vif
+            table <- self$results$measurementSection$vif
             keys <- vapply(seq_len(nrow(v)), function(k) {
                 i <- which(vapply(private$.blocks(), `[[`, "", "label") == v$construct[k])
                 paste(i, v$indicator[k], sep = "::")
@@ -591,9 +591,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 values <- list(from = paths$from[k], arrow = "\u2192", to = paths$to[k],
                                assessment = if (is.na(band)) txt("labels", "not_computable") else txt("labels", band))
                 if (!is.na(out_f2[k])) values$f2 <- out_f2[k]
-                self$results$f2$setRow(rowNo = k, values = values)
+                self$results$structuralSection$f2$setRow(rowNo = k, values = values)
                 if (is.na(out_f2[k]))
-                    self$results$f2$addFootnote(rowNo = k, col = "f2", sprintf(txt("footnotes", "failed"),
+                    self$results$structuralSection$f2$addFootnote(rowNo = k, col = "f2", sprintf(txt("footnotes", "failed"),
                         if (is.null(f2$error)) "NaN" else f2$error))
                 v <- vifs[paste(to, from, sep = ".")]
                 out_vif[k] <- if (length(v) && is.finite(v)) unname(v) else NA_real_
@@ -602,7 +602,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                assessment = if (sum(paths$to == paths$to[k]) == 1) txt("labels", "vif_single_predictor")
                                             else if (is.na(band)) txt("labels", "not_computable") else txt("labels", band))
                 if (!is.na(out_vif[k])) values$vif <- out_vif[k]
-                self$results$vifStruct$setRow(rowNo = k, values = values)
+                self$results$structuralSection$vifStruct$setRow(rowNo = k, values = values)
             }
             pairs <- .pl_effect_pairs(paths)
             pick <- function(df, from, to) {
@@ -622,7 +622,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (!is.na(d_est)) values$direct <- d_est
                 if (!is.na(i_est)) values$indirect <- i_est
                 if (!is.na(t_est)) values$total <- t_est
-                self$results$effects$setRow(rowKey = paste(from, to, sep = "::"), values = values)
+                self$results$structuralSection$effects$setRow(rowKey = paste(from, to, sep = "::"), values = values)
                 eff_rows[[k]] <- data.frame(from = from, to = to, direct = d_est, indirect = i_est, total = t_est,
                                             stringsAsFactors = FALSE)
             }
@@ -674,7 +674,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .fillMediation = function(fit, paths, model, sm, txt) {
             chains <- .pl_mediation_chains(paths)
             if (!nrow(chains)) return(NULL)
-            table <- self$results$mediation
+            table <- self$results$structuralSection$mediation
             B <- fit$Estimates$Path_estimates
             level <- as.numeric(self$options$ciLevel)
             med <- .pl_mediation(chains, B, model$cmap, draws = sm$path_draws, level = level, direct_ci = sm$paths)
@@ -698,7 +698,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # dibujan desde image$state.
         # ---------------------------------------------------------------------
         .fillIpma = function(fit, model, d, blocks, paths, hocs, txt, sm = NULL) {
-            table <- self$results$ipmaTable
+            table <- self$results$ipmaSection$ipmaTable
             reason <- .pl_ipma_reason(model, hocs, self$options)
             if (!is.null(reason)) {
                 for (k in seq_len(table$rowCount)) table$setCell(rowNo = k, col = "quadrant", value = txt("labels", "not_computable"))
@@ -734,7 +734,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (isTRUE(r$value$negative)) table$setNote("negative", txt("footnotes", "ipma_negative"))
             lang <- .pl_lang(self$options)
             for (tg in unique(ip$to)) {
-                item <- self$results$ipmaPlots$get(key = tg)
+                item <- self$results$ipmaSection$ipmaPlots$get(key = tg)
                 k <- ip$to == tg
                 item$setState(list(points = data.frame(construct = ip$from[k], importance = ip$importance[k],
                                                        performance = ip$performance[k], stringsAsFactors = FALSE),
@@ -760,8 +760,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # inadmisibles.
         # ---------------------------------------------------------------------
         .prediction = function(fit, model, d, blocks, paths, hocs, admissible, txt) {
-            pt <- self$results$predict
-            ct <- self$results$cvpat
+            pt <- self$results$predictSection$predict
+            ct <- self$results$predictSection$cvpat
             reason <- .pl_predict_reason(model, hocs, admissible)
             notcomp <- function(why) {
                 for (tab in list(pt, ct)) {
@@ -881,6 +881,22 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
         },
 
+        # A result item by name, wherever it sits: at the top of the report or
+        # inside one of its sections (Groups that give the report headings).
+        # ES: Un elemento de resultados por nombre, esté arriba o dentro de una
+        # de las secciones del informe.
+        .item = function(name) {
+            r <- self$results
+            top <- r$get(name)
+            if (!is.null(top)) return(top)
+            for (g in c("measurementSection", "structuralSection", "fitSection", "predictSection",
+                        "ipmaSection", "mgaSection", "plotsSection")) {
+                it <- r$get(g)$get(name)
+                if (!is.null(it)) return(it)
+            }
+            stop("unknown result item: ", name)
+        },
+
         # Rows of the multigroup tables: one per group, per pair of groups
         # and construct (MICOM) and per pair and path. With two groups the
         # coefficient columns carry the group names. Called by .init() (with
@@ -891,21 +907,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # cabecera de los datos) y de nuevo .run() si los niveles con casos
         # son otros.
         .mgaRows = function(lev, labels, paths, vs) {
-            for (g in lev) self$results$mgaGroups$addRow(rowKey = g, values = list(group = g))
+            for (g in lev) self$results$mgaSection$mgaGroups$addRow(rowKey = g, values = list(group = g))
             if (length(lev) < 2 || length(lev) > .PL_MGA_MAX_GROUPS) return(invisible(NULL))
             prs <- utils::combn(lev, 2, simplify = FALSE)
             for (k in seq_along(prs)) {
                 cmp <- sprintf(vs, prs[[k]][1], prs[[k]][2])
                 for (cn in labels)
-                    self$results$micom$addRow(rowKey = paste(k, cn, sep = "::"),
+                    self$results$mgaSection$micom$addRow(rowKey = paste(k, cn, sep = "::"),
                                               values = list(comparison = cmp, construct = cn))
                 for (j in seq_len(nrow(paths)))
-                    self$results$mga$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                    self$results$mgaSection$mga$addRow(rowKey = paste(k, j, sep = "::"), values = list(
                         comparison = cmp, from = paths$from[j], arrow = "\u2192", to = paths$to[j]))
             }
             if (length(lev) == 2) {
-                self$results$mga$getColumn("est1")$setTitle(lev[1])
-                self$results$mga$getColumn("est2")$setTitle(lev[2])
+                self$results$mgaSection$mga$getColumn("est1")$setTitle(lev[1])
+                self$results$mgaSection$mga$getColumn("est2")$setTitle(lev[2])
             }
         },
 
@@ -920,9 +936,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # mientras las diferencias sí se calculan.
         # ---------------------------------------------------------------------
         .multigroup = function(model, d, blocks, paths, hocs, txt) {
-            gt <- self$results$mgaGroups
-            mt <- self$results[["micom"]]
-            dt <- self$results$mga
+            gt <- self$results$mgaSection$mgaGroups
+            mt <- self$results$mgaSection$micom
+            dt <- self$results$mgaSection$mga
             lab <- function(key) txt("labels", key)
             gv <- self$options$groupVar
             lev <- .pl_mga_levels(self$data[[gv]])
@@ -1118,7 +1134,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # se quedan, con la razón.
         # ---------------------------------------------------------------------
         .fitTest = function(fit, model, d, hocs, admissible, txt) {
-            table <- self$results$fit
+            table <- self$results$fitSection$fit
             reason <- .pl_fit_reason(model, hocs, admissible)
             notcomp <- function(why) {
                 for (k in seq_len(table$rowCount)) {
@@ -1187,7 +1203,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(nrow(paths))) {
                 r <- row_of(sm$paths, paste(cc(paths$to[k]), "~", cc(paths$from[k])))
                 if (nrow(r)) {
-                    set(self$results$paths, list(se = r$se, t = r$t, p = r$p, lower = r$lower, upper = r$upper), rowNo = k)
+                    set(self$results$structuralSection$paths, list(se = r$se, t = r$t, p = r$p, lower = r$lower, upper = r$upper), rowNo = k)
                     # p (normal theory on the bootstrap SE) and the percentile
                     # interval can disagree on borderline paths; the interval
                     # decides, and the row says so.
@@ -1196,10 +1212,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     excl <- is.finite(r$lower) && (r$lower > 0 || r$upper < 0)
                     sig_p <- is.finite(r$p) && r$p < 1 - as.numeric(self$options$ciLevel)
                     if (is.finite(r$p) && excl != sig_p)
-                        self$results$paths$addFootnote(rowNo = k, col = "p", txt("boot", "p_ci_disagree"))
+                        self$results$structuralSection$paths$addFootnote(rowNo = k, col = "p", txt("boot", "p_ci_disagree"))
                 }
             }
-            self$results$paths$setNote("ci", paste(note, txt("boot", "p_note")))
+            self$results$structuralSection$paths$setNote("ci", paste(note, txt("boot", "p_note")))
 
             # Loadings and weights.
             # ES: Cargas y pesos.
@@ -1207,25 +1223,25 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 key <- paste(i, v, sep = "::")
                 l <- row_of(sm$loadings, paste(mc(blocks[[i]]$label), "=~", vv(v)))
                 w <- row_of(sm$weights, paste(mc(blocks[[i]]$label), "<~", vv(v)))
-                if (!is.null(l) && nrow(l)) set(self$results$measurement, list(loadLower = l$lower, loadUpper = l$upper), rowKey = key)
-                if (!is.null(w) && nrow(w)) set(self$results$measurement, list(weightLower = w$lower, weightUpper = w$upper,
+                if (!is.null(l) && nrow(l)) set(self$results$measurementSection$measurement, list(loadLower = l$lower, loadUpper = l$upper), rowKey = key)
+                if (!is.null(w) && nrow(w)) set(self$results$measurementSection$measurement, list(weightLower = w$lower, weightUpper = w$upper,
                                                                               weightP = w$p), rowKey = key)
             }
-            self$results$measurement$setNote("ci", note)
+            self$results$measurementSection$measurement$setNote("ci", note)
 
             for (to in unique(paths$to)) {
                 r <- row_of(sm$R2, cc(to))
-                if (!is.null(r) && nrow(r)) set(self$results$r2, list(r2Lower = r$lower, r2Upper = r$upper), rowKey = to)
+                if (!is.null(r) && nrow(r)) set(self$results$structuralSection$r2, list(r2Lower = r$lower, r2Upper = r$upper), rowKey = to)
             }
-            self$results$r2$setNote("ci", note)
+            self$results$structuralSection$r2$setNote("ci", note)
 
             for (b in Filter(function(b) b$type == "reflective" && length(b$vars) > 1, blocks)) {
                 rc <- row_of(sm$rhoC, mc(b$label))
                 av <- row_of(sm$AVE, mc(b$label))
-                if (!is.null(rc) && nrow(rc)) set(self$results$reliability, list(rhoCLower = rc$lower, rhoCUpper = rc$upper), rowKey = b$label)
-                if (!is.null(av) && nrow(av)) set(self$results$reliability, list(aveLower = av$lower, aveUpper = av$upper), rowKey = b$label)
+                if (!is.null(rc) && nrow(rc)) set(self$results$measurementSection$reliability, list(rhoCLower = rc$lower, rhoCUpper = rc$upper), rowKey = b$label)
+                if (!is.null(av) && nrow(av)) set(self$results$measurementSection$reliability, list(aveLower = av$lower, aveUpper = av$upper), rowKey = b$label)
             }
-            self$results$reliability$setNote("ci", note)
+            self$results$measurementSection$reliability$setNote("ci", note)
 
             # HTMT: the one-sided 95% upper bound decides the assessment.
             # ES: HTMT: el límite superior unilateral al 95% decide la
@@ -1237,29 +1253,29 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     r <- row_of(sm$HTMT, paste(mc(pr[1, k]), mc(pr[2, k]), sep = "~"))
                     key <- paste(pr[, k], collapse = "::")
                     if (!is.null(r) && nrow(r) && is.finite(r$upper)) {
-                        self$results$htmt$setCell(col = "htmtUpper", value = r$upper, rowKey = key)
+                        self$results$measurementSection$htmt$setCell(col = "htmtUpper", value = r$upper, rowKey = key)
                         band <- if (r$upper < 0.85) "htmt_ok_ci" else if (r$upper < 0.90) "htmt_similar_ci" else "htmt_doubt_ci"
-                        self$results$htmt$setCell(col = "assessment", value = txt("labels", band), rowKey = key)
+                        self$results$measurementSection$htmt$setCell(col = "assessment", value = txt("labels", band), rowKey = key)
                     }
                 }
-                self$results$htmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
+                self$results$measurementSection$htmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
             }
 
             for (i in seq_along(blocks)) {
                 if (blocks[[i]]$type != "formative" || length(blocks[[i]]$vars) < 2) next
                 for (v in blocks[[i]]$vars) {
                     r <- row_of(sm$VIFB, paste(mc(blocks[[i]]$label), vv(v), sep = "~"))
-                    if (!is.null(r) && nrow(r)) set(self$results$vif, list(vifLower = r$lower, vifUpper = r$upper),
+                    if (!is.null(r) && nrow(r)) set(self$results$measurementSection$vif, list(vifLower = r$lower, vifUpper = r$upper),
                                                     rowKey = paste(i, v, sep = "::"))
                 }
             }
-            self$results$vif$setNote("ci", note)
+            self$results$measurementSection$vif$setNote("ci", note)
 
             for (k in seq_len(nrow(paths))) {
                 r <- row_of(sm$VIFS, paste(cc(paths$to[k]), cc(paths$from[k]), sep = "."))
-                if (!is.null(r) && nrow(r)) set(self$results$vifStruct, list(vifLower = r$lower, vifUpper = r$upper), rowNo = k)
+                if (!is.null(r) && nrow(r)) set(self$results$structuralSection$vifStruct, list(vifLower = r$lower, vifUpper = r$upper), rowNo = k)
             }
-            self$results$vifStruct$setNote("ci", note)
+            self$results$structuralSection$vifStruct$setNote("ci", note)
 
             pairs <- .pl_effect_pairs(paths)
             for (k in seq_len(nrow(pairs))) {
@@ -1268,11 +1284,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 ri <- row_of(sm$indirect, nm)
                 rt <- row_of(sm$total, nm)
                 if (!is.null(ri) && nrow(ri) && ri$estimate != 0)
-                    set(self$results$effects, list(indLower = ri$lower, indUpper = ri$upper), rowKey = key)
+                    set(self$results$structuralSection$effects, list(indLower = ri$lower, indUpper = ri$upper), rowKey = key)
                 if (!is.null(rt) && nrow(rt))
-                    set(self$results$effects, list(totLower = rt$lower, totUpper = rt$upper), rowKey = key)
+                    set(self$results$structuralSection$effects, list(totLower = rt$lower, totUpper = rt$upper), rowKey = key)
             }
-            self$results$effects$setNote("ci", note)
+            self$results$structuralSection$effects$setNote("ci", note)
         },
 
         # ---------------------------------------------------------------------
@@ -1295,10 +1311,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     r <- md$slopes[j, ]
                     values <- list(slope = r$slope)
                     if (md$boot) values <- c(values, list(se = r$se, lower = r$lower, upper = r$upper))
-                    self$results$simpleSlopes$setRow(rowKey = paste(k, j, sep = "::"), values = values)
+                    self$results$structuralSection$simpleSlopes$setRow(rowKey = paste(k, j, sep = "::"), values = values)
                 }
                 if (self$options$moderationPlot) {
-                    item <- self$results$moderationPlots$get(key = paste(md$term, "\u2192", md$y))
+                    item <- self$results$structuralSection$moderationPlots$get(key = paste(md$term, "\u2192", md$y))
                     labels <- list(levels = c(txt("moderation", "minus_sd_short"), txt("moderation", "mean_short"),
                                               txt("moderation", "plus_sd_short")),
                                    x_axis = txt("moderation", "x_axis"), y_axis = txt("moderation", "y_axis"),
@@ -1310,7 +1326,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             note <- if (!is.null(sm)) sprintf(txt("moderation", "table_note_boot"), pct, sm$admissible)
                     else txt("moderation", "table_note")
-            self$results$simpleSlopes$setNote("mod", note)
+            self$results$structuralSection$simpleSlopes$setNote("mod", note)
             mod
         },
 
@@ -1321,7 +1337,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .prepareDiagram = function(blocks, loadings, path_tab, r2_tab, sm, model, hocq = NULL) {
-            image <- self$results$pathDiagram
+            image <- self$results$plotsSection$pathDiagram
             if (!self$options$pathDiagram) return()
             lang <- .pl_lang(self$options)
             caption <- if (is.null(sm)) .pl_text(lang, "labels", "diagram_caption")
@@ -1358,20 +1374,20 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (self$options$loadingsPlot) {
                 st <- .pl_loadings_state(loadings, sm, model, if (is.null(sm)) txt("labels", "loadings_caption")
                                          else sprintf(txt("labels", "loadings_caption_boot"), pct))
-                if (is.null(st)) self$results$loadingsPlot$setVisible(FALSE)
+                if (is.null(st)) self$results$plotsSection$loadingsPlot$setVisible(FALSE)
                 else {
-                    self$results$loadingsPlot$setSize(600, max(260, 26 * nrow(st$data) + 30 * length(unique(st$data$construct)) + 70))
-                    self$results$loadingsPlot$setState(st)
+                    self$results$plotsSection$loadingsPlot$setSize(600, max(260, 26 * nrow(st$data) + 30 * length(unique(st$data$construct)) + 70))
+                    self$results$plotsSection$loadingsPlot$setState(st)
                 }
             }
             if (self$options$htmtPlot) {
                 st <- .pl_htmt_state(quality, sm, model, if (is.null(sm)) txt("labels", "htmt_caption")
                                      else txt("labels", "htmt_caption_boot"))
-                if (is.null(st)) self$results$htmtPlot$setVisible(FALSE)
+                if (is.null(st)) self$results$plotsSection$htmtPlot$setVisible(FALSE)
                 else {
                     n <- length(st$levels)
-                    self$results$htmtPlot$setSize(max(380, 95 * n + 140), max(340, 85 * n + 120))
-                    self$results$htmtPlot$setState(st)
+                    self$results$plotsSection$htmtPlot$setSize(max(380, 95 * n + 140), max(340, 85 * n + 120))
+                    self$results$plotsSection$htmtPlot$setState(st)
                 }
             }
         },
@@ -1409,7 +1425,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (name in c("keySummary", "choicesGuide", "modelGuide", "measurementGuide", "reliabilityGuide",
                            "htmtGuide", "vifGuide", "pathsGuide", "structuralGuide", "interpretation", "reproducibility",
                            "reproducibilityCode"))
-                self$results[[name]]$setVisible(FALSE)
+                private$.item(name)$setVisible(FALSE)
         },
 
         .fillModel = function(blocks, paths, txt, hocs = list()) {
@@ -1420,7 +1436,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 preds <- paths$from[paths$to == b$label]
                 role <- if (b$label %in% names(dims)) sprintf(txt("labels", "dimension_of"), dims[[b$label]])
                         else txt("labels", if (length(preds)) "endogenous" else "exogenous")
-                self$results$model$setRow(rowKey = i, values = list(
+                self$results$measurementSection$model$setRow(rowKey = i, values = list(
                     construct = b$label,
                     measurement = txt("labels", b$type),
                     indicators = length(b$vars),
@@ -1430,7 +1446,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (j in seq_along(hocs)) {
                 h <- hocs[[j]]
                 preds <- paths$from[paths$to == h$label]
-                self$results$model$setRow(rowKey = paste0("hoc", j), values = list(
+                self$results$measurementSection$model$setRow(rowKey = paste0("hoc", j), values = list(
                     construct = h$label,
                     measurement = txt("labels", paste0(h$type, "_hoc")),
                     indicators = length(h$components),
@@ -1451,13 +1467,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 values <- list(hoc = r$hoc, component = r$component, loading = r$loading, weight = r$weight,
                                vifAssessment = if (is.na(band)) "" else txt("labels", band))
                 if (is.finite(r$vif)) values$vif <- r$vif
-                self$results$hocMeasurement$setRow(rowKey = paste(r$hoc, r$component, sep = "::"), values = values)
+                self$results$measurementSection$hocMeasurement$setRow(rowKey = paste(r$hoc, r$component, sep = "::"), values = values)
             }
             rel <- q$reliability
             for (k in seq_len(if (is.null(rel)) 0 else nrow(rel))) {
                 r <- rel[k, ]
                 a <- c(.pl_band_reliability(r$rhoC), if (r$ave >= 0.5) "ave_ok" else "ave_low")
-                self$results$hocReliability$setRow(rowKey = r$hoc, values = list(
+                self$results$measurementSection$hocReliability$setRow(rowKey = r$hoc, values = list(
                     hoc = r$hoc, alpha = r$alpha, rhoC = r$rhoC, ave = r$ave,
                     assessment = paste(vapply(a, function(x) txt("labels", x), ""), collapse = "; ")))
             }
@@ -1473,7 +1489,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .fillHocHtmt = function(sfit, hocs, smodel, txt, paths) {
             hp <- .pl_hoc_htmt_pairs(hocs, smodel$blocks, paths, smodel$m2)
             if (is.null(hp)) return(NULL)
-            table <- self$results$hocHtmt
+            table <- self$results$measurementSection$hocHtmt
             csem_like <- !identical(smodel$m2$approach, "disjoint")
             hp$htmt <- if (csem_like) NA_real_ else .pl_hoc_htmt(sfit, hp)
             hp$htmt2 <- if (csem_like) NA_real_ else .pl_hoc_htmt(sfit, hp, "htmt2")
@@ -1505,10 +1521,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     key <- paste(inv[[ab[1]]], inv[[ab[2]]], sep = "::")
                     u <- sm$hoc_htmt$upper[k]
                     if (!is.finite(u)) next
-                    self$results$hocHtmt$setCell(rowKey = key, col = "htmtUpper", value = u)
+                    self$results$measurementSection$hocHtmt$setCell(rowKey = key, col = "htmtUpper", value = u)
                     band <- if (u < 0.85) "htmt_ok_ci" else if (u < 0.90) "htmt_similar_ci" else "htmt_doubt_ci"
-                    self$results$hocHtmt$setCell(rowKey = key, col = "assessment", value = txt("labels", band))
-                    self$results$hocHtmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
+                    self$results$measurementSection$hocHtmt$setCell(rowKey = key, col = "assessment", value = txt("labels", band))
+                    self$results$measurementSection$hocHtmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
                 }
             set <- function(table, key, values) for (col in names(values)) {
                 v <- values[[col]]
@@ -1523,22 +1539,22 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     l <- row_of(sm$hoc_loadings, paste(hh, "=~", ind))
                     w <- row_of(sm$hoc_weights, paste(hh, "<~", ind))
                     v <- row_of(sm$hoc_vif, paste(hh, ind, sep = "~"))
-                    if (!is.null(l) && nrow(l)) set(self$results$hocMeasurement, key, list(loadLower = l$lower, loadUpper = l$upper))
-                    if (!is.null(w) && nrow(w)) set(self$results$hocMeasurement, key, list(weightLower = w$lower,
+                    if (!is.null(l) && nrow(l)) set(self$results$measurementSection$hocMeasurement, key, list(loadLower = l$lower, loadUpper = l$upper))
+                    if (!is.null(w) && nrow(w)) set(self$results$measurementSection$hocMeasurement, key, list(weightLower = w$lower,
                                                                                             weightUpper = w$upper, weightP = w$p))
-                    if (!is.null(v) && nrow(v)) set(self$results$hocMeasurement, key, list(vifLower = v$lower, vifUpper = v$upper))
+                    if (!is.null(v) && nrow(v)) set(self$results$measurementSection$hocMeasurement, key, list(vifLower = v$lower, vifUpper = v$upper))
                 }
                 if (h$type == "reflective") {
                     r <- row_of(sm$hoc_rhoC, hh)
                     a <- row_of(sm$hoc_ave, hh)
-                    if (!is.null(r) && nrow(r)) set(self$results$hocReliability, h$label, list(rhoCLower = r$lower, rhoCUpper = r$upper))
-                    if (!is.null(a) && nrow(a)) set(self$results$hocReliability, h$label, list(aveLower = a$lower, aveUpper = a$upper))
+                    if (!is.null(r) && nrow(r)) set(self$results$measurementSection$hocReliability, h$label, list(rhoCLower = r$lower, rhoCUpper = r$upper))
+                    if (!is.null(a) && nrow(a)) set(self$results$measurementSection$hocReliability, h$label, list(aveLower = a$lower, aveUpper = a$upper))
                 }
             }
             pct <- format(100 * as.numeric(self$options$ciLevel))
             note <- sprintf(txt("boot", "ci_note"), pct, sm$admissible)
-            self$results$hocMeasurement$setNote("ci", note)
-            self$results$hocReliability$setNote("ci", note)
+            self$results$measurementSection$hocMeasurement$setNote("ci", note)
+            self$results$measurementSection$hocReliability$setNote("ci", note)
         },
 
         # Returns the long table of loadings and weights, reused by the
@@ -1554,7 +1570,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     vv <- model$vmap[[v]]
                     loading <- est$Loading_estimates[cc, vv]
                     weight <- est$Weight_estimates[cc, vv]
-                    self$results$measurement$setRow(rowKey = paste(i, v, sep = "::"), values = list(
+                    self$results$measurementSection$measurement$setRow(rowKey = paste(i, v, sep = "::"), values = list(
                         construct = b$label, indicator = v, loading = loading, weight = weight))
                     out[[length(out) + 1]] <- data.frame(construct = b$label, type = b$type, indicator = v,
                                                          loading = loading, weight = weight,
@@ -1568,7 +1584,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             paths$estimate <- NA_real_
             for (k in seq_len(nrow(paths))) {
                 paths$estimate[k] <- est$Path_estimates[model$cmap[[paths$to[k]]], model$cmap[[paths$from[k]]]]
-                self$results$paths$setRow(rowKey = k, values = list(
+                self$results$structuralSection$paths$setRow(rowKey = k, values = list(
                     from = paths$from[k], arrow = "\u2192", to = paths$to[k], estimate = paths$estimate[k]))
             }
             paths
@@ -1581,7 +1597,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 cc <- model$cmap[[out$construct[k]]]
                 out$r2[k] <- est$R2[[cc]]
                 out$r2adj[k] <- est$R2adj[[cc]]
-                self$results$r2$setRow(rowKey = out$construct[k], values = list(
+                self$results$structuralSection$r2$setRow(rowKey = out$construct[k], values = list(
                     construct = out$construct[k], r2 = out$r2[k], r2adj = out$r2adj[k]))
             }
             out
@@ -2087,21 +2103,21 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .guides = function(lang) {
             if (!self$options$showGuides) return()
             txt <- function(key) .pl_text(lang, "guide", key)
-            self$results$modelGuide$setContent(.pl_html_block(txt("model")))
-            self$results$measurementGuide$setContent(.pl_html_block(txt("measurement")))
-            self$results$reliabilityGuide$setContent(.pl_html_block(c(txt("reliability"), txt("reliability_omega"))))
-            self$results$htmtGuide$setContent(.pl_html_block(txt("htmt")))
-            self$results$vifGuide$setContent(.pl_html_block(txt("vif")))
-            self$results$structuralGuide$setContent(.pl_html_block(c(txt("f2"), txt("vif_struct"), txt("effects"))))
-            self$results$pathsGuide$setContent(.pl_html_block(txt("paths")))
-            self$results$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
-            self$results$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
-            self$results$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
-            self$results$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
-            self$results$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
+            self$results$measurementSection$modelGuide$setContent(.pl_html_block(txt("model")))
+            self$results$measurementSection$measurementGuide$setContent(.pl_html_block(txt("measurement")))
+            self$results$measurementSection$reliabilityGuide$setContent(.pl_html_block(c(txt("reliability"), txt("reliability_omega"))))
+            self$results$measurementSection$htmtGuide$setContent(.pl_html_block(txt("htmt")))
+            self$results$measurementSection$vifGuide$setContent(.pl_html_block(txt("vif")))
+            self$results$structuralSection$structuralGuide$setContent(.pl_html_block(c(txt("f2"), txt("vif_struct"), txt("effects"))))
+            self$results$structuralSection$pathsGuide$setContent(.pl_html_block(txt("paths")))
+            self$results$structuralSection$moderationGuide$setContent(.pl_html_block(c(txt("moderation"), txt("moderation_f2"))))
+            self$results$measurementSection$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
+            self$results$structuralSection$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
+            self$results$ipmaSection$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
+            self$results$predictSection$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
                                                                  txt("predict_power"), txt("cvpat"))))
-            self$results$mgaGuide$setContent(.pl_html_block(c(txt("mga"), txt("micom"), txt("mgd"), txt("mga_cautions"))))
-            self$results$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
+            self$results$mgaSection$mgaGuide$setContent(.pl_html_block(c(txt("mga"), txt("micom"), txt("mgd"), txt("mga_cautions"))))
+            self$results$fitSection$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 
         # ---------------------------------------------------------------------

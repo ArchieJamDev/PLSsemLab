@@ -32,8 +32,8 @@ test_that("chains are found and typed (Zhao et al., 2010)", {
 
 test_that("a single chain reproduces cSEM's indirect effect and interval", {
     a <- runPlssem(corpRepData(), simpleModel(), bootstrap = TRUE, bootReps = 200, bootSeed = 1)
-    med <- a$results$mediation$asDF
-    eff <- a$results$effects$asDF
+    med <- a$results$structuralSection$mediation$asDF
+    eff <- a$results$structuralSection$effects$asDF
     expect_equal(nrow(med), 2)
     for (x in c("COMP", "LIKE")) {
         m <- med[med$chain == paste(x, "→ CUSA → CUSL"), ]
@@ -47,7 +47,7 @@ test_that("a single chain reproduces cSEM's indirect effect and interval", {
 
 test_that("without the bootstrap the chains show estimates and ask for it", {
     a <- runPlssem(corpRepData(), simpleModel())
-    med <- a$results$mediation$asDF
+    med <- a$results$structuralSection$mediation$asDF
     expect_true(all(med$type == "Needs the bootstrap"))
     expect_true(all(is.finite(med$indirect)))
 })
@@ -64,8 +64,8 @@ test_that("mediation through a higher-order construct uses the stage-2 draws", {
                                     structural = list(list("QUAL"), list("SAT", "QUAL"), list(), list(), list()),
                                     bootstrap = TRUE, bootReps = 100, bootSeed = 3), data = d)
     a$init(); a$run()
-    med <- a$results$mediation$asDF
-    eff <- a$results$effects$asDF
+    med <- a$results$structuralSection$mediation$asDF
+    eff <- a$results$structuralSection$effects$asDF
     expect_equal(med$chain, "QUAL → SAT → LOY")
     e <- eff[eff$from == "QUAL" & eff$to == "LOY", ]
     expect_equal(med$indirect, e$indirect, tolerance = 1e-10)

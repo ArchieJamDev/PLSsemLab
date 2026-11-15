@@ -30,7 +30,7 @@ test_that("the report is in Spanish, then English, then Spanish in one process",
     expect_match(es1$results$keySummary$content, "Hallazgos principales")
     expect_match(en$results$keySummary$content, "Main findings")
     expect_match(es2$results$keySummary$content, "Hallazgos principales")
-    expect_equal(es2$results$model$asDF$measurement[1], "Reflectivo")
+    expect_equal(es2$results$measurementSection$model$asDF$measurement[1], "Reflectivo")
 })
 
 test_that("Category A messages are translated", {

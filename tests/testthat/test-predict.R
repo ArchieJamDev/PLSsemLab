@@ -34,7 +34,7 @@ satModel <- function() list(
 test_that("PLSpredict equals cSEM::predict with one repetition", {
     s <- satModel()
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 10, predictReps = 1, bootSeed = 11)
-    tab <- a$results$predict$asDF
+    tab <- a$results$predictSection$predict$asDF
     f <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
     p <- withDefaultRng(suppressWarnings(cSEM::predict(f, .benchmark = "lm", .cv_folds = 10, .r = 1, .seed = 11)))$Prediction_metrics
     p <- p[match(tab$indicator, p$Name), ]
@@ -43,7 +43,7 @@ test_that("PLSpredict equals cSEM::predict with one repetition", {
     expect_equal(tab$rmseLm, p$RMSE_benchmark, tolerance = 1e-8)
     expect_equal(tab$maePls, p$MAE_target, tolerance = 1e-8)
     expect_equal(tab$maeLm, p$MAE_benchmark, tolerance = 1e-8)
-    expect_equal(nrow(a$results$cvpat$asDF), 6)
+    expect_equal(nrow(a$results$predictSection$cvpat$asDF), 6)
     expect_match(a$results$keySummary$content, "Prediction:")
 })
 
@@ -69,14 +69,14 @@ test_that("with an interaction prediction stays as not computable", {
     s <- satModel()
     s$m$structural <- list(list(label = "LOY", predictors = list("SAT", "IMAG", c("SAT", "IMAG"))))
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictReps = 1)
-    expect_true(all(a$results$predict$asDF$lower == "Not computable"))
+    expect_true(all(a$results$predictSection$predict$asDF$lower == "Not computable"))
 })
 
 test_that("CVPAT against a competing model through the options equals cSEM::testCVPAT", {
     s <- satModel()
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 10, predictReps = 1, bootSeed = 11,
                    cvpatDrop = list("IMAG → LOY"))
-    tab <- a$results$cvpat$asDF
+    tab <- a$results$predictSection$cvpat$asDF
     r <- tab[tab$bench == "Competing model" & tab$construct == "All endogenous constructs", ]
     f1 <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
     f2 <- cSEM::csem(s$d, sub("LOY ~ SAT + IMAG", "LOY ~ SAT", s$syntax, fixed = TRUE), .PLS_modes = s$modes,
@@ -90,13 +90,13 @@ test_that("CVPAT against a competing model through the options equals cSEM::test
 test_that("the comparison with LM uses the MAE when the errors are asymmetric", {
     s <- satModel()
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictReps = 2, bootSeed = 3)
-    tab <- a$results$predict$asDF
+    tab <- a$results$predictSection$predict$asDF
     expect_true(all(tab$metric == ifelse(abs(tab$skew) > 1, "MAE", "RMSE")))
     better <- ifelse(tab$metric == "MAE", tab$maePls < tab$maeLm, tab$rmsePls < tab$rmseLm)
     expect_equal(tab$lower, ifelse(better, "PLS", "LM"))
-    expect_true(all(c("metric", "q2") %in% names(a$results$predict$notes)))
+    expect_true(all(c("metric", "q2") %in% names(a$results$predictSection$predict$notes)))
     # 250 cases, 10 folds: 25 per fold and 225 training cases for 5 predictors of LM
     # ES: 250 casos, 10 particiones: 25 por partición, 225 de entrenamiento
-    expect_false("small" %in% names(a$results$predict$notes))
+    expect_false("small" %in% names(a$results$predictSection$predict$notes))
     expect_true(PLSsemLab:::.pl_predict_small(120, 10, 11)$small)
 })

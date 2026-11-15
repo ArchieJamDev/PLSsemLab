@@ -48,19 +48,19 @@ test_that("estimates, f² and structural VIF equal cSEM with an interaction", {
     d <- satData()
     a <- runPlssem(d, interactionModel())
     f <- directFit(d)
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     term <- paste0("SAT", " × ", "IMAG")
     expect_equal(p$estimate[p$from == term], f$Estimates$Path_estimates["C3", "C2.C1"], tolerance = 1e-10)
     expect_equal(p$estimate[p$from == "SAT"], f$Estimates$Path_estimates["C3", "C2"], tolerance = 1e-10)
-    f2 <- a$results$f2$asDF
+    f2 <- a$results$structuralSection$f2$asDF
     expect_equal(f2$f2[f2$from == term], cSEM::calculatef2(f)["C3", "C2.C1"], tolerance = 1e-10)
     expect_match(f2$assessment[f2$from == term], "^Interaction")
-    v <- a$results$vifStruct$asDF
+    v <- a$results$structuralSection$vifStruct$asDF
     expect_equal(v$vif[v$from == term], unname(f$Estimates$VIF$C3["C2.C1"]), tolerance = 1e-10)
-    expect_equal(a$results$r2$asDF$r2, unname(f$Estimates$R2), tolerance = 1e-10)
-    expect_true(all(is.finite(a$results$reliability$asDF$rhoC)))
+    expect_equal(a$results$structuralSection$r2$asDF$r2, unname(f$Estimates$R2), tolerance = 1e-10)
+    expect_true(all(is.finite(a$results$measurementSection$reliability$asDF$rhoC)))
     expect_true(any(grepl("computed from the loadings", noticesOf(a))))
-    expect_equal(nrow(a$results$simpleSlopes$asDF), 3)
+    expect_equal(nrow(a$results$structuralSection$simpleSlopes$asDF), 3)
 })
 
 test_that("rho_C from the loadings equals cSEM's in a linear model", {
@@ -76,7 +76,7 @@ test_that("simple effects and floodlight equal doNonlinearEffectsAnalysis()", {
     d <- satData()
     a <- runPlssem(d, interactionModel(), bootstrap = TRUE, bootReps = 150, bootSeed = 7)
     b <- cSEM::resamplecSEMResults(directFit(d), .R = 150, .seed = 7, .handle_inadmissibles = "drop")
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     s <- cSEM::summarize(b, .ci = "CI_percentile")$Estimates$Path_estimates
     term <- "SAT × IMAG"
     expect_equal(p$upper[p$from == term], s[["CI_percentile.95%U"]][s$Name == "C3 ~ C2.C1"], tolerance = 1e-10)
@@ -84,9 +84,9 @@ test_that("simple effects and floodlight equal doNonlinearEffectsAnalysis()", {
     fl <- as.data.frame(nl$out_floodlight$out)
     # the module's own slopes at cSEM's grid, from the same draws
     # ES: las pendientes del módulo en la rejilla de cSEM, de las mismas réplicas
-    st <- a$results$moderationPlots$items[[1]]$state
+    st <- a$results$structuralSection$moderationPlots$items[[1]]$state
     expect_equal(range(st$flood$value), range(fl$value_z), tolerance = 1e-10)
-    ss <- a$results$simpleSlopes$asDF
+    ss <- a$results$structuralSection$simpleSlopes$asDF
     pe <- f <- directFit(d)$Estimates$Path_estimates
     expect_equal(ss$slope, pe["C3", "C2"] + pe["C3", "C2.C1"] * c(-1, 0, 1), tolerance = 1e-10)
     dr <- b$Estimates$Estimates_resample$Estimates1$Path_estimates$Resampled
@@ -98,7 +98,7 @@ test_that("simple effects and floodlight equal doNonlinearEffectsAnalysis()", {
     }
     expect_equal(ss$lower[2], p$lower[p$from == "SAT"], tolerance = 1e-10)
     expect_match(a$results$interpretation$content, "no evidence that IMAG moderates")
-    dg <- a$results$pathDiagram$state
+    dg <- a$results$plotsSection$pathDiagram$state
     expect_true(term %in% dg$vars$name)
     expect_equal(sum(dg$pars$kind == "path"), 3)
 })

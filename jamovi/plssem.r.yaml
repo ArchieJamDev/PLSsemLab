@@ -50,1454 +50,1510 @@ items:
     type: Html
     visible: (showChoicesGuide)
 
-  - name: modelGuide
-    title: How to read the model summary
-    type: Html
-    visible: (showGuides)
+  # Section: Measurement model. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: measurementSection
+    title: Measurement model
+    type: Group
+    items:
+      - name: modelGuide
+        title: How to read the model summary
+        type: Html
+        visible: (showGuides)
 
-  # One row per construct defined in the boxes (rows laid out in .init()).
-  # ES: Una fila por constructo definido en las cajas (filas en .init()).
-  - name: model
-    title: Model summary
-    type: Table
-    rows: 0
-    refs:
-      - csem_pkg
-      - hair_2021
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-      - name: measurement
-        title: Measurement model
-        type: text
-      - name: indicators
-        title: Indicators
-        type: integer
-      - name: role
-        title: Role
-        type: text
-      - name: predictors
-        title: Predicted by
-        type: text
-
-  - name: measurementGuide
-    title: How to read loadings and weights
-    type: Html
-    visible: (showGuides)
-
-  # One row per indicator (rows laid out in .init()).
-  # ES: Una fila por indicador (filas en .init()).
-  - name: measurement
-    title: Loadings and weights
-    type: Table
-    rows: 0
-    refs:
-      - tenenhaus_2005
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-        combineBelow: true
-      - name: indicator
-        title: Indicator
-        type: text
-      - name: loading
-        title: Loading
-        type: number
-      - name: loadLower
-        title: Lower
-        type: number
-        superTitle: Loading CI
-        visible: (bootstrap)
-      - name: loadUpper
-        title: Upper
-        type: number
-        superTitle: Loading CI
-        visible: (bootstrap)
-      - name: weight
-        title: Weight
-        type: number
-
-      - name: weightLower
-        title: Lower
-        type: number
-        superTitle: Weight CI
-        visible: (bootstrap)
-      - name: weightUpper
-        title: Upper
-        type: number
-        superTitle: Weight CI
-        visible: (bootstrap)
-      - name: weightP
-        title: p (weight)
-        type: number
-        format: zto,pvalue
-        visible: (bootstrap)
-  - name: reliabilityGuide
-    title: How to read reliability and convergent validity
-    type: Html
-    visible: (showGuides)
-
-  # One row per reflective construct (rows laid out in .init()).
-  # ES: Una fila por constructo reflectivo (filas en .init()).
-  - name: reliability
-    title: Reliability and convergent validity
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-      - dijkstra_2015
-      - mcdonald_1999
-      - schuberth_2018
-      - chalmers_2018
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-      - omegaCfa
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-      - name: alpha
-        title: Cronbach's α
-        type: number
-      - name: rhoA
-        title: ρA
-        type: number
-      - name: rhoC
-        title: ρC
-        type: number
-      - name: rhoCLower
-        title: Lower
-        type: number
-        superTitle: ρC CI
-        visible: (bootstrap)
-      - name: rhoCUpper
-        title: Upper
-        type: number
-        superTitle: ρC CI
-        visible: (bootstrap)
-      - name: omega
-        title: ω (CFA)
-        type: number
-        visible: (omegaCfa)
-      - name: ave
-        title: AVE
-        type: number
-      - name: aveLower
-        title: Lower
-        type: number
-        superTitle: AVE CI
-        visible: (bootstrap)
-      - name: aveUpper
-        title: Upper
-        type: number
-        superTitle: AVE CI
-        visible: (bootstrap)
-      - name: assessment
-        title: Assessment
-        type: text
-
-  - name: htmtGuide
-    title: How to read discriminant validity
-    type: Html
-    visible: (showGuides)
-
-  # One row per pair of reflective constructs (rows laid out in .init()).
-  # ES: Una fila por par de constructos reflectivos (filas en .init()).
-  - name: htmt
-    title: Discriminant validity (HTMT)
-    type: Table
-    rows: 0
-    refs:
-      - henseler_2015
-      - roemer_2021
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: c1
-        title: Construct
-        type: text
-      - name: sep
-        title: ''
-        type: text
-      - name: c2
-        title: Construct
-        type: text
-      - name: htmt
-        title: HTMT
-        type: number
-      - name: htmtUpper
-        title: Upper bound
-        type: number
-        superTitle: HTMT
-        visible: (bootstrap)
-      - name: htmt2
-        title: HTMT2
-        type: number
-      - name: assessment
-        title: Assessment (HTMT)
-        type: text
-
-  # Square table: one row and one column per reflective construct (laid out
-  # in .init()).
-  # ES: Tabla cuadrada: una fila y una columna por constructo reflectivo.
-  - name: fornell
-    title: Fornell-Larcker criterion
-    type: Table
-    rows: 0
-    visible: (fornellLarcker)
-    refs:
-      - fornell_1981
-      - henseler_2015
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - fornellLarcker
-    columns:
-      - name: construct
-        title: ''
-        type: text
-
-  - name: vifGuide
-    title: How to read the collinearity of formative indicators
-    type: Html
-    visible: (showGuides)
-
-  # One row per indicator of a formative construct (rows laid out in .init()).
-  # ES: Una fila por indicador de un constructo formativo.
-  - name: vif
-    title: Collinearity of formative indicators
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-        combineBelow: true
-      - name: indicator
-        title: Indicator
-        type: text
-      - name: vif
-        title: VIF
-        type: number
-      - name: vifLower
-        title: Lower
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: vifUpper
-        title: Upper
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: assessment
-        title: Assessment
-        type: text
-
-  - name: pathsGuide
-    title: How to read the path coefficients
-    type: Html
-    visible: (showGuides)
-
-  # One row per structural path (rows laid out in .init()).
-  # ES: Una fila por ruta estructural (filas en .init()).
-  - name: paths
-    title: Path coefficients
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-      - dijkstra_2015
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: from
-        title: Predictor
-        type: text
-      - name: arrow
-        title: ''
-        type: text
-      - name: to
-        title: Outcome
-        type: text
-      - name: estimate
-        title: Coefficient
-        type: number
-
-  # One row per endogenous construct (rows laid out in .init()).
-  # ES: Una fila por constructo endógeno (filas en .init()).
-      - name: se
-        title: SE
-        type: number
-        visible: (bootstrap)
-      - name: t
-        title: t
-        type: number
-        visible: (bootstrap)
-      - name: p
-        title: p
-        type: number
-        format: zto,pvalue
-        visible: (bootstrap)
-      - name: lower
-        title: Lower
-        type: number
-        superTitle: Coefficient CI
-        visible: (bootstrap)
-      - name: upper
-        title: Upper
-        type: number
-        superTitle: Coefficient CI
-        visible: (bootstrap)
-  - name: r2
-    title: Explained variance
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-      - name: r2
-        title: R²
-        type: number
-      - name: r2Lower
-        title: Lower
-        type: number
-        superTitle: R² CI
-        visible: (bootstrap)
-      - name: r2Upper
-        title: Upper
-        type: number
-        superTitle: R² CI
-        visible: (bootstrap)
-      - name: r2adj
-        title: Adjusted R²
-        type: number
-
-  # Higher-order constructs (phase 4): measurement in stage 2, rows laid
-  # out in .init(); hidden when the model has none.
-  # ES: Constructos de orden superior (fase 4): medida en la etapa 2.
-  - name: hocGuide
-    title: How to read higher-order constructs
-    type: Html
-    visible: (showGuides)
-
-  - name: hocMeasurement
-    title: Higher-order constructs (stage 2)
-    type: Table
-    rows: 0
-    refs:
-      - sarstedt_2019
-      - hair_2021
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: hoc
-        title: Higher-order construct
-        type: text
-        combineBelow: true
-      - name: component
-        title: Lower-order construct
-        type: text
-      - name: loading
-        title: Loading
-        type: number
-      - name: loadLower
-        title: Lower
-        type: number
-        superTitle: Loading CI
-        visible: (bootstrap)
-      - name: loadUpper
-        title: Upper
-        type: number
-        superTitle: Loading CI
-        visible: (bootstrap)
-      - name: weight
-        title: Weight
-        type: number
-      - name: weightLower
-        title: Lower
-        type: number
-        superTitle: Weight CI
-        visible: (bootstrap)
-      - name: weightUpper
-        title: Upper
-        type: number
-        superTitle: Weight CI
-        visible: (bootstrap)
-      - name: weightP
-        title: p (weight)
-        type: number
-        format: zto,pvalue
-        visible: (bootstrap)
-      - name: vif
-        title: VIF
-        type: number
-      - name: vifLower
-        title: Lower
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: vifUpper
-        title: Upper
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: vifAssessment
-        title: Assessment (VIF)
-        type: text
-
-  - name: hocReliability
-    title: Reliability of reflective higher-order constructs
-    type: Table
-    rows: 0
-    refs:
-      - sarstedt_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: hoc
-        title: Higher-order construct
-        type: text
-      - name: alpha
-        title: Cronbach's α
-        type: number
-      - name: rhoC
-        title: ρC
-        type: number
-      - name: rhoCLower
-        title: Lower
-        type: number
-        superTitle: ρC CI
-        visible: (bootstrap)
-      - name: rhoCUpper
-        title: Upper
-        type: number
-        superTitle: ρC CI
-        visible: (bootstrap)
-      - name: ave
-        title: AVE
-        type: number
-      - name: aveLower
-        title: Lower
-        type: number
-        superTitle: AVE CI
-        visible: (bootstrap)
-      - name: aveUpper
-        title: Upper
-        type: number
-        superTitle: AVE CI
-        visible: (bootstrap)
-      - name: assessment
-        title: Assessment
-        type: text
-
-
-  # HTMT of each reflective higher-order construct with the other reflective
-  # constructs, in stage 2 (rows laid out in .init()).
-  # ES: HTMT de cada constructo de orden superior reflectivo con los otros
-  # constructos reflectivos, en la etapa 2.
-  - name: hocHtmt
-    title: Discriminant validity of higher-order constructs (HTMT, stage 2)
-    type: Table
-    rows: 0
-    refs:
-      - sarstedt_2019
-      - henseler_2015
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: c1
-        title: Higher-order construct
-        type: text
-      - name: sep
-        title: ''
-        type: text
-      - name: c2
-        title: Construct
-        type: text
-      - name: htmt
-        title: HTMT
-        type: number
-      - name: htmtUpper
-        title: Upper bound
-        type: number
-        superTitle: HTMT
-        visible: (bootstrap)
-      - name: htmt2
-        title: HTMT2
-        type: number
-      - name: assessment
-        title: Assessment (HTMT)
-        type: text
-  - name: structuralGuide
-    title: How to read effect sizes, collinearity and effects
-    type: Html
-    visible: (showGuides)
-
-  # One row per structural path (rows laid out in .init()).
-  # ES: Una fila por ruta estructural (filas en .init()).
-  - name: f2
-    title: Effect size (f²)
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-    columns:
-      - name: from
-        title: Predictor
-        type: text
-      - name: arrow
-        title: ''
-        type: text
-      - name: to
-        title: Outcome
-        type: text
-      - name: f2
-        title: f²
-        type: number
-      - name: assessment
-        title: Assessment
-        type: text
-
-  # One row per structural path (rows laid out in .init()).
-  # ES: Una fila por ruta estructural (filas en .init()).
-  - name: vifStruct
-    title: Collinearity of predictors (structural VIF)
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: from
-        title: Predictor
-        type: text
-      - name: arrow
-        title: ''
-        type: text
-      - name: to
-        title: Outcome
-        type: text
-      - name: vif
-        title: VIF
-        type: number
-      - name: vifLower
-        title: Lower
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: vifUpper
-        title: Upper
-        type: number
-        superTitle: VIF CI
-        visible: (bootstrap)
-      - name: assessment
-        title: Assessment
-        type: text
-
-  # One row per pair of constructs joined by at least one path, directly or
-  # through other constructs (rows laid out in .init()).
-  # ES: Una fila por par de constructos unidos por al menos una ruta,
-  # directa o a través de otros constructos.
-  - name: effects
-    title: Direct, indirect and total effects
-    type: Table
-    rows: 0
-    refs:
-      - hair_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: from
-        title: Predictor
-        type: text
-      - name: arrow
-        title: ''
-        type: text
-      - name: to
-        title: Outcome
-        type: text
-      - name: direct
-        title: Direct
-        type: number
-      - name: indirect
-        title: Indirect
-        type: number
-      - name: indLower
-        title: Lower
-        type: number
-        superTitle: Indirect CI
-        visible: (bootstrap)
-      - name: indUpper
-        title: Upper
-        type: number
-        superTitle: Indirect CI
-        visible: (bootstrap)
-      - name: total
-        title: Total
-        type: number
-      - name: totLower
-        title: Lower
-        type: number
-        superTitle: Total CI
-        visible: (bootstrap)
-      - name: totUpper
-        title: Upper
-        type: number
-        superTitle: Total CI
-        visible: (bootstrap)
-
-  # Mediation (phase 6): one row per specific indirect effect (a chain of
-  # two or more paths), laid out in .init(); hidden without chains.
-  # ES: Mediación (fase 6): una fila por efecto indirecto específico, en
-  # .init(); oculta si no hay cadenas.
-  - name: mediationGuide
-    title: How to read the mediation analysis
-    type: Html
-    visible: (showGuides)
-
-  - name: mediation
-    title: Mediation (specific indirect effects)
-    type: Table
-    rows: 0
-    refs:
-      - zhao_2010
-      - nitzl_2016
-      - preacher_2008
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: chain
-        title: Indirect path
-        type: text
-      - name: indirect
-        title: Indirect
-        type: number
-      - name: se
-        title: SE
-        type: number
-        visible: (bootstrap)
-      - name: lower
-        title: Lower
-        type: number
-        superTitle: Indirect CI
-        visible: (bootstrap)
-      - name: upper
-        title: Upper
-        type: number
-        superTitle: Indirect CI
-        visible: (bootstrap)
-      - name: direct
-        title: Direct (X → Y)
-        type: number
-      - name: type
-        title: Type of mediation
-        type: text
-
-  # Moderation (phase 4): rows laid out in .init(), three per interaction;
-  # hidden when the model has none.
-  # ES: Moderación (fase 4): tres filas por interacción, en .init(); oculta
-  # si el modelo no tiene ninguna.
-  - name: moderationGuide
-    title: How to read a moderation
-    type: Html
-    visible: (showGuides)
-
-  - name: simpleSlopes
-    title: Simple effects (moderation)
-    type: Table
-    rows: 0
-    refs:
-      - hair_2021
-      - kenny_2018
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
-    columns:
-      - name: term
-        title: Interaction
-        type: text
-        combineBelow: true
-      - name: effect
-        title: Effect
-        type: text
-        combineBelow: true
-      - name: level
-        title: Moderator at
-        type: text
-      - name: slope
-        title: Simple effect
-        type: number
-      - name: se
-        title: SE
-        type: number
-        visible: (bootstrap)
-      - name: lower
-        title: Lower
-        type: number
-        superTitle: Simple effect CI
-        visible: (bootstrap)
-      - name: upper
-        title: Upper
-        type: number
-        superTitle: Simple effect CI
-        visible: (bootstrap)
-
-  - name: moderationPlots
-    title: Moderation
-    type: Array
-    items: 0
-    visible: (moderationPlot)
-    template:
-      title: $key
-      type: Image
-      width: 760
-      height: 360
-      renderFun: .plotModeration
-      clearWith:
-        - reflective
-        - formative
-        - reflectiveHoc
-        - formativeHoc
-        - hocApproach
-        - structural
-        - estimator
-        - innerScheme
-        - indicatorScale
-        - missing
-        - bootstrap
-        - bootReps
-        - bootSeed
-        - ciLevel
-
-  # Overall model fit (phase 5): rows laid out in .init() (4 measures x
-  # estimated and saturated model).
-  # ES: Ajuste global (fase 5): filas en .init().
-  - name: fitGuide
-    title: How to read the overall fit test
-    type: Html
-    visible: (showGuides && fitTest)
-
-  - name: fit
-    title: Overall model fit (bootstrap test of exact fit)
-    type: Table
-    rows: 0
-    visible: (fitTest)
-    refs:
-      - dijkstra_2015
-      - beran_1985
-      - schuberth_2023
-      - henseler_2016
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - fitReps
-      - fitLevel
-      - bootSeed
-    columns:
+      # One row per construct defined in the boxes (rows laid out in .init()).
+      # ES: Una fila por constructo definido en las cajas (filas en .init()).
       - name: model
-        title: Model
-        type: text
-        combineBelow: true
-      - name: measure
-        title: Discrepancy
-        type: text
-      - name: value
-        title: Value
-        type: number
-      - name: critical
-        title: Critical value
-        type: number
-      - name: p
-        title: p (bootstrap)
-        type: number
-        format: zto,pvalue
-      - name: decision
-        title: Exact fit
-        type: text
+        title: Model summary
+        type: Table
+        rows: 0
+        refs:
+          - csem_pkg
+          - hair_2021
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+          - name: measurement
+            title: Measurement model
+            type: text
+          - name: indicators
+            title: Indicators
+            type: integer
+          - name: role
+            title: Role
+            type: text
+          - name: predictors
+            title: Predicted by
+            type: text
 
-  # Out-of-sample prediction (phase 6): rows laid out in .init() (one per
-  # indicator of an endogenous construct; CVPAT: all endogenous constructs
-  # and each one, against IA and LM).
-  # ES: Predicción fuera de la muestra (fase 6): filas en .init().
-  - name: predictGuide
-    title: How to read PLSpredict and CVPAT
-    type: Html
-    visible: (showGuides && predictRun)
+      - name: measurementGuide
+        title: How to read loadings and weights
+        type: Html
+        visible: (showGuides)
 
-  - name: predict
-    title: PLSpredict (out-of-sample prediction of the endogenous indicators)
-    type: Table
-    rows: 0
+      # One row per indicator (rows laid out in .init()).
+      # ES: Una fila por indicador (filas en .init()).
+      - name: measurement
+        title: Loadings and weights
+        type: Table
+        rows: 0
+        refs:
+          - tenenhaus_2005
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+            combineBelow: true
+          - name: indicator
+            title: Indicator
+            type: text
+          - name: loading
+            title: Loading
+            type: number
+          - name: loadLower
+            title: Lower
+            type: number
+            superTitle: Loading CI
+            visible: (bootstrap)
+          - name: loadUpper
+            title: Upper
+            type: number
+            superTitle: Loading CI
+            visible: (bootstrap)
+          - name: weight
+            title: Weight
+            type: number
+
+          - name: weightLower
+            title: Lower
+            type: number
+            superTitle: Weight CI
+            visible: (bootstrap)
+          - name: weightUpper
+            title: Upper
+            type: number
+            superTitle: Weight CI
+            visible: (bootstrap)
+          - name: weightP
+            title: p (weight)
+            type: number
+            format: zto,pvalue
+            visible: (bootstrap)
+
+      - name: reliabilityGuide
+        title: How to read reliability and convergent validity
+        type: Html
+        visible: (showGuides)
+
+      # One row per reflective construct (rows laid out in .init()).
+      # ES: Una fila por constructo reflectivo (filas en .init()).
+      - name: reliability
+        title: Reliability and convergent validity
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+          - dijkstra_2015
+          - mcdonald_1999
+          - schuberth_2018
+          - chalmers_2018
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+          - omegaCfa
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+          - name: alpha
+            title: Cronbach's α
+            type: number
+          - name: rhoA
+            title: ρA
+            type: number
+          - name: rhoC
+            title: ρC
+            type: number
+          - name: rhoCLower
+            title: Lower
+            type: number
+            superTitle: ρC CI
+            visible: (bootstrap)
+          - name: rhoCUpper
+            title: Upper
+            type: number
+            superTitle: ρC CI
+            visible: (bootstrap)
+          - name: omega
+            title: ω (CFA)
+            type: number
+            visible: (omegaCfa)
+          - name: ave
+            title: AVE
+            type: number
+          - name: aveLower
+            title: Lower
+            type: number
+            superTitle: AVE CI
+            visible: (bootstrap)
+          - name: aveUpper
+            title: Upper
+            type: number
+            superTitle: AVE CI
+            visible: (bootstrap)
+          - name: assessment
+            title: Assessment
+            type: text
+
+      - name: htmtGuide
+        title: How to read discriminant validity
+        type: Html
+        visible: (showGuides)
+
+      # One row per pair of reflective constructs (rows laid out in .init()).
+      # ES: Una fila por par de constructos reflectivos (filas en .init()).
+      - name: htmt
+        title: Discriminant validity (HTMT)
+        type: Table
+        rows: 0
+        refs:
+          - henseler_2015
+          - roemer_2021
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: c1
+            title: Construct
+            type: text
+          - name: sep
+            title: ''
+            type: text
+          - name: c2
+            title: Construct
+            type: text
+          - name: htmt
+            title: HTMT
+            type: number
+          - name: htmtUpper
+            title: Upper bound
+            type: number
+            superTitle: HTMT
+            visible: (bootstrap)
+          - name: htmt2
+            title: HTMT2
+            type: number
+          - name: assessment
+            title: Assessment (HTMT)
+            type: text
+
+      # Square table: one row and one column per reflective construct (laid out
+      # in .init()).
+      # ES: Tabla cuadrada: una fila y una columna por constructo reflectivo.
+      - name: fornell
+        title: Fornell-Larcker criterion
+        type: Table
+        rows: 0
+        visible: (fornellLarcker)
+        refs:
+          - fornell_1981
+          - henseler_2015
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - fornellLarcker
+        columns:
+          - name: construct
+            title: ''
+            type: text
+
+      - name: vifGuide
+        title: How to read the collinearity of formative indicators
+        type: Html
+        visible: (showGuides)
+
+      # One row per indicator of a formative construct (rows laid out in .init()).
+      # ES: Una fila por indicador de un constructo formativo.
+      - name: vif
+        title: Collinearity of formative indicators
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+            combineBelow: true
+          - name: indicator
+            title: Indicator
+            type: text
+          - name: vif
+            title: VIF
+            type: number
+          - name: vifLower
+            title: Lower
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: vifUpper
+            title: Upper
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: assessment
+            title: Assessment
+            type: text
+
+      # Higher-order constructs (phase 4): measurement in stage 2, rows laid
+      # out in .init(); hidden when the model has none.
+      # ES: Constructos de orden superior (fase 4): medida en la etapa 2.
+      - name: hocGuide
+        title: How to read higher-order constructs
+        type: Html
+        visible: (showGuides)
+
+      - name: hocMeasurement
+        title: Higher-order constructs (stage 2)
+        type: Table
+        rows: 0
+        refs:
+          - sarstedt_2019
+          - hair_2021
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: hoc
+            title: Higher-order construct
+            type: text
+            combineBelow: true
+          - name: component
+            title: Lower-order construct
+            type: text
+          - name: loading
+            title: Loading
+            type: number
+          - name: loadLower
+            title: Lower
+            type: number
+            superTitle: Loading CI
+            visible: (bootstrap)
+          - name: loadUpper
+            title: Upper
+            type: number
+            superTitle: Loading CI
+            visible: (bootstrap)
+          - name: weight
+            title: Weight
+            type: number
+          - name: weightLower
+            title: Lower
+            type: number
+            superTitle: Weight CI
+            visible: (bootstrap)
+          - name: weightUpper
+            title: Upper
+            type: number
+            superTitle: Weight CI
+            visible: (bootstrap)
+          - name: weightP
+            title: p (weight)
+            type: number
+            format: zto,pvalue
+            visible: (bootstrap)
+          - name: vif
+            title: VIF
+            type: number
+          - name: vifLower
+            title: Lower
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: vifUpper
+            title: Upper
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: vifAssessment
+            title: Assessment (VIF)
+            type: text
+
+      - name: hocReliability
+        title: Reliability of reflective higher-order constructs
+        type: Table
+        rows: 0
+        refs:
+          - sarstedt_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: hoc
+            title: Higher-order construct
+            type: text
+          - name: alpha
+            title: Cronbach's α
+            type: number
+          - name: rhoC
+            title: ρC
+            type: number
+          - name: rhoCLower
+            title: Lower
+            type: number
+            superTitle: ρC CI
+            visible: (bootstrap)
+          - name: rhoCUpper
+            title: Upper
+            type: number
+            superTitle: ρC CI
+            visible: (bootstrap)
+          - name: ave
+            title: AVE
+            type: number
+          - name: aveLower
+            title: Lower
+            type: number
+            superTitle: AVE CI
+            visible: (bootstrap)
+          - name: aveUpper
+            title: Upper
+            type: number
+            superTitle: AVE CI
+            visible: (bootstrap)
+          - name: assessment
+            title: Assessment
+            type: text
+
+      # HTMT of each reflective higher-order construct with the other reflective
+      # constructs, in stage 2 (rows laid out in .init()).
+      # ES: HTMT de cada constructo de orden superior reflectivo con los otros
+      # constructos reflectivos, en la etapa 2.
+      - name: hocHtmt
+        title: Discriminant validity of higher-order constructs (HTMT, stage 2)
+        type: Table
+        rows: 0
+        refs:
+          - sarstedt_2019
+          - henseler_2015
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: c1
+            title: Higher-order construct
+            type: text
+          - name: sep
+            title: ''
+            type: text
+          - name: c2
+            title: Construct
+            type: text
+          - name: htmt
+            title: HTMT
+            type: number
+          - name: htmtUpper
+            title: Upper bound
+            type: number
+            superTitle: HTMT
+            visible: (bootstrap)
+          - name: htmt2
+            title: HTMT2
+            type: number
+          - name: assessment
+            title: Assessment (HTMT)
+            type: text
+
+  # Section: Structural model. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: structuralSection
+    title: Structural model
+    type: Group
+    items:
+      - name: pathsGuide
+        title: How to read the path coefficients
+        type: Html
+        visible: (showGuides)
+
+      # One row per structural path (rows laid out in .init()).
+      # ES: Una fila por ruta estructural (filas en .init()).
+      - name: paths
+        title: Path coefficients
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+          - dijkstra_2015
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ''
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: estimate
+            title: Coefficient
+            type: number
+
+      # One row per endogenous construct (rows laid out in .init()).
+      # ES: Una fila por constructo endógeno (filas en .init()).
+          - name: se
+            title: SE
+            type: number
+            visible: (bootstrap)
+          - name: t
+            title: t
+            type: number
+            visible: (bootstrap)
+          - name: p
+            title: p
+            type: number
+            format: zto,pvalue
+            visible: (bootstrap)
+          - name: lower
+            title: Lower
+            type: number
+            superTitle: Coefficient CI
+            visible: (bootstrap)
+          - name: upper
+            title: Upper
+            type: number
+            superTitle: Coefficient CI
+            visible: (bootstrap)
+
+      - name: r2
+        title: Explained variance
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+          - name: r2
+            title: R²
+            type: number
+          - name: r2Lower
+            title: Lower
+            type: number
+            superTitle: R² CI
+            visible: (bootstrap)
+          - name: r2Upper
+            title: Upper
+            type: number
+            superTitle: R² CI
+            visible: (bootstrap)
+          - name: r2adj
+            title: Adjusted R²
+            type: number
+
+      - name: structuralGuide
+        title: How to read effect sizes, collinearity and effects
+        type: Html
+        visible: (showGuides)
+
+      # One row per structural path (rows laid out in .init()).
+      # ES: Una fila por ruta estructural (filas en .init()).
+      - name: f2
+        title: Effect size (f²)
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+        columns:
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ''
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: f2
+            title: f²
+            type: number
+          - name: assessment
+            title: Assessment
+            type: text
+
+      # One row per structural path (rows laid out in .init()).
+      # ES: Una fila por ruta estructural (filas en .init()).
+      - name: vifStruct
+        title: Collinearity of predictors (structural VIF)
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ''
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: vif
+            title: VIF
+            type: number
+          - name: vifLower
+            title: Lower
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: vifUpper
+            title: Upper
+            type: number
+            superTitle: VIF CI
+            visible: (bootstrap)
+          - name: assessment
+            title: Assessment
+            type: text
+
+      # One row per pair of constructs joined by at least one path, directly or
+      # through other constructs (rows laid out in .init()).
+      # ES: Una fila por par de constructos unidos por al menos una ruta,
+      # directa o a través de otros constructos.
+      - name: effects
+        title: Direct, indirect and total effects
+        type: Table
+        rows: 0
+        refs:
+          - hair_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ''
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: direct
+            title: Direct
+            type: number
+          - name: indirect
+            title: Indirect
+            type: number
+          - name: indLower
+            title: Lower
+            type: number
+            superTitle: Indirect CI
+            visible: (bootstrap)
+          - name: indUpper
+            title: Upper
+            type: number
+            superTitle: Indirect CI
+            visible: (bootstrap)
+          - name: total
+            title: Total
+            type: number
+          - name: totLower
+            title: Lower
+            type: number
+            superTitle: Total CI
+            visible: (bootstrap)
+          - name: totUpper
+            title: Upper
+            type: number
+            superTitle: Total CI
+            visible: (bootstrap)
+
+      # Mediation (phase 6): one row per specific indirect effect (a chain of
+      # two or more paths), laid out in .init(); hidden without chains.
+      # ES: Mediación (fase 6): una fila por efecto indirecto específico, en
+      # .init(); oculta si no hay cadenas.
+      - name: mediationGuide
+        title: How to read the mediation analysis
+        type: Html
+        visible: (showGuides)
+
+      - name: mediation
+        title: Mediation (specific indirect effects)
+        type: Table
+        rows: 0
+        refs:
+          - zhao_2010
+          - nitzl_2016
+          - preacher_2008
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: chain
+            title: Indirect path
+            type: text
+          - name: indirect
+            title: Indirect
+            type: number
+          - name: se
+            title: SE
+            type: number
+            visible: (bootstrap)
+          - name: lower
+            title: Lower
+            type: number
+            superTitle: Indirect CI
+            visible: (bootstrap)
+          - name: upper
+            title: Upper
+            type: number
+            superTitle: Indirect CI
+            visible: (bootstrap)
+          - name: direct
+            title: Direct (X → Y)
+            type: number
+          - name: type
+            title: Type of mediation
+            type: text
+
+      # Moderation (phase 4): rows laid out in .init(), three per interaction;
+      # hidden when the model has none.
+      # ES: Moderación (fase 4): tres filas por interacción, en .init(); oculta
+      # si el modelo no tiene ninguna.
+      - name: moderationGuide
+        title: How to read a moderation
+        type: Html
+        visible: (showGuides)
+
+      - name: simpleSlopes
+        title: Simple effects (moderation)
+        type: Table
+        rows: 0
+        refs:
+          - hair_2021
+          - kenny_2018
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
+        columns:
+          - name: term
+            title: Interaction
+            type: text
+            combineBelow: true
+          - name: effect
+            title: Effect
+            type: text
+            combineBelow: true
+          - name: level
+            title: Moderator at
+            type: text
+          - name: slope
+            title: Simple effect
+            type: number
+          - name: se
+            title: SE
+            type: number
+            visible: (bootstrap)
+          - name: lower
+            title: Lower
+            type: number
+            superTitle: Simple effect CI
+            visible: (bootstrap)
+          - name: upper
+            title: Upper
+            type: number
+            superTitle: Simple effect CI
+            visible: (bootstrap)
+
+      - name: moderationPlots
+        title: Moderation
+        type: Array
+        items: 0
+        visible: (moderationPlot)
+        template:
+          title: $key
+          type: Image
+          width: 760
+          height: 360
+          renderFun: .plotModeration
+          clearWith:
+            - reflective
+            - formative
+            - reflectiveHoc
+            - formativeHoc
+            - hocApproach
+            - structural
+            - estimator
+            - innerScheme
+            - indicatorScale
+            - missing
+            - bootstrap
+            - bootReps
+            - bootSeed
+            - ciLevel
+
+  # Section: Overall model fit. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: fitSection
+    title: Overall model fit
+    type: Group
+    visible: (fitTest)
+    items:
+      # Overall model fit (phase 5): rows laid out in .init() (4 measures x
+      # estimated and saturated model).
+      # ES: Ajuste global (fase 5): filas en .init().
+      - name: fitGuide
+        title: How to read the overall fit test
+        type: Html
+        visible: (showGuides && fitTest)
+
+      - name: fit
+        title: Overall model fit (bootstrap test of exact fit)
+        type: Table
+        rows: 0
+        visible: (fitTest)
+        refs:
+          - dijkstra_2015
+          - beran_1985
+          - schuberth_2023
+          - henseler_2016
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - fitReps
+          - fitLevel
+          - bootSeed
+        columns:
+          - name: model
+            title: Model
+            type: text
+            combineBelow: true
+          - name: measure
+            title: Discrepancy
+            type: text
+          - name: value
+            title: Value
+            type: number
+          - name: critical
+            title: Critical value
+            type: number
+          - name: p
+            title: p (bootstrap)
+            type: number
+            format: zto,pvalue
+          - name: decision
+            title: Exact fit
+            type: text
+
+  # Section: Out-of-sample prediction. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: predictSection
+    title: Out-of-sample prediction
+    type: Group
     visible: (predictRun)
-    refs:
-      - shmueli_2016
-      - shmueli_2019
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - predictFolds
-      - predictReps
-      - cvpatDrop
-      - bootSeed
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-        combineBelow: true
-      - name: indicator
-        title: Indicator
-        type: text
-      - name: q2
-        title: Q²predict
-        type: number
-      - name: rmsePls
-        title: PLS
-        type: number
-        superTitle: RMSE
-      - name: rmseLm
-        title: LM
-        type: number
-        superTitle: RMSE
-      - name: maePls
-        title: PLS
-        type: number
-        superTitle: MAE
-      - name: maeLm
-        title: LM
-        type: number
-        superTitle: MAE
-      - name: skew
-        title: Error skewness
-        type: number
-      - name: metric
-        title: Metric
-        type: text
-      - name: lower
-        title: Lower error
-        type: text
+    items:
+      # Out-of-sample prediction (phase 6): rows laid out in .init() (one per
+      # indicator of an endogenous construct; CVPAT: all endogenous constructs
+      # and each one, against IA and LM).
+      # ES: Predicción fuera de la muestra (fase 6): filas en .init().
+      - name: predictGuide
+        title: How to read PLSpredict and CVPAT
+        type: Html
+        visible: (showGuides && predictRun)
 
-  - name: cvpat
-    title: CVPAT (does the model predict better than the benchmarks?)
-    type: Table
-    rows: 0
-    visible: (predictRun)
-    refs:
-      - liengaard_2021
-      - sharma_2023
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - predictFolds
-      - predictReps
-      - cvpatDrop
-      - bootSeed
-    columns:
-      - name: construct
-        title: Construct
-        type: text
-        combineBelow: true
-      - name: bench
-        title: Benchmark
-        type: text
-      - name: lossPls
-        title: PLS loss
-        type: number
-      - name: lossBench
-        title: Benchmark loss
-        type: number
-      - name: diff
-        title: Loss difference
-        type: number
-      - name: t
-        title: t
-        type: number
-      - name: p
-        title: p
-        type: number
-        format: zto,pvalue
-      - name: decision
-        title: PLS predicts better
-        type: text
+      - name: predict
+        title: PLSpredict (out-of-sample prediction of the endogenous indicators)
+        type: Table
+        rows: 0
+        visible: (predictRun)
+        refs:
+          - shmueli_2016
+          - shmueli_2019
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - predictFolds
+          - predictReps
+          - cvpatDrop
+          - bootSeed
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+            combineBelow: true
+          - name: indicator
+            title: Indicator
+            type: text
+          - name: q2
+            title: Q²predict
+            type: number
+          - name: rmsePls
+            title: PLS
+            type: number
+            superTitle: RMSE
+          - name: rmseLm
+            title: LM
+            type: number
+            superTitle: RMSE
+          - name: maePls
+            title: PLS
+            type: number
+            superTitle: MAE
+          - name: maeLm
+            title: LM
+            type: number
+            superTitle: MAE
+          - name: skew
+            title: Error skewness
+            type: number
+          - name: metric
+            title: Metric
+            type: text
+          - name: lower
+            title: Lower error
+            type: text
 
-  # Importance-performance map (phase 6): rows laid out in .init() (each
-  # endogenous construct and every construct with an effect on it); one map
-  # per target.
-  # ES: Mapa importancia-desempeño (fase 6): filas en .init(); un mapa por
-  # objetivo.
-  - name: ipmaGuide
-    title: How to read the importance-performance map
-    type: Html
-    visible: (showGuides && ipma)
+      - name: cvpat
+        title: CVPAT (does the model predict better than the benchmarks?)
+        type: Table
+        rows: 0
+        visible: (predictRun)
+        refs:
+          - liengaard_2021
+          - sharma_2023
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - predictFolds
+          - predictReps
+          - cvpatDrop
+          - bootSeed
+        columns:
+          - name: construct
+            title: Construct
+            type: text
+            combineBelow: true
+          - name: bench
+            title: Benchmark
+            type: text
+          - name: lossPls
+            title: PLS loss
+            type: number
+          - name: lossBench
+            title: Benchmark loss
+            type: number
+          - name: diff
+            title: Loss difference
+            type: number
+          - name: t
+            title: t
+            type: number
+          - name: p
+            title: p
+            type: number
+            format: zto,pvalue
+          - name: decision
+            title: PLS predicts better
+            type: text
 
-  - name: ipmaTable
-    title: Importance-performance map (IPMA)
-    type: Table
-    rows: 0
+  # Section: Importance-performance map. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: ipmaSection
+    title: Importance-performance map
+    type: Group
     visible: (ipma)
-    refs:
-      - ringle_2016
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - ipmaRange
-      - ipmaMin
-      - ipmaMax
-    columns:
-      - name: target
-        title: Target
-        type: text
-        combineBelow: true
-      - name: construct
-        title: Construct
-        type: text
-      - name: importance
-        title: Importance
-        type: number
-      - name: perfRaw
-        title: Mean (scale)
-        type: number
-      - name: performance
-        title: Performance (0-100)
-        type: number
-      - name: quadrant
-        title: Reading
-        type: text
+    items:
+      # Importance-performance map (phase 6): rows laid out in .init() (each
+      # endogenous construct and every construct with an effect on it); one map
+      # per target.
+      # ES: Mapa importancia-desempeño (fase 6): filas en .init(); un mapa por
+      # objetivo.
+      - name: ipmaGuide
+        title: How to read the importance-performance map
+        type: Html
+        visible: (showGuides && ipma)
 
-  - name: ipmaPlots
-    title: Importance-performance maps
-    type: Array
-    items: 0
-    visible: (ipma)
-    template:
-      title: $key
-      type: Image
-      width: 560
-      height: 420
-      renderFun: .plotIpma
-      clearWith:
-        - reflective
-        - formative
-        - reflectiveHoc
-        - formativeHoc
-        - hocApproach
-        - structural
-        - estimator
-        - innerScheme
-        - indicatorScale
-        - missing
-        - ipmaRange
-        - ipmaMin
-        - ipmaMax
+      - name: ipmaTable
+        title: Importance-performance map (IPMA)
+        type: Table
+        rows: 0
+        visible: (ipma)
+        refs:
+          - ringle_2016
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - ipmaRange
+          - ipmaMin
+          - ipmaMax
+        columns:
+          - name: target
+            title: Target
+            type: text
+            combineBelow: true
+          - name: construct
+            title: Construct
+            type: text
+          - name: importance
+            title: Importance
+            type: number
+          - name: perfRaw
+            title: Mean (scale)
+            type: number
+          - name: performance
+            title: Performance (0-100)
+            type: number
+          - name: quadrant
+            title: Reading
+            type: text
 
-  # Multigroup analysis (phase 7): rows laid out in .init() from the levels
-  # of the grouping variable (groups; pairs x constructs for MICOM; pairs x
-  # paths for the differences).
-  # ES: Análisis multigrupo (fase 7): filas en .init() a partir de los
-  # niveles de la variable de agrupación.
-  - name: mgaGuide
-    title: How to read the multigroup analysis
-    type: Html
-    visible: (showGuides && mgaRun)
+      - name: ipmaPlots
+        title: Importance-performance maps
+        type: Array
+        items: 0
+        visible: (ipma)
+        template:
+          title: $key
+          type: Image
+          width: 560
+          height: 420
+          renderFun: .plotIpma
+          clearWith:
+            - reflective
+            - formative
+            - reflectiveHoc
+            - formativeHoc
+            - hocApproach
+            - structural
+            - estimator
+            - innerScheme
+            - indicatorScale
+            - missing
+            - ipmaRange
+            - ipmaMin
+            - ipmaMax
 
-  - name: mgaGroups
-    title: Groups
-    type: Table
-    rows: 0
+  # Section: Multigroup analysis. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: mgaSection
+    title: Multigroup analysis
+    type: Group
     visible: (mgaRun)
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - groupVar
-      - mgaPerm
-      - mgaBoot
-      - mgaAdjust
-      - bootSeed
-    columns:
-      - name: group
-        title: Group
-        type: text
-      - name: n
-        title: N
-        type: integer
-      - name: admissible
-        title: Admissible estimates
-        type: text
+    items:
+      # Multigroup analysis (phase 7): rows laid out in .init() from the levels
+      # of the grouping variable (groups; pairs x constructs for MICOM; pairs x
+      # paths for the differences).
+      # ES: Análisis multigrupo (fase 7): filas en .init() a partir de los
+      # niveles de la variable de agrupación.
+      - name: mgaGuide
+        title: How to read the multigroup analysis
+        type: Html
+        visible: (showGuides && mgaRun)
 
-  - name: micom
-    title: Measurement invariance of composites (MICOM)
-    type: Table
-    rows: 0
-    visible: (mgaRun)
-    refs:
-      - henseler_2016b
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - groupVar
-      - mgaPerm
-      - mgaBoot
-      - mgaAdjust
-      - bootSeed
-    columns:
-      - name: comparison
-        title: Comparison
-        type: text
-        combineBelow: true
-      - name: construct
-        title: Construct
-        type: text
-      - name: c
-        title: c
-        type: number
-        superTitle: Step 2 (compositional)
-      - name: c5
-        title: 5% quantile
-        type: number
-        superTitle: Step 2 (compositional)
-      - name: pC
-        title: p
-        type: number
-        format: zto,pvalue
-        superTitle: Step 2 (compositional)
-      - name: meanDiff
-        title: Mean difference
-        type: number
-        superTitle: Step 3 (means and variances)
-      - name: pMean
-        title: p
-        type: number
-        format: zto,pvalue
-        superTitle: Step 3 (means and variances)
-      - name: logVar
-        title: Log variance ratio
-        type: number
-        superTitle: Step 3 (means and variances)
-      - name: pVar
-        title: p
-        type: number
-        format: zto,pvalue
-        superTitle: Step 3 (means and variances)
-      - name: invariance
-        title: Invariance
-        type: text
+      - name: mgaGroups
+        title: Groups
+        type: Table
+        rows: 0
+        visible: (mgaRun)
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - groupVar
+          - mgaPerm
+          - mgaBoot
+          - mgaAdjust
+          - bootSeed
+        columns:
+          - name: group
+            title: Group
+            type: text
+          - name: n
+            title: N
+            type: integer
+          - name: admissible
+            title: Admissible estimates
+            type: text
 
-  - name: mga
-    title: Path differences between groups
-    type: Table
-    rows: 0
-    visible: (mgaRun)
-    refs:
-      - chin_2010
-      - henseler_2009
-      - sarstedt_2011
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - groupVar
-      - mgaPerm
-      - mgaBoot
-      - mgaAdjust
-      - bootSeed
-    columns:
-      - name: comparison
-        title: Comparison
-        type: text
-        combineBelow: true
-      - name: from
-        title: Predictor
-        type: text
-      - name: arrow
-        title: ''
-        type: text
-      - name: to
-        title: Outcome
-        type: text
-      - name: est1
-        title: First group
-        type: number
-      - name: est2
-        title: Second group
-        type: number
-      - name: diff
-        title: Difference
-        type: number
-      - name: pPerm
-        title: p (permutation)
-        type: number
-        format: zto,pvalue
-      - name: pOne
-        title: P(first ≤ second)
-        type: number
-        superTitle: PLS-MGA
-      - name: pHens
-        title: p (two-sided)
-        type: number
-        format: zto,pvalue
-        superTitle: PLS-MGA
-      - name: decision
-        title: Decision
-        type: text
+      - name: micom
+        title: Measurement invariance of composites (MICOM)
+        type: Table
+        rows: 0
+        visible: (mgaRun)
+        refs:
+          - henseler_2016b
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - groupVar
+          - mgaPerm
+          - mgaBoot
+          - mgaAdjust
+          - bootSeed
+        columns:
+          - name: comparison
+            title: Comparison
+            type: text
+            combineBelow: true
+          - name: construct
+            title: Construct
+            type: text
+          - name: c
+            title: c
+            type: number
+            superTitle: Step 2 (compositional)
+          - name: c5
+            title: 5% quantile
+            type: number
+            superTitle: Step 2 (compositional)
+          - name: pC
+            title: p
+            type: number
+            format: zto,pvalue
+            superTitle: Step 2 (compositional)
+          - name: meanDiff
+            title: Mean difference
+            type: number
+            superTitle: Step 3 (means and variances)
+          - name: pMean
+            title: p
+            type: number
+            format: zto,pvalue
+            superTitle: Step 3 (means and variances)
+          - name: logVar
+            title: Log variance ratio
+            type: number
+            superTitle: Step 3 (means and variances)
+          - name: pVar
+            title: p
+            type: number
+            format: zto,pvalue
+            superTitle: Step 3 (means and variances)
+          - name: invariance
+            title: Invariance
+            type: text
 
-  - name: pathDiagram
-    title: Path diagram
-    type: Image
-    width: 700
-    height: 460
-    renderFun: .plotPaths
-    visible: (pathDiagram)
-    clearWith:
-      - diagramLayout
-      - diagramTitle
-      - diagramIndicators
-      - diagramCaption
-      - latentSize
-      - manifestSize
-      - nodeLabelSize
-      - latentFill
-      - manifestFill
-      - edgeWidth
-      - edgeColor
-      - nonsigDashed
-      - edgeLabels
-      - edgeLabelSize
-      - edgeDigits
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
+      - name: mga
+        title: Path differences between groups
+        type: Table
+        rows: 0
+        visible: (mgaRun)
+        refs:
+          - chin_2010
+          - henseler_2009
+          - sarstedt_2011
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - groupVar
+          - mgaPerm
+          - mgaBoot
+          - mgaAdjust
+          - bootSeed
+        columns:
+          - name: comparison
+            title: Comparison
+            type: text
+            combineBelow: true
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ''
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: est1
+            title: First group
+            type: number
+          - name: est2
+            title: Second group
+            type: number
+          - name: diff
+            title: Difference
+            type: number
+          - name: pPerm
+            title: p (permutation)
+            type: number
+            format: zto,pvalue
+          - name: pOne
+            title: P(first ≤ second)
+            type: number
+            superTitle: PLS-MGA
+          - name: pHens
+            title: p (two-sided)
+            type: number
+            format: zto,pvalue
+            superTitle: PLS-MGA
+          - name: decision
+            title: Decision
+            type: text
 
-  # Small cache of bootstrap results (MokkenLab pattern), cleared when the
-  # model or the data options change.
-  # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
+  # Section: Plots. Groups give the report headings that tell the reader
+  # where each part starts.
+  # ES: Sección con título: da al informe encabezados que ubican al lector.
+  - name: plotsSection
+    title: Plots
+    type: Group
+    visible: (pathDiagram || loadingsPlot || htmtPlot)
+    items:
+      - name: pathDiagram
+        title: Path diagram
+        type: Image
+        width: 700
+        height: 460
+        renderFun: .plotPaths
+        visible: (pathDiagram)
+        clearWith:
+          - diagramLayout
+          - diagramTitle
+          - diagramIndicators
+          - diagramCaption
+          - latentSize
+          - manifestSize
+          - nodeLabelSize
+          - latentFill
+          - manifestFill
+          - edgeWidth
+          - edgeColor
+          - nonsigDashed
+          - edgeLabels
+          - edgeLabelSize
+          - edgeDigits
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
 
-  - name: loadingsPlot
-    title: Loadings of reflective indicators
-    type: Image
-    width: 600
-    height: 400
-    renderFun: .plotLoadings
-    visible: (loadingsPlot)
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
+      # Small cache of bootstrap results (MokkenLab pattern), cleared when the
+      # model or the data options change.
+      # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
 
-  # Small cache of bootstrap results (MokkenLab pattern), cleared when the
-  # model or the data options change.
-  # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
+      - name: loadingsPlot
+        title: Loadings of reflective indicators
+        type: Image
+        width: 600
+        height: 400
+        renderFun: .plotLoadings
+        visible: (loadingsPlot)
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
 
-  - name: htmtPlot
-    title: Discriminant validity (HTMT)
-    type: Image
-    width: 520
-    height: 420
-    renderFun: .plotHtmt
-    visible: (htmtPlot)
-    clearWith:
-      - reflective
-      - formative
-      - reflectiveHoc
-      - formativeHoc
-      - hocApproach
-      - structural
-      - estimator
-      - innerScheme
-      - indicatorScale
-      - missing
-      - bootstrap
-      - bootReps
-      - bootSeed
-      - ciLevel
+      # Small cache of bootstrap results (MokkenLab pattern), cleared when the
+      # model or the data options change.
+      # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
+
+      - name: htmtPlot
+        title: Discriminant validity (HTMT)
+        type: Image
+        width: 520
+        height: 420
+        renderFun: .plotHtmt
+        visible: (htmtPlot)
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - bootstrap
+          - bootReps
+          - bootSeed
+          - ciLevel
 
   # Small cache of bootstrap results (MokkenLab pattern), cleared when the
   # model or the data options change.

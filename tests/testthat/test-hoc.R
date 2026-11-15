@@ -65,34 +65,34 @@ directTwoStage <- function(mode) {
 test_that("a reflective higher-order construct equals two direct cSEM stages (Mode A)", {
     a <- runHoc("reflective")
     ref <- directTwoStage("modeA")
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     B <- ref$f2$Estimates$Path_estimates
     expect_equal(p$estimate[p$from == "QUAL" & p$to == "SAT"], B["SAT", "QUAL"], tolerance = 1e-10)
     expect_equal(p$estimate[p$from == "QUAL" & p$to == "LOY"], B["LOY", "QUAL"], tolerance = 1e-10)
-    h <- a$results$hocMeasurement$asDF
+    h <- a$results$measurementSection$hocMeasurement$asDF
     expect_equal(h$loading, unname(ref$f2$Estimates$Loading_estimates["QUAL", c("s_IMAG", "s_EXPE")]), tolerance = 1e-10)
     expect_equal(h$weight, unname(ref$f2$Estimates$Weight_estimates["QUAL", c("s_IMAG", "s_EXPE")]), tolerance = 1e-10)
-    r <- a$results$hocReliability$asDF
+    r <- a$results$measurementSection$hocReliability$asDF
     expect_equal(r$rhoC, unname(cSEM::calculateRhoC(ref$f2, .only_common_factors = FALSE)["QUAL"]), tolerance = 1e-10)
     expect_equal(r$ave, unname(cSEM::calculateAVE(ref$f2, .only_common_factors = FALSE)["QUAL"]), tolerance = 1e-10)
-    expect_equal(a$results$r2$asDF$r2, unname(ref$f2$Estimates$R2[c("SAT", "LOY")]), tolerance = 1e-10)
+    expect_equal(a$results$structuralSection$r2$asDF$r2, unname(ref$f2$Estimates$R2[c("SAT", "LOY")]), tolerance = 1e-10)
     # first-order measurement comes from stage 1
     # ES: la medida de primer orden sale de la etapa 1
-    m <- a$results$measurement$asDF
+    m <- a$results$measurementSection$measurement$asDF
     expect_equal(m$weight[m$construct == "IMAG"], unname(ref$f1$Estimates$Weight_estimates["IMAG", paste0("imag", 1:5)]),
                  tolerance = 1e-10)
-    expect_match(a$results$model$asDF$role[a$results$model$asDF$construct == "IMAG"], "Dimension of QUAL")
+    expect_match(a$results$measurementSection$model$asDF$role[a$results$measurementSection$model$asDF$construct == "IMAG"], "Dimension of QUAL")
     expect_true(any(grepl("two-stage", noticesOf(a))))
 })
 
 test_that("a formative higher-order construct uses Mode B weights with VIF", {
     a <- runHoc("formative")
     ref <- directTwoStage("modeB")
-    h <- a$results$hocMeasurement$asDF
+    h <- a$results$measurementSection$hocMeasurement$asDF
     expect_equal(h$weight, unname(ref$f2$Estimates$Weight_estimates["QUAL", c("s_IMAG", "s_EXPE")]), tolerance = 1e-10)
     S <- ref$f2$Estimates$Indicator_VCV[c("s_IMAG", "s_EXPE"), c("s_IMAG", "s_EXPE")]
     expect_equal(h$vif, unname(diag(solve(S))), tolerance = 1e-10)
-    expect_false(a$results$hocReliability$visible)
+    expect_false(a$results$measurementSection$hocReliability$visible)
 })
 
 test_that("the bootstrap resamples both stages and the R code reproduces the model", {
@@ -113,17 +113,17 @@ test_that("the bootstrap resamples both stages and the R code reproduces the mod
     b <- cSEM::resamplecSEMResults(ref$f1, .R = 120, .seed = 3, .user_funs = list(QL = fun),
                                    .handle_inadmissibles = "drop")
     ci <- cSEM::infer(b, .quantity = "CI_percentile", .alpha = 0.05)$QL$CI_percentile
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     row <- p$from == "QUAL" & p$to == "LOY"
     expect_equal(c(p$lower[row], p$upper[row]), unname(ci[, 1]), tolerance = 1e-10)
-    expect_true(all(is.finite(a$results$hocMeasurement$asDF$loadLower)))
-    expect_true(all(is.finite(a$results$hocReliability$asDF$rhoCLower)))
-    expect_true(all(is.finite(a$results$effects$asDF$totLower)))
+    expect_true(all(is.finite(a$results$measurementSection$hocMeasurement$asDF$loadLower)))
+    expect_true(all(is.finite(a$results$measurementSection$hocReliability$asDF$rhoCLower)))
+    expect_true(all(is.finite(a$results$structuralSection$effects$asDF$totLower)))
     env <- new.env()
     env$data <- hocData()
     utils::capture.output(eval(parse(text = reproCode(a)), envir = env))
     expect_equal(env$fit2$Estimates$Path_estimates["C2", "H1"], p$estimate[row], tolerance = 1e-10)
-    dg <- a$results$pathDiagram$state
+    dg <- a$results$plotsSection$pathDiagram$state
     expect_equal(sum(dg$pars$kind == "hoc"), 2)
     expect_true(any(grepl("^QUAL", dg$vars$name)))
 })
@@ -163,12 +163,12 @@ test_that("cSEM's second-order routine, as an option, equals cSEM's own estimate
           LOY ~ SAT + QUAL"
     f <- suppressWarnings(cSEM::csem(d, m, .PLS_modes = list(SAT = "modeA", LOY = "modeA", IMAG = "modeB", EXPE = "modeB")))
     B <- f$Second_stage$Estimates$Path_estimates
-    p <- a$results$paths$asDF
+    p <- a$results$structuralSection$paths$asDF
     expect_equal(p$estimate[p$from == "QUAL" & p$to == "SAT"], B["SAT_temp", "QUAL"], tolerance = 1e-8)
     expect_equal(p$estimate[p$from == "QUAL" & p$to == "LOY"], B["LOY_temp", "QUAL"], tolerance = 1e-8)
-    expect_equal(a$results$hocMeasurement$asDF$loading,
+    expect_equal(a$results$measurementSection$hocMeasurement$asDF$loading,
                  unname(f$Second_stage$Estimates$Loading_estimates["QUAL", c("IMAG", "EXPE")]), tolerance = 1e-8)
-    m1 <- a$results$measurement$asDF
+    m1 <- a$results$measurementSection$measurement$asDF
     expect_equal(m1$weight[m1$construct == "IMAG"],
                  unname(f$First_stage$Estimates$Weight_estimates["IMAG", paste0("imag", 1:5)]), tolerance = 1e-8)
     expect_true(all(is.finite(p$lower)))
@@ -176,7 +176,7 @@ test_that("cSEM's second-order routine, as an option, equals cSEM's own estimate
     # the disjoint approach differs (no paths among the dimensions in stage 1)
     # ES: el enfoque disjunto difiere
     b <- runHoc("reflective")
-    pb <- b$results$paths$asDF
+    pb <- b$results$structuralSection$paths$asDF
     expect_gt(abs(pb$estimate[pb$from == "QUAL" & pb$to == "SAT"] - p$estimate[p$from == "QUAL" & p$to == "SAT"]), 1e-4)
 })
 
@@ -184,15 +184,15 @@ test_that("stage-2 HTMT of a higher-order construct equals cSEM on the stage-2 m
     a <- runHoc("reflective")
     ref <- directTwoStage("modeA")
     m <- cSEM::calculateHTMT(ref$f2, .only_common_factors = FALSE, .absolute = FALSE)$htmts
-    h <- a$results$hocHtmt$asDF
+    h <- a$results$measurementSection$hocHtmt$asDF
     expect_equal(h$c2, c("SAT", "LOY"))
     expect_equal(h$htmt, c(m["SAT", "QUAL"], m["LOY", "QUAL"]), tolerance = 1e-10)
     expect_match(paste(gsub("<[^>]+>", " ", a$results$interpretation$content)), "stage 2")
     # cSEM's routine: rows stay, not computable
     # ES: rutina de cSEM: las filas se quedan, no calculable
     b <- runHoc("reflective", hocApproach = "csem")
-    expect_equal(nrow(b$results$hocHtmt$asDF), 2)
-    expect_true(all(is.na(b$results$hocHtmt$asDF$htmt) | b$results$hocHtmt$asDF$htmt == ""))
+    expect_equal(nrow(b$results$measurementSection$hocHtmt$asDF), 2)
+    expect_true(all(is.na(b$results$measurementSection$hocHtmt$asDF$htmt) | b$results$measurementSection$hocHtmt$asDF$htmt == ""))
 })
 
 test_that("pairs without discriminant validity are key-summary warnings", {

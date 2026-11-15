@@ -89,7 +89,7 @@ test_that("names with spaces and accents work (internal names, E4)", {
                          srow("CUSL", "Competencia percibida", "Simpatía", "CUSA"),
                          srow("Competencia percibida"), srow("Simpatía"))
     a <- runPlssem(data, m)
-    paths <- a$results$paths$asDF
+    paths <- a$results$structuralSection$paths$asDF
     expect_true("Competencia percibida" %in% paths$from)
     expect_true(all(is.finite(paths$estimate)))
 })

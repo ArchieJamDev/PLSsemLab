@@ -23,7 +23,7 @@ test_that("overall fit equals cSEM::testOMF() for the estimated and the saturate
               formative = list(),
               structural = list(srow("SAT", "IMAG"), srow("LOY", "SAT")))
     a <- runPlssem(d, m, fitTest = TRUE, fitReps = 99, bootSeed = 7)
-    tab <- a$results$fit$asDF
+    tab <- a$results$fitSection$fit$asDF
     expect_equal(nrow(tab), 8)
 
     model <- "IMAG <~ imag1 + imag2 + imag3 + imag4 + imag5
@@ -53,7 +53,7 @@ test_that("with an interaction the fit rows stay as not computable", {
               formative = list(),
               structural = list(list(label = "LOY", predictors = list("SAT", "IMAG", c("SAT", "IMAG")))))
     a <- runPlssem(d, m, fitTest = TRUE, fitReps = 99)
-    tab <- a$results$fit$asDF
+    tab <- a$results$fitSection$fit$asDF
     expect_equal(nrow(tab), 8)
     expect_true(all(tab$decision == "Not computable"))
 })

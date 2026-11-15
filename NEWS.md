@@ -1,4 +1,12 @@
-# PLSsemLab 0.7.5 (development)
+# PLSsemLab 0.7.6
+
+* The per-group table of the multigroup analysis says "Not computable", with
+  the reason, when the comparison cannot run (for example, with a
+  higher-order construct), instead of leaving the cell empty.
+* Documentation: README with features, installation from the latest release,
+  DOI and citation; design documents worded as requirements D1–D6.
+
+# PLSsemLab 0.7.5
 
 * The path diagram draws a moderation as it is drawn in the literature: an
   arrow from the moderator that ends on the path it moderates (predictor →

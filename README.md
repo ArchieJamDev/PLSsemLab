@@ -7,7 +7,7 @@
 
 # PLSsemLab
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24259623.svg)](https://doi.org/10.5281/zenodo.24259623)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24259622.svg)](https://doi.org/10.5281/zenodo.24259622)
 
 A jamovi module for partial least squares structural equation modeling
 (PLS-SEM) with the cSEM R package, with guided interpretation in the style
@@ -92,8 +92,11 @@ which dataset and model to use to try each option.
 If you use PLSsemLab, please cite it:
 
 > Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for partial
-> least squares structural equation modeling* (Version 0.7.5) [Computer
-> software]. Zenodo. https://doi.org/10.5281/zenodo.24259623
+> least squares structural equation modeling* (Version 0.7.6) [Computer
+> software]. Zenodo. https://doi.org/10.5281/zenodo.24260117
+
+The DOI https://doi.org/10.5281/zenodo.24259622 covers all versions and
+always resolves to the latest one.
 
 The metadata are also in `CITATION.cff` (GitHub's *Cite this repository*
 button). Please cite cSEM and the methods you
@@ -129,8 +132,9 @@ tiene algo que mostrar. `data/README.md` indica la fuente, la licencia y qué
 conjunto usar para probar cada opción.
 
 **Cita:** Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for
-partial least squares structural equation modeling* (Versión 0.7.5)
-[Software]. Zenodo. https://doi.org/10.5281/zenodo.24259623. Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
+partial least squares structural equation modeling* (Versión 0.7.6)
+[Software]. Zenodo. https://doi.org/10.5281/zenodo.24260117 (el DOI
+https://doi.org/10.5281/zenodo.24259622 abarca todas las versiones). Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
 
 ## License
 

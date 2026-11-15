@@ -410,7 +410,13 @@
         # box, where the arrows are spread out
         # ES: filas de indicadores arriba o abajo: justo fuera de la caja,
         # donde las flechas están separadas
-        mid <- if (uy > ux) min((t_ind + 11) / len, 0.5) else (t_ind + len - r_con) / 2 / len
+        # (a row is recognised by its indicators sharing one height, also
+        # when it slid sideways and some arrows became shallow)
+        # ES: (una fila se reconoce porque sus indicadores comparten altura,
+        # también cuando se desplazó y algunas flechas quedaron tendidas)
+        own <- c(p$lhs[p$kind == "weight" & p$rhs == con], p$rhs[p$kind == "loading" & p$lhs == con])
+        in_row <- length(own) > 1 && diff(range(gy[pos_of[own]])) < 1e-9
+        mid <- if (uy > ux || in_row) min((t_ind + 11) / len, 0.5) else (t_ind + len - r_con) / 2 / len
         lab_pos[k] <- if (p$kind[k] == "weight") mid else 1 - mid
     }
     # paths into the same construct alternate their label position so the
@@ -478,7 +484,7 @@
     for (j in seq_len(nrow(mods))) {
         a <- at(mods$pred[j]); b <- at(mods$out[j]); m <- at(mods$mod[j])
         if (anyNA(c(a, b, m))) next
-        end <- a + 0.6 * (b - a)
+        end <- a + 0.5 * (b - a)
         d <- end - m
         len <- sqrt(sum(d^2))
         if (!is.finite(len) || len <= 0) next
@@ -486,8 +492,8 @@
         r <- 1 / sqrt((u[1] / rx)^2 + (u[2] / ry)^2)
         start <- m + u * min(r, 0.8 * len)
         nonsig <- !is.na(mods$sig[j]) && !mods$sig[j]
-        lwd <- if (is.na(lwd_max) || lwd_max <= 0) 1.6 else max(1, 6 * abs(mods$est[j]) / lwd_max)
-        graphics::arrows(start[1], start[2], end[1], end[2], length = 0.1, angle = 22, col = col,
+        lwd <- if (is.na(lwd_max) || lwd_max <= 0) 1.6 else max(1.4, 6 * abs(mods$est[j]) / lwd_max)
+        graphics::arrows(start[1], start[2], end[1], end[2], length = 0.13, angle = 25, col = col,
                          lwd = lwd, lty = if (dashed && nonsig) 2 else 1)
         if (labels) {
             lab <- formatC(mods$est[j], format = "f", digits = digits)

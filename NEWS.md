@@ -1,4 +1,12 @@
-# PLSsemLab 0.7.0 (development)
+# PLSsemLab 0.7.1 (development)
+
+* Fix: ticking Run multigroup analysis in jamovi stopped with "rowKey not
+  found". jamovi runs `.init()` with the header of the data only (no rows),
+  so no group was found and no rows were laid out; `.init()` now uses the
+  levels of the factor and `.run()` rebuilds the rows when a level has no
+  cases. A test reproduces jamovi's header-only `.init()`.
+
+# PLSsemLab 0.7.0
 
 ## Phase 7: multigroup analysis (D6)
 

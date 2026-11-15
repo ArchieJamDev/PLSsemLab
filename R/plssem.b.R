@@ -197,26 +197,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: Análisis multigrupo (fase 7): una fila por grupo, por par y
             # constructo (MICOM) y por par y ruta.
             gv <- self$options$groupVar
-            if (self$options$mgaRun && !is.null(gv) && nzchar(gv)) {
-                lev <- .pl_mga_levels(self$data[[gv]])
-                for (g in lev) self$results$mgaGroups$addRow(rowKey = g, values = list(group = g))
-                if (length(lev) >= 2 && length(lev) <= .PL_MGA_MAX_GROUPS) {
-                    prs <- utils::combn(lev, 2, simplify = FALSE)
-                    for (k in seq_along(prs)) {
-                        cmp <- sprintf(ptxt("mga_vs"), prs[[k]][1], prs[[k]][2])
-                        for (cn in labels)
-                            self$results$micom$addRow(rowKey = paste(k, cn, sep = "::"),
-                                                      values = list(comparison = cmp, construct = cn))
-                        for (j in seq_len(nrow(paths)))
-                            self$results$mga$addRow(rowKey = paste(k, j, sep = "::"), values = list(
-                                comparison = cmp, from = paths$from[j], arrow = "\u2192", to = paths$to[j]))
-                    }
-                    if (length(lev) == 2) {
-                        self$results$mga$getColumn("est1")$setTitle(lev[1])
-                        self$results$mga$getColumn("est2")$setTitle(lev[2])
-                    }
-                }
-            }
+            if (self$options$mgaRun && !is.null(gv) && nzchar(gv))
+                private$.mgaRows(.pl_mga_levels(self$data[[gv]]), labels, paths, ptxt("mga_vs"))
 
             # Mediation (phase 6): one row per specific indirect effect.
             # ES: Mediación (fase 6): una fila por efecto indirecto específico.
@@ -899,6 +881,34 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                 drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
         },
 
+        # Rows of the multigroup tables: one per group, per pair of groups
+        # and construct (MICOM) and per pair and path. With two groups the
+        # coefficient columns carry the group names. Called by .init() (with
+        # the header of the data) and again by .run() when the levels with
+        # cases differ.
+        # ES: Filas de las tablas multigrupo: una por grupo, por par y
+        # constructo (MICOM) y por par y ruta. La llama .init() (con la
+        # cabecera de los datos) y de nuevo .run() si los niveles con casos
+        # son otros.
+        .mgaRows = function(lev, labels, paths, vs) {
+            for (g in lev) self$results$mgaGroups$addRow(rowKey = g, values = list(group = g))
+            if (length(lev) < 2 || length(lev) > .PL_MGA_MAX_GROUPS) return(invisible(NULL))
+            prs <- utils::combn(lev, 2, simplify = FALSE)
+            for (k in seq_along(prs)) {
+                cmp <- sprintf(vs, prs[[k]][1], prs[[k]][2])
+                for (cn in labels)
+                    self$results$micom$addRow(rowKey = paste(k, cn, sep = "::"),
+                                              values = list(comparison = cmp, construct = cn))
+                for (j in seq_len(nrow(paths)))
+                    self$results$mga$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                        comparison = cmp, from = paths$from[j], arrow = "\u2192", to = paths$to[j]))
+            }
+            if (length(lev) == 2) {
+                self$results$mga$getColumn("est1")$setTitle(lev[1])
+                self$results$mga$getColumn("est2")$setTitle(lev[2])
+            }
+        },
+
         # ---------------------------------------------------------------------
         # Multigroup analysis (cached): the model in each group, MICOM and the
         # path differences. Category B: when it cannot run, the rows stay with
@@ -916,6 +926,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             lab <- function(key) txt("labels", key)
             gv <- self$options$groupVar
             lev <- .pl_mga_levels(self$data[[gv]])
+            if (!identical(as.character(unlist(gt$rowKeys)), lev)) {
+                for (tab in list(gt, mt, dt)) tab$deleteRows()
+                private$.mgaRows(lev, vapply(blocks, `[[`, "", "label"), paths, lab("mga_vs"))
+            }
             g <- self$data[[gv]][as.integer(rownames(d))]
             mg <- .pl_mga_data(d, g, lev)
             n <- stats::setNames(unname(mg$n), lev)

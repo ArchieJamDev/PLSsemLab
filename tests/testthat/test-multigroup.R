@@ -194,3 +194,28 @@ test_that("verdicts, decisions and corrections follow their rules", {
     expect_equal(PLSsemLab:::.pl_mga_reason(list(), "x", "x", c(a = 30, b = 30))$key, "mga_group_indicator")
     expect_null(PLSsemLab:::.pl_mga_reason(list(), "g", "x", c(a = 30, b = 30)))
 })
+
+test_that("rows are built when jamovi runs .init() with the header of the data only", {
+    # jamovi's .init() reads the data with headerOnly = TRUE (no rows): the
+    # rows of the groups must still exist when .run() fills them.
+    # ES: el .init() de jamovi lee los datos solo con la cabecera.
+    d <- corpRepData()
+    d$servicetype <- factor(d$servicetype, levels = c("Contract", "Prepaid", "Unused"))
+    m <- simpleModel()
+    cls <- get("plssemClass", envir = asNamespace("PLSsemLab"))
+    opts <- get("plssemOptions", envir = asNamespace("PLSsemLab"))
+    a <- cls$new(options = opts$new(reflective = m$reflective, formative = m$formative, structural = asRows(m),
+                                    missing = "mean", groupVar = "servicetype", mgaRun = TRUE,
+                                    mgaPerm = 99, mgaBoot = 99, bootSeed = 2), data = d[0, ])
+    a$init()
+    # header only: every level of the factor, including the unused one
+    # ES: solo cabecera: todos los niveles, incluido el no usado
+    expect_equal(a$results$mgaGroups$rowCount, 3)
+    a$.__enclos_env__$private$.data <- d
+    expect_error(a$run(), NA)
+    expect_equal(a$results$mgaGroups$asDF$group, c("Contract", "Prepaid"))
+    expect_equal(a$results$mgaGroups$asDF$n, c(219L, 125L))
+    expect_equal(nrow(a$results$micom$asDF), 4)
+    expect_true(all(is.finite(a$results$mga$asDF$pPerm)))
+    expect_equal(a$results$mga$getColumn("est1")$title, "Contract")
+})

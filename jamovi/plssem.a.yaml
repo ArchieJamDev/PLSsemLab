@@ -27,7 +27,7 @@ name: plssem
 title: PLS-SEM
 menuGroup: PLS-SEM Lab
 menuTitle: PLS-SEM
-version: '0.7.0'
+version: '0.7.1'
 jas: '1.2'
 
 description:

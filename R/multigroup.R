@@ -43,12 +43,19 @@
 .PL_MGA_MAX_GROUPS <- 10
 
 # Levels of the grouping variable that have at least one case, in the order
-# of the factor levels (jamovi's order) or, for other types, sorted.
-# ES: Niveles de la variable de agrupación con al menos un caso.
+# of the factor levels (jamovi's order) or, for other types, sorted. jamovi
+# runs .init() with the header of the data only (no rows): then every level
+# of the factor is returned, and .run() rebuilds the rows if a level turns
+# out to have no cases.
+# ES: Niveles de la variable de agrupación con al menos un caso. jamovi
+# corre .init() solo con la cabecera de los datos (sin filas): entonces se
+# devuelven todos los niveles del factor, y .run() rehace las filas si un
+# nivel resulta no tener casos.
 .pl_mga_levels <- function(g) {
     if (is.null(g)) return(character(0))
     if (is.factor(g)) {
         lev <- levels(g)
+        if (!length(g)) return(lev)
         return(lev[lev %in% as.character(g[!is.na(g)])])
     }
     sort(unique(as.character(g[!is.na(g)])))

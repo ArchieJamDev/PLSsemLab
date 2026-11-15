@@ -105,6 +105,10 @@ carry every rule below in full.
   (MICOM, Chin, CV folds) changed. Every resampling routine runs under
   `.pl_rng_guard()` (default generator, previous one restored); tests wrap
   direct cSEM calls in `withDefaultRng()`.
+- jamovi runs `.init()` with `readDataset(headerOnly = TRUE)`: zero rows.
+  Rows that depend on data values (group levels) must come from the factor
+  levels in `.init()` and be rebuilt in `.run()` if they differ; tests that
+  pass the full data to `.init()` hide this (see the header-only test).
 - R's `$` partially matches list names (`s$micom` returns `s$micom_error`
   when `micom` is absent): read cached summaries with `[[ ]]`.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in

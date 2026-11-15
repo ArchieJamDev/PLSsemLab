@@ -115,6 +115,18 @@ bundled <- function(file) {
     utils::read.csv(path, stringsAsFactors = TRUE)
 }
 
+# The notice placed before a result item that does not apply (NULL when
+# there is none): its content.
+# ES: El aviso delante de un elemento que no aplica (NULL si no hay).
+notApplyNotice <- function(a, section, item) {
+    g <- a$results$get(section)
+    nm <- vapply(g$items, function(i) i$name, "")
+    k <- match(paste0(item, "Notice"), nm)
+    if (is.na(k)) return(NULL)
+    expect_equal(unname(nm[k + 1]), item)
+    g$items[[k]]$content
+}
+
 # A result item by name, wherever it sits in the report's sections.
 # ES: Un elemento de resultados por nombre, en cualquier sección.
 res <- function(a, name) a$.__enclos_env__$private$.item(name)

@@ -63,6 +63,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     inherit = plssemBase,
     private = list(
 
+        # Parts of the report that do not apply to this model, found by
+        # .init(): list(section, before, key, args). .run() explains each
+        # one with a jamovi notice placed before its table or plot, which
+        # stays in place (jamovi's review: never hide, explain).
+        # ES: Partes del informe que no aplican a este modelo, halladas por
+        # .init(); .run() explica cada una con un aviso de jamovi delante de
+        # su tabla o gráfico, que se queda en su sitio.
+        .na = NULL,
+
         # ---------------------------------------------------------------------
         # Lay out the rows that depend only on the options, so every table
         # keeps its shape before the results arrive (jamovi's review of
@@ -111,21 +120,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
                 self$results$measurementSection$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
                                             values = list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k]))
+            na <- list()
+            notApply <- function(section, before, key, args = list())
+                na[[length(na) + 1]] <<- list(section = section, before = before, key = key, args = args)
             if (!length(hocs))
-                for (name in c("hocGuide", "hocMeasurement", "hocReliability", "hocHtmt"))
-                    private$.item(name)$setVisible(FALSE)
+                notApply("measurementSection", "hocMeasurement", "na_hoc")
             else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
-                self$results$measurementSection$hocReliability$setVisible(FALSE)
+                notApply("measurementSection", "hocReliability", "na_hoc_reliability")
             if (length(hocs) && is.null(hp))
-                self$results$measurementSection$hocHtmt$setVisible(FALSE)
+                notApply("measurementSection", "hocHtmt", "na_hoc_htmt")
 
             # Measurement-model quality (phase 2): rows follow the constructs
             # in the boxes; a table that does not apply to the model (no
-            # reflective pair, no formative construct) is hidden with its
-            # guide, and the interpretation says why.
+            # reflective pair, no formative construct) stays in place, and a
+            # notice says why (see .na).
             # ES: Calidad del modelo de medida: las filas siguen a los
             # constructos de las cajas; una tabla que no aplica al modelo se
-            # oculta con su guía y la interpretación explica por qué.
+            # queda en su sitio y un aviso explica por qué.
             refl <- labels[vapply(blocks, function(b) b$type == "reflective", TRUE)]
             for (r in refl)
                 self$results$measurementSection$reliability$addRow(rowKey = r, values = list(construct = r))
@@ -205,10 +216,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             chains <- .pl_mediation_chains(paths)
             for (k in seq_len(nrow(chains)))
                 self$results$structuralSection$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
-            if (!nrow(chains)) {
-                self$results$structuralSection$mediation$setVisible(FALSE)
-                self$results$structuralSection$mediationGuide$setVisible(FALSE)
-            }
+            if (!nrow(chains))
+                notApply("structuralSection", "mediation", "na_mediation")
 
             # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
             # +1 SD) and one plot per interaction.
@@ -227,14 +236,25 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 self$results$structuralSection$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
             }
             if (!nrow(inter))
-                for (name in c("moderationGuide", "simpleSlopes", "moderationPlots"))
-                    private$.item(name)$setVisible(FALSE)
+                notApply("structuralSection", "simpleSlopes", "na_moderation")
 
-            hide <- c(if (length(refl) == 0) c("reliability", "reliabilityGuide", "fornell"),
-                      if (length(refl) < 2) c("htmt", "htmtGuide"),
-                      if (!any(vapply(blocks, function(b) b$type == "formative", TRUE))) c("vif", "vifGuide"))
-            for (name in hide)
-                private$.item(name)$setVisible(FALSE)
+            if (length(refl) == 0)
+                notApply("measurementSection", "reliability", "na_reliability")
+            if (length(refl) < 2)
+                notApply("measurementSection", "htmt", "na_htmt", list(length(refl)))
+            if (!any(vapply(blocks, function(b) b$type == "formative", TRUE)))
+                notApply("measurementSection", "vif", "na_vif")
+            private$.na <- na
+        },
+
+        # Notices for the parts that do not apply (see .na), placed before
+        # their table or plot.
+        # ES: Avisos de las partes que no aplican, delante de su tabla o
+        # gráfico.
+        .notApplyNotices = function(txt) {
+            for (x in private$.na)
+                .pl_notice_before(self$results$get(x$section), self$options, x$before,
+                                  do.call(sprintf, c(list(txt("notapply", x$key)), x$args)))
         },
 
         .run = function() {
@@ -253,6 +273,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 return()
             }
             self$results$intro$setVisible(FALSE)
+            private$.notApplyNotices(txt)
 
             # 2. Validate and prepare (Category A).
             # ES: 2. Validar y preparar (Categoría A).
@@ -1374,7 +1395,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (self$options$loadingsPlot) {
                 st <- .pl_loadings_state(loadings, sm, model, if (is.null(sm)) txt("labels", "loadings_caption")
                                          else sprintf(txt("labels", "loadings_caption_boot"), pct))
-                if (is.null(st)) self$results$plotsSection$loadingsPlot$setVisible(FALSE)
+                if (is.null(st))
+                    .pl_notice_before(self$results$plotsSection, self$options, "loadingsPlot",
+                                      txt("notapply", "na_loadings_plot"))
                 else {
                     self$results$plotsSection$loadingsPlot$setSize(600, max(260, 26 * nrow(st$data) + 30 * length(unique(st$data$construct)) + 70))
                     self$results$plotsSection$loadingsPlot$setState(st)
@@ -1383,7 +1406,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (self$options$htmtPlot) {
                 st <- .pl_htmt_state(quality, sm, model, if (is.null(sm)) txt("labels", "htmt_caption")
                                      else txt("labels", "htmt_caption_boot"))
-                if (is.null(st)) self$results$plotsSection$htmtPlot$setVisible(FALSE)
+                if (is.null(st))
+                    .pl_notice_before(self$results$plotsSection, self$options, "htmtPlot",
+                                      txt("notapply", "na_htmt_plot"))
                 else {
                     n <- length(st$levels)
                     self$results$plotsSection$htmtPlot$setSize(max(380, 95 * n + 140), max(340, 85 * n + 120))

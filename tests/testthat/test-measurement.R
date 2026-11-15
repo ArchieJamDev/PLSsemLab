@@ -108,9 +108,14 @@ test_that("a single-indicator construct keeps its row, marked as not computable"
     expect_true(all(is.finite(h$htmt)))
 })
 
-test_that("tables keep their shape and hide only when they do not apply", {
+test_that("tables that do not apply stay in place with a notice", {
     a <- runPlssem(corpRepData(), simpleModel())
-    expect_false(a$results$measurementSection$vif$visible)
+    expect_true(a$results$measurementSection$vif$visible)
+    expect_match(notApplyNotice(a, "measurementSection", "vif"), "no formative construct")
+    expect_match(notApplyNotice(a, "measurementSection", "hocMeasurement"), "no higher-order constructs")
+    expect_match(notApplyNotice(a, "structuralSection", "simpleSlopes"), "no interaction term")
+    expect_null(notApplyNotice(a, "measurementSection", "htmt"))
+    expect_null(notApplyNotice(a, "structuralSection", "mediation"))
     expect_false(a$results$measurementSection$fornell$visible)
     expect_true(a$results$measurementSection$htmt$visible)
 
@@ -138,9 +143,18 @@ test_that("a model without reflective constructs explains why there is no reliab
               formative = list(block("QUAL", paste0("qual_", 1:8)), block("PERF", paste0("perf_", 1:5))),
               structural = list(srow("PERF", "QUAL"), srow("QUAL")))
     a <- runPlssem(corpRepData(), m)
-    expect_false(a$results$measurementSection$reliability$visible)
+    expect_true(a$results$measurementSection$reliability$visible)
+    expect_match(notApplyNotice(a, "measurementSection", "reliability"), "no reflective construct")
+    expect_match(notApplyNotice(a, "measurementSection", "htmt"), "this model has 0")
+    expect_match(notApplyNotice(a, "structuralSection", "mediation"), "no chain")
     expect_true(any(grepl("no reflective constructs", noticesOf(a))))
     expect_equal(nrow(a$results$measurementSection$vif$asDF), 13)
+    # the plots that do not apply also stay, with a notice
+    # ES: los gráficos que no aplican también se quedan, con un aviso
+    b <- runPlssem(corpRepData(), m, loadingsPlot = TRUE, htmtPlot = TRUE)
+    expect_true(b$results$plotsSection$loadingsPlot$visible)
+    expect_match(notApplyNotice(b, "plotsSection", "loadingsPlot"), "has none")
+    expect_match(notApplyNotice(b, "plotsSection", "htmtPlot"), "at least two")
 })
 
 test_that("the reproducibility code reproduces reliability, rho_A and HTMT", {

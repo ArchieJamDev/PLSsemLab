@@ -1,4 +1,15 @@
-# PLSsemLab 0.7.3 (development)
+# PLSsemLab 0.7.4 (development)
+
+* Nothing is hidden because it does not apply to the model: the tables and
+  plots stay in place and a jamovi notice in front of each one says why
+  (no higher-order construct, formative higher-order constructs and their
+  reliability, no higher-order HTMT pair, no mediation chain, no interaction,
+  no reflective construct, fewer than two reflective constructs for HTMT, no
+  formative construct, and the loadings and HTMT plots), as jamovi's review
+  asked of EGAnetLab. The introduction is still shown only while the model
+  is incomplete.
+
+# PLSsemLab 0.7.3
 
 ## Phase 8, first part: datasets, stress tests and jamovi's requirements
 

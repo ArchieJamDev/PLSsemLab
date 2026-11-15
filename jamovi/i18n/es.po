@@ -1104,6 +1104,10 @@ msgid "HTMT"
 msgstr "HTMT"
 
 #: R/texts.R
+msgid "HTMT compares reflective constructs in pairs and needs at least two; this model has %d."
+msgstr "El HTMT compara constructos reflectivos por pares y necesita al menos dos; este modelo tiene %d."
+
+#: R/texts.R
 msgid "HTMT per pair of reflective constructs; darker cells reach 0.85 or 0.90."
 msgstr "HTMT por par de constructos reflectivos; las celdas más oscuras alcanzan 0.85 o 0.90."
 
@@ -2162,6 +2166,10 @@ msgstr "Fiabilidad y validez convergente"
 msgid "Reliability and convergent validity: %d of %d reflective construct(s) have composite reliability between 0.70 and 0.95, and %d of %d have AVE of 0.50 or more."
 msgstr "Fiabilidad y validez convergente: %d de %d constructo(s) reflectivo(s) tienen una fiabilidad compuesta entre 0.70 y 0.95, y %d de %d tienen una AVE de 0.50 o más."
 
+#: R/texts.R
+msgid "Reliability of a higher-order construct applies to reflective higher-order constructs; the ones in this model are formative, and their quality is read from the weights and VIF of their dimensions in the table above."
+msgstr "La fiabilidad de un constructo de orden superior se aplica a los de tipo reflectivo; los de este modelo son formativos, y su calidad se lee en los pesos y el VIF de sus dimensiones, en la tabla anterior."
+
 #: plssem/results/measurementSection/hocReliability.title
 msgid "Reliability of reflective higher-order constructs"
 msgstr "Fiabilidad de los constructos reflectivos de orden superior"
@@ -2442,6 +2450,10 @@ msgid "The higher-order construct '%s' needs at least two lower-order constructs
 msgstr "El constructo de orden superior '%s' necesita al menos dos constructos de orden inferior. Arrastre a él dos o más constructos de primer orden."
 
 #: R/texts.R
+msgid "The HTMT plot needs at least two reflective constructs."
+msgstr "El gráfico de HTMT necesita al menos dos constructos reflectivos."
+
+#: R/texts.R
 msgid "The HTMT table of the higher-order constructs checks each reflective higher-order construct against the other reflective constructs of the model, in stage 2, where it is measured by the scores of its dimensions (Sarstedt et al., 2019, see references). It is never compared with its own dimensions, which correlate highly by design. The thresholds are the usual ones (0.85; 0.90 for conceptually similar constructs), and with the bootstrap the test is the upper bound."
 msgstr "La tabla HTMT de los constructos de orden superior compara cada constructo de orden superior reflectivo con los demás constructos reflectivos del modelo, en la etapa 2, donde se mide con las puntuaciones de sus dimensiones (Sarstedt et al., 2019, vea las referencias). Nunca se compara con sus propias dimensiones, que por diseño correlacionan alto. Los umbrales son los habituales (0.85; 0.90 para constructos conceptualmente similares), y con el bootstrap la prueba es el límite superior."
 
@@ -2486,6 +2498,10 @@ msgid "the linear model (LM)"
 msgstr "el modelo lineal (LM)"
 
 #: R/texts.R
+msgid "The loadings plot shows the indicators of reflective constructs, and this model has none."
+msgstr "El gráfico de cargas muestra los indicadores de los constructos reflectivos, y este modelo no tiene ninguno."
+
+#: R/texts.R
 msgid "The map is descriptive: it assumes the model is right and that all indicators share one scale where higher means better."
 msgstr "El mapa es descriptivo: supone que el modelo es correcto y que todos los indicadores comparten una escala en la que más alto significa mejor."
 
@@ -2500,6 +2516,22 @@ msgstr "El desajuste ya está en el modelo de medida. Revise los indicadores con
 #: R/texts.R
 msgid "The model has interaction terms: chains through them (conditional indirect effects, moderated mediation) are not listed in this version."
 msgstr "El modelo tiene términos de interacción: las cadenas que pasan por ellos (efectos indirectos condicionales, mediación moderada) no se listan en esta versión."
+
+#: R/texts.R
+msgid "The model has no chain X → M → Y (a construct that is predicted and also predicts another), so there are no specific indirect effects."
+msgstr "El modelo no tiene ninguna cadena X → M → Y (un constructo que es predicho y a la vez predice a otro), así que no hay efectos indirectos específicos."
+
+#: R/texts.R
+msgid "The model has no formative construct, so there are no indicator VIFs: collinearity among indicators is a problem only for formative constructs."
+msgstr "El modelo no tiene constructos formativos, así que no hay VIF de indicadores: la colinealidad entre indicadores es un problema solo en los constructos formativos."
+
+#: R/texts.R
+msgid "The model has no interaction term, so there are no simple slopes. To test a moderation, add Predictor × Moderator to the predictors of a construct in the Structural Model box."
+msgstr "El modelo no tiene ningún término de interacción, así que no hay pendientes simples. Para probar una moderación, añada Predictor × Moderador a los predictores de un constructo en la caja Modelo estructural."
+
+#: R/texts.R
+msgid "The model has no reflective construct. Reliability, convergent validity and the Fornell-Larcker criterion apply only to reflective constructs; formative constructs are judged by their weights and VIF."
+msgstr "El modelo no tiene constructos reflectivos. La fiabilidad, la validez convergente y el criterio de Fornell-Larcker se aplican solo a constructos reflectivos; los formativos se valoran por sus pesos y su VIF."
 
 #: R/texts.R
 msgid "The model has no reflective constructs, so loadings are not used to judge indicator quality."
@@ -2604,8 +2636,16 @@ msgid "The type of mediation (Zhao et al., 2010) combines the indirect effect wi
 msgstr "El tipo de mediación (Zhao et al., 2010) combina el efecto indirecto con la ruta directa X → Y. Complementaria: ambos significativos con el mismo signo; el mediador explica parte del efecto. Competitiva: ambos significativos con signos opuestos; el mediador empuja contra el efecto directo, y el efecto total puede ocultar ambos. Solo indirecta (mediación total): solo el efecto indirecto es significativo. Solo directa: solo la ruta directa es significativa; no hay mediación por esta cadena. Sin efecto: ninguno es significativo. La práctica antigua de exigir primero un efecto total significativo (Baron y Kenny) y el cociente VAF ya no se recomiendan. Solo se puede afirmar una mediación total cuando la ruta directa X → Y está en el modelo; si no lo está, la tabla lo dice."
 
 #: R/texts.R
+msgid "There is no pair of a reflective higher-order construct and another reflective construct, so there is no higher-order HTMT to report."
+msgstr "No hay ningún par formado por un constructo reflectivo de orden superior y otro constructo reflectivo, así que no hay HTMT de orden superior que informar."
+
+#: R/texts.R
 msgid "These priorities are untested: without the bootstrap a construct can look important while its total effect does not differ from 0. Run the bootstrap before acting on them."
 msgstr "Estas prioridades no están probadas: sin el bootstrap un constructo puede parecer importante aunque su efecto total no difiera de 0. Ejecute el bootstrap antes de actuar sobre ellas."
+
+#: R/texts.R
+msgid "This model has no higher-order constructs, so the higher-order tables stay empty. To model one, add it in a Higher-Order Constructs box (reflective or formative) and move its dimensions into it."
+msgstr "Este modelo no tiene constructos de orden superior, así que las tablas de orden superior quedan vacías. Para modelar uno, añádalo en una caja de constructos de orden superior (reflectivos o formativos) y mueva a ella sus dimensiones."
 
 #: plssem/results/structuralSection/effects.columns.title
 msgid "Total"

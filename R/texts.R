@@ -96,6 +96,18 @@
 
         # Notices (Category B, never block).
         # ES: Avisos (Categoría B, nunca bloquean).
+        notapply = list(
+            na_hoc = .("This model has no higher-order constructs, so the higher-order tables stay empty. To model one, add it in a Higher-Order Constructs box (reflective or formative) and move its dimensions into it."),
+            na_hoc_reliability = .("Reliability of a higher-order construct applies to reflective higher-order constructs; the ones in this model are formative, and their quality is read from the weights and VIF of their dimensions in the table above."),
+            na_hoc_htmt = .("There is no pair of a reflective higher-order construct and another reflective construct, so there is no higher-order HTMT to report."),
+            na_mediation = .("The model has no chain X \u2192 M \u2192 Y (a construct that is predicted and also predicts another), so there are no specific indirect effects."),
+            na_moderation = .("The model has no interaction term, so there are no simple slopes. To test a moderation, add Predictor \u00d7 Moderator to the predictors of a construct in the Structural Model box."),
+            na_reliability = .("The model has no reflective construct. Reliability, convergent validity and the Fornell-Larcker criterion apply only to reflective constructs; formative constructs are judged by their weights and VIF."),
+            na_htmt = .("HTMT compares reflective constructs in pairs and needs at least two; this model has %d."),
+            na_vif = .("The model has no formative construct, so there are no indicator VIFs: collinearity among indicators is a problem only for formative constructs."),
+            na_loadings_plot = .("The loadings plot shows the indicators of reflective constructs, and this model has none."),
+            na_htmt_plot = .("The HTMT plot needs at least two reflective constructs.")
+        ),
         notices = list(
             mga_missing_group = .("%1$d case(s) without a value of %2$s were left out of the multigroup analysis."),
             mga_failed = .("The multigroup analysis could not be run: %s"),

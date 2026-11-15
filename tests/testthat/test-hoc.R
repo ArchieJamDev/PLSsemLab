@@ -92,7 +92,8 @@ test_that("a formative higher-order construct uses Mode B weights with VIF", {
     expect_equal(h$weight, unname(ref$f2$Estimates$Weight_estimates["QUAL", c("s_IMAG", "s_EXPE")]), tolerance = 1e-10)
     S <- ref$f2$Estimates$Indicator_VCV[c("s_IMAG", "s_EXPE"), c("s_IMAG", "s_EXPE")]
     expect_equal(h$vif, unname(diag(solve(S))), tolerance = 1e-10)
-    expect_false(a$results$measurementSection$hocReliability$visible)
+    expect_true(a$results$measurementSection$hocReliability$visible)
+    expect_match(notApplyNotice(a, "measurementSection", "hocReliability"), "are formative")
 })
 
 test_that("the bootstrap resamples both stages and the R code reproduces the model", {

@@ -1,6 +1,6 @@
 Package: PLSsemLab
 Title: Partial Least Squares Structural Equation Modeling Lab for jamovi
-Version: 0.7.3
+Version: 0.7.4
 Authors@R: person("Arquímedes De León", "Chacón Chacón", email = "arquimedeschacon@gmail.com", role = c("aut", "cre"), comment = c(affiliation = "Universidad Católica Andrés Bello (UCAB), Caracas, Venezuela"))
 Description: A jamovi module, in development, for partial least squares
     structural equation modeling (PLS-SEM) with the cSEM package. Models are

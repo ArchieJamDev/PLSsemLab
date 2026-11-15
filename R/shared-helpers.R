@@ -149,6 +149,38 @@
 }
 
 # -----------------------------------------------------------------------------
+# .pl_notice_before()
+#
+# Input: group - a results Group (a section of the report, or the root);
+#   options - the analysis options; before - name of the item the notice
+#   goes in front of; content - translated text; type - a NoticeType.
+# Output: the jmvcore::Notice, inserted just before `before` (appended when
+#   `before` is not in the group).
+#
+# A part of the report that does not apply to the model keeps its table or
+# plot in place and says why with a native jamovi notice, instead of being
+# hidden, so the layout does not jump while the model is built (jamovi's
+# review of EGAnetLab, November 2026). Group$insert() is used only inside
+# the list: at its end it would duplicate items, so there add() is used.
+# ES: Una parte del informe que no aplica al modelo mantiene su tabla o
+# gráfico en su sitio y explica por qué con un aviso nativo de jamovi, en
+# vez de ocultarse, para que el diseño no salte mientras se arma el modelo.
+# -----------------------------------------------------------------------------
+.pl_notice_before <- function(group, options, before, content, type = jmvcore::NoticeType$INFO) {
+    names_now <- vapply(group$items, function(item) item$name, character(1))
+    name <- paste0(before, "Notice")
+    k <- 1
+    while (name %in% names_now) {
+        k <- k + 1
+        name <- paste0(before, "Notice", k)
+    }
+    notice <- jmvcore::Notice$new(options, name = name, type = type, content = content)
+    pos <- match(before, names_now)
+    if (is.na(pos)) group$add(notice) else group$insert(pos, notice)
+    invisible(notice)
+}
+
+# -----------------------------------------------------------------------------
 # .pl_constructs()
 #
 # Input: options - with `reflective` and `formative` (lists of

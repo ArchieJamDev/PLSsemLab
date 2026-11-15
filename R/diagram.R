@@ -410,12 +410,12 @@
         # box, where the arrows are spread out
         # ES: filas de indicadores arriba o abajo: justo fuera de la caja,
         # donde las flechas están separadas
-        # (a row is recognised by its indicators sharing one height, also
-        # when it slid sideways and some arrows became shallow)
+        # (a row is recognised by its indicators sharing one height, or one
+        # x in the top-to-bottom tree, also when it slid sideways)
         # ES: (una fila se reconoce porque sus indicadores comparten altura,
-        # también cuando se desplazó y algunas flechas quedaron tendidas)
+        # o x en el árbol de arriba abajo, también si se desplazó)
         own <- c(p$lhs[p$kind == "weight" & p$rhs == con], p$rhs[p$kind == "loading" & p$lhs == con])
-        in_row <- length(own) > 1 && diff(range(gy[pos_of[own]])) < 1e-9
+        in_row <- length(own) > 1 && diff(range((if (tb) gx else gy)[pos_of[own]])) < 1e-9
         mid <- if (uy > ux || in_row) min((t_ind + 11) / len, 0.5) else (t_ind + len - r_con) / 2 / len
         lab_pos[k] <- if (p$kind[k] == "weight") mid else 1 - mid
     }

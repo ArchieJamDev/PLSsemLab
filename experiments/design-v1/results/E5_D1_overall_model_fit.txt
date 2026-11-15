@@ -15,7 +15,7 @@
      dML 0.5586      0.2740 reject exact fit
   admissible bootstrap samples: 410 
   chi2 = 191.59, df = 29, p = 7.03e-26
-[ML chi-square (what JASP shows)] OK (0.00 s)
+[ML chi-square (covariance-based SEM)] OK (0.00 s)
      SRMR        DG        DL       DML RMS_theta       NFI       CFI       GoF 
    0.0561    0.1029    0.1731    0.5586    0.0900    0.8913    0.9053    0.5580 
 [Descriptive fit indices] OK (0.00 s)
@@ -36,7 +36,7 @@
      dML 2.6080      2.3076 reject exact fit
   admissible bootstrap samples: 499 
   chi2 = 907.94, df = 368, p = 1.65e-47
-[ML chi-square (what JASP shows)] OK (0.00 s)
+[ML chi-square (covariance-based SEM)] OK (0.00 s)
      SRMR        DG        DL       DML RMS_theta       NFI       CFI       GoF 
    0.0567    0.4795    1.5929    2.6471    0.0357    0.8428    0.8983    0.5453 
 [Descriptive fit indices] OK (0.00 s)

@@ -165,7 +165,7 @@
     stage 2 the dimensions' scores measure the higher-order construct and
     every other construct keeps its own indicators. Both stages are
     resampled together in the bootstrap.
-  * Option: cSEM's own second-order routine, as JASP uses it, whose
+  * Option: cSEM's own second-order routine, whose
     estimates equal a direct `cSEM::csem()` call. A notice explains the three
     differences (paths among lower-order constructs in stage 1; other
     constructs measured by their scores in stage 2; a reflective
@@ -320,7 +320,7 @@
 ## Phase 0: design
 
 * Design experiments (`experiments/design-v1/`): six R scripts that check
-  with cSEM 0.7.1 that every shortcoming documented for JASP's PLS-SEM (D1–D6)
+  with cSEM 0.7.1 that every requirement of the first version (D1–D6)
   can be solved in the first version, with their results and a GitHub
   Actions workflow to run them without a local R installation.
 * Design document (`docs/DESIGN.md`).

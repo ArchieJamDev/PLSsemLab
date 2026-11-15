@@ -1,11 +1,10 @@
 # -----------------------------------------------------------------------------
-# E6 — D6: measures JASP's documentation does not show.
+# E6 — D6: the remaining measures of a complete PLS-SEM report.
 # f2, Q2/PLSpredict, CVPAT, mediation (indirect effects with bootstrap CI),
-# IPMA, and multigroup comparison with MICOM. Source: JASP's help file
-# (Oct 2024); to be confirmed in JASP 0.99.
+# IPMA, and multigroup comparison with MICOM.
 # Question: does each one run on the reference data and return what the
 # report needs?
-# ES: E6 — D6: medidas que la documentación de JASP no muestra.
+# ES: E6 — D6: las medidas restantes de un informe PLS-SEM completo.
 # ES: Pregunta: ¿cada una funciona con los datos de referencia y devuelve lo
 # que necesita el informe?
 # -----------------------------------------------------------------------------

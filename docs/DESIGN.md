@@ -10,10 +10,10 @@ están en `experiments/design-v1/results/`.
 
 ## 1. Propósito y alcance
 
-PLSsemLab v1 será el primer módulo de PLS-SEM para jamovi y resolverá desde
-su primera versión las seis deficiencias documentadas del PLS-SEM de JASP. No
-busca superar a JASP en el motor de estimación —usa el mismo, cSEM—, sino en
-lo que JASP calcula pero no muestra, en lo que falla y en cómo se interpreta.
+PLSsemLab v1 será el primer módulo de PLS-SEM para jamovi y cumplirá desde
+su primera versión seis requisitos (D1–D6) que un análisis PLS-SEM completo
+necesita y que suelen faltar o fallar en el software disponible: lo que se
+calcula pero no se muestra, lo que falla y cómo se interpreta.
 
 - **Dentro de la v1:** constructos reflectivos y formativos, estimadores PLS
   y PLSc, evaluación completa del modelo de medida y del estructural, prueba
@@ -27,38 +27,34 @@ lo que JASP calcula pero no muestra, en lo que falla y en cómo se interpreta.
   "Acerca de sus elecciones", interpretación que responde qué ocurrió, por
   qué, qué significa y qué hacer, hallazgos clave y registro de
   reproducibilidad. La interpretación es determinista y citada; no depende de
-  una clave de API (JASP 0.98 añadió IA opcional que sí la requiere).
+  una clave de API.
 - **Público:** académico (docencia e investigación).
 
 ## 2. Priorización
 
-Primero van las deficiencias reportadas por usuarios (errores o solicitudes
-no cumplidas), luego la detectada por el propio equipo de JASP y al final la
-que se infiere de su documentación. Las seis entran en la v1; el orden fija
-qué se construye y se valida antes.
+Primero van los requisitos que más piden los usuarios de PLS-SEM (errores o
+solicitudes frecuentes), luego los metodológicos y al final los de
+completitud del informe. Los seis entran en la v1; el orden fija qué se
+construye y se valida antes.
 
-| Prioridad | Deficiencia | Tipo | Evidencia en JASP | Estado conocido |
-| --- | --- | --- | --- | --- |
-| 1 | D2 HTMT, VIF e IC bootstrap | Solicitud no cumplida | Issues #1982, #2567; foro 2023; tutorial de Rogers y Barboza (2024) | Sin confirmar en JASP 0.99; su ayuda no lo menciona |
-| 2 | D3 Orden superior e interacciones | Error | Issues #2955, #3007 (con archivos de usuarios) | Solo se añadió manejo de excepciones |
-| 3 | D4 Rendimiento del bootstrap | Error | Issues #3642, #4599; foro 2023 | #3642 corregido; #4599 abierto (oct. 2026) |
-| 4 | D5 Errores de sintaxis y ayuda escasa | Usabilidad | Foro 2023; issue #2955 | Sin cambios documentados |
-| 5 | D1 Prueba de ajuste incorrecta | Error metodológico | Issue #2955, abierto por el equipo de JASP | Abierto |
-| 6 | D6 f², Q², mediación, CVPAT, IPMA, MICOM | Ausencia inferida | Ayuda oficial de JASP (oct. 2024) | Por confirmar en JASP 0.99 |
-
-Pendiente: abrir JASP 0.99 con un modelo cualquiera y confirmar HTMT, VIF,
-f², la tabla de ajuste y el diagrama de rutas, para saber qué deficiencias
-siguen vigentes.
+| Prioridad | Requisito | Tipo |
+| --- | --- | --- |
+| 1 | D2 HTMT, VIF e IC bootstrap | Medidas que los usuarios piden |
+| 2 | D3 Orden superior e interacciones | Modelos que suelen fallar |
+| 3 | D4 Rendimiento del bootstrap | Robustez |
+| 4 | D5 Errores de sintaxis y ayuda escasa | Usabilidad |
+| 5 | D1 Prueba de ajuste adecuada a PLS | Rigor metodológico |
+| 6 | D6 f², Q², mediación, CVPAT, IPMA, MICOM | Completitud |
 
 ## 3. Motor: cSEM
 
-El motor es cSEM (Rademaker y Schuberth), el mismo de JASP. Cubre las seis
-deficiencias con funciones propias y permite validar los números contra JASP
-en los mismos datos. Versión probada: 0.7.1 (2026-09-08); licencia GPL-3,
-compatible con la suite. Arrastra unas 76 dependencias; JASP ya lo empaqueta,
-así que es viable, pero el `.jmo` será grande.
+El motor es cSEM (Rademaker y Schuberth). Cubre los seis requisitos con
+funciones propias y permite validar cada número contra llamadas directas a
+cSEM. Versión probada: 0.7.1 (2026-09-08); licencia GPL-3,
+compatible con la suite. Arrastra unas 76 dependencias, así que el `.jmo`
+será grande.
 
-| Deficiencia | Funciones de cSEM | Comprobado en |
+| Requisito | Funciones de cSEM | Comprobado en |
 | --- | --- | --- |
 | D1 Ajuste | `testOMF()` (SRMR, d_G, d_L, d_ML con valores críticos bootstrap) | E5 |
 | D2 Fiabilidad | `calculateRhoC()`, `calculateRhoT()`, `calculateAVE()`, rho_A en `$Reliabilities` (solo PLSc) | E1 |
@@ -75,7 +71,7 @@ así que es viable, pero el `.jmo` será grande.
 | D6 IPMA | `doIPMA()` | E6 |
 | D6 Multigrupo | `testMICOM()`, `testMGD()` (Chin, Henseler) | E6 |
 
-## 4. Las seis deficiencias: solución y evidencia
+## 4. Los seis requisitos: solución y evidencia
 
 ### D2 — HTMT, VIF y fiabilidad con intervalos (E1)
 
@@ -145,7 +141,7 @@ da el efecto simple de SAT sobre LOY en todo el rango de IMAG.
   en la etapa 2 solo el constructo de orden superior se mide con las
   puntuaciones de sus dimensiones y los demás constructos conservan sus
   indicadores (fig. 4 del artículo). Como opción, la rutina de segundo orden
-  de cSEM (la de JASP), con un aviso de sus tres diferencias. El bootstrap
+  de cSEM, con un aviso de sus tres diferencias. El bootstrap
   remuestrea ambas etapas juntas.
 - Validación: las dimensiones no pueden tener rutas propias (cSEM las acepta
   sin aviso y las descarta de la etapa 2), cada constructo de orden superior
@@ -168,8 +164,7 @@ caché (pequeña y con tope, como MokkenLab).
 
 **Evidencia.** Unos 19 ms por réplica para el modelo extendido (n = 344),
 lineal: 500 réplicas en 10 s, 2000 en 38 s, igual con PLS o PLSc y con
-`drop` o `replace`. Con R = 2000 nada falla (el error #3642 de JASP no se
-reproduce con cSEM 0.7.1). Diez bloques de 200 dan los mismos IC percentiles
+`drop` o `replace`. Con R = 2000 nada falla con cSEM 0.7.1. Diez bloques de 200 dan los mismos IC percentiles
 que una corrida de 2000 (diferencia máxima 0,016). La misma semilla da
 réplicas idénticas.
 
@@ -177,7 +172,7 @@ réplicas idénticas.
 - El informe muestra cuántas réplicas fueron admisibles y qué se hizo con las
   inadmisibles. En E5, la prueba de ajuste del modelo simple con PLSc tuvo
   410 de 499 réplicas admisibles: la desatenuación sí produce inadmisibles en
-  algunos modelos, y la opción debe ser real (en JASP no tenía efecto).
+  algunos modelos, y la opción debe tener efecto real.
 - 2000 réplicas por defecto para el informe final, con aviso de tiempo
   estimado a partir de la primera tanda.
 
@@ -207,13 +202,10 @@ dataset de referencia salen como cuatro mensajes claros.
 
 ### D1 — Prueba de ajuste global (E5)
 
-**Actualización (noviembre de 2026).** JASP quitó el chi-cuadrado ML en
-junio de 2025 (jaspSem 0.95, commit 698bb9a) y desde entonces muestra
-`testOMF()`: el estadístico y su valor crítico, para el modelo estimado o el
-saturado según una casilla, sin decisión ni lectura; con una solución
-inadmisible la tabla da error. En "medidas adicionales" sigue mostrando CFI,
-GFI, RMSEA, NFI, NNFI e IFI, índices de la lógica ML del SEM basado en
-covarianzas, sin advertencia.
+**Problema.** La prueba chi-cuadrado ML y los índices CFI, GFI, RMSEA, NFI,
+NNFI e IFI pertenecen a la lógica ML del SEM basado en covarianzas y no se
+justifican en PLS; la prueba bootstrap del ajuste debe mostrarse con su
+decisión y su lectura.
 
 **Solución.** `testOMF()` (Beran y Srivastava, 1985; Dijkstra y Henseler,
 2015): SRMR, d_G, d_L y d_ML con su valor crítico bootstrap al nivel elegido,
@@ -227,7 +219,8 @@ como "No computable" con la razón.
 **Evidencia.** 3–7 s con 499 réplicas. Modelo simple (PLSc): SRMR 0,056
 frente a un valor crítico de 0,040, se rechaza el ajuste exacto aunque el
 SRMR está bajo la regla descriptiva de 0,08. Una prueba chi-cuadrado ML, el
-tipo de prueba que muestra JASP, da para el mismo modelo 191,6 con 29 gl.
+prueba propia del SEM basado en covarianzas, da para el mismo modelo 191,6
+con 29 gl.
 
 **Decisión.** El informe separa la prueba de ajuste exacto de los índices
 descriptivos y enseña la diferencia: rechazar el ajuste exacto con un SRMR
@@ -268,8 +261,8 @@ bajo es un resultado frecuente y debe leerse junto al tamaño de la muestra.
   Su Q²predict centra los residuos (diferencia de ~1e-6 con la fórmula sin
   centrar); el módulo usa la misma fórmula.
 - Mediación: efectos indirectos específicos por cadena con IC percentil de
-  las réplicas de las rutas y tipo de Zhao et al. (2010); JASP muestra solo
-  los efectos totales.
+  las réplicas de las rutas y tipo de Zhao et al. (2010), no solo los
+  efectos totales.
 
 ### Hallazgo transversal: qué significa "reflectivo"
 
@@ -402,8 +395,8 @@ catálogo i18n como el resto del informe, y queda en el idioma de jamovi.
    llamada directa a cSEM, en PLS y PLSc, y corre en CI en cada push.
 2. Comparación con las tablas publicadas por Hair et al. para el modelo de
    reputación corporativa.
-3. Comparación con JASP 0.99 en los mismos datos y opciones; cada diferencia
-   se explica.
+3. Comparación interna con otro software de PLS-SEM en los mismos datos y
+   opciones; cada diferencia se explica.
 4. Pruebas de estrés (`tests/`): perdidos, muestras pequeñas, nombres con
    espacios y acentos, un solo indicador, modelos casi singulares, idioma
    español-inglés-español en un mismo proceso.
@@ -416,7 +409,7 @@ leer", interpretación, hallazgos clave): la parte didáctica se construye con
 cada tabla, no al final. El orden sigue la prioridad de la sección 2, salvo
 la fase 1, que es la base de todas las demás.
 
-| Fase | Contenido | Deficiencia | Criterio de cierre |
+| Fase | Contenido | Requisito | Criterio de cierre |
 | --- | --- | --- | --- |
 | 0 | Diseño, experimentos con cSEM, documentos de la suite, logo | — | Hecho |
 | 1 | Plataforma: paquete, `0000.yaml`, catálogo i18n, CI, datasets incluidos (perdidos -99 ya declarados); interfaz de cajas con el Supplier en JS; constructor y validador del modelo; estimación con cargas, pesos y rutas | D5 | El modelo se arma con cajas, los 7 errores del E4 dan su mensaje y los números coinciden con cSEM |
@@ -426,7 +419,7 @@ la fase 1, que es la base de todas las demás.
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Hecho: valores y valores críticos iguales a `testOMF()`; explicación de por qué no hay chi-cuadrado ML ni CFI/RMSEA |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Hecho: iguales a `predict()`, `testCVPAT()` y `doIPMA()` de cSEM; rango de la escala para IPMA; CVPAT frente a IA, LM y un modelo competidor |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Hecho: iguales a `testMICOM()` y `testMGD()`; comparación por tipo de servicio del E6 reproducida exactamente (con el orden de grupos del E6); p bilateral de PLS-MGA y nota sobre la regla .05/.95 de SmartPLS |
-| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra JASP; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con JASP explicada |
+| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra otro software; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con otro software explicada |
 | 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |
 | 10 | Versión 1.0.0 y envío a la biblioteca de jamovi | — | Revisión de jamovi atendida |
 
@@ -440,21 +433,10 @@ la fase 1, que es la base de todas las demás.
 | Diagrama de rutas | Distribución automática legible con muchos constructos | Disposición por capas (exógenos a la izquierda), probada con los modelos de referencia |
 | CVPAT | Requiere un modelo alternativo | Rutas marcadas para quitar; confirmar con Archie |
 | IPMA | Requiere el rango de la escala | Opción de rango (mínimo y máximo) con detección automática como valor por defecto |
-| Estado de JASP | Lo de D2 y D6 puede haber cambiado en 0.99 | Revisarlo en JASP antes de cerrar la lista de requisitos |
 | Volumen de la v1 | Cubrir D1–D6 a la vez es mucho | Construir en el orden de prioridad de la sección 2 y validar cada parte antes de la siguiente |
 
 ## 10. Fuentes
 
-Las referencias metodológicas están en `docs/Bibliography.md`. Reportes de
-JASP usados en este documento:
+Las referencias metodológicas están en `docs/Bibliography.md`. Otras fuentes:
 
-- [JASP Release Notes](https://jasp-stats.org/release-notes/)
-- [Ayuda de PLS-SEM de JASP (jaspSem)](https://rdrr.io/github/jasp-stats/jaspSem/f/inst/help/PLSSEM.md)
-- [Issue #2955: ajuste, AVE/HTMT, segundo orden, interacciones](https://github.com/jasp-stats/jasp-issues/issues/2955)
-- [Issue #1982: VIF, HTMT, AVE](https://github.com/jasp-stats/jasp-issues/issues/1982)
-- [Issue #2567: mejoras de PLS-SEM](https://github.com/jasp-stats/jasp-issues/issues/2567)
-- [Issue #3642: fallo del bootstrap con 2000 o más réplicas](https://github.com/jasp-stats/jasp-issues/issues/3642)
-- [Issue #4599: PLS-SEM extremadamente lento](https://github.com/jasp-stats/jasp-issues/issues/4599)
-- [Rogers y Barboza: tutorial de PLS-SEM en JASP](https://www.researchgate.net/publication/377656241_Unlocking_VB-SEM_Practical_PLS-SEM_Tutorial_Using_JASP_for_Variance-Based_Structural_Equation_Modeling)
-- [Foro de JASP: sintaxis de PLS-SEM](https://forum.cogsci.nl/discussion/8657/pls-sem-model-sintax)
 - [SEMLj (interfaz de modelos en jamovi)](https://github.com/semlj/semlj)

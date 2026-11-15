@@ -877,8 +877,8 @@ Before publishing a new version verify
   with the published values of Hair et al. for the corporate reputation
   model.
 
-□ Results compared with JASP's PLS-SEM on the same data and options, every
-  difference explained.
+□ Results compared with other PLS-SEM software on the same data and
+  options, every difference explained.
 
 □ `.jmo` built and installed with `jmvtools::install()` on Windows, macOS and
   Linux (cSEM imports about 76 packages; TruncatedNormal, spacefillr and qrng

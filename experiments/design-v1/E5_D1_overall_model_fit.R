@@ -1,15 +1,14 @@
 # -----------------------------------------------------------------------------
 # E5 — D1: a correct test of overall model fit.
-# JASP issue #2955 (opened by the JASP team, still open): the fit table shows
-# an ML-based chi-square test, which does not apply to PLS; the bootstrap test
+# An ML-based chi-square test of fit does not apply to PLS; the bootstrap test
 # of Beran & Srivastava (1985) / Dijkstra & Henseler (2015), testOMF(), is the
 # right one.
 # Questions: (1) does testOMF() run on the reference models, with what time?
-# (2) how different is the ML chi-square JASP shows? (3) saturated vs
+# (2) how different is the ML chi-square of covariance-based SEM? (3) saturated vs
 # estimated model: what changes?
 # ES: E5 — D1: una prueba correcta del ajuste global del modelo.
 # ES: Preguntas: (1) ¿testOMF() funciona en los modelos de referencia y cuánto
-# tarda? (2) ¿qué tan distinto es el chi-cuadrado ML que muestra JASP?
+# tarda? (2) ¿qué tan distinto es el chi-cuadrado ML del SEM basado en covarianzas?
 # (3) modelo saturado vs estimado: ¿qué cambia?
 # -----------------------------------------------------------------------------
 source("00_setup.R")
@@ -35,9 +34,9 @@ for (case in list(list(name = "simple reflective (PLSc)", model = model_simple, 
     if (r$ok) { print(omf_table(r$value), row.names = FALSE)
                 cat("  admissible bootstrap samples:", r$value$Information$Number_admissibles, "\n") }
   }
-  # What JASP's table reports: an ML chi-square and its p-value.
-  # ES: Lo que reporta la tabla de JASP: un chi-cuadrado ML y su p.
-  run_case("ML chi-square (what JASP shows)", {
+  # The covariance-based SEM report: an ML chi-square and its p-value.
+  # ES: Lo que reporta el SEM basado en covarianzas: un chi-cuadrado ML y su p.
+  run_case("ML chi-square (covariance-based SEM)", {
     chi <- calculateChiSquare(fit); df <- calculateDf(fit)
     cat(sprintf("  chi2 = %.2f, df = %d, p = %.3g\n", chi, df, pchisq(chi, df, lower.tail = FALSE)))
   })

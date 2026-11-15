@@ -1,7 +1,6 @@
 # -----------------------------------------------------------------------------
 # E4 — D5: from the options panel to a cSEM model, with clear messages.
-# User reports in JASP: forum 2023 (uninformative errors on wrong syntax),
-# issue #2955 (help file). PLSsemLab builds the model from boxes, like
+# Typed syntax gives uninformative errors when it is wrong. PLSsemLab builds the model from boxes, like
 # EGAnetLab's "Theoretical structure" and SEMLj's latent boxes, so the user
 # never types syntax; the module validates the boxes before calling cSEM.
 # Questions: (1) what does cSEM say on its own for each common mistake?
@@ -147,7 +146,7 @@ mistakes <- list(
 # ES: Nombres ASCII aquí, para que el mensaje de cSEM trate del error y no de
 # los acentos (la sección C prueba los acentos por separado).
 asc <- function(x) gsub("[^A-Za-z0-9_]", "_", iconv(x, "UTF-8", "ASCII//TRANSLIT"))
-raw_syntax <- function(o) { # naive syntax as a user would type it in JASP
+raw_syntax <- function(o) { # naive syntax as a user would type it
   b <- c(lapply(o$reflective, c, list(type = "=~")), lapply(o$composite, c, list(type = "<~")))
   paste(c(vapply(b, function(x) sprintf("%s %s %s", asc(x$label), x$type,
                                         paste(x$vars, collapse = " + ")), ""),

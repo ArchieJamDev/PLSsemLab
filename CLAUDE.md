@@ -6,13 +6,12 @@ FiabilityLab (all at github.com/ArchieJamDev). Status: design stage.
 
 ## Goal of v1
 
-Be the first PLS-SEM module for jamovi and fix, from the first release, the
-six shortcomings documented for JASP's PLS-SEM (priority = reported by users
-first): D2 HTMT/VIF with bootstrap CI · D3 higher-order constructs and
+Be the first PLS-SEM module for jamovi and meet, from the first release, six
+requirements of a complete PLS-SEM analysis (priority = most requested by
+users first): D2 HTMT/VIF with bootstrap CI · D3 higher-order constructs and
 interactions · D4 bootstrap speed/robustness · D5 syntax errors and help ·
 D1 wrong (ML) overall fit test · D6 f², Q²/PLSpredict, CVPAT, mediation,
-IPMA, MICOM. Engine: cSEM (same as JASP; lets results be checked against
-JASP). Design: `docs/DESIGN.md`. Evidence for each fix:
+IPMA, MICOM. Engine: cSEM. Design: `docs/DESIGN.md`. Evidence for each fix:
 `experiments/design-v1/` (see its README). Suite rules: `ARCHITECTURE.md`,
 `DEVELOPER_GUIDE.md`, `CODE_STYLE.md` (adopted from MokkenLab, the most
 recent module after jamovi's review; helper prefix `.pl_`).
@@ -83,17 +82,16 @@ carry every rule below in full.
 - Disjoint two-stage HOC (Sarstedt et al., 2019, Fig. 4): in stage 2 only
   the HOC is measured by stage-1 scores; every other construct keeps its
   own indicators. cSEM's `calculate2ndStage` uses scores for all (and adds
-  paths among LOCs in stage 1): it is the optional "as JASP" approach.
+  paths among LOCs in stage 1): it is the optional "cSEM routine" approach.
 - cSEM accepts a path to one dimension of a second-order construct without
   warning and drops it from the reported stage 2: the module rejects it.
-- JASP removed its ML chi-square in June 2025 (jaspSem 0.95, commit
-  698bb9a): it now shows testOMF() without decision, one model at a time,
-  plus CFI/GFI/RMSEA-type indices. D1 is about reading and completeness.
+- D1 is about reading and completeness: testOMF() for the estimated and the
+  saturated model together, with decision and reading; no ML chi-square nor
+  CFI/GFI/RMSEA-type indices.
 - `testOMF()` returns `Critical_value` columns in its own order and keeps
   admissible draws in `Information$Bootstrap_values`; `"<~"` without
   `.PLS_modes` is Mode B (pass Mode A in reference calls).
-- Multigroup (phase 7): JASP (Nov 2026) only estimates the model per group;
-  no MICOM, no difference tests. `testMGD()`'s Henseler p is
+- Multigroup (phase 7): `testMGD()`'s Henseler p is
   P(first ≤ second), one-sided; the module reports 2·min(P, 1−P) (cSEM's
   own decision rule); SmartPLS's .05/.95 rule is a two-sided .10 level.
   The group column is `PLgroup` with labels G01..Gk (cSEM rejects dots;
@@ -124,6 +122,9 @@ carry every rule below in full.
 
 ## Working conventions
 
+- No mention of, or comparison with, JASP in any file of the repository, the
+  module texts, commits or releases. Comparisons with JASP are internal only
+  and stay outside GitHub.
 - Talk to Archie in Spanish, always with "tú" — never voseo (tenés, podés,
   querés...). Check every -ás/-és/-ís verb before sending.
 - Source comments: English first, then a `# ES:` Spanish block.

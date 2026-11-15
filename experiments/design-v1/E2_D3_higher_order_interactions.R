@@ -1,7 +1,6 @@
 # -----------------------------------------------------------------------------
 # E2 — D3: higher-order constructs and interactions between constructs.
-# User reports in JASP: issue #2955 (errors with files attached), #3007.
-# Root cause named by a user: cSEM's assess() refuses nonlinear terms.
+# Known obstacle: cSEM's assess() refuses nonlinear terms.
 # Question: which quality criteria still work if each one is computed on its
 # own, for a second-order model and for a model with an interaction?
 # ES: E2 — D3: constructos de orden superior e interacciones.
@@ -38,8 +37,8 @@ check_all <- function(fit, label) {
     r <- run_case(paste(tn, cn, sep = " / "), criteria[[cn]](targets[[tn]]))
     res[[paste(tn, cn)]] <- r$ok
   }
-  # Also the whole object, as JASP passes it.
-  # ES: También el objeto completo, como lo pasa JASP.
+  # Also the whole object, as a front end would pass it.
+  # ES: También el objeto completo, como lo pasaría una interfaz.
   if (length(targets) > 1) run_case("whole object / assess_all", assess(fit))
   invisible(res)
 }

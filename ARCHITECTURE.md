@@ -786,8 +786,7 @@ No un elemento accesorio.
 
 # 14. Future Expansion
 
-Version 1 covers the six shortcomings documented for JASP's PLS-SEM
-(`docs/DESIGN.md`). Planned analyses, in release order:
+Version 1 covers the six requirements D1–D6 of `docs/DESIGN.md`. Planned analyses, in release order:
 
 | Phase | Analysis | cSEM functions |
 | --- | --- | --- |
@@ -805,8 +804,7 @@ to, or as a new analysis, without structural changes.
 
 # Expansión futura
 
-La versión 1 cubre las seis deficiencias documentadas del PLS-SEM de JASP
-(`docs/DESIGN.md`). Cada capacidad nueva se agrega como opciones y
+La versión 1 cubre los seis requisitos D1–D6 de `docs/DESIGN.md`. Cada capacidad nueva se agrega como opciones y
 resultados del análisis al que pertenece, o como un análisis nuevo, sin
 cambios estructurales.
 

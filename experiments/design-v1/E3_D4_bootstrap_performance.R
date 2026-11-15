@@ -1,8 +1,7 @@
 # -----------------------------------------------------------------------------
 # E3 — D4: bootstrap speed and robustness.
-# User reports in JASP: issue #3642 (crash with >= 2000 samples, fixed),
-# #4599 (open, Oct 2026: runs for a day), forum 2023 (disattenuation always on
-# -> many inadmissible samples redrawn with "replace").
+# Known risks: crashes with >= 2000 samples, runs that never end, and
+# disattenuation always on (many inadmissible samples redrawn with "replace").
 # Questions: (1) how long does each R take? (2) what does disattenuation cost?
 # (3) does R >= 2000 still break anything? (4) can the bootstrap run in chunks,
 # so jamovi's checkpoint can stop it, with the same result as one run?
@@ -31,9 +30,9 @@ for (i in seq_len(nrow(grid))) {
 }
 print(grid, row.names = FALSE)
 
-# (3) The step that crashed JASP at >= 2000: model selection criteria on a
+# (3) A step known to crash at >= 2000: model selection criteria on a
 # resampled object.
-# ES: (3) El paso que rompía JASP con >= 2000: criterios de selección de modelo
+# ES: (3) Un paso que se sabe que fallaba con >= 2000: criterios de selección de modelo
 # sobre un objeto remuestreado.
 big <- csem(dat, model_extended, .resample_method = "bootstrap", .R = 2000, .seed = SEED,
             .disattenuate = FALSE)

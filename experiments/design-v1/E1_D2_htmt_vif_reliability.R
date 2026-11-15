@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 # E1 — D2: HTMT, VIF and reliability with bootstrap intervals.
-# User reports in JASP: issues #1982, #2567; forum 2023; Rogers & Barboza 2024.
+# Background: users' requests for these measures; Rogers & Barboza (2024).
 # Question: can every measure be computed, with a bootstrap CI where the
 # literature asks for one, for reflective AND formative constructs?
 # ES: E1 — D2: HTMT, VIF y fiabilidad con intervalos bootstrap.
@@ -98,8 +98,8 @@ vif_idx   <- which(v2$value != 0, arr.ind = TRUE)
 vif_pos   <- which(v2$value != 0)
 vif_names <- paste(colnames(v2$value)[vif_idx[, 2]], "->", rownames(v2$value)[vif_idx[, 1]])
 
-# 5. Bootstrap CI for VIF and reliability via .user_funs (JASP issue #2567
-# asks for CI of VIF; SmartPLS 4.1.1.2 added them in April 2025).
+# 5. Bootstrap CI for VIF and reliability via .user_funs (users ask for CI
+# of VIF; SmartPLS 4.1.1.2 added them in April 2025).
 # ES: 5. IC bootstrap para VIF y fiabilidad vía .user_funs.
 b <- run_case("Bootstrap with user functions (R = 499)", {
   resamplecSEMResults(fit, .R = 499, .seed = SEED,

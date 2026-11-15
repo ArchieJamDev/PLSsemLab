@@ -161,6 +161,11 @@ test_that("a model that cannot be compared keeps its rows with the reason", {
     h$init(); h$run()
     expect_true(all(h$results$mgaSection$micom$asDF$invariance == "Not computable"))
     expect_match(h$results$mgaSection$mga$notes$reason$note, "higher-order")
+    # the per-group table says why, instead of an empty cell
+    # ES: la tabla por grupo dice por qué, en lugar de una celda vacía
+    expect_equal(h$results$mgaSection$mgaGroups$asDF$admissible, c("Not computable", "Not computable"))
+    expect_match(h$results$mgaSection$mgaGroups$notes$reason$note, "higher-order")
+    expect_true(all(h$results$mgaSection$mgaGroups$asDF$n > 0))
 })
 
 test_that("a bootstrap earlier in the session does not change the permutations", {

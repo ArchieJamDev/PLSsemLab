@@ -971,17 +971,25 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             mg <- .pl_mga_data(d, g, lev)
             n <- stats::setNames(unname(mg$n), lev)
             for (k in seq_along(lev)) gt$setRow(rowKey = lev[k], values = list(n = n[[k]]))
-            notcomp <- function(why, tables = list(mt, dt)) {
+            notcomp <- function(why, tables = list(mt, dt), groups = FALSE) {
                 for (tab in tables) {
                     col <- if (identical(tab, mt)) "invariance" else "decision"
                     for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = col, value = lab("not_computable"))
                     tab$setNote("reason", why)
                 }
+                # the per-group table keeps its N and says why there is no
+                # estimate, instead of an empty cell
+                # ES: la tabla por grupo conserva su N y dice por qué no hay
+                # estimación, en lugar de una celda vacía
+                if (groups) {
+                    for (k in seq_along(lev)) gt$setRow(rowKey = lev[k], values = list(admissible = lab("not_computable")))
+                    gt$setNote("reason", why)
+                }
             }
             r <- .pl_mga_reason(hocs, gv, unlist(lapply(blocks, `[[`, "vars")), n)
             if (!is.null(r)) {
                 why <- do.call(sprintf, c(list(txt("footnotes", r$key)), r$args))
-                notcomp(why)
+                notcomp(why, groups = TRUE)
                 return(list(reason = why, n_missing = mg$n_missing))
             }
             fit <- .pl_capture(cSEM::csem(
@@ -991,7 +999,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 .PLS_weight_scheme_inner = self$options$innerScheme))
             if (!is.null(fit$error)) {
                 why <- sprintf(txt("footnotes", "mga_error"), paste(fit$error, collapse = "; "))
-                notcomp(why)
+                notcomp(why, groups = TRUE)
                 return(list(reason = why, error = fit$error, n_missing = mg$n_missing))
             }
             fg <- fit$value

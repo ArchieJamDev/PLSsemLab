@@ -1,0 +1,33 @@
+# Publish an archived version: creates the GitHub release (which Zenodo turns
+# into a DOI) with the notes in .github/release-notes/<tag>.md and the
+# Windows .jmo of the dev-build-windows pre-release.
+# ES: Publica una versión archivada: crea la versión de GitHub (que Zenodo
+# convierte en DOI) con las notas de .github/release-notes/<tag>.md y el .jmo
+# de Windows de la pre-versión dev-build-windows.
+name: Publish release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version tag, e.g. v0.7.5"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          VER="${TAG#v}"
+          grep -q "version: $VER" jamovi/0000.yaml || { echo "jamovi/0000.yaml is not $VER"; exit 1; }
+          gh release download dev-build-windows -p "PLSsemLab_${VER}_win64.jmo"
+          gh release create "$TAG" "PLSsemLab_${VER}_win64.jmo" --target "$GITHUB_SHA" \
+            --title "PLSsemLab $VER (development version)" --notes-file ".github/release-notes/$TAG.md"

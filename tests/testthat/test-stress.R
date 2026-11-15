@@ -39,7 +39,10 @@ accented <- function() {
     d <- bundled("plssemlab_learning.csv")
     names(d)[names(d) == "lead_1"] <- "liderazgo 1"
     names(d)[names(d) == "perf_2"] <- "desempeño 2"
-    d$sector <- factor(ifelse(d$sector == "Public", "Sector público", "Sector privado"))
+    # explicit levels: factor() would sort them by the system locale
+    # ES: niveles explícitos: factor() los ordenaría según el idioma del sistema
+    d$sector <- factor(ifelse(d$sector == "Public", "Sector público", "Sector privado"),
+                       levels = c("Sector privado", "Sector público"))
     d$sector[c(3, 50, 77)] <- NA
     d
 }

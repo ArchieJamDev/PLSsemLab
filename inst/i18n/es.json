@@ -2043,6 +2043,9 @@
             ],
             "ω (CFA)": [
                 "ω (AFC)"
+            ],
+            "An arrow that ends on a path is a moderation: the moderator changes the strength of that path, and the number is the coefficient of the interaction term (predictor × moderator).": [
+                "Una flecha que termina sobre una ruta es una moderación: el moderador cambia la fuerza de esa ruta, y el número es el coeficiente del término de interacción (predictor × moderador)."
             ]
         }
     },

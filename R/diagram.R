@@ -73,15 +73,26 @@
     for (k in seq_len(nrow(simple)))
         add(node[[simple$from[k]]], node[[simple$to[k]]], simple$estimate[k], "path",
             sig_of(paste(model$cmap[[simple$to[k]]], "~", model$cmap[[simple$from[k]]]), "paths"))
-    # Each interaction term is a node of its own ("A × B") with its path to
-    # the outcome, drawn in the column of its components, below them.
-    # ES: Cada interacción es un nodo propio ("A × B") con su ruta al
-    # resultado, en la columna de sus componentes, debajo de ellos.
+    # A moderation is drawn as researchers draw it: an arrow from the
+    # moderator to the middle of the path it moderates (predictor ->
+    # outcome), labelled with the coefficient of the interaction term. The
+    # term itself is not a node. In "A × B" the first construct is the
+    # predictor and the second the moderator, as in the moderation table.
+    # semPlot draws arrows only between nodes, so these arrows are added
+    # over its drawing (see .pl_plot_sem).
+    # ES: Una moderación se dibuja como la dibujan los investigadores: una
+    # flecha del moderador al centro de la ruta que modera, con el
+    # coeficiente del término de interacción. El término no es un nodo.
     inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
-    for (term in unique(inter$from)) node[[term]] <- term
-    for (k in seq_len(nrow(inter)))
-        add(node[[inter$from[k]]], node[[inter$to[k]]], inter$estimate[k], "path",
-            sig_of(paste(model$cmap[[inter$to[k]]], "~", model$cmap[[inter$from[k]]]), "paths"))
+    mods <- data.frame(pred = character(0), mod = character(0), out = character(0), est = numeric(0),
+                       sig = logical(0), stringsAsFactors = FALSE)
+    for (k in seq_len(nrow(inter))) {
+        parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
+        mods <- rbind(mods, data.frame(pred = node[[parts[1]]], mod = node[[parts[2]]], out = node[[inter$to[k]]],
+                                       est = inter$estimate[k],
+                                       sig = sig_of(paste(model$cmap[[inter$to[k]]], "~", model$cmap[[inter$from[k]]]), "paths"),
+                                       stringsAsFactors = FALSE))
+    }
     for (h in hocs) {
         hh <- model$m2$hmap[[h$label]]
         for (cpt in h$components) {
@@ -108,36 +119,30 @@
     # higher-order construct
     # ES: rutas de la disposición: las del usuario y cada constructo de orden
     # inferior antes del suyo de orden superior
-    lay_paths <- paths[, c("from", "to")]
+    lay_paths <- paths[!grepl(.PL_X, paths$from, fixed = TRUE), c("from", "to"), drop = FALSE]
     for (h in hocs) lay_paths <- rbind(lay_paths, data.frame(from = h$components, to = h$label, stringsAsFactors = FALSE))
     lay <- .pl_diagram_layout(blocks_all, lay_paths, paths, r2, NULL)
-    for (term in unique(inter$from)) {
-        parts <- strsplit(term, .PL_X, fixed = TRUE)[[1]]
-        lay$nodes <- rbind(lay$nodes[, c("label", "type", "layer")], data.frame(
-            label = term, type = "interaction", layer = max(lay$nodes$layer[lay$nodes$label %in% parts]),
-            stringsAsFactors = FALSE))
-    }
-    simple_lay <- lay_paths[!grepl(.PL_X, lay_paths$from, fixed = TRUE), , drop = FALSE]
+    simple_lay <- lay_paths
     xy <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars)
     # top to bottom: indicator boxes side by side need a wider step
     # ES: de arriba abajo, las cajas lado a lado necesitan más separación
     tb <- .pl_sem_coords(lay$nodes, simple_lay, node, pars, vars, gap = 1.3, step = 0.6, side = 1.7,
                          row_off = 2.5, row_extra = 3.1, min_body = 2.3, layer = 1.4)
-    list(vars = vars, pars = pars, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
+    list(vars = vars, pars = pars, mods = mods, caption = caption, x = xy$x, y = xy$y, x_tb = -tb$y, y_tb = -tb$x,
          n_layers = length(unique(lay$nodes$layer)), n_rows = max(table(lay$nodes$layer)),
          n_ind = length(unique(man)), boot = !is.null(sm))
 }
 
 # Coordinates for the left-to-right tree (SmartPLS-like): constructs in
 # columns by depth, ordered by the mean position of their predictors;
-# formative indicators and those of exogenous reflective constructs in a
-# column to the left, those of reflective constructs that predict nothing in
-# a column to the right, and those of reflective constructs in the middle in
-# a row above, so no indicator sits on a structural arrow.
+# the indicators of exogenous constructs in a column to the left, those of
+# constructs that predict nothing in a column to the right, and those of
+# constructs in the middle in a row above (formative or reflective), so no
+# indicator sits on a structural arrow.
 # ES: Coordenadas del árbol de izquierda a derecha (como SmartPLS):
-# constructos en columnas por profundidad; indicadores formativos y de
-# reflectivos exógenos a la izquierda, de reflectivos terminales a la
-# derecha y de reflectivos intermedios en una fila arriba.
+# constructos en columnas por profundidad; indicadores de exógenos a la
+# izquierda, de terminales a la derecha y de intermedios (formativos o
+# reflectivos) en una fila arriba.
 .pl_sem_coords <- function(nodes, simple, node, pars, vars, gap = 0.62, step = 1.4, side = 2.8,
                            row_off = 1.5, row_extra = 1.8, min_body = 1.5, layer = 1.6) {
     x <- stats::setNames(rep(0, nrow(vars)), vars$name)
@@ -148,8 +153,13 @@
         outof <- pars$rhs[pars$lhs == nm & pars$kind == "loading"]
         exo <- !(cl %in% simple$to)
         term <- !(cl %in% simple$from)
-        list(left = c(into, if (exo) outof), right = if (!exo && term) outof else character(0),
-             top = if (!exo && !term) outof else character(0))
+        # an endogenous formative construct keeps its indicators off the
+        # incoming paths too: row above if it predicts, column right if not
+        # ES: un formativo endógeno también saca sus indicadores de las rutas
+        # que llegan: fila arriba si predice, columna a la derecha si no
+        own <- c(into, outof)
+        list(left = if (exo) own else character(0), right = if (!exo && term) own else character(0),
+             top = if (!exo && !term) own else character(0))
     })
     names(sides) <- nodes$label
     body <- vapply(sides, function(sd) max(min_body, gap * length(sd$left), gap * length(sd$right)), 0)
@@ -247,6 +257,39 @@
             }
             top <- top - body[[cl]] - extra[[j]] - 0.8
         }
+    }
+    # A row of indicators can still lie on a path that arrives from a lower
+    # or higher construct (e.g. Like -> Qual under Qual's row): slide each
+    # row sideways to the nearest place that no path and no construct
+    # touches, keeping its height.
+    # ES: Una fila de indicadores aún puede quedar sobre una ruta que llega
+    # desde un constructo más bajo o más alto (p. ej. Like -> Qual bajo la
+    # fila de Qual): cada fila se desliza al lugar más cercano que ninguna
+    # ruta ni constructo toque, sin cambiar su altura.
+    seg <- simple[simple$from %in% names(node) & simple$to %in% names(node), , drop = FALSE]
+    sx <- cbind(x[unlist(node[seg$from])], x[unlist(node[seg$to])])
+    sy <- cbind(y[unlist(node[seg$from])], y[unlist(node[seg$to])])
+    cons <- unlist(node[nodes$label])
+    hits <- function(bx, by, own) {
+        t <- seq(0.04, 0.96, length.out = 60)
+        n <- 0
+        for (i in seq_len(nrow(seg))) {
+            px <- sx[i, 1] + t * (sx[i, 2] - sx[i, 1])
+            py <- sy[i, 1] + t * (sy[i, 2] - sy[i, 1])
+            n <- n + sum(vapply(seq_along(bx), function(k) any(abs(px - bx[k]) < step * 0.45 & abs(py - by[k]) < 0.45), TRUE))
+        }
+        other <- setdiff(cons, own)
+        n + sum(vapply(seq_along(bx), function(k) any(abs(x[other] - bx[k]) < step * 0.45 + 1 & abs(y[other] - by[k]) < 0.9), TRUE))
+    }
+    for (cl in nodes$label) {
+        v <- sides[[cl]]$top
+        if (!length(v)) next
+        nm <- node[[cl]]
+        base <- x[v] - x[[nm]]
+        k <- 0:length(v)
+        shifts <- c(0, rbind(k[-1], -k[-1])) * step / 2
+        cost <- vapply(shifts, function(s) hits(x[[nm]] + base + s, y[v], nm), 0)
+        if (cost[1] > 0 && min(cost) < cost[1]) x[v] <- x[[nm]] + base + shifts[which.min(cost)]
     }
     list(x = unname(x), y = unname(y))
 }
@@ -378,7 +421,13 @@
         k <- which(p$kind == "path" & p$rhs == to)
         if (length(k) > 1) lab_pos[k] <- rep(c(0.4, 0.6), length.out = length(k))
     }
-    semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
+    # a moderated path keeps its label near the predictor: the moderation
+    # arrow ends further along it
+    # ES: una ruta moderada lleva su etiqueta cerca del predictor
+    mods <- if (is.null(state$mods)) data.frame() else state$mods
+    for (j in seq_len(nrow(mods)))
+        lab_pos[p$kind == "path" & p$lhs == mods$pred[j] & p$rhs == mods$out[j]] <- 0.3
+    g <- semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
                       sizeLat = lat_w / unit, sizeLat2 = lat_h / unit,
                       sizeMan = man_w / unit, sizeMan2 = man_h / unit,
@@ -395,12 +444,62 @@
                       edge.label.position = lab_pos,
                       curvePivot = TRUE, mar = c(if (!isFALSE(opts$diagramCaption)) 7 else 3, 3, if (nzchar(opts$diagramTitle %or% "")) 6 else 3, 3),
                       bg = back, DoNotPlot = FALSE)
+    if (nrow(mods))
+        .pl_draw_moderation(g, mods, state$vars$name, labels = !isFALSE(opts$edgeLabels), digits = digits,
+                            dashed = !isFALSE(opts$nonsigDashed), col = edge_col, ink = ink, back = back,
+                            lwd_max = if (by_est) max(abs(c(p$est[p$kind == "path"], mods$est))) else NA,
+                            lat_w = lat_w, lat_h = lat_h,
+                            cex = if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize)
     if (nzchar(opts$diagramTitle %or% ""))
         graphics::title(main = opts$diagramTitle, col.main = ink, font.main = 1, cex.main = 1.1, line = 0.5)
     if (!isFALSE(opts$diagramCaption) && nzchar(state$caption))
         graphics::mtext(paste(strwrap(state$caption, width = max(40, round(width / 7))), collapse = "\n"),
                         side = 1, line = 1, adj = 0, cex = 0.75, col = ink, padj = 1)
     TRUE
+}
+
+# Moderation arrows over semPlot's drawing: from the edge of the moderator's
+# ellipse to a point 60% along the moderated path (between the centres of
+# predictor and outcome; the path's own label sits at 30%), with the
+# interaction coefficient at the middle of the arrow. Coordinates come from
+# the qgraph object semPaths() returns, in the plot's user units; the
+# ellipse size is converted from pixels. Dashed when the bootstrap interval
+# includes 0, as the other paths.
+# ES: Flechas de moderación sobre el dibujo de semPlot: del borde de la
+# elipse del moderador a un punto al 60% de la ruta moderada, con el
+# coeficiente de la interacción en el medio de la flecha.
+.pl_draw_moderation <- function(g, mods, names, labels, digits, dashed, col, ink, back, lwd_max,
+                                lat_w, lat_h, cex) {
+    xy <- tryCatch(g$layout, error = function(e) NULL)
+    if (is.null(xy) || nrow(xy) != length(names)) return(invisible(FALSE))
+    at <- function(n) xy[match(n, names), ]
+    rx <- abs(diff(graphics::grconvertX(c(0, lat_w / 2), "device", "user")))
+    ry <- abs(diff(graphics::grconvertY(c(0, lat_h / 2), "device", "user")))
+    for (j in seq_len(nrow(mods))) {
+        a <- at(mods$pred[j]); b <- at(mods$out[j]); m <- at(mods$mod[j])
+        if (anyNA(c(a, b, m))) next
+        end <- a + 0.6 * (b - a)
+        d <- end - m
+        len <- sqrt(sum(d^2))
+        if (!is.finite(len) || len <= 0) next
+        u <- d / len
+        r <- 1 / sqrt((u[1] / rx)^2 + (u[2] / ry)^2)
+        start <- m + u * min(r, 0.8 * len)
+        nonsig <- !is.na(mods$sig[j]) && !mods$sig[j]
+        lwd <- if (is.na(lwd_max) || lwd_max <= 0) 1.6 else max(1, 6 * abs(mods$est[j]) / lwd_max)
+        graphics::arrows(start[1], start[2], end[1], end[2], length = 0.1, angle = 22, col = col,
+                         lwd = lwd, lty = if (dashed && nonsig) 2 else 1)
+        if (labels) {
+            lab <- formatC(mods$est[j], format = "f", digits = digits)
+            if (!is.na(mods$sig[j]) && mods$sig[j]) lab <- paste0(lab, "*")
+            mid <- (start + end) / 2
+            w <- graphics::strwidth(lab, cex = cex) * 0.6
+            h <- graphics::strheight(lab, cex = cex) * 0.8
+            graphics::rect(mid[1] - w, mid[2] - h, mid[1] + w, mid[2] + h, col = back, border = NA)
+            graphics::text(mid[1], mid[2], lab, cex = cex, col = ink)
+        }
+    }
+    invisible(TRUE)
 }
 
 `%or%` <- function(a, b) if (is.null(a)) b else a

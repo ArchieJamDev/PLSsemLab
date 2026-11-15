@@ -1,4 +1,16 @@
-# PLSsemLab 0.7.4 (development)
+# PLSsemLab 0.7.5 (development)
+
+* The path diagram draws a moderation as it is drawn in the literature: an
+  arrow from the moderator that ends on the path it moderates (predictor →
+  outcome), labelled with the coefficient of the interaction term and dashed
+  when it is not significant. The interaction term is no longer a separate
+  node, and the caption explains how to read the arrow.
+* The indicators of an endogenous formative construct no longer sit between
+  its predictors and the construct, where they covered the path labels:
+  they go in a row above (when the construct predicts others) or in a column
+  to the right (when it does not), like those of reflective constructs.
+
+# PLSsemLab 0.7.4
 
 * Nothing is hidden because it does not apply to the model: the tables and
   plots stay in place and a jamovi notice in front of each one says why

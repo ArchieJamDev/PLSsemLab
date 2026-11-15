@@ -76,6 +76,17 @@ bk <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = 
                                  bootstrap = TRUE, bootReps = 100), data = d)
 bk$init(); bk$run(); draw(bk, "diagram-bank-hoc-LR.png")
 print(bk$results$measurementSection$hocHtmt$asDF)
+# Archie's report model: moderation Comp x Like -> Qual drawn on the path, next to a higher-order construct
+# ES: El modelo del informe de Archie: moderación Comp x Like -> Qual dibujada sobre la ruta, junto a un orden superior
+bm <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Perf", vars = paste0("perf_", 1:5)),
+                                                    list(label = "Loy", vars = paste0("loy_", 1:3)), list(label = "Comp", vars = paste0("comp_", 1:3)),
+                                                    list(label = "Like", vars = paste0("like_", 1:2))),
+                                 formative = list(list(label = "Qual", vars = c("qual_1", "qual_2", "qual_4", "qual_5", "qual_6", "qual_7"))),
+                                 reflectiveHoc = list(list(label = "Superior", components = list("Trust", "Perf"))),
+                                 structural = list(list(), list(), list("Superior", "Qual"), list(), list(), list("Comp", "Like", c("Comp", "Like")), list()),
+                                 bootstrap = TRUE, bootReps = 100), data = d)
+bm$init(); bm$run(); draw(bm, "diagram-bank-moderation-LR.png"); draw(bm, "diagram-bank-moderation-TB.png", diagramLayout = "treeTB")
+print(bm$results$structuralSection$paths$asDF)
 # Overall fit (phase 5) on the bank model without the higher-order construct
 # ES: Ajuste global (fase 5) en el modelo bancario sin orden superior
 fb <- cls$new(options = opts$new(reflective = list(list(label = "Trust", vars = paste0("trust_", 1:4)), list(label = "Loy", vars = paste0("loy_", 1:3)),

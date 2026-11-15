@@ -102,6 +102,7 @@ jobs:
         run: |
           TAG="${{ inputs.tag }}"; TAG="${TAG:-dev-build-windows}"
           gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" *_win64.jmo --prerelease --target "$GITHUB_SHA" \
+          (cd out && 7z a -tzip ../probe-plots.zip *.png > /dev/null) || true
+          gh release create "$TAG" *_win64.jmo $(ls probe-plots.zip 2>/dev/null) --prerelease --target "$GITHUB_SHA" \
             --title "Development build (Windows, jamovi ${{ inputs.app_version }}, R ${{ inputs.r_version }})" \
             --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."

@@ -1364,6 +1364,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             caption <- if (is.null(sm)) .pl_text(lang, "labels", "diagram_caption")
                        else sprintf(.pl_text(lang, "labels", "diagram_caption_boot"),
                                     format(100 * as.numeric(self$options$ciLevel)))
+            if (any(grepl(.PL_X, path_tab$from, fixed = TRUE)))
+                caption <- paste(caption, .pl_text(lang, "labels", "diagram_moderation"))
             st <- .pl_sem_state(blocks, loadings, path_tab, r2_tab, sm, model,
                                 indicators = isTRUE(self$options$diagramIndicators), caption = caption,
                                 hocq = hocq)

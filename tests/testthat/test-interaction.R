@@ -99,6 +99,13 @@ test_that("simple effects and floodlight equal doNonlinearEffectsAnalysis()", {
     expect_equal(ss$lower[2], p$lower[p$from == "SAT"], tolerance = 1e-10)
     expect_match(a$results$interpretation$content, "no evidence that IMAG moderates")
     dg <- a$results$plotsSection$pathDiagram$state
-    expect_true(term %in% dg$vars$name)
-    expect_equal(sum(dg$pars$kind == "path"), 3)
+    # the moderation is an arrow onto the path SAT -> LOY, not a node
+    # ES: la moderación es una flecha sobre la ruta SAT -> LOY, no un nodo
+    expect_false(term %in% dg$vars$name)
+    expect_equal(sum(dg$pars$kind == "path"), 2)
+    expect_equal(nrow(dg$mods), 1)
+    expect_equal(sub("\n.*", "", c(dg$mods$pred, dg$mods$mod, dg$mods$out)), c("SAT", "IMAG", "LOY"))
+    pp <- a$results$structuralSection$paths$asDF
+    expect_equal(dg$mods$est, pp$estimate[pp$from == term], tolerance = 1e-12)
+    expect_match(dg$caption, "moderation")
 })

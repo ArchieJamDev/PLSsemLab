@@ -299,7 +299,8 @@
             htmt_caption = .("HTMT per pair of reflective constructs; darker cells reach 0.85 or 0.90."),
             htmt_caption_boot = .("HTMT per pair, with its one-sided 95% bootstrap upper bound in brackets; the shade follows the upper bound (darker: 0.85 or 0.90 reached)."),
             diagram_caption = .("Path coefficients; line width follows the coefficient. Run the bootstrap to mark which paths are significant."),
-            diagram_caption_boot = .("Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); dashed line: not significant.")
+            diagram_caption_boot = .("Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); dashed line: not significant."),
+            diagram_moderation = .("An arrow that ends on a path is a moderation: the moderator changes the strength of that path, and the number is the coefficient of the interaction term (predictor \u00d7 moderator).")
         ),
 
         # "How to read" guides.

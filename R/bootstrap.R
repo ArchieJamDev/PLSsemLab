@@ -153,10 +153,19 @@
         f <- .pl_stage2_fit(scores, m2, options, data)
         e <- f$Estimates
         B <- e$Path_estimates
-        TT <- solve(diag(nrow(B)) - B) - diag(nrow(B))
-        dimnames(TT) <- dimnames(B)
-        II <- TT - B
-        pick <- function(M, to, from) mapply(function(a, b) M[a, b], cm[to], cm[from])
+        # With an interaction term the path matrix has one more column per
+        # term (not square): the total and indirect effects come from the
+        # paths among the constructs, as in models without higher-order
+        # constructs; the interaction path itself is picked from B.
+        # ES: Con un término de interacción la matriz de rutas tiene una
+        # columna más por término (no es cuadrada): los efectos totales e
+        # indirectos salen de las rutas entre constructos.
+        Bs <- B[, rownames(B), drop = FALSE]
+        TT <- solve(diag(nrow(Bs)) - Bs) - diag(nrow(Bs))
+        dimnames(TT) <- dimnames(Bs)
+        II <- TT - Bs
+        pick <- function(M, to, from) mapply(function(a, b)
+            if (a %in% rownames(M) && b %in% colnames(M)) M[a, b] else NA_real_, cm[to], cm[from])
         vifs <- unlist(e$VIF)
         c(pick(B, paths$to, paths$from),
           pick(TT, pairs$to, pairs$from), pick(II, pairs$to, pairs$from),

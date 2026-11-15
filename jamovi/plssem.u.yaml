@@ -129,7 +129,7 @@ children:
           - type: ComboBox
             name: hocApproach
       - type: Supplier
-        label: First-order constructs
+        label: First-Order Constructs
         name: hocSupplier
         format: term
         persistentItems: true
@@ -228,7 +228,7 @@ children:
           change: './plssem.events::onChangeConstructSupplier'
         children:
           - type: TargetLayoutBox
-            label: Predictors of each construct
+            label: Predictors of Each Construct
             transferAction: interactions
             children:
               - type: ListBox
@@ -340,7 +340,7 @@ children:
           - type: Label
             label: The seed is the one in the Bootstrap box.
       - type: Supplier
-        label: Paths of the model
+        label: Paths of the Model
         name: pathSupplier
         format: term
         persistentItems: false
@@ -350,7 +350,7 @@ children:
           change: './plssem.events::onChangeConstructSupplier'
         children:
           - type: TargetLayoutBox
-            label: Left out of the competing model (CVPAT)
+            label: Left Out of the Competing Model (CVPAT)
             children:
               - type: ListBox
                 name: cvpatDrop

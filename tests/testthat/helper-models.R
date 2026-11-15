@@ -105,3 +105,26 @@ withDefaultRng <- function(expr) {
     on.exit(restore())
     expr
 }
+
+# A bundled dataset of data/ by file name, read as jamovi would (text
+# columns as factors).
+# ES: Un conjunto de datos incluido, leído como lo leería jamovi.
+bundled <- function(file) {
+    path <- system.file("extdata", file, package = "PLSsemLab")
+    if (!nzchar(path)) path <- testthat::test_path("..", "..", "data", file)
+    utils::read.csv(path, stringsAsFactors = TRUE)
+}
+
+# A result item by name, wherever it sits in the report's sections.
+# ES: Un elemento de resultados por nombre, en cualquier sección.
+res <- function(a, name) a$.__enclos_env__$private$.item(name)
+
+# Learning-data blocks (data/README.md): reflective first-order constructs
+# and the formative job resources.
+# ES: Bloques de los datos de aprendizaje.
+learnBlock <- function(label) switch(label,
+    LEAD = block("LEAD", paste0("lead_", 1:4)), AUT = block("AUT", paste0("aut_", 1:3)),
+    VIG = block("VIG", paste0("vig_", 1:3)), DED = block("DED", paste0("ded_", 1:3)),
+    ABS = block("ABS", paste0("abs_", 1:3)), PERF = block("PERF", paste0("perf_", 1:3)),
+    INT = block("INT", paste0("int_", 1:3)), RES = block("RES", paste0("res_", 1:4)),
+    ENG = block("ENG", c(paste0("vig_", 1:3), paste0("ded_", 1:3), paste0("abs_", 1:3))))

@@ -358,7 +358,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             med <- private$.fillMediation(sfit, paths, smodel, boot$summary, txt)
             mod <- if (isTRUE(model$nonlinear))
-                private$.fillModeration(fit$value, paths, model, boot$summary, txt) else NULL
+                private$.fillModeration(sfit, paths, smodel, boot$summary, txt) else NULL
 
             # Overall fit (phase 5): only when "Run overall fit test" is ticked.
             # ES: Ajuste global (fase 5): solo con su casilla marcada.
@@ -692,7 +692,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         # ---------------------------------------------------------------------
-        # IPMA: importance (unstandardised total effects) and performance
+        # IPMA: importance (unstandardized total effects) and performance
         # (0-100) per target; the maps are drawn from image$state.
         # ES: IPMA: importancia y desempeño (0-100) por objetivo; los mapas se
         # dibujan desde image$state.
@@ -2218,7 +2218,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (self$options$ipma && is.null(.pl_ipma_reason(model, model$hocs, self$options))) {
                 code <- c(code, "",
-                    "# IPMA: importance = unstandardised total effects (rows: targets); performance rescaled to 0-100",
+                    "# IPMA: importance = unstandardized total effects (rows: targets); performance rescaled to 0-100",
                     "ip <- cSEM::doIPMA(fit)",
                     "ip$Construct$Importance",
                     if (self$options$ipmaRange == "manual")

@@ -27,16 +27,18 @@ name: plssem
 title: PLS-SEM
 menuGroup: PLS-SEM Lab
 menuTitle: PLS-SEM
-version: '0.7.2'
+version: '0.7.3'
 jas: '1.2'
 
 description:
     main: >
-      Partial least squares structural equation modeling: reflective and
-      formative constructs built from boxes, model validation before
-      estimation, loadings and weights, reliability, convergent and
-      discriminant validity, collinearity of formative indicators, paths and
-      explained variance, with plain-language interpretation.
+      Partial least squares structural equation modeling with cSEM: reflective
+      and formative constructs and higher-order constructs built from boxes,
+      model validation before estimation, PLS and consistent PLS, measurement
+      quality (reliability, HTMT, VIF), paths, effect sizes, mediation and
+      moderation with bootstrap intervals, the overall fit test, PLSpredict and
+      CVPAT, the importance-performance map and multigroup analysis (MICOM and
+      path differences), each with plain-language interpretation.
 
 options:
   - name: data
@@ -442,7 +444,7 @@ options:
 
   # Path diagram settings (EGAnetLab's Network Plot box): a SEM diagram
   # drawn with semPlot (as SEMLj). Colours default to jamovi's theme; the
-  # other choices are fixed colours for printing.
+  # other choices are fixed colors for printing.
   # ES: Ajustes del diagrama de rutas (como la caja Gráfico de red de
   # EGAnetLab): un diagrama SEM con semPlot (como SEMLj). Los colores siguen
   # por defecto el tema de jamovi.
@@ -466,7 +468,7 @@ options:
     default: ''
 
   - name: diagramIndicators
-    title: Show indicators
+    title: Indicators in the diagram
     type: Bool
     default: true
 

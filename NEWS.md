@@ -1,4 +1,33 @@
-# PLSsemLab 0.7.2 (development)
+# PLSsemLab 0.7.3 (development)
+
+## Phase 8, first part: datasets, stress tests and jamovi's requirements
+
+* New bundled dataset **Learning data** (`plssemlab_learning.csv`, n = 600,
+  simulated, CC0) with a known population model, so that every option has
+  something to show: reflective and formative constructs, a higher-order
+  construct (work engagement), a moderation, a mediation, a difference
+  between sectors (MICOM: full invariance; leadership → engagement differs
+  in both tests) and none between regions, the importance-performance map
+  and missing answers. `data-raw/simulate_learning_data.R` rebuilds it; the
+  seed choice is stated. `data/README.md` has a table of which dataset and
+  model to use for each option.
+* Fix: a higher-order construct together with an interaction stopped with
+  "non-conformable arrays" (the stage-2 path matrix has one column per
+  interaction term) and the moderation table looked for the higher-order
+  construct in the stage-1 fit. Both now use stage 2.
+* New tests: every row of the dataset table end to end
+  (`test-datasets.R`) and stress tests (`test-stress.R`: names with spaces
+  and accents through every long option, a grouping variable with missing
+  values and accented labels, an empty dataset, small samples, an indicator
+  constant inside one group, an indicator with no observed value, a tiny
+  group). Each case finishes or stops with a PLSsemLab message.
+* jamovi's library conventions: American spelling in the report and the
+  panel, Title Case for every target box, no "Show" in checkbox titles, the
+  module and analysis descriptions list every section, README with the
+  datasets and the Windows build. The Spanish catalog has no untranslated
+  string.
+
+# PLSsemLab 0.7.2
 
 * The report is organised in sections with headings, so the reader can find
   each part: Measurement model, Structural model, Overall model fit,

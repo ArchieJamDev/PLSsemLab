@@ -1,7 +1,7 @@
 ---
 name: PLSsemLab
 title: PLS-SEM Lab
-version: 0.7.2
+version: 0.7.3
 jms: '1.0'
 authors:
   - Arquímedes De León Chacón Chacón
@@ -26,11 +26,13 @@ analyses:
     menuGroup: PLS-SEM Lab
     menuTitle: PLS-SEM
     description: >
-      Partial least squares structural equation modeling: reflective and
-      formative constructs built from boxes, model validation before estimation,
-      loadings and weights, reliability, convergent and discriminant validity,
-      collinearity of formative indicators, paths and explained variance, with
-      plain-language interpretation.
+      Partial least squares structural equation modeling with cSEM: reflective
+      and formative constructs and higher-order constructs built from boxes,
+      model validation before estimation, PLS and consistent PLS, measurement
+      quality (reliability, HTMT, VIF), paths, effect sizes, mediation and
+      moderation with bootstrap intervals, the overall fit test, PLSpredict and
+      CVPAT, the importance-performance map and multigroup analysis (MICOM and
+      path differences), each with plain-language interpretation.
     category: analyses
 datasets:
   - name: Corporate reputation (n=344)
@@ -45,6 +47,13 @@ datasets:
       European Customer Satisfaction Index for the mobile phone industry: image,
       expectation, quality, value, satisfaction and loyalty, from the cSEM
       package - see data/README.md
+  - name: Learning data, simulated (n=600)
+    path: plssemlab_learning.csv
+    description: >-
+      Simulated employees with a known population model, to try every option:
+      reflective and formative constructs, a higher-order construct (work
+      engagement), a moderation, a mediation, a difference between sectors for
+      the multigroup analysis and missing answers; CC0 - see data/README.md
   - name: Bank customers, with demographics (n=675)
     path: plssemlab_bank.csv
     description: >-

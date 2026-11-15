@@ -12,8 +12,8 @@
 # -----------------------------------------------------------------------------
 # Importance-performance map analysis (phase 6; Ringle & Sarstedt, 2016):
 # for each endogenous construct (the target), the importance of every
-# construct that affects it is its unstandardised total effect on the
-# target, and its performance is the mean of its unstandardised scores
+# construct that affects it is its unstandardized total effect on the
+# target, and its performance is the mean of its unstandardized scores
 # rescaled to 0-100 with the range of the scale. cSEM::doIPMA() gives both
 # on the metric of the indicators; the module rescales.
 # ES: Análisis del mapa importancia-desempeño (fase 6): para cada constructo

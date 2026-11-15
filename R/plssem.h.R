@@ -2400,7 +2400,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,7,1),
+                version = c(0,7,2),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2415,11 +2415,13 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
 #' PLS-SEM
 #'
-#' Partial least squares structural equation modeling: reflective and 
-#' formative constructs built from boxes, model validation before estimation, 
-#' loadings and weights, reliability, convergent and discriminant validity, 
-#' collinearity of formative indicators, paths and explained variance, with 
-#' plain-language interpretation.
+#' Partial least squares structural equation modeling with cSEM: reflective 
+#' and formative constructs and higher-order constructs built from boxes, 
+#' model validation before estimation, PLS and consistent PLS, measurement 
+#' quality (reliability, HTMT, VIF), paths, effect sizes, mediation and 
+#' moderation with bootstrap intervals, the overall fit test, PLSpredict and 
+#' CVPAT, the importance-performance map and multigroup analysis (MICOM and 
+#' path differences), each with plain-language interpretation.
 #' 
 #' @param data .
 #' @param reflective .

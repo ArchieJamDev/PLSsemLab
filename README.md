@@ -11,8 +11,8 @@ A jamovi module for partial least squares structural equation modeling
 (PLS-SEM), with guided interpretation in the style of AssumptionsLab,
 EGAnetLab and MokkenLab.
 
-**Status:** in development (phase 3 of 10). Not yet in the jamovi Library;
-it can be built from source for testing.
+**Status:** in development (phase 8 of 10: validation). Not yet in the
+jamovi Library; it can be built from source for testing.
 
 ## What is here now
 
@@ -32,11 +32,13 @@ it can be built from source for testing.
 
 ## Try it (development version)
 
-**Linux (jamovi from Flathub):** download `PLSsemLab_0.0.0.jmo` from the
-[dev-build pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build)
-and, in jamovi, open **⋮ › Modules › Install from file**. It is rebuilt by
-the *Build .jmo (Linux)* workflow; a `.jmo` only loads in the jamovi it was
-built for.
+**Windows (jamovi 2.7):** download `PLSsemLab_<version>_win64.jmo` from the
+[dev-build-windows pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build-windows)
+and, in jamovi, open **⋮ › Modules › Install from file**. **Linux (jamovi
+from Flathub):** the same from the
+[dev-build pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build).
+They are rebuilt by the *Build .jmo* workflows; a `.jmo` only loads in the
+jamovi (R version) it was built for.
 
 **Any system, from source:** with jamovi installed, clone this repository
 and, in R, from its folder:
@@ -46,8 +48,27 @@ install.packages("jmvtools", repos = c("https://repo.jamovi.org", "https://cloud
 jmvtools::install()
 ```
 
-Then open the bundled *Corporate reputation* data in jamovi (Open > Data
-Library > PLS-SEM Lab) and run *PLS-SEM Lab > PLS-SEM*.
+Then open a bundled dataset in jamovi (Open > Data Library > PLS-SEM Lab)
+and run *PLS-SEM Lab > PLS-SEM*.
+
+## Datasets
+
+Four datasets ship with the module (Open > Data Library > PLS-SEM Lab):
+
+- **Corporate reputation** (n = 344), the example of Hair et al.'s PLS-SEM
+  primer: reflective and formative constructs, missing answers, service type
+  for a multigroup analysis.
+- **Customer satisfaction index ECSI** (n = 250): image, expectation,
+  quality, value, satisfaction and loyalty; a moderation and PLSc.
+- **Bank customers** (n = 675, Damberg, 2023, CC BY 4.0): four formative and
+  five reflective constructs with demographics.
+- **Learning data** (n = 600, simulated, CC0): a known population model in
+  which every option has something to show: a higher-order construct, a
+  moderation, a mediation, a difference between sectors and none between
+  regions, the importance-performance map and missing answers.
+
+`data/README.md` gives the source and licence of each one and a table of
+which dataset and model to use to try each option.
 
 ## Roadmap
 
@@ -75,8 +96,16 @@ Un módulo de jamovi para modelos de ecuaciones estructurales por mínimos
 cuadrados parciales (PLS-SEM), con interpretación guiada al estilo de
 AssumptionsLab, EGAnetLab y MokkenLab.
 
-**Estado:** en desarrollo (fase 3 de 10). Todavía no está en la biblioteca
-de jamovi; se puede compilar desde el código fuente para probarlo.
+**Estado:** en desarrollo (fase 8 de 10: validación). Todavía no está en
+la biblioteca de jamovi; se puede compilar desde el código fuente para
+probarlo.
+
+**Conjuntos de datos:** el módulo incluye cuatro (Abrir > Biblioteca de
+datos > PLS-SEM Lab): reputación corporativa (Hair et al.), índice de
+satisfacción ECSI, clientes de bancos (Damberg, 2023) y unos datos simulados
+para aprender, con un modelo poblacional conocido en el que cada opción
+tiene algo que mostrar. `data/README.md` indica la fuente, la licencia y qué
+conjunto usar para probar cada opción.
 
 ## Qué hay ahora
 

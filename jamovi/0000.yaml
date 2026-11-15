@@ -15,7 +15,7 @@ description: >
   built from boxes, never typed: reflective and formative constructs with their
   indicators, and for each construct the constructs that predict it. The model
   is checked before estimation, with messages that name the construct or
-  indicator at fault. In development.
+  indicator at fault.
 usesNative: false
 minApp: 1.0.8
 icon: assets/plssemlab-icon.png

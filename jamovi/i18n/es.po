@@ -629,8 +629,8 @@ msgid "cSEM could not estimate the model: %s"
 msgstr "cSEM no pudo estimar el modelo: %s"
 
 #: plssem/options/hocApproach/csem.title
-msgid "cSEM's second-order routine (as JASP)"
-msgstr "Rutina de segundo orden de cSEM (como JASP)"
+msgid "cSEM's second-order routine"
+msgstr "Rutina de segundo orden de cSEM"
 
 #: package/datasets/Customer satisfaction index ECSI (n=250).name
 msgid "Customer satisfaction index ECSI (n=250)"
@@ -1007,8 +1007,8 @@ msgid "Higher-order constructs"
 msgstr "Constructos de orden superior"
 
 #: R/texts.R
-msgid "Higher-order constructs (%s): cSEM's second-order routine, as JASP uses it. It differs from the disjoint two-stage approach in three ways: in stage 1 the lower-order constructs also get structural paths among themselves; in stage 2 the other constructs are measured by their stage-1 scores instead of their own indicators; and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021)."
-msgstr "Constructos de orden superior (%s): rutina de segundo orden de cSEM, como la usa JASP. Difiere del enfoque disjunto de dos etapas en tres aspectos: en la etapa 1 los constructos de orden inferior reciben además rutas estructurales entre sí; en la etapa 2 los demás constructos se miden con su puntuación de la etapa 1 en lugar de sus propios indicadores; y en la etapa 2 un constructo de orden superior reflectivo es un factor común corregido por PLS consistente (cSEM fija allí .PLS_modes = NULL y .disattenuate = TRUE), aunque se haya elegido PLS. Elija el enfoque disjunto para seguir a Sarstedt et al. (2019) y Hair et al. (2021)."
+msgid "Higher-order constructs (%s): cSEM's second-order routine (calculate2ndStage). It differs from the disjoint two-stage approach in three ways: in stage 1 the lower-order constructs also get structural paths among themselves; in stage 2 the other constructs are measured by their stage-1 scores instead of their own indicators; and in stage 2 a reflective higher-order construct is a common factor corrected by consistent PLS (cSEM sets .PLS_modes = NULL and .disattenuate = TRUE there), even when PLS was chosen. Choose the disjoint approach to follow Sarstedt et al. (2019) and Hair et al. (2021)."
+msgstr "Constructos de orden superior (%s): rutina de segundo orden de cSEM (calculate2ndStage). Difiere del enfoque disjunto de dos etapas en tres aspectos: en la etapa 1 los constructos de orden inferior reciben además rutas estructurales entre sí; en la etapa 2 los demás constructos se miden con su puntuación de la etapa 1 en lugar de sus propios indicadores; y en la etapa 2 un constructo de orden superior reflectivo es un factor común corregido por PLS consistente (cSEM fija allí .PLS_modes = NULL y .disattenuate = TRUE), aunque se haya elegido PLS. Elija el enfoque disjunto para seguir a Sarstedt et al. (2019) y Hair et al. (2021)."
 
 #: R/texts.R
 msgid "Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al., 2019). Stage 1 estimates every first-order construct, with each higher-order construct replaced in the structural model by its lower-order constructs; in stage 2 the stage-1 scores of the dimensions measure the higher-order construct, and every other construct keeps its own indicators. The measurement tables of first-order constructs come from stage 1; the structural model and the higher-order constructs from stage 2. With the bootstrap, both stages are resampled together."

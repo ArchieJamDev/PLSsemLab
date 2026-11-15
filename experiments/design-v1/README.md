@@ -1,7 +1,7 @@
 # Design experiments for PLSsemLab v1
 
-Each script checks, with cSEM (the engine JASP also uses), that one documented
-shortcoming of JASP's PLS-SEM can be solved in PLSsemLab's first version. The
+Each script checks, with cSEM, that one requirement of PLSsemLab's first
+version (D1–D6 in `docs/DESIGN.md`) can be met. The
 scripts are deliberately small and self-contained: they are evidence for
 design decisions, not module code.
 
@@ -19,14 +19,14 @@ Locally: `Rscript install_deps.R`, then `Rscript run_all.R` from this folder.
 
 ## Experiments and findings
 
-| Script | Shortcoming in JASP | Result | What the design takes from it |
+| Script | Requirement | Result | What the design takes from it |
 | --- | --- | --- | --- |
-| `E1_D2_htmt_vif_reliability.R` | D2: no HTMT/VIF, no bootstrap CI (issues #1982, #2567) | Solved. rho_A, rho_C, alpha, AVE, HTMT/HTMT2 with CI, VIF of formative indicators and of structural predictors, all with bootstrap CI | rho_A exists only under PLSc (`.disattenuate = TRUE`); cSEM packs HTMT and its upper bound in one matrix (lower/upper triangle), to be unpacked into a long table |
-| `E2_D3_higher_order_interactions.R` | D3: errors with second-order constructs and interactions (#2955, #3007) | Solved by computing each criterion separately. Second order: every criterion works per stage. Interaction: R², f², alpha, AVE, HTMT, VIF Mode B, effects work; rho_C works with `.model_implied = FALSE`; structural VIF from construct scores; floodlight / Johnson-Neyman works | SRMR, d_G, d_L have no model-implied matrix with nonlinear terms: shown as *Not computable* with that reason (Category B). Second-stage names carry a `_temp` suffix that must be mapped back |
-| `E3_D4_bootstrap_performance.R` | D4: crash at >= 2000 samples (#3642), runs that never end (#4599) | About 19 ms per bootstrap draw for the extended model (n = 344), linear in R. No error at R = 2000. Ten blocks of 200 draws give the same percentile CIs as one run of 2000 (largest difference 0.016). Same seed, identical draws | Bootstrap in blocks with `private$.checkpoint()` between them, progress shown, seed in the panel and in the report |
-| `E4_D5_model_builder_validation.R` | D5: uninformative errors on wrong syntax (forum 2023) | A builder from option boxes plus a validator catches the 7 common mistakes tested, each with a teaching message; cSEM alone gives messages such as "input string 1 is invalid" | Constructs and indicators are renamed internally (C1..Ck, V1..Vp): cSEM fails with spaces in variable names always, and with accented construct names depending on the system locale |
-| `E5_D1_overall_model_fit.R` | D1: ML chi-square test, wrong for PLS (#2955) | Solved. `testOMF()` gives SRMR, d_G, d_L, d_ML with bootstrap critical values in 5–7 s at R = 499 | The report separates the exact-fit test from descriptive SRMR and says why the ML chi-square is not shown |
-| `E6_D6_missing_metrics.R` | D6: f², Q²/PLSpredict, CVPAT, mediation, IPMA, MICOM not documented | Solved. f², PLSpredict (Q²_predict, RMSE, MAE against the LM benchmark), CVPAT (established vs competing model), indirect effects with bootstrap CI, IPMA, MICOM and multigroup differences (Chin, Henseler) all run | cSEM takes a seed only with one prediction repetition, so the module sets it itself; IPMA performance comes on the item scale and is rescaled to 0–100 with the scale range the user declares; `testMGD(.output_type = "structured")` fails in cSEM 0.7.1, the default output works; Henseler's p is one-sided (near 0 or near 1 both signal a difference) |
+| `E1_D2_htmt_vif_reliability.R` | D2: HTMT and VIF with bootstrap CI | Solved. rho_A, rho_C, alpha, AVE, HTMT/HTMT2 with CI, VIF of formative indicators and of structural predictors, all with bootstrap CI | rho_A exists only under PLSc (`.disattenuate = TRUE`); cSEM packs HTMT and its upper bound in one matrix (lower/upper triangle), to be unpacked into a long table |
+| `E2_D3_higher_order_interactions.R` | D3: second-order constructs and interactions without errors | Solved by computing each criterion separately. Second order: every criterion works per stage. Interaction: R², f², alpha, AVE, HTMT, VIF Mode B, effects work; rho_C works with `.model_implied = FALSE`; structural VIF from construct scores; floodlight / Johnson-Neyman works | SRMR, d_G, d_L have no model-implied matrix with nonlinear terms: shown as *Not computable* with that reason (Category B). Second-stage names carry a `_temp` suffix that must be mapped back |
+| `E3_D4_bootstrap_performance.R` | D4: fast, robust bootstrap (2000 draws or more, cancellable) | About 19 ms per bootstrap draw for the extended model (n = 344), linear in R. No error at R = 2000. Ten blocks of 200 draws give the same percentile CIs as one run of 2000 (largest difference 0.016). Same seed, identical draws | Bootstrap in blocks with `private$.checkpoint()` between them, progress shown, seed in the panel and in the report |
+| `E4_D5_model_builder_validation.R` | D5: informative messages for modeling mistakes | A builder from option boxes plus a validator catches the 7 common mistakes tested, each with a teaching message; cSEM alone gives messages such as "input string 1 is invalid" | Constructs and indicators are renamed internally (C1..Ck, V1..Vp): cSEM fails with spaces in variable names always, and with accented construct names depending on the system locale |
+| `E5_D1_overall_model_fit.R` | D1: an overall fit test that suits PLS (not the ML chi-square) | Solved. `testOMF()` gives SRMR, d_G, d_L, d_ML with bootstrap critical values in 5–7 s at R = 499 | The report separates the exact-fit test from descriptive SRMR and says why the ML chi-square is not shown |
+| `E6_D6_missing_metrics.R` | D6: f², Q²/PLSpredict, CVPAT, mediation, IPMA, MICOM | Solved. f², PLSpredict (Q²_predict, RMSE, MAE against the LM benchmark), CVPAT (established vs competing model), indirect effects with bootstrap CI, IPMA, MICOM and multigroup differences (Chin, Henseler) all run | cSEM takes a seed only with one prediction repetition, so the module sets it itself; IPMA performance comes on the item scale and is rescaled to 0–100 with the scale range the user declares; `testMGD(.output_type = "structured")` fails in cSEM 0.7.1, the default output works; Henseler's p is one-sided (near 0 or near 1 both signal a difference) |
 
 ### Design decision forced by E6: what "reflective" means
 
@@ -51,9 +51,8 @@ estimating and asks the user to declare them as missing in jamovi.
 
 # Experimentos de diseño para PLSsemLab v1 (ES)
 
-Cada script comprueba, con cSEM (el mismo motor de JASP), que una deficiencia
-documentada del PLS-SEM de JASP se puede resolver en la primera versión de
-PLSsemLab. Son scripts pequeños y autónomos: evidencia para decisiones de
+Cada script comprueba, con cSEM, que un requisito de la primera versión de
+PLSsemLab (D1–D6 en `docs/DESIGN.md`) se puede cumplir. Son scripts pequeños y autónomos: evidencia para decisiones de
 diseño, no código del módulo.
 
 ## Cómo ejecutarlos

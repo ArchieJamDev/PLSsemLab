@@ -7,38 +7,44 @@
 
 # PLSsemLab
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24259623.svg)](https://doi.org/10.5281/zenodo.24259623)
+
 A jamovi module for partial least squares structural equation modeling
-(PLS-SEM), with guided interpretation in the style of AssumptionsLab,
-EGAnetLab and MokkenLab.
+(PLS-SEM) with the cSEM R package, with guided interpretation in the style
+of AssumptionsLab, EGAnetLab and MokkenLab: every result says what happened,
+why, what it means and what to do next, in English and Spanish.
 
-**Status:** in development (phase 8 of 10: validation). Not yet in the
-jamovi Library; it can be built from source for testing.
+## What it does
 
-## What is here now
+- **Models built from boxes**, no syntax: reflective and formative
+  constructs, structural paths, higher-order constructs and interactions,
+  with a validator that explains each modeling mistake.
+- **Estimators:** PLS and consistent PLS (PLSc); continuous or ordinal
+  indicators (polychoric correlations).
+- **Measurement model:** Cronbach's alpha, rho_A, rho_C, AVE, HTMT and HTMT2
+  with bootstrap intervals, Fornell-Larcker, indicator VIF, loadings and
+  weights.
+- **Structural model:** paths, R², f², VIF, direct, indirect and total
+  effects; bootstrap in blocks with intervals for every measure, cancellable
+  and with a visible seed; path diagram, loadings and HTMT plots.
+- **Higher-order constructs** (disjoint two-stage approach by default; cSEM's
+  second-order routine as an option) and **two-way interactions** with simple
+  effects, floodlight and Johnson-Neyman.
+- **Overall model fit:** bootstrap test with SRMR, d_G, d_L and d_ML for the
+  estimated and the saturated model, with decision and reading.
+- **Prediction and more:** PLSpredict, CVPAT (against the indicator average,
+  a linear model and a competing model), mediation with specific indirect
+  effects, and the importance-performance map (IPMA).
+- **Multigroup analysis:** MICOM (steps 1-3) and path differences
+  (permutation test and PLS-MGA).
+- **Reproducibility:** the equivalent R code of every analysis.
 
-- `docs/DESIGN.md` — the design of version 1 (in Spanish): the six
-  shortcomings of JASP's PLS-SEM it fixes, the engine, the interface, the
-  architecture, validation and open decisions.
-- `ARCHITECTURE.md`, `DEVELOPER_GUIDE.md`, `CODE_STYLE.md`, `CONTRIBUTING.md`
-  — the suite's rules, adopted from MokkenLab, EGAnetLab and AssumptionsLab
-  and adapted to PLS-SEM with cSEM.
-- `docs/Bibliography.md` — APA 7th edition references.
-- `experiments/design-v1/` — reproducible R scripts that check, with cSEM,
-  that each shortcoming documented for JASP's PLS-SEM can be solved in the
-  first version. See its README for the findings.
-- `.github/workflows/design-experiments.yml` — runs those scripts on GitHub's
-  machines (Actions tab → *design-experiments* → *Run workflow*); results are
-  attached to the run as an artifact.
+## Install
 
-## Try it (development version)
-
-**Windows (jamovi 2.7):** download `PLSsemLab_<version>_win64.jmo` from the
-[dev-build-windows pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build-windows)
-and, in jamovi, open **⋮ › Modules › Install from file**. **Linux (jamovi
-from Flathub):** the same from the
-[dev-build pre-release](https://github.com/ArchieJamDev/PLSsemLab/releases/tag/dev-build).
-They are rebuilt by the *Build .jmo* workflows; a `.jmo` only loads in the
-jamovi (R version) it was built for.
+**Windows (jamovi 2.7.41):** download `PLSsemLab_<version>_win64.jmo` from
+the [latest release](https://github.com/ArchieJamDev/PLSsemLab/releases/latest)
+and, in jamovi, open **⋮ › Modules › Install from file**. A `.jmo` only loads
+in the jamovi (R version) it was built for.
 
 **Any system, from source:** with jamovi installed, clone this repository
 and, in R, from its folder:
@@ -70,35 +76,50 @@ Four datasets ship with the module (Open > Data Library > PLS-SEM Lab):
 `data/README.md` gives the source and licence of each one and a table of
 which dataset and model to use to try each option.
 
-## Roadmap
+## Documentation
 
-| Phase | Content | Status |
-|---|---|---|
-| 0 | Design, experiments with cSEM for every JASP shortcoming, suite documents, logo | ✅ Done |
-| 1 | Platform, model built from boxes, model validation, first estimates | ✅ Done |
-| 2 | Measurement model: reliability, AVE, HTMT, HTMT2, VIF, Fornell-Larcker, ω, ordinal indicators | ✅ Done |
-| 3 | Structural model (f², VIF, effects), bootstrap in blocks with intervals for every measure, path diagram, loadings and HTMT plots | ✅ Done |
-| 4 | Two-way interactions (simple effects, floodlight, Johnson-Neyman) and higher-order constructs (disjoint two-stage by default; cSEM's routine as an option), with stage-2 discriminant validity | ✅ Done |
-| 5 | Bootstrap test of overall model fit (estimated and saturated model, with decision and reading) | ✅ Done |
-| 6 | Mediation (specific indirect effects), PLSpredict, CVPAT (IA, LM and a competing model) and IPMA | ✅ Done |
-| 7 | Multigroup analysis: MICOM (steps 1-3) and path differences (permutation test and PLS-MGA) | ✅ Done |
-| 8 | Validation against cSEM, Hair et al. and JASP; stress tests | 🗓 Planned |
-| 9 | First public release (0.1.0) with Zenodo DOI | 🗓 Planned |
-| 10 | Version 1.0.0 and jamovi Library submission | 🗓 Planned |
+- `docs/DESIGN.md` — the design (in Spanish): engine, interface,
+  architecture and validation.
+- `ARCHITECTURE.md`, `DEVELOPER_GUIDE.md`, `CODE_STYLE.md`, `CONTRIBUTING.md`
+  — the suite's rules, adapted to PLS-SEM with cSEM.
+- `docs/Bibliography.md` — APA 7th edition references.
+- `experiments/design-v1/` — reproducible R scripts with the evidence behind
+  each design decision.
+- `NEWS.md` — changes in each version.
 
-Details of each phase and its completion criterion: `docs/DESIGN.md` §8.
+## Citation
+
+If you use PLSsemLab, please cite it:
+
+> Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for partial
+> least squares structural equation modeling* (Version 0.7.5) [Computer
+> software]. Zenodo. https://doi.org/10.5281/zenodo.24259623
+
+The metadata are also in `CITATION.cff` (GitHub's *Cite this repository*
+button). Please cite cSEM and the methods you
+report as listed in `docs/Bibliography.md`.
 
 ---
 
 # PLSsemLab (ES)
 
 Un módulo de jamovi para modelos de ecuaciones estructurales por mínimos
-cuadrados parciales (PLS-SEM), con interpretación guiada al estilo de
-AssumptionsLab, EGAnetLab y MokkenLab.
+cuadrados parciales (PLS-SEM) con el paquete cSEM de R, con interpretación
+guiada al estilo de AssumptionsLab, EGAnetLab y MokkenLab: cada resultado
+dice qué pasó, por qué, qué significa y qué hacer después, en español e
+inglés.
 
-**Estado:** en desarrollo (fase 8 de 10: validación). Todavía no está en
-la biblioteca de jamovi; se puede compilar desde el código fuente para
-probarlo.
+**Qué hace:** modelos armados con cajas, sin sintaxis; PLS y PLS consistente;
+fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
+bootstrap por bloques; constructos de orden superior e interacciones con
+pendientes simples y Johnson-Neyman; ajuste global por bootstrap (SRMR, d_G,
+d_L); PLSpredict, CVPAT, mediación, IPMA y análisis multigrupo (MICOM, PLS-MGA
+y prueba de permutación); y el código R equivalente de cada análisis.
+
+**Instalación:** en Windows (jamovi 2.7.41), descargar
+`PLSsemLab_<versión>_win64.jmo` de la
+[última versión](https://github.com/ArchieJamDev/PLSsemLab/releases/latest)
+y abrirlo en jamovi con **⋮ › Módulos › Instalar desde archivo**.
 
 **Conjuntos de datos:** el módulo incluye cuatro (Abrir > Biblioteca de
 datos > PLS-SEM Lab): reputación corporativa (Hair et al.), índice de
@@ -107,21 +128,9 @@ para aprender, con un modelo poblacional conocido en el que cada opción
 tiene algo que mostrar. `data/README.md` indica la fuente, la licencia y qué
 conjunto usar para probar cada opción.
 
-## Qué hay ahora
-
-- `docs/DESIGN.md` — el diseño de la versión 1: las seis deficiencias del
-  PLS-SEM de JASP que corrige, el motor, la interfaz, la arquitectura, la
-  validación y las decisiones abiertas.
-- `ARCHITECTURE.md`, `DEVELOPER_GUIDE.md`, `CODE_STYLE.md`, `CONTRIBUTING.md`
-  — las reglas de la suite, adoptadas de MokkenLab, EGAnetLab y
-  AssumptionsLab y adaptadas a PLS-SEM con cSEM.
-- `docs/Bibliography.md` — referencias en APA 7.ª edición.
-- `experiments/design-v1/` — scripts de R reproducibles que comprueban, con
-  cSEM, que cada deficiencia documentada del PLS-SEM de JASP se puede resolver
-  en la primera versión. Su README resume los hallazgos.
-- `.github/workflows/design-experiments.yml` — ejecuta esos scripts en las
-  máquinas de GitHub (pestaña Actions → *design-experiments* → *Run
-  workflow*); los resultados quedan adjuntos a la ejecución como artefacto.
+**Cita:** Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for
+partial least squares structural equation modeling* (Versión 0.7.5)
+[Software]. Zenodo. https://doi.org/10.5281/zenodo.24259623. Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
 
 ## License
 

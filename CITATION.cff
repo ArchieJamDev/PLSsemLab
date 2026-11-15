@@ -13,9 +13,10 @@ authors:
 repository-code: "https://github.com/ArchieJamDev/PLSsemLab"
 license: "GPL-3.0-or-later"
 version: "0.7.5"
+doi: "10.5281/zenodo.24259623"
 date-released: "2026-11-15"
 abstract: >
-  PLSsemLab is an open-source jamovi module, in development, that brings
+  PLSsemLab is an open-source jamovi module that brings
   partial least squares structural equation modeling (PLS-SEM) to jamovi with
   the cSEM R package, pairing every result with evidence-based methodological
   guidance, interpretation and educational support in English and Spanish.

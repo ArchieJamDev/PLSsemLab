@@ -7,8 +7,16 @@
       "affiliation": "Universidad Católica Andrés Bello (UCAB), Caracas, Venezuela"
     }
   ],
-  "description": "An open-source jamovi module that brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM R package: models built from boxes, PLS and consistent PLS, reliability and validity (HTMT with bootstrap intervals), structural model with blockwise bootstrap, higher-order constructs, two-way interactions with simple slopes and Johnson-Neyman, overall model fit by bootstrap (SRMR, d_G, d_L), PLSpredict, CVPAT, mediation, IPMA and multigroup analysis (MICOM, Henseler and Chin tests). Every result is paired with evidence-based methodological guidance, interpretation and educational support in English and Spanish. Development version: validation in progress before the 1.0.0 release.",
-  "keywords": ["jamovi", "PLS-SEM", "Partial Least Squares", "Structural Equation Modeling", "Composite-based SEM", "cSEM", "Open Science"],
+  "description": "An open-source jamovi module that brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM R package: models built from boxes, PLS and consistent PLS, reliability and validity (HTMT with bootstrap intervals), structural model with blockwise bootstrap, higher-order constructs, two-way interactions with simple slopes and Johnson-Neyman, overall model fit by bootstrap (SRMR, d_G, d_L), PLSpredict, CVPAT, mediation, IPMA and multigroup analysis (MICOM, Henseler and Chin tests). Every result is paired with evidence-based methodological guidance, interpretation and educational support in English and Spanish.",
+  "keywords": [
+    "jamovi",
+    "PLS-SEM",
+    "Partial Least Squares",
+    "Structural Equation Modeling",
+    "Composite-based SEM",
+    "cSEM",
+    "Open Science"
+  ],
   "license": "gpl-3.0",
   "upload_type": "software",
   "version": "0.7.5"

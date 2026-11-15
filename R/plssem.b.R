@@ -2205,7 +2205,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 # First_stage, stage 2 its Second_stage.
                 # ES: La rutina de segundo orden de cSEM: una llamada.
                 code <- c(code, "",
-                    "# cSEM's second-order routine (as JASP): stage 1 = fit_2nd$First_stage, stage 2 = fit_2nd$Second_stage",
+                    "# cSEM's second-order routine: stage 1 = fit_2nd$First_stage, stage 2 = fit_2nd$Second_stage",
                     "model_2nd <- \"", model$csem_syntax, "\"",
                     sprintf("fit_2nd <- cSEM::csem(d, model_2nd, .PLS_modes = %s, .PLS_weight_scheme_inner = \"%s\")  # cSEM sets .disattenuate = TRUE",
                             modes, self$options$innerScheme),

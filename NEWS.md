@@ -1,4 +1,4 @@
-# PLSsemLab 1.0.0
+# PLSsemLab 1.0.0 (released 2026-11-17, DOI 10.5281/zenodo.24309058)
 
 Version prepared for the jamovi library. It covers every section of the
 design (requirements D1–D6) and the lessons of jamovi's audits of the

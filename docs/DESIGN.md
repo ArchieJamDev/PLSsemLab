@@ -349,7 +349,9 @@ explica por qué con un aviso nativo.
   avisos de cSEM pasan a avisos nativos de jamovi.
 - Detalle completo en `ARCHITECTURE.md` §16.
 
-### Prompt para una IA externa (planeado)
+### Prompt para una IA externa (aplazado a una versión posterior a la 1.0.0)
+
+Decisión de Archie (17 de noviembre de 2026): no entra en la v1.
 
 Apoyo externo sin integrar ninguna IA en el módulo: el módulo no se conecta
 a ningún servicio ni envía datos. Genera un texto (prompt) que el usuario
@@ -419,7 +421,7 @@ la fase 1, que es la base de todas las demás.
 | 5 | Ajuste global: `testOMF()` con SRMR, d_G, d_L y d_ML, modelo estimado y saturado | D1 | Hecho: valores y valores críticos iguales a `testOMF()`; explicación de por qué no hay chi-cuadrado ML ni CFI/RMSEA |
 | 6 | Predicción (PLSpredict, CVPAT), mediación e IPMA | D6 | Hecho: iguales a `predict()`, `testCVPAT()` y `doIPMA()` de cSEM; rango de la escala para IPMA; CVPAT frente a IA, LM y un modelo competidor |
 | 7 | Multigrupo: MICOM y diferencias por ruta (Henseler, Chin) | D6 | Hecho: iguales a `testMICOM()` y `testMGD()`; comparación por tipo de servicio del E6 reproducida exactamente (con el orden de grupos del E6); p bilateral de PLS-MGA y nota sobre la regla .05/.95 de SmartPLS |
-| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra otro software; pruebas de estrés; catálogo en español completo; prompt exportable para una IA externa (§6) | — | `validation/` en CI sin fallos; cada diferencia con otro software explicada |
+| 8 | Validación completa: contra cSEM en CI, contra las tablas de Hair et al. y contra otro software; pruebas de estrés; catálogo en español completo (el prompt para una IA externa, §6, pasa a una versión posterior) | — | `validation/` en CI sin fallos; cada diferencia con otro software explicada |
 | 9 | Primera versión pública 0.1.0 con DOI de Zenodo | — | `.jmo` instalado en Windows, macOS y Linux |
 | 10 | Versión 1.0.0 y envío a la biblioteca de jamovi | — | Revisión de jamovi atendida |
 

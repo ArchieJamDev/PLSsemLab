@@ -2,7 +2,7 @@
 
 **Versión:** 0.1 (2026-11-10)  
 **Autor:** Arquímedes De León Chacón Chacón  
-**Estado:** diseño. Cada decisión técnica de este documento se comprobó con un
+**Estado:** versión 1.0.0, preparada para la biblioteca de jamovi. Cada decisión técnica de este documento se comprobó con un
 script de `experiments/design-v1/` (cSEM 0.7.1, R 4.3.3); los resultados
 están en `experiments/design-v1/results/`.
 

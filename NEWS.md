@@ -1,3 +1,11 @@
+# PLSsemLab 1.0.0
+
+Version prepared for the jamovi library. It covers every section of the
+design (requirements D1–D6) and the lessons of jamovi's audits of the
+earlier modules of the suite; numbers identical to direct cSEM calls and to
+the values published by Hair et al. (`validation/`, in CI on every push).
+The changes since 0.7.6 are listed under 0.7.7.
+
 # PLSsemLab 0.7.7
 
 Lessons from jamovi's audits of EGAnetLab and MokkenLab, applied before

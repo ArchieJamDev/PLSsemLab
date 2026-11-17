@@ -1,4 +1,15 @@
 # -----------------------------------------------------------------------------
+# PLSsemLab
+# A jamovi module for partial least squares structural equation modeling and
+# evidence-based methodological decision support.
+#
+# Copyright (C) 2026 Arquímedes De León Chacón Chacón
+#
+# This file is part of PLSsemLab, licensed under the GNU General Public
+# License, version 3 or later. See https://www.gnu.org/licenses/.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
 # Runs PLSsemLab inside jamovi's own R (docker image) with the libraries the
 # .jmo ships, to reproduce engine crashes that a plain R session hides.
 # ES: Ejecuta PLSsemLab dentro del R de jamovi (imagen docker) con las

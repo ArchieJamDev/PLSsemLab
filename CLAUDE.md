@@ -2,7 +2,8 @@
 
 PLSsemLab is a jamovi module for PLS-SEM by Arquímedes De León Chacón
 (Archie), part of his "Lab" suite: AssumptionsLab, EGAnetLab, MokkenLab,
-FiabilityLab (all at github.com/ArchieJamDev). Status: design stage.
+FiabilityLab (all at github.com/ArchieJamDev). Status: 1.0.0, prepared for
+the jamovi library (DOI of all versions 10.5281/zenodo.24259622).
 
 ## Goal of v1
 

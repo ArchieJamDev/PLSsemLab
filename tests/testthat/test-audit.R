@@ -166,3 +166,29 @@ test_that("the bootstrap record is also a numeric table", {
     expect_true(bs$admissible <= bs$drawn && bs$admissible > 0)
     expect_match(a$results$bootStatus$content, paste(bs$admissible, "admissible"), fixed = TRUE)
 })
+
+test_that("the caches stay small: entries and bytes are capped", {
+    fake <- new.env()
+    fake$state <- NULL
+    fake$setState <- function(x) fake$state <- x
+    big <- function(i) function() list(summary = list(i = i, x = stats::runif(40000)))  # ~0.3 MB each
+    for (i in 1:6) PLSsemLab:::.pl_cached_bootstrap(fake, list("k", i), big(i),
+                                                    max_entries = PLSsemLab:::.PL_CACHE_BOOT$entries,
+                                                    max_bytes = PLSsemLab:::.PL_CACHE_BOOT$bytes)
+    expect_lte(length(fake$state), 3)
+    expect_lte(length(serialize(fake$state, NULL)), 1.5 * 1024^2)
+    # the newest entries are the ones kept
+    # ES: se conservan las entradas más recientes
+    expect_equal(fake$state[[length(fake$state)]]$summary$i, 6)
+    expect_lte(PLSsemLab:::.PL_CACHE_BOOT$bytes + 3 * PLSsemLab:::.PL_CACHE_SMALL$bytes, 2 * 1024^2)
+})
+
+test_that("column super-titles follow jamovi's language", {
+    skip_on_cran()
+    withr::local_envvar(c(LANGUAGE = "es"))
+    a <- runPlssem(corpRepData(), simpleModel(), bootstrap = TRUE, bootReps = 100)
+    cols <- a$results$measurementSection$measurement$columns
+    st <- unlist(lapply(cols, function(c) if (length(c$superTitle)) c$superTitle))
+    expect_true("IC de la carga" %in% st)
+    expect_false("Loading CI" %in% st)
+})

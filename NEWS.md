@@ -26,6 +26,16 @@ PLSsemLab's own review.
   `.pl_with_ticks()` installs a silent progressr handler that calls
   `private$.checkpoint(flush = FALSE)` at most every 0.25 s.
 * `graphics` and `progressr` declared in Imports.
+* Long methods split into named steps: `.run()` into `.estimate()`,
+  `.fillTables()`, `.optionalSections()` and `.reportNotices()`; `.init()`
+  into `.initMeasurement()`, `.initStructural()` and `.initOptional()`;
+  `.interpretation()`, `.reproducibility()` and `.multigroup()` likewise.
+  No method is longer than about 125 lines.
+* The four result caches together stay under 2 MB (bootstrap: 3 entries,
+  1.5 MB; overall fit, prediction and multigroup: 4 entries, 0.1 MB each,
+  their measured entries being a few KB).
+* Column super-titles are translated at run time by jmvcore from the
+  catalog; a test checks them in Spanish.
 * Regression tests in `tests/testthat/test-audit.R`: restart through every
   long computation, restarted runs not cached, one tick per resample with
   identical results, tables with their final rows when `.init()` sees only

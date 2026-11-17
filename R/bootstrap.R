@@ -325,7 +325,17 @@
 # so a rerun for a report option (guides, key findings) costs nothing.
 # ES: Corrida en caché: la clave cubre los datos, el modelo y cada opción del
 # bootstrap, así que volver a ejecutar por una opción del informe no cuesta.
-.pl_cached_bootstrap <- function(store, key_parts, compute, max_entries = 4, max_bytes = 2 * 1024^2) {
+# Caps (measured: a bootstrap entry is 0.1-0.5 MB, a fit, prediction or
+# multigroup entry a few KB): together the four stores stay under 2 MB, so
+# .omv files stay small (jamovi's audit of MokkenLab).
+# ES: Topes (medidos: una entrada de bootstrap pesa 0,1-0,5 MB, una de
+# ajuste, predicción o multigrupo pocos KB): juntas, las cuatro cachés
+# quedan bajo 2 MB y los .omv siguen siendo pequeños.
+.PL_CACHE_BOOT <- list(entries = 3, bytes = 1.5 * 1024^2)
+.PL_CACHE_SMALL <- list(entries = 4, bytes = 0.1 * 1024^2)
+
+.pl_cached_bootstrap <- function(store, key_parts, compute, max_entries = .PL_CACHE_SMALL$entries,
+                                 max_bytes = .PL_CACHE_SMALL$bytes) {
     key <- tryCatch(rlang::hash(key_parts), error = function(e) NULL)
     state <- tryCatch(store$state, error = function(e) NULL)
     if (!is.null(key) && is.list(state) && !is.null(state[[key]]))

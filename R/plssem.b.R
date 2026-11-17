@@ -91,19 +91,29 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         .init = function() {
             blocks <- .pl_constructs(self$options)$blocks
             hocs <- .pl_hocs(self$options)
-            labels <- vapply(blocks, `[[`, "", "label")
             paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks, hocs))
+            private$.na <- list()
+            private$.initMeasurement(blocks, hocs, paths)
+            private$.initStructural(blocks, paths)
+            private$.initOptional(blocks, paths)
+        },
+
+        # Records a part of the report that does not apply (see .na).
+        # ES: Registra una parte del informe que no aplica (ver .na).
+        .notApply = function(section, before, key, args = list())
+            private$.na[[length(private$.na) + 1]] <- list(section = section, before = before, key = key, args = args),
+
+        # Rows of the measurement-model tables, higher-order constructs
+        # included, known from the boxes.
+        # ES: Filas de las tablas del modelo de medida, conocidas por las cajas.
+        .initMeasurement = function(blocks, hocs, paths) {
+            labels <- vapply(blocks, `[[`, "", "label")
             for (i in seq_along(blocks)) {
                 self$results$measurementSection$model$addRow(rowKey = i, values = list(construct = blocks[[i]]$label))
                 for (v in blocks[[i]]$vars)
                     self$results$measurementSection$measurement$addRow(rowKey = paste(i, v, sep = "::"),
                                                     values = list(construct = blocks[[i]]$label, indicator = v))
             }
-            for (k in seq_len(nrow(paths)))
-                self$results$structuralSection$paths$addRow(rowKey = k, values = list(from = paths$from[k], arrow = "\u2192",
-                                                                    to = paths$to[k]))
-            for (to in unique(paths$to))
-                self$results$structuralSection$r2$addRow(rowKey = to, values = list(construct = to))
             # Higher-order constructs (phase 4): a row in the model summary
             # and one per lower-order construct in their measurement table.
             # ES: Constructos de orden superior (fase 4).
@@ -116,28 +126,16 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (h$type == "reflective")
                     self$results$measurementSection$hocReliability$addRow(rowKey = h$label, values = list(hoc = h$label))
             }
-            # overall fit: 4 discrepancies x estimated and saturated model
-            # ES: ajuste global: 4 discrepancias x modelo estimado y saturado
-            ltxt <- function(key) .pl_text(.pl_lang(self$options), "labels", key)
-            for (mdl in c("estimated", "saturated"))
-                for (m in names(.PL_FIT))
-                    self$results$fitSection$fit$addRow(rowKey = paste(mdl, m, sep = "::"),
-                                            values = list(model = ltxt(paste0("fit_", mdl)), measure = .PL_FIT[[m]]))
-            self$results$fitSection$fit$getColumn("critical")$setTitle(
-                sprintf(ltxt("fit_critical"), format(100 * as.numeric(self$options$fitLevel))))
             hp <- if (length(hocs)) .pl_hoc_htmt_pairs(hocs, blocks, paths, NULL) else NULL
             for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
                 self$results$measurementSection$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
                                             values = list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k]))
-            na <- list()
-            notApply <- function(section, before, key, args = list())
-                na[[length(na) + 1]] <<- list(section = section, before = before, key = key, args = args)
             if (!length(hocs))
-                notApply("measurementSection", "hocMeasurement", "na_hoc")
+                private$.notApply("measurementSection", "hocMeasurement", "na_hoc")
             else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
-                notApply("measurementSection", "hocReliability", "na_hoc_reliability")
+                private$.notApply("measurementSection", "hocReliability", "na_hoc_reliability")
             if (length(hocs) && is.null(hp))
-                notApply("measurementSection", "hocHtmt", "na_hoc_htmt")
+                private$.notApply("measurementSection", "hocHtmt", "na_hoc_htmt")
 
             # Measurement-model quality (phase 2): rows follow the constructs
             # in the boxes; a table that does not apply to the model (no
@@ -165,6 +163,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     self$results$measurementSection$vif$addRow(rowKey = paste(i, v, sep = "::"),
                                             values = list(construct = blocks[[i]]$label, indicator = v))
             }
+            if (length(refl) == 0)
+                private$.notApply("measurementSection", "reliability", "na_reliability")
+            if (length(refl) < 2)
+                private$.notApply("measurementSection", "htmt", "na_htmt", list(length(refl)))
+            if (!any(vapply(blocks, function(b) b$type == "formative", TRUE)))
+                private$.notApply("measurementSection", "vif", "na_vif")
+        },
+
+        # Rows of the structural tables: paths, R², f², VIF, effects,
+        # mediation chains and simple slopes.
+        # ES: Filas de las tablas estructurales.
+        .initStructural = function(blocks, paths) {
+            for (k in seq_len(nrow(paths)))
+                self$results$structuralSection$paths$addRow(rowKey = k, values = list(from = paths$from[k], arrow = "\u2192",
+                                                                    to = paths$to[k]))
+            for (to in unique(paths$to))
+                self$results$structuralSection$r2$addRow(rowKey = to, values = list(construct = to))
             # Structural tables (phase 3): f² and VIF per path, effects per
             # pair of constructs joined by at least one path.
             # ES: Tablas estructurales (fase 3): f² y VIF por ruta, efectos
@@ -180,6 +195,49 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             values = list(from = pairs_eff$from[k], arrow = "\u2192",
                                                           to = pairs_eff$to[k]))
 
+            # Mediation (phase 6): one row per specific indirect effect.
+            # ES: Mediación (fase 6): una fila por efecto indirecto específico.
+            chains <- .pl_mediation_chains(paths)
+            for (k in seq_len(nrow(chains)))
+                self$results$structuralSection$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
+            if (!nrow(chains))
+                private$.notApply("structuralSection", "mediation", "na_mediation")
+
+            # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
+            # +1 SD) and one plot per interaction.
+            # ES: Moderación (fase 4): tres filas y un gráfico por interacción.
+            inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
+            lang <- .pl_lang(self$options)
+            lv <- c(.pl_text(lang, "moderation", "minus_sd"), .pl_text(lang, "moderation", "mean"),
+                    .pl_text(lang, "moderation", "plus_sd"))
+            for (k in seq_len(nrow(inter))) {
+                parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
+                for (j in 1:3)
+                    self$results$structuralSection$simpleSlopes$addRow(rowKey = paste(k, j, sep = "::"), values = list(
+                        term = paste(inter$from[k], "\u2192", inter$to[k]),
+                        effect = paste(parts[1], "\u2192", inter$to[k]),
+                        level = sprintf(lv[j], parts[2])))
+                self$results$structuralSection$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
+            }
+            if (!nrow(inter))
+                private$.notApply("structuralSection", "simpleSlopes", "na_moderation")
+
+        },
+
+        # Rows of the optional sections: overall fit, prediction, IPMA and
+        # multigroup analysis.
+        # ES: Filas de las secciones opcionales.
+        .initOptional = function(blocks, paths) {
+            labels <- vapply(blocks, `[[`, "", "label")
+            # overall fit: 4 discrepancies x estimated and saturated model
+            # ES: ajuste global: 4 discrepancias x modelo estimado y saturado
+            ltxt <- function(key) .pl_text(.pl_lang(self$options), "labels", key)
+            for (mdl in c("estimated", "saturated"))
+                for (m in names(.PL_FIT))
+                    self$results$fitSection$fit$addRow(rowKey = paste(mdl, m, sep = "::"),
+                                            values = list(model = ltxt(paste0("fit_", mdl)), measure = .PL_FIT[[m]]))
+            self$results$fitSection$fit$getColumn("critical")$setTitle(
+                sprintf(ltxt("fit_critical"), format(100 * as.numeric(self$options$fitLevel))))
             # Prediction (phase 6): one row per indicator of an endogenous
             # construct; CVPAT: all endogenous constructs and each one, against
             # IA and LM.
@@ -220,40 +278,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (self$options$mgaRun && !is.null(gv) && nzchar(gv))
                 private$.mgaRows(.pl_mga_levels(self$data[[gv]]), labels, paths, ptxt("mga_vs"))
 
-            # Mediation (phase 6): one row per specific indirect effect.
-            # ES: Mediación (fase 6): una fila por efecto indirecto específico.
-            chains <- .pl_mediation_chains(paths)
-            for (k in seq_len(nrow(chains)))
-                self$results$structuralSection$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
-            if (!nrow(chains))
-                notApply("structuralSection", "mediation", "na_mediation")
-
-            # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
-            # +1 SD) and one plot per interaction.
-            # ES: Moderación (fase 4): tres filas y un gráfico por interacción.
-            inter <- paths[grepl(.PL_X, paths$from, fixed = TRUE), , drop = FALSE]
-            lang <- .pl_lang(self$options)
-            lv <- c(.pl_text(lang, "moderation", "minus_sd"), .pl_text(lang, "moderation", "mean"),
-                    .pl_text(lang, "moderation", "plus_sd"))
-            for (k in seq_len(nrow(inter))) {
-                parts <- strsplit(inter$from[k], .PL_X, fixed = TRUE)[[1]]
-                for (j in 1:3)
-                    self$results$structuralSection$simpleSlopes$addRow(rowKey = paste(k, j, sep = "::"), values = list(
-                        term = paste(inter$from[k], "\u2192", inter$to[k]),
-                        effect = paste(parts[1], "\u2192", inter$to[k]),
-                        level = sprintf(lv[j], parts[2])))
-                self$results$structuralSection$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
-            }
-            if (!nrow(inter))
-                notApply("structuralSection", "simpleSlopes", "na_moderation")
-
-            if (length(refl) == 0)
-                notApply("measurementSection", "reliability", "na_reliability")
-            if (length(refl) < 2)
-                notApply("measurementSection", "htmt", "na_htmt", list(length(refl)))
-            if (!any(vapply(blocks, function(b) b$type == "formative", TRUE)))
-                notApply("measurementSection", "vif", "na_vif")
-            private$.na <- na
         },
 
         # Notices for the parts that do not apply (see .na), placed before
@@ -275,7 +299,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             cons <- .pl_constructs(self$options)
             blocks <- cons$blocks
             hocs <- .pl_hocs(self$options)
-            labels <- vapply(blocks, `[[`, "", "label")
             paths <- .pl_paths(self$options$structural, .pl_structural_labels(blocks, hocs))
             if (length(blocks) < 2 || nrow(paths) == 0) {
                 private$.showIntro(lang, if (length(blocks) < 2) "need_constructs" else "need_paths")
@@ -284,6 +307,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$intro$setVisible(FALSE)
             private$.notApplyNotices(txt)
 
+            # 2-3. Validate, prepare and estimate; 4. the tables of every
+            # model; the optional sections; 5. notices and the texts.
+            # ES: 2-3. Validar, preparar y estimar; 4. las tablas de todo
+            # modelo; las secciones opcionales; 5. avisos y textos.
+            e <- private$.estimate(blocks, hocs, paths, lang, txt)
+            t <- private$.fillTables(e, blocks, paths, hocs, txt)
+            o <- private$.optionalSections(e, t, blocks, paths, hocs, txt)
+            private$.reportNotices(e, t, o, cons, blocks, hocs, txt)
+            private$.interpretation(lang, blocks, t$loadings, t$path_tab, t$r2_tab, t$quality, t$structural,
+                                    o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga)
+            private$.keySummary(lang, blocks, e$vars, paths, e$prep, t$loadings, t$r2_tab, e$admissible, t$quality,
+                                o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga)
+            private$.choices(lang, e$prep, o$boot)
+            private$.guides(lang)
+            private$.reproducibility(lang, e$smodel, e$prep, blocks, paths)
+        },
+
+        # ---------------------------------------------------------------------
+        # Steps 2-3 of .run(): validation (Category A: reject with the real
+        # reason), data preparation and estimation, with stage 2 for
+        # higher-order constructs. Returns everything the later steps read.
+        # ES: Pasos 2-3 de .run(): validación (Categoría A), preparación de
+        # los datos y estimación, con la etapa 2 del orden superior.
+        # ---------------------------------------------------------------------
+        .estimate = function(blocks, hocs, paths, lang, txt) {
             # 2. Validate and prepare (Category A).
             # ES: 2. Validar y preparar (Categoría A).
             # Higher-order constructs (phase 4): checked first; the
@@ -362,20 +410,50 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             sest <- sfit$Estimates
 
-            # 4. Tables.
-            # ES: 4. Tablas.
+            list(approach = approach, paths1 = paths1, model = model, d = d, categories = categories,
+                 ordinal = ordinal, fit = fit, est = est, admissible = admissible, sfit = sfit,
+                 smodel = smodel, prep = prep, vars = vars)
+        },
+
+        # ---------------------------------------------------------------------
+        # Step 4 of .run(): the tables every model has.
+        # ES: Paso 4 de .run(): las tablas que tiene todo modelo.
+        # ---------------------------------------------------------------------
+        .fillTables = function(e, blocks, paths, hocs, txt) {
+            fit <- e$fit
+            model <- e$model
+            smodel <- e$smodel
+            sest <- e$sfit$Estimates
             private$.fillModel(blocks, paths, txt, hocs)
-            loadings <- private$.fillMeasurement(blocks, model, est)
+            loadings <- private$.fillMeasurement(blocks, model, e$est)
             path_tab <- private$.fillPaths(paths, smodel, sest)
             r2_tab <- private$.fillR2(paths, smodel, sest)
-            quality <- .pl_measurement_quality(fit$value, blocks, paths1, model, d, self$options)
+            quality <- .pl_measurement_quality(fit$value, blocks, e$paths1, model, e$d, self$options)
             private$.fillReliability(quality, txt)
             private$.fillHtmt(quality, txt)
             private$.fillFornell(quality, txt)
             private$.fillVif(quality, txt)
-            hocq <- if (length(hocs)) private$.fillHoc(sfit, hocs, smodel, txt, paths) else NULL
-            structural <- private$.fillStructural(sfit, paths, smodel, txt)
+            hocq <- if (length(hocs)) private$.fillHoc(e$sfit, hocs, smodel, txt, paths) else NULL
+            structural <- private$.fillStructural(e$sfit, paths, smodel, txt)
 
+            list(loadings = loadings, path_tab = path_tab, r2_tab = r2_tab, quality = quality, hocq = hocq,
+                 structural = structural)
+        },
+
+        # ---------------------------------------------------------------------
+        # The optional sections, each only when its box is ticked: bootstrap,
+        # mediation and moderation, overall fit, IPMA, prediction,
+        # multigroup; then the plots' data.
+        # ES: Las secciones opcionales, cada una solo con su casilla marcada;
+        # luego los datos de los gráficos.
+        # ---------------------------------------------------------------------
+        .optionalSections = function(e, t, blocks, paths, hocs, txt) {
+            fit <- e$fit
+            model <- e$model
+            smodel <- e$smodel
+            sfit <- e$sfit
+            d <- e$d
+            admissible <- e$admissible
             # Bootstrap (phase 3): only when "Run bootstrap" is ticked.
             # ES: Bootstrap (fase 3): solo con "Ejecutar bootstrap" marcado.
             boot <- NULL
@@ -401,17 +479,35 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             gv <- self$options$groupVar
             mga <- if (self$options$mgaRun && !is.null(gv) && nzchar(gv))
                 private$.multigroup(model, d, blocks, paths, hocs, txt) else NULL
-            private$.prepareDiagram(blocks, loadings, path_tab, r2_tab, boot$summary, smodel, hocq)
-            private$.preparePlots(loadings, quality, boot$summary, model, txt)
+            private$.prepareDiagram(blocks, t$loadings, t$path_tab, t$r2_tab, boot$summary, smodel, t$hocq)
+            private$.preparePlots(t$loadings, t$quality, boot$summary, model, txt)
 
-            # 5. Notices, interpretation, summaries, reproducibility.
-            # ES: 5. Avisos, interpretación, resúmenes, reproducibilidad.
+            list(boot = boot, med = med, mod = mod, omf = omf, ipm = ipm, prd = prd, mga = mga)
+        },
+
+        # ---------------------------------------------------------------------
+        # Step 5 of .run(): cSEM's messages and the data notes as jamovi
+        # notices (warnings and information).
+        # ES: Paso 5 de .run(): los mensajes de cSEM y las notas de los datos
+        # como avisos de jamovi.
+        # ---------------------------------------------------------------------
+        .reportNotices = function(e, t, o, cons, blocks, hocs, txt) {
+            fit <- e$fit
+            prep <- e$prep
+            boot <- o$boot
+            omf <- o$omf
+            prd <- o$prd
+            mga <- o$mga
+            model <- e$model
+            ordinal <- e$ordinal
+            categories <- e$categories
+            approach <- e$approach
             warn <- c(vapply(cons$empty, function(x) sprintf(txt("notices", "empty_construct"), x), ""),
                       unlist(lapply(blocks, function(b)
                           if (b$type == "reflective" && length(b$vars) == 1)
                               sprintf(txt("notices", "single_reflective"), b$label))),
-                      fit$warnings, quality$warnings,
-                      private$.negativeLoadings(loadings, txt),
+                      fit$warnings, t$quality$warnings,
+                      private$.negativeLoadings(t$loadings, txt),
                       if (self$options$bootstrap && is.null(boot$summary))
                           sprintf(txt("boot", "failed"), paste(boot$error, collapse = "; ")),
                       if (!is.null(boot$summary) && length(boot$error))
@@ -421,9 +517,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                       if (isTRUE(prd$inadmissible > 0)) sprintf(txt("notices", "predict_inadmissible_folds"), prd$inadmissible),
                       if (!is.null(mga$error)) sprintf(txt("notices", "mga_failed"), paste(mga$error, collapse = "; ")),
                       omf$warnings, mga$warnings)
-            if (!admissible) {
+            if (!e$admissible) {
                 failed <- c(names(which(unlist(cSEM::verify(fit$value)))),
-                            if (length(hocs)) names(which(unlist(cSEM::verify(sfit)))))
+                            if (length(hocs)) names(which(unlist(cSEM::verify(e$sfit)))))
                 warn <- c(warn, sprintf(txt("notices", "inadmissible"), paste(failed, collapse = ", ")))
             }
             info <- if (length(hocs)) sprintf(txt("notices", if (approach == "csem") "hoc_csem" else "hoc_two_stage"),
@@ -451,13 +547,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             .pl_insert_notices(self$results, self$options, info, jmvcore::NoticeType$INFO, ".plssemInfo")
             .pl_insert_notices(self$results, self$options, warn)
 
-            private$.interpretation(lang, blocks, loadings, path_tab, r2_tab, quality, structural, boot$summary, smodel,
-                                    mod, hocq, omf, med, prd, ipm, mga)
-            private$.keySummary(lang, blocks, vars, paths, prep, loadings, r2_tab, admissible, quality, boot$summary,
-                                smodel, hocq, omf, med, prd, mga)
-            private$.choices(lang, prep, boot)
-            private$.guides(lang)
-            private$.reproducibility(lang, smodel, prep, blocks, paths)
         },
 
         # ---------------------------------------------------------------------
@@ -683,7 +772,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 sm <- if (!is.null(run$value)) .pl_capture(.pl_boot_summary(run$value, level, spec)) else NULL
                 list(summary = sm$value, error = c(run$errors, sm$error), warnings = run$warnings,
                      seconds = run$seconds)
-            })
+            }, max_entries = .PL_CACHE_BOOT$entries, max_bytes = .PL_CACHE_BOOT$bytes)
             # the record also as numbers; a failed bootstrap keeps the row
             # with what is known and a footnote
             # ES: el registro también en números; si el bootstrap falla la
@@ -1069,6 +1158,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             out <- list(group = gv, labels = lev, n = n, n_missing = mg$n_missing, adjust = adjust,
                         warnings = res$warnings, perms = perms, boots = boots, seed = seed)
 
+            ctx <- list(txt = txt, lab = lab, notcomp = notcomp, cmp_of = cmp_of, cinv = cinv, mg = mg,
+                        perms = perms, boots = boots, seed = seed, adjust = adjust, mt = mt, dt = dt)
+            out <- private$.fillMicom(out, s, micom_reason, blocks, ctx)
+            private$.fillMgd(out, s, model, paths, ctx)
+        },
+
+        # MICOM rows (steps 2 and 3) or the reason they are not computable.
+        # ES: Filas de MICOM (pasos 2 y 3) o la razón por la que no se calculan.
+        .fillMicom = function(out, s, micom_reason, blocks, ctx) {
+            txt <- ctx$txt; lab <- ctx$lab; notcomp <- ctx$notcomp; cmp_of <- ctx$cmp_of; cinv <- ctx$cinv
+            mt <- ctx$mt; perms <- ctx$perms; seed <- ctx$seed
             # MICOM
             # ES: MICOM
             if (!is.null(micom_reason)) {
@@ -1093,6 +1193,16 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 out$micom <- mi
             }
 
+            out
+        },
+
+        # Path differences between groups (permutation test and PLS-MGA),
+        # with the paths whose constructs lack compositional invariance.
+        # ES: Diferencias de rutas entre grupos, con las rutas cuyos
+        # constructos no tienen invarianza composicional.
+        .fillMgd = function(out, s, model, paths, ctx) {
+            txt <- ctx$txt; lab <- ctx$lab; notcomp <- ctx$notcomp; cmp_of <- ctx$cmp_of; mg <- ctx$mg
+            dt <- ctx$dt; perms <- ctx$perms; boots <- ctx$boots; seed <- ctx$seed; adjust <- ctx$adjust
             # Path differences
             # ES: Diferencias de rutas
             if (is.null(s[["mgd"]])) {
@@ -1670,6 +1780,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
+            meas <- private$.measurementLines(txt, loadings, quality, sm, model, listed)
+            struct <- private$.structuralLines(txt, paths, r2, structural, sm, model, listed)
+            mlines <- private$.moderationLines(lang, mod, structural, sm, model)
+            hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
+            flines <- private$.fitLines(txt, omf)
+            dlines <- private$.mediationLines(txt, med)
+            plines <- private$.predictLines(txt, prd)
+            ilines <- private$.ipmaLines(txt, ipm)
+            glines <- private$.mgaLines(txt, mga)
+            html <- paste0(.pl_html_block(meas, txt("title_measurement")),
+                           if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
+                           .pl_html_block(c(struct, mlines), txt("title_structural")),
+                           if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
+                           if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
+                           if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
+                           if (length(glines)) .pl_html_block(glines, txt("title_mga")) else "",
+                           if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
+                           .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
+            self$results$interpretation$setContent(html)
+        },
+
+        # Interpretation of the measurement model: loadings, reliability,
+        # convergent and discriminant validity, collinearity and weights.
+        # ES: Interpretación del modelo de medida.
+        .measurementLines = function(txt, loadings, quality, sm, model, listed) {
             refl <- private$.multiReflective(loadings)
             meas <- character(0)
             if (nrow(refl) == 0) {
@@ -1761,6 +1896,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (!any(ns)) meas <- c(meas, txt("weights_all_sig"))
                 }
             }
+            meas
+        },
+
+        # Interpretation of the structural model: strongest path,
+        # significance, R², f² and collinearity.
+        # ES: Interpretación del modelo estructural.
+        .structuralLines = function(txt, paths, r2, structural, sm, model, listed) {
             k <- which.max(abs(paths$estimate))
             band <- function(x) txt(if (x >= 0.75) "r2_substantial" else if (x >= 0.50) "r2_moderate"
                                     else if (x >= 0.25) "r2_weak" else "r2_very_weak")
@@ -1792,6 +1934,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 struct <- c(struct, if (any(hv)) sprintf(txt("vifs_high"), listed(paste(vs$from[hv], vs$to[hv], sep = " \u2192 "), vs$vif[hv]))
                                     else txt("vifs_ok"))
             }
+            struct
+        },
+
+        # Interpretation of each interaction: coefficient, f², significance
+        # and Johnson-Neyman region.
+        # ES: Interpretación de cada interacción.
+        .moderationLines = function(lang, mod, structural, sm, model) {
             mtxt <- function(key) .pl_text(lang, "moderation", key)
             txt_band <- function(v) .pl_text(lang, "labels", .pl_band_f2_int(v))
             mlines <- character(0)
@@ -1815,22 +1964,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 } else head <- paste(head, mtxt("no_boot"))
                 mlines <- c(mlines, head)
             }
-            hlines <- if (is.null(hocq)) character(0) else private$.hocLines(txt, hocq, sm, model, listed)
-            flines <- private$.fitLines(txt, omf)
-            dlines <- private$.mediationLines(txt, med)
-            plines <- private$.predictLines(txt, prd)
-            ilines <- private$.ipmaLines(txt, ipm)
-            glines <- private$.mgaLines(txt, mga)
-            html <- paste0(.pl_html_block(meas, txt("title_measurement")),
-                           if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
-                           .pl_html_block(c(struct, mlines), txt("title_structural")),
-                           if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
-                           if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
-                           if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
-                           if (length(glines)) .pl_html_block(glines, txt("title_mga")) else "",
-                           if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
-                           .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
-            self$results$interpretation$setContent(html)
+            mlines
         },
 
         # Interpretation of the mediation: each specific indirect effect with
@@ -2256,6 +2390,19 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "cSEM::summarize(fit2)",
                     "# Bootstrap of a higher-order model: in each resample of stage 1, stage 2 is re-estimated from that resample (.user_funs; see R/bootstrap.R in PLSsemLab)")
             }
+            code <- c(code, private$.reproOptional(model, paths, q, modes),
+                      private$.reproQuality(model, blocks, paths, q, modes_of))
+            esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x, fixed = TRUE), fixed = TRUE), fixed = TRUE)
+            self$results$reproducibilityCode$setContent(paste0(
+                "<pre style=\"white-space: pre-wrap; font-family: monospace; font-size: 0.85em;\">",
+                esc(paste(code, collapse = "\n")), "</pre>"))
+        },
+
+        # Equivalent R code of the optional sections that ran: bootstrap,
+        # IPMA, prediction, multigroup analysis and overall fit.
+        # ES: Código R equivalente de las secciones opcionales que corrieron.
+        .reproOptional = function(model, paths, q, modes) {
+            code <- character(0)
             if (self$options$bootstrap) {
                 # The same blocks and seeds as the module: up to 200 resamples
                 # this is a single cSEM call with the seed.
@@ -2328,6 +2475,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     sprintf("cSEM::testOMF(fit, %s, .saturated = FALSE)", args),
                     sprintf("cSEM::testOMF(fit, %s, .saturated = TRUE)", args))
             }
+            code
+        },
+
+        # Equivalent R code of the measurement-model criteria, each called
+        # separately as the module does.
+        # ES: Código R equivalente de los criterios del modelo de medida.
+        .reproQuality = function(model, blocks, paths, q, modes_of) {
+            code <- character(0)
             types <- vapply(blocks, `[[`, "", "type")
             if (any(types == "reflective")) {
                 # Quality criteria, each called separately as the module does.
@@ -2381,10 +2536,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                             paste(q(unname(model$vmap[b$vars])), collapse = ", "),
                                             unname(model$cmap[[b$label]])))
             }
-            esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x, fixed = TRUE), fixed = TRUE), fixed = TRUE)
-            self$results$reproducibilityCode$setContent(paste0(
-                "<pre style=\"white-space: pre-wrap; font-family: monospace; font-size: 0.85em;\">",
-                esc(paste(code, collapse = "\n")), "</pre>"))
+            code
         }
     )
 )

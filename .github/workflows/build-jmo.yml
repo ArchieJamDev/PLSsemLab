@@ -126,7 +126,7 @@ jobs:
           gh release delete "$TAG" --yes --cleanup-tag || true
           gh release create "$TAG" *.jmo --prerelease --target "$GITHUB_SHA" \
             --title "Development build (Linux, jamovi flatpak $JV)" \
-            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."
+            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: a test build of the current code."
 
   # Older jamovi releases are no longer served by Flathub, but the compiler
   # keeps a CRAN snapshot per R version with binaries built for jamovi
@@ -173,4 +173,4 @@ jobs:
           gh release delete "$TAG" --yes --cleanup-tag || true
           gh release create "$TAG" *.jmo --prerelease --target "$GITHUB_SHA" \
             --title "Development build (Linux, jamovi ${{ inputs.app_version }}, R ${{ inputs.r_version }})" \
-            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: the module is in development."
+            --notes "Built from ${GITHUB_SHA::7} for testing. Install in jamovi: ⋮ › Modules › Install from file. Not a release: a test build of the current code."

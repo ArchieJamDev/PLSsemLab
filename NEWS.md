@@ -1,4 +1,4 @@
-# PLSsemLab (development version)
+# PLSsemLab 0.7.7
 
 Lessons from jamovi's audits of EGAnetLab and MokkenLab, applied before
 PLSsemLab's own review.

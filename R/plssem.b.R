@@ -2432,11 +2432,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (self$options$predictRun && is.null(.pl_predict_reason(model, model$hocs, TRUE))) {
                 code <- c(code, "",
-                    "# PLSpredict: each repetition uses cSEM's folds with seed + repetition - 1",
+                    "# PLSpredict: each repetition uses cSEM's folds with seed + repetition - 1 (PLS columns of cSEM::predict)",
                     sprintf("pred <- lapply(seq_len(%d), function(r) cSEM::predict(fit, .benchmark = \"lm\", .cv_folds = %d, .r = 1, .seed = %d + r - 1))",
                             as.integer(self$options$predictReps), as.integer(self$options$predictFolds),
                             as.integer(self$options$bootSeed)),
-                    "Reduce(`+`, lapply(pred, function(p) p$Prediction_metrics[, c(\"Q2_predict\", \"RMSE_target\", \"RMSE_benchmark\", \"MAE_target\", \"MAE_benchmark\")])) / length(pred)",
+                    "Reduce(`+`, lapply(pred, function(p) p$Prediction_metrics[, c(\"Q2_predict\", \"RMSE_target\", \"MAE_target\")])) / length(pred)",
+                    "# LM benchmark (Shmueli et al., 2019): each endogenous indicator regressed WITH an intercept on the",
+                    "# exogenous indicators, on the same folds; cSEM::predict(.benchmark = \"lm\") omits the intercept",
+                    "exo <- colnames(fit$Information$Model$measurement)[colSums(fit$Information$Model$measurement[rowSums(fit$Information$Model$structural) == 0, , drop = FALSE]) > 0]",
+                    "endo <- as.character(pred[[1]]$Prediction_metrics$Name)",
+                    sprintf("lm_rmse <- sapply(seq_len(%d), function(r) {", as.integer(self$options$predictReps)),
+                    sprintf("    folds <- cSEM::resampleData(fit, .resample_method = \"cross-validation\", .cv_folds = %d, .R = 1, .seed = %d + r - 1)[[1]]",
+                            as.integer(self$options$predictFolds), as.integer(self$options$bootSeed)),
+                    "    res <- do.call(rbind, lapply(folds, function(test) { train <- d[setdiff(rownames(d), rownames(test)), ]",
+                    "        b <- qr.coef(qr(cbind(1, as.matrix(train[, exo]))), as.matrix(train[, endo]))",
+                    "        as.matrix(test[, endo]) - cbind(1, as.matrix(test[, exo])) %*% b }))",
+                    "    sqrt(colMeans(res^2)) })",
+                    "rowMeans(lm_rmse)  # RMSE of LM (MAE likewise with mean(abs(res)))",
                     "# CVPAT against IA and LM: paired t test on the per-case losses of the same residuals (see R/predict.R in PLSsemLab)")
             }
             gv <- self$options$groupVar

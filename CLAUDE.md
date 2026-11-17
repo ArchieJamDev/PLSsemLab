@@ -114,6 +114,10 @@ carry every rule below in full.
   resample through progressr inside its own `with_progress()`: a handler set
   in `options(progressr.handlers = ..., progressr.enable = TRUE)` is the only
   way to see them (`.pl_with_ticks()`); results are identical.
+- cSEM 0.7.1's `predict(.benchmark = "lm")` solves (X'X)^-1 X'y on the raw
+  data without an intercept (regression through the origin): LM errors are
+  inflated. The module fits LM itself with an intercept
+  (`.pl_lm_residuals()`), which reproduces Hair et al.'s (2022) RMSE.
 - R's `$` partially matches list names (`s$micom` returns `s$micom_error`
   when `micom` is absent): read cached summaries with `[[ ]]`.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in

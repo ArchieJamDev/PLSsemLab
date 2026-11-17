@@ -67,6 +67,25 @@ jobs:
           fi
           Rscript .github/scripts/run-tests.R
 
+      # Every number PLSsemLab reports must equal direct cSEM calls, and the
+      # corporate reputation model must reproduce the values published by
+      # Hair et al.; each script stops with an error if a check fails.
+      # ES: Cada número debe ser igual a las llamadas directas a cSEM, y el
+      # modelo de reputación corporativa debe reproducir los valores
+      # publicados por Hair et al.; cada script termina con error si falla.
+      - name: Check numerical equivalence with cSEM
+        run: Rscript validation/csem_equivalence.R
+
+      - name: Check the values published by Hair et al.
+        run: Rscript validation/hair_published.R
+
+      - name: Keep the validation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-results
+          path: validation/*_results.csv
+
   cross-platform-tests:
     strategy:
       fail-fast: false

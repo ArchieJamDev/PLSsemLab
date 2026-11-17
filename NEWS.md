@@ -5,6 +5,13 @@ PLSsemLab's own review.
 
 ## Changes visible to users
 
+* **PLSpredict's linear-model benchmark (LM) has its intercept.** cSEM
+  0.7.1's `predict(.benchmark = "lm")` regresses the indicators through the
+  origin, which inflates LM's errors and makes PLS look better than it is,
+  in PLSpredict and in CVPAT against LM. PLSsemLab now fits LM itself as
+  Shmueli et al. (2019) define it (OLS with an intercept on the exogenous
+  indicators, same folds), and reproduces the RMSE published by Hair et al.
+  (2022). The equivalent R code shows the same computation.
 * **Every long computation can be interrupted.** The overall fit test,
   PLSpredict/CVPAT, MICOM and the multigroup tests stop as soon as an option
   changes: jamovi's restart signal is no longer caught as if it were an
@@ -36,6 +43,10 @@ PLSsemLab's own review.
   their measured entries being a few KB).
 * Column super-titles are translated at run time by jmvcore from the
   catalog; a test checks them in Spanish.
+* **Validation (phase 8):** `validation/csem_equivalence.R` (54 checks, 346
+  values, identical to direct cSEM calls) and `validation/hair_published.R`
+  (52 published values of Hair et al., 2021 and 2022, reproduced to three
+  decimals) run in CI on every push.
 * Regression tests in `tests/testthat/test-audit.R`: restart through every
   long computation, restarted runs not cached, one tick per resample with
   identical results, tables with their final rows when `.init()` sees only

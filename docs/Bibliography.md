@@ -58,6 +58,19 @@ Tenenhaus, M., Esposito Vinzi, V., Chatelin, Y.-M., & Lauro, C. (2005). PLS
 path modeling. *Computational Statistics & Data Analysis, 48*(1), 159–205.
 https://doi.org/10.1016/j.csda.2004.03.005
 
+Hair, J. F., Jr., Hult, G. T. M., Ringle, C. M., & Sarstedt, M. (2022). *A
+primer on partial least squares structural equation modeling (PLS-SEM)* (3rd
+ed.). Sage.
+
+Henseler, J., Ringle, C. M., & Sinkovics, R. R. (2009). The use of partial
+least squares path modeling in international marketing. *Advances in
+International Marketing, 20*, 277–319.
+https://doi.org/10.1108/S1474-7979(2009)0000020014
+
+Henseler, J., Hubona, G., & Ray, P. A. (2016). Using PLS path modeling in new
+technology research: Updated guidelines. *Industrial Management & Data
+Systems, 116*(1), 2–20. https://doi.org/10.1108/IMDS-09-2015-0382
+
 ## Higher-order constructs
 
 Sarstedt, M., Hair, J. F., Cheah, J.-H., Becker, J.-M., & Ringle, C. M.
@@ -84,11 +97,52 @@ assessing discriminant validity in variance-based structural equation
 modeling. *Journal of the Academy of Marketing Science, 43*(1), 115–135.
 https://doi.org/10.1007/s11747-014-0403-8
 
+Fornell, C., & Larcker, D. F. (1981). Evaluating structural equation models
+with unobservable variables and measurement error. *Journal of Marketing
+Research, 18*(1), 39–50. https://doi.org/10.1177/002224378101800104
+
+McDonald, R. P. (1999). *Test theory: A unified treatment*. Lawrence Erlbaum.
+https://doi.org/10.4324/9781410601087
+
+Chalmers, R. P. (2018). On misconceptions and the limited usefulness of
+ordinal alpha. *Educational and Psychological Measurement, 78*(6), 1056–1071.
+https://doi.org/10.1177/0013164417727036
+
+Schuberth, F., Henseler, J., & Dijkstra, T. K. (2018). Partial least squares
+path modeling using ordinal categorical indicators. *Quality & Quantity,
+52*(1), 9–35. https://doi.org/10.1007/s11135-016-0401-7
+
+Roemer, E., Schuberth, F., & Henseler, J. (2021). HTMT2: An improved criterion
+for assessing discriminant validity in structural equation modeling.
+*Industrial Management & Data Systems, 121*(12), 2637–2650.
+https://doi.org/10.1108/IMDS-02-2021-0082
+
 ## Overall model fit
 
 Beran, R., & Srivastava, M. S. (1985). Bootstrap tests and confidence regions
 for functions of a covariance matrix. *The Annals of Statistics, 13*(1),
 95–115. https://doi.org/10.1214/aos/1176346579
+
+Schuberth, F., Rademaker, M. E., & Henseler, J. (2023). Assessing the overall
+fit of composite models estimated by partial least squares path modeling.
+*European Journal of Marketing, 57*(6).
+https://doi.org/10.1108/EJM-08-2020-0586
+
+## Mediation
+
+Preacher, K. J., & Hayes, A. F. (2008). Asymptotic and resampling strategies
+for assessing and comparing indirect effects in multiple mediator models.
+*Behavior Research Methods, 40*(3), 879–891.
+https://doi.org/10.3758/BRM.40.3.879
+
+Zhao, X., Lynch, J. G., & Chen, Q. (2010). Reconsidering Baron and Kenny:
+Myths and truths about mediation analysis. *Journal of Consumer Research,
+37*(2), 197–206. https://doi.org/10.1086/651257
+
+Nitzl, C., Roldán, J. L., & Cepeda, G. (2016). Mediation analysis in partial
+least squares path modeling: Helping researchers discuss more sophisticated
+models. *Industrial Management & Data Systems, 116*(9), 1849–1864.
+https://doi.org/10.1108/IMDS-07-2015-0302
 
 ## Prediction
 
@@ -97,6 +151,21 @@ Hair, J. F., & Ringle, C. M. (2021). Prediction: Coveted, yet forsaken?
 Introducing a cross-validated predictive ability test in partial least
 squares path modeling. *Decision Sciences, 52*(2), 362–392.
 https://doi.org/10.1111/deci.12445
+
+Shmueli, G., Ray, S., Velasquez Estrada, J. M., & Chatla, S. B. (2016). The
+elephant in the room: Predictive performance of PLS models. *Journal of
+Business Research, 69*(10), 4552–4564.
+https://doi.org/10.1016/j.jbusres.2016.03.049
+
+Shmueli, G., Sarstedt, M., Hair, J. F., Cheah, J.-H., Ting, H., Vaithilingam,
+S., & Ringle, C. M. (2019). Predictive model assessment in PLS-SEM: Guidelines
+for using PLSpredict. *European Journal of Marketing, 53*(11), 2322–2347.
+https://doi.org/10.1108/EJM-02-2019-0189
+
+Sharma, P. N., Liengaard, B. D., Hair, J. F., Sarstedt, M., & Ringle, C. M.
+(2023). Predictive model assessment and selection in composite-based modeling
+using PLS-SEM: Extensions and guidelines for using CVPAT. *European Journal of
+Marketing, 57*(6), 1662–1677. https://doi.org/10.1108/EJM-08-2020-0636
 
 ## Importance-performance map analysis
 
@@ -109,6 +178,18 @@ Data Systems, 116*(9), 1865–1886. https://doi.org/10.1108/IMDS-10-2015-0449
 Henseler, J., Ringle, C. M., & Sarstedt, M. (2016). Testing measurement
 invariance of composites using partial least squares. *International
 Marketing Review, 33*(3), 405–431. https://doi.org/10.1108/IMR-09-2014-0304
+
+Chin, W. W., & Dibbern, J. (2010). An introduction to a permutation based
+procedure for multi-group PLS analysis: Results of tests of differences on
+simulated data and a cross cultural analysis of the sourcing of information
+system services between Germany and the USA. In V. Esposito Vinzi, W. W. Chin,
+J. Henseler, & H. Wang (Eds.), Handbook of partial least squares (pp.
+171-193). Springer. https://doi.org/10.1007/978-3-540-32827-8_8
+
+Sarstedt, M., Henseler, J., & Ringle, C. M. (2011). Multigroup analysis in
+partial least squares (PLS) path modeling: Alternative methods and empirical
+results. *Advances in International Marketing, 22*, 195–218.
+https://doi.org/10.1108/S1474-7979(2011)0000022012
 
 ## Critical perspectives
 

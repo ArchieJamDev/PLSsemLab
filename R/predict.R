@@ -16,9 +16,10 @@
 # (resampleData, seed + repetition - 1), so with one repetition the residuals
 # equal cSEM::predict(.r = 1, .seed = seed). For each fold the model is
 # estimated on the training part and cSEM::predict(.test_data) predicts the
-# indicators of the endogenous constructs of the test part (PLS and the
-# linear-model benchmark LM); the indicator-average benchmark IA predicts
-# each indicator by its training mean.
+# indicators of the endogenous constructs of the test part (PLS); the
+# linear-model benchmark LM is the regression on the exogenous indicators
+# with an intercept (.pl_lm_residuals()), and the indicator-average
+# benchmark IA predicts each indicator by its training mean.
 # ES: Predicción fuera de la muestra (fase 6): una validación cruzada de k
 # particiones, repetida r veces, alimenta PLSpredict y CVPAT. Las
 # particiones son las de cSEM, así que con una repetición los residuos son
@@ -51,10 +52,11 @@
     out <- list()
     inadmissible <- 0
     one <- function(f, test) {
-        p <- suppressWarnings(cSEM::predict(f, .test_data = test, .benchmark = "lm"))
+        p <- suppressWarnings(cSEM::predict(f, .test_data = test, .benchmark = "NA"))
         get1 <- function(x) if (is.list(x)) x[[1]] else x
-        list(t = get1(p$Residuals_target), b = get1(p$Residuals_benchmark))
+        list(t = get1(p$Residuals_target))
     }
+    exo <- .pl_exo_indicators(fit)
     for (r in seq_len(reps)) {
         checkpoint()
         cv <- cSEM::resampleData(fit, .resample_method = "cross-validation", .cv_folds = folds, .R = 1,
@@ -67,6 +69,7 @@
             fk <- refit(train)
             if (sum(cSEM::verify(fk)) != 0) inadmissible <- inadmissible + 1
             pk <- one(fk, test)
+            pk$b <- .pl_lm_residuals(train, test, exo, colnames(pk$t))
             ia <- sweep(as.matrix(.pl_numeric(test[, colnames(pk$t), drop = FALSE])), 2,
                         colMeans(as.matrix(.pl_numeric(train[, colnames(pk$t), drop = FALSE]))))
             alt <- NULL
@@ -89,6 +92,40 @@
         out[[r]] <- list(PLS = stack("t"), LM = stack("b"), IA = stack("ia"), ALT = stack("alt"))
     }
     list(res = out, inadmissible = inadmissible, folds = folds, reps = reps, seed = seed)
+}
+
+# The linear-model benchmark LM of PLSpredict (Shmueli et al., 2019): each
+# indicator of an endogenous construct regressed, with an intercept, on the
+# indicators of the exogenous constructs, estimated on the training part and
+# applied to the test part. cSEM 0.7.1's predict(.benchmark = "lm") solves
+# (X'X)^-1 X'y on the uncentered data without an intercept (a regression
+# through the origin), which inflates the benchmark's errors and favors PLS;
+# its results match the published ones only with the intercept. Ordinal
+# indicators are predicted on their codes and rounded, as cSEM does.
+# ES: La referencia LM de PLSpredict: cada indicador de un constructo
+# endógeno regresado, con intercepto, sobre los indicadores de los
+# constructos exógenos. predict(.benchmark = "lm") de cSEM 0.7.1 resuelve
+# (X'X)^-1 X'y sin intercepto (regresión por el origen), lo que infla los
+# errores de la referencia y favorece a PLS.
+.pl_exo_indicators <- function(fit) {
+    m <- fit$Information$Model
+    exo <- rownames(m$structural)[rowSums(m$structural) == 0]
+    colnames(m$measurement)[colSums(m$measurement[exo, , drop = FALSE]) > 0]
+}
+
+.pl_lm_residuals <- function(train, test, exo, endo) {
+    ordinal <- vapply(test[, endo, drop = FALSE], is.factor, TRUE)
+    xtr <- cbind(1, as.matrix(.pl_numeric(train[, exo, drop = FALSE])))
+    xte <- cbind(1, as.matrix(.pl_numeric(test[, exo, drop = FALSE])))
+    ytr <- as.matrix(.pl_numeric(train[, endo, drop = FALSE]))
+    yte <- as.matrix(.pl_numeric(test[, endo, drop = FALSE]))
+    beta <- qr.coef(qr(xtr), ytr)
+    beta[is.na(beta)] <- 0
+    pred <- xte %*% beta
+    if (any(ordinal)) pred[, ordinal] <- round(pred[, ordinal])
+    res <- yte - pred
+    colnames(res) <- endo
+    res
 }
 
 # Ordered factors back to their codes (IA works on the indicator metric).

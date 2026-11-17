@@ -192,3 +192,15 @@ test_that("column super-titles follow jamovi's language", {
     expect_true("IC de la carga" %in% st)
     expect_false("Loading CI" %in% st)
 })
+
+test_that("every reference the module cites is in docs/Bibliography.md", {
+    refs_file <- testthat::test_path("..", "..", "jamovi", "00refs.yaml")
+    bib_file <- testthat::test_path("..", "..", "docs", "Bibliography.md")
+    skip_if_not(file.exists(refs_file) && file.exists(bib_file))
+    skip_if_not_installed("yaml")
+    refs <- yaml::read_yaml(refs_file)$refs
+    bib <- tolower(paste(readLines(bib_file, encoding = "UTF-8"), collapse = " "))
+    doi <- vapply(refs, function(r) tolower(sub("^https?://(dx\\.)?doi\\.org/", "", r$url)), "")
+    expect_true(all(vapply(doi, function(d) grepl(d, bib, fixed = TRUE), TRUE)),
+                info = paste(names(doi)[!vapply(doi, function(d) grepl(d, bib, fixed = TRUE), TRUE)], collapse = ", "))
+})

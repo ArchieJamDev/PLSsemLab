@@ -40,9 +40,25 @@ test_that("PLSpredict equals cSEM::predict with one repetition", {
     p <- p[match(tab$indicator, p$Name), ]
     expect_equal(tab$q2, p$Q2_predict, tolerance = 1e-8)
     expect_equal(tab$rmsePls, p$RMSE_target, tolerance = 1e-8)
-    expect_equal(tab$rmseLm, p$RMSE_benchmark, tolerance = 1e-8)
     expect_equal(tab$maePls, p$MAE_target, tolerance = 1e-8)
-    expect_equal(tab$maeLm, p$MAE_benchmark, tolerance = 1e-8)
+    # LM: the regression with an intercept on the exogenous indicators, on
+    # the same folds (cSEM 0.7.1's benchmark has no intercept)
+    # ES: LM: la regresión con intercepto sobre los indicadores exógenos, en
+    # las mismas particiones (la referencia de cSEM 0.7.1 no tiene intercepto)
+    folds <- withDefaultRng(cSEM::resampleData(f, .resample_method = "cross-validation", .cv_folds = 10, .R = 1,
+                                               .seed = 11))[[1]]
+    endo <- c(paste0("sat", 1:4), paste0("loy", 1:4))
+    res <- matrix(NA, nrow(s$d), length(endo), dimnames = list(NULL, endo))
+    for (k in seq_along(folds)) {
+        te <- match(rownames(folds[[k]]), rownames(s$d))
+        fit_k <- stats::lm(as.matrix(s$d[-te, endo]) ~ ., data = s$d[-te, paste0("imag", 1:5)])
+        res[te, ] <- as.matrix(s$d[te, endo]) - stats::predict(fit_k, newdata = s$d[te, paste0("imag", 1:5)])
+    }
+    expect_equal(tab$rmseLm, unname(sqrt(colMeans(res^2))[tab$indicator]), tolerance = 1e-8)
+    expect_equal(tab$maeLm, unname(colMeans(abs(res))[tab$indicator]), tolerance = 1e-8)
+    # cSEM's own benchmark is the regression through the origin: other errors
+    # ES: la referencia de cSEM es la regresión por el origen: otros errores
+    expect_gt(max(abs(p$RMSE_benchmark - tab$rmseLm)), 1e-4)
     expect_equal(nrow(a$results$predictSection$cvpat$asDF), 6)
     expect_match(a$results$keySummary$content, "Prediction:")
 })
@@ -99,4 +115,16 @@ test_that("the comparison with LM uses the MAE when the errors are asymmetric", 
     # ES: 250 casos, 10 particiones: 25 por partición, 225 de entrenamiento
     expect_false("small" %in% names(a$results$predictSection$predict$notes))
     expect_true(PLSsemLab:::.pl_predict_small(120, 10, 11)$small)
+})
+
+test_that("the equivalent R code reproduces the LM benchmark with its intercept", {
+    s <- satModel()
+    a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 5, predictReps = 2, bootSeed = 3)
+    env <- new.env()
+    env$data <- s$d
+    withDefaultRng(utils::capture.output(suppressWarnings(eval(parse(text = reproCode(a)), envir = env))))
+    tab <- a$results$predictSection$predict$asDF
+    inv <- stats::setNames(names(env$d), names(env$d))
+    got <- rowMeans(env$lm_rmse)
+    expect_equal(unname(sort(got)), sort(tab$rmseLm), tolerance = 1e-8)
 })

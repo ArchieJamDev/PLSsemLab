@@ -1,3 +1,37 @@
+# PLSsemLab (development version)
+
+Lessons from jamovi's audits of EGAnetLab and MokkenLab, applied before
+PLSsemLab's own review.
+
+## Changes visible to users
+
+* **Every long computation can be interrupted.** The overall fit test,
+  PLSpredict/CVPAT, MICOM and the multigroup tests stop as soon as an option
+  changes: jamovi's restart signal is no longer caught as if it were an
+  error of cSEM, and cSEM's resampling calls (bootstrap, testOMF, testMICOM,
+  testMGD) check in with jamovi at every resample. The results are the same.
+* **Bootstrap resamples table:** requested, drawn and admissible resamples,
+  seed, block size, confidence level and time as numbers, next to the text
+  record.
+* **"How to read each table" is off by default**, so the report stays
+  compact; the guides are one click away in Report Content.
+* The IPMA quadrant of a construct whose total effect is not significant is
+  one whole label (translatable as a sentence), not a label with a clause
+  appended.
+* Panel subheading "Nodes and Labels" in title case.
+
+## Internal changes
+
+* `.pl_capture()` rethrows jamovi's restart condition (`.pl_is_restart()`);
+  `.pl_with_ticks()` installs a silent progressr handler that calls
+  `private$.checkpoint(flush = FALSE)` at most every 0.25 s.
+* `graphics` and `progressr` declared in Imports.
+* Regression tests in `tests/testthat/test-audit.R`: restart through every
+  long computation, restarted runs not cached, one tick per resample with
+  identical results, tables with their final rows when `.init()` sees only
+  the header of the data, whole IPMA labels, guides off by default, plot
+  settings enabled only with their plot, numeric bootstrap table.
+
 # PLSsemLab 0.7.6
 
 * The per-group table of the multigroup analysis says "Not computable", with

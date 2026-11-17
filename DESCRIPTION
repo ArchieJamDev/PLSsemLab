@@ -16,10 +16,12 @@ Imports:
     cSEM (>= 0.7.1),
     lavaan,
     rlang,
+    progressr,
     ggplot2,
     semPlot,
     patchwork,
     methods,
+    graphics,
     stats,
     utils
 Suggests:

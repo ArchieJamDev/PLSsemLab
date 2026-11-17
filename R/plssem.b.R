@@ -63,6 +63,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
     inherit = plssemBase,
     private = list(
 
+        # Checkpoint inside a long cSEM resampling call (every resample,
+        # throttled in .pl_with_ticks()): without flushing the results, so
+        # it is cheap; it stops the run when jamovi asks for a restart.
+        # ES: Checkpoint dentro de una llamada larga de remuestreo de cSEM
+        # (cada remuestra, con freno en .pl_with_ticks()): sin enviar los
+        # resultados, así que es barato; detiene la ejecución si jamovi pide
+        # reiniciar.
+        .tick = function() private$.checkpoint(flush = FALSE),
+
         # Parts of the report that do not apply to this model, found by
         # .init(): list(section, before, key, args). .run() explains each
         # one with a jamovi notice placed before its table or plot, which
@@ -670,16 +679,27 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 run <- .pl_run_bootstrap(fit, spec$funs, reps, seed, progress = function(done, total) {
                     status$setContent(.pl_html_block(sprintf(txt("boot", "running"), done, total)))
                     private$.checkpoint()
-                })
+                }, tick = private$.tick)
                 sm <- if (!is.null(run$value)) .pl_capture(.pl_boot_summary(run$value, level, spec)) else NULL
                 list(summary = sm$value, error = c(run$errors, sm$error), warnings = run$warnings,
                      seconds = run$seconds)
             })
+            # the record also as numbers; a failed bootstrap keeps the row
+            # with what is known and a footnote
+            # ES: el registro también en números; si el bootstrap falla la
+            # fila queda con lo conocido y una nota
+            bs <- self$results$bootSummary
+            known <- list(requested = reps, seed = seed, block = .PL_BLOCK, level = level)
             if (!is.null(res$summary)) {
                 status$setContent(.pl_html_block(sprintf(txt("boot", "done"), res$summary$runs, res$summary$admissible,
                     seed, .PL_BLOCK, round(res$seconds), format(100 * level))))
+                bs$setRow(rowNo = 1, values = c(known, list(drawn = res$summary$runs,
+                    admissible = res$summary$admissible, seconds = res$seconds)))
+                if (isTRUE(res$cached)) bs$setNote("cached", txt("boot", "cached_note"))
             } else {
                 status$setContent(.pl_html_block(txt("boot", "not_done")))
+                bs$setRow(rowNo = 1, values = known)
+                bs$setNote("failed", txt("boot", "not_done"))
             }
             res
         },
@@ -746,8 +766,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 table$setRow(rowKey = paste(ip$to[k], ip$from[k], sep = "::"),
                              values = list(importance = ip$importance[k], perfRaw = ip$perf_raw[k],
                                            performance = ip$performance[k],
-                                           quadrant = paste0(txt("labels", ip$quadrant[k]),
-                                                             if (isFALSE(ip$sig[k])) txt("labels", "ipma_ns_suffix") else "")))
+                                           # whole labels, one per quadrant and significance (translatable as one sentence)
+                                           # ES: etiquetas completas, una por cuadrante y significación
+                                           quadrant = txt("labels", paste0(ip$quadrant[k], if (isFALSE(ip$sig[k])) "_ns" else ""))))
             if (is.null(sm)) table$setNote("sig", txt("footnotes", "ipma_no_boot"))
             else if (any(!is.na(ip$sig) & !ip$sig)) table$setNote("sig", txt("footnotes", "ipma_ns"))
             table$setNote("range", sprintf(txt("boot", "ipma_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
@@ -1027,7 +1048,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (is.null(micom_reason)) {
                     private$.checkpoint()
                     t0 <- proc.time()[["elapsed"]]
-                    m <- .pl_capture(.pl_micom(fg, perms, seed))
+                    m <- .pl_capture(.pl_micom(fg, perms, seed, tick = private$.tick))
                     out$micom <- m$value
                     out$micom_error <- m$error
                     out$s_micom <- proc.time()[["elapsed"]] - t0
@@ -1035,7 +1056,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }
                 private$.checkpoint()
                 t0 <- proc.time()[["elapsed"]]
-                m <- .pl_capture(.pl_mgd(fg, compare, perms, boots, seed))
+                m <- .pl_capture(.pl_mgd(fg, compare, perms, boots, seed, tick = private$.tick))
                 out$mgd <- m$value
                 out$mgd_error <- m$error
                 out$s_mgd <- proc.time()[["elapsed"]] - t0
@@ -1184,7 +1205,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         reps, seed, level, tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$fitCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
-                r <- .pl_capture(.pl_fit_test(fit, reps, seed, level, checkpoint = function() private$.checkpoint()))
+                r <- .pl_capture(.pl_fit_test(fit, reps, seed, level, checkpoint = function() private$.checkpoint(),
+                                              tick = private$.tick))
                 list(summary = r$value, error = r$error, warnings = r$warnings,
                      seconds = proc.time()[["elapsed"]] - t0)
             })

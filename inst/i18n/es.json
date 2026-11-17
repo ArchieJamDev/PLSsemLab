@@ -13,9 +13,6 @@
             "—": [
                 "—"
             ],
-            "; total effect not significant": [
-                "; efecto total no significativo"
-            ],
             "'%s' appears in the structural model but is not defined as a construct with indicators.": [
                 "'%s' aparece en el modelo estructural, pero no está definido como un constructo con indicadores."
             ],
@@ -220,6 +217,9 @@
             "Adjusted R²": [
                 "R² ajustado"
             ],
+            "Admissible": [
+                "Admisibles"
+            ],
             "Admissible estimates": [
                 "Estimaciones admisibles"
             ],
@@ -237,6 +237,9 @@
             ],
             "Along the whole observed range of %3$s, the interval of the effect of %1$s on %2$s includes 0.": [
                 "En todo el rango observado de %3$s, el intervalo del efecto de %1$s sobre %2$s incluye el 0."
+            ],
+            "An arrow that ends on a path is a moderation: the moderator changes the strength of that path, and the number is the coefficient of the interaction term (predictor × moderator).": [
+                "Una flecha que termina sobre una ruta es una moderación: el moderador cambia la fuerza de esa ruta, y el número es el coeficiente del término de interacción (predictor × moderador)."
             ],
             "An interaction X × M asks whether the effect of X on the outcome depends on the moderator M. Its coefficient is the change in that effect when M rises by one standard deviation. The table gives the simple effect of X at three values of M (one standard deviation below the mean, the mean and one above), and the plot draws the same idea twice: the simple slopes (left) and the floodlight analysis (right), the simple effect over the whole observed range of M with its bootstrap interval. The Johnson-Neyman points mark where that interval starts or stops including 0. The first construct of the term is the predictor and the second the moderator, in the order the term was built in the panel. Common misreading: concluding there is moderation because the simple effect is significant at one value of M; moderation is the interaction coefficient itself, and its interval must exclude 0.": [
                 "Una interacción X × M pregunta si el efecto de X sobre el resultado depende del moderador M. Su coeficiente es el cambio en ese efecto cuando M aumenta una desviación estándar. La tabla da el efecto simple de X en tres valores de M (una desviación estándar por debajo de la media, la media y una por encima), y el gráfico dibuja la misma idea dos veces: las pendientes simples (izquierda) y el análisis floodlight (derecha), el efecto simple en todo el rango observado de M con su intervalo bootstrap. Los puntos de Johnson-Neyman marcan dónde ese intervalo empieza o deja de incluir el 0. El primer constructo del término es el predictor y el segundo el moderador, en el orden en que se armó el término en el panel. Lectura errónea frecuente: concluir que hay moderación porque el efecto simple es significativo en un valor de M; la moderación es el coeficiente de la interacción mismo, y su intervalo debe excluir el 0."
@@ -298,11 +301,17 @@
             "Black": [
                 "Negro"
             ],
+            "Block size": [
+                "Tamaño de bloque"
+            ],
             "Bonferroni": [
                 "Bonferroni"
             ],
             "Bootstrap": [
                 "Bootstrap"
+            ],
+            "Bootstrap resamples": [
+                "Remuestras bootstrap"
             ],
             "Bootstrap resamples per group (PLS-MGA)": [
                 "Remuestras bootstrap por grupo (PLS-MGA)"
@@ -567,6 +576,9 @@
             ],
             "drag predictors here": [
                 "arrastre los predictores aquí"
+            ],
+            "Drawn": [
+                "Extraídas"
             ],
             "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a large coefficient as significant. Significance needs the bootstrap (Bootstrap box): a path is significant at the chosen level when its interval excludes 0.": [
                 "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. El R² es la proporción de la varianza del resultado explicada por sus predictores. Lectura errónea frecuente: tratar un coeficiente grande como significativo. La significación requiere el bootstrap (caja Bootstrap): una ruta es significativa al nivel elegido cuando su intervalo excluye el 0."
@@ -841,6 +853,9 @@
             "Improve first (important, low performance)": [
                 "Mejorar primero (importante, desempeño bajo)"
             ],
+            "Improve first (important, low performance); total effect not significant": [
+                "Mejorar primero (importante, desempeño bajo); efecto total no significativo"
+            ],
             "Indicator": [
                 "Indicador"
             ],
@@ -937,6 +952,9 @@
             "Keep up (important, high performance)": [
                 "Mantener (importante, desempeño alto)"
             ],
+            "Keep up (important, high performance); total effect not significant": [
+                "Mantener (importante, desempeño alto); efecto total no significativo"
+            ],
             "Key findings": [
                 "Hallazgos clave"
             ],
@@ -1011,6 +1029,9 @@
             ],
             "Low priority (less important, low performance)": [
                 "Baja prioridad (menos importante, desempeño bajo)"
+            ],
+            "Low priority (less important, low performance); total effect not significant": [
+                "Baja prioridad (menos importante, desempeño bajo); efecto total no significativo"
             ],
             "Lower": [
                 "Inferior"
@@ -1183,8 +1204,8 @@
             "No: the competing model predicts better": [
                 "No: el modelo competidor predice mejor"
             ],
-            "Nodes and labels": [
-                "Nodos y etiquetas"
+            "Nodes and Labels": [
+                "Nodos y Etiquetas"
             ],
             "Non-significant paths dashed": [
                 "Rutas no significativas discontinuas"
@@ -1462,11 +1483,14 @@
             "PLSpredict asks how well the model predicts cases it has not seen (Shmueli et al., 2016, 2019, see references). The data are split into k folds; each fold is predicted by a model estimated on the others, and the whole procedure is repeated with new random folds. For every indicator of an endogenous construct, Q²predict compares the prediction errors with those of the naive benchmark that predicts each case by the training mean: above 0, the model predicts better than that mean. RMSE and MAE are the average sizes of the errors (in the metric of the indicator; MAE is less sensitive to a few large errors), shown for PLS and for LM, a linear regression of each indicator on all the indicators of the exogenous constructs. R² describes the sample at hand; PLSpredict says how far the model generalizes.": [
                 "PLSpredict pregunta qué tan bien predice el modelo casos que no ha visto (Shmueli et al., 2016, 2019, vea las referencias). Los datos se dividen en k particiones; cada partición se predice con un modelo estimado con las demás, y todo el procedimiento se repite con nuevas particiones aleatorias. Para cada indicador de un constructo endógeno, Q²predict compara los errores de predicción con los de la referencia ingenua que predice cada caso con la media de entrenamiento: por encima de 0, el modelo predice mejor que esa media. RMSE y MAE son el tamaño promedio de los errores (en la métrica del indicador; el MAE es menos sensible a unos pocos errores grandes), para PLS y para LM, una regresión lineal de cada indicador sobre todos los indicadores de los constructos exógenos. El R² describe la muestra disponible; PLSpredict dice hasta dónde generaliza el modelo."
             ],
-            "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault. In development.": [
-                "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas. En desarrollo."
+            "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault.": [
+                "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas."
             ],
             "Possible overkill (less important, high performance)": [
                 "Posible exceso (menos importante, desempeño alto)"
+            ],
+            "Possible overkill (less important, high performance); total effect not significant": [
+                "Posible exceso (menos importante, desempeño alto); efecto total no significativo"
             ],
             "Predicted %s (standardized)": [
                 "%s predicho (estandarizado)"
@@ -1591,8 +1615,14 @@
             "Reproducibility record": [
                 "Registro de reproducibilidad"
             ],
+            "Requested": [
+                "Solicitadas"
+            ],
             "Resamples": [
                 "Réplicas"
+            ],
+            "Results reused from an earlier run with the same model, data and bootstrap options; Seconds is the time of that run.": [
+                "Resultados reutilizados de una ejecución anterior con el mismo modelo, datos y opciones de bootstrap; Segundos es el tiempo de esa ejecución."
             ],
             "RMSE": [
                 "RMSE"
@@ -1635,6 +1665,9 @@
             ],
             "Second group": [
                 "Segundo grupo"
+            ],
+            "Seconds": [
+                "Segundos"
             ],
             "Seed": [
                 "Semilla"
@@ -2043,9 +2076,6 @@
             ],
             "ω (CFA)": [
                 "ω (AFC)"
-            ],
-            "An arrow that ends on a path is a moderation: the moderator changes the strength of that path, and the number is the coefficient of the interaction term (predictor × moderator).": [
-                "Una flecha que termina sobre una ruta es una moderación: el moderador cambia la fuerza de esa ruta, y el número es el coeficiente del término de interacción (predictor × moderador)."
             ]
         }
     },

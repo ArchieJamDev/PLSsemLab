@@ -124,10 +124,10 @@
 # standardised scores (first group minus second) with their two-sided
 # permutation p.
 # ES: Pasos 2 y 3 de MICOM: una fila por par y constructo.
-.pl_micom <- function(fg, reps, seed) {
+.pl_micom <- function(fg, reps, seed, tick = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
-    mi <- cSEM::testMICOM(fg, .R = reps, .seed = seed, .verbose = FALSE)
+    mi <- .pl_with_ticks(cSEM::testMICOM(fg, .R = reps, .seed = seed, .verbose = FALSE), tick)
     pairs <- .pl_mga_pairs(names(fg))
     rows <- list()
     for (k in seq_along(pairs)) {
@@ -164,12 +164,12 @@
 # both tests.
 # ES: Diferencias de rutas por par de grupos; p_one es la P(primero <=
 # segundo) de PLS-MGA y p_hens su forma bilateral.
-.pl_mgd <- function(fg, compare, perms, boots, seed) {
+.pl_mgd <- function(fg, compare, perms, boots, seed, tick = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
-    mg <- cSEM::testMGD(fg, .approach_mgd = c("Henseler", "Chin"), .R_permutation = perms,
-                        .R_bootstrap = boots, .seed = seed, .verbose = FALSE,
-                        .parameters_to_compare = compare)
+    mg <- .pl_with_ticks(cSEM::testMGD(fg, .approach_mgd = c("Henseler", "Chin"), .R_permutation = perms,
+                                       .R_bootstrap = boots, .seed = seed, .verbose = FALSE,
+                                       .parameters_to_compare = compare), tick)
     pairs <- .pl_mga_pairs(names(fg))
     coef <- function(g, name) {
         p <- strsplit(name, " ~ ", fixed = TRUE)[[1]]

@@ -62,7 +62,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             omegaCfa = FALSE,
             showKeySummary = TRUE,
             showChoicesGuide = TRUE,
-            showGuides = TRUE,
+            showGuides = FALSE,
             showRepro = TRUE, ...) {
 
             super$initialize(
@@ -421,7 +421,7 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..showGuides <- jmvcore::OptionBool$new(
                 "showGuides",
                 showGuides,
-                default=TRUE)
+                default=FALSE)
             private$..showRepro <- jmvcore::OptionBool$new(
                 "showRepro",
                 showRepro,
@@ -604,6 +604,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         intro = function() private$.items[["intro"]],
         keySummary = function() private$.items[["keySummary"]],
         bootStatus = function() private$.items[["bootStatus"]],
+        bootSummary = function() private$.items[["bootSummary"]],
         choicesGuide = function() private$.items[["choicesGuide"]],
         measurementSection = function() private$.items[["measurementSection"]],
         structuralSection = function() private$.items[["structuralSection"]],
@@ -640,6 +641,56 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="bootStatus",
                 title="Bootstrap",
                 visible="(bootstrap)"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="bootSummary",
+                title="Bootstrap resamples",
+                rows=1,
+                visible="(bootstrap)",
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "bootReps",
+                    "bootSeed",
+                    "ciLevel"),
+                columns=list(
+                    list(
+                        `name`="requested", 
+                        `title`="Requested", 
+                        `type`="integer"),
+                    list(
+                        `name`="drawn", 
+                        `title`="Drawn", 
+                        `type`="integer"),
+                    list(
+                        `name`="admissible", 
+                        `title`="Admissible", 
+                        `type`="integer"),
+                    list(
+                        `name`="seed", 
+                        `title`="Seed", 
+                        `type`="integer"),
+                    list(
+                        `name`="block", 
+                        `title`="Block size", 
+                        `type`="integer"),
+                    list(
+                        `name`="level", 
+                        `title`="Confidence level", 
+                        `type`="number", 
+                        `format`="pc"),
+                    list(
+                        `name`="seconds", 
+                        `title`="Seconds", 
+                        `type`="number"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="choicesGuide",
@@ -2400,7 +2451,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,7,2),
+                version = c(0,7,6),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2484,6 +2535,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$intro} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$keySummary} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$bootStatus} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$bootSummary} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$choicesGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$measurementSection$modelGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$measurementSection$model} \tab \tab \tab \tab \tab a table \cr
@@ -2535,6 +2587,12 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibilityCode} \tab \tab \tab \tab \tab a html \cr
 #' }
+#'
+#' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
+#'
+#' \code{results$bootSummary$asDF}
+#'
+#' \code{as.data.frame(results$bootSummary)}
 #'
 #' @export
 plssem <- function(
@@ -2595,7 +2653,7 @@ plssem <- function(
     omegaCfa = FALSE,
     showKeySummary = TRUE,
     showChoicesGuide = TRUE,
-    showGuides = TRUE,
+    showGuides = FALSE,
     showRepro = TRUE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))

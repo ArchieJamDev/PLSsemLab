@@ -466,7 +466,7 @@ children:
           row: 1
         children:
           - type: Label
-            label: Nodes and labels
+            label: Nodes and Labels
             children:
               - type: TextBox
                 name: latentSize

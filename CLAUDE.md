@@ -107,6 +107,13 @@ carry every rule below in full.
   Rows that depend on data values (group levels) must come from the factor
   levels in `.init()` and be rebuilt in `.run()` if they differ; tests that
   pass the full data to `.init()` hide this (see the header-only test).
+- jamovi's `private$.checkpoint()` signals a restart with an error whose
+  `code` is "restart": every `tryCatch` that may run a checkpoint must
+  rethrow it (`.pl_capture()` does; `.pl_is_restart()`), or the run goes on
+  with the old options (MokkenLab's second audit, MEDIUM). cSEM reports each
+  resample through progressr inside its own `with_progress()`: a handler set
+  in `options(progressr.handlers = ..., progressr.enable = TRUE)` is the only
+  way to see them (`.pl_with_ticks()`); results are identical.
 - R's `$` partially matches list names (`s$micom` returns `s$micom_error`
   when `micom` is absent): read cached summaries with `[[ ]]`.
 - The .jmo must match the user's jamovi R version exactly (`rVersion` in

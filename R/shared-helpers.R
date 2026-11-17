@@ -107,17 +107,27 @@
 # Input: expr - a cSEM call.
 # Output: list(value, error, warnings): errors are caught, warnings collected
 #   (unique, whitespace-normalised) and console output discarded, so cSEM
-#   messages become jamovi notices and never a raw R error.
+#   messages become jamovi notices and never a raw R error. jamovi's restart
+#   signal (private$.checkpoint() when the options changed) is not an error
+#   of the analysis: it passes through, so jamovi can stop the run (jamovi's
+#   second audit of MokkenLab).
 # ES: Salida: list(value, error, warnings): los errores se atrapan, las
 #   advertencias se recogen y la salida de consola se descarta, para que los
-#   mensajes de cSEM sean avisos de jamovi y nunca un error crudo de R.
+#   mensajes de cSEM sean avisos de jamovi y nunca un error crudo de R. La
+#   señal de reinicio de jamovi no es un error del análisis: se deja pasar,
+#   para que jamovi pueda detener la ejecución.
 # -----------------------------------------------------------------------------
+.pl_is_restart <- function(e) identical(e$code, "restart")
+
 .pl_capture <- function(expr) {
     warnings <- character(0)
     value <- NULL
     utils::capture.output(
         value <- withCallingHandlers(
-            tryCatch(expr, error = function(e) structure(list(message = conditionMessage(e)), class = "pl_error")),
+            tryCatch(expr, error = function(e) {
+                if (.pl_is_restart(e)) stop(e)
+                structure(list(message = conditionMessage(e)), class = "pl_error")
+            }),
             warning = function(w) {
                 warnings <<- c(warnings, trimws(gsub("[[:space:]]+", " ", conditionMessage(w))))
                 invokeRestart("muffleWarning")
@@ -128,6 +138,41 @@
         return(list(value = NULL, error = trimws(gsub("[[:space:]]+", " ", value$message)),
                     warnings = unique(warnings)))
     list(value = value, error = NULL, warnings = unique(warnings))
+}
+
+# -----------------------------------------------------------------------------
+# .pl_with_ticks()
+#
+# Input: expr - a cSEM resampling call (resamplecSEMResults, testOMF,
+#   testMICOM, testMGD); tick - a function, normally
+#   private$.checkpoint(flush = FALSE).
+# Output: the value of expr. cSEM reports every resample through progressr;
+#   a silent progressr handler calls tick() at most every `every` seconds,
+#   so jamovi can stop a long run in the middle when the options change.
+#   The resamples and their results are the same as without it.
+# ES: Salida: el valor de expr. cSEM informa cada remuestra mediante
+#   progressr; un manejador silencioso llama a tick() como mucho cada
+#   `every` segundos, para que jamovi pueda detener una ejecución larga a
+#   mitad de camino. Las remuestras y sus resultados no cambian.
+# -----------------------------------------------------------------------------
+.pl_with_ticks <- function(expr, tick = NULL, every = 0.25) {
+    if (is.null(tick)) return(expr)
+    last <- proc.time()[["elapsed"]]
+    handler <- function(intrusiveness = 0, target = "void", enable = TRUE, ...)
+        progressr::make_progression_handler("plssemlab", reporter = list(
+            initiate = function(config, state, progression, ...) NULL,
+            update = function(config, state, progression, ...) {
+                now <- proc.time()[["elapsed"]]
+                if (now - last >= every) {
+                    last <<- now
+                    tick()
+                }
+            },
+            finish = function(config, state, progression, ...) NULL),
+            intrusiveness = intrusiveness, target = target, enable = enable, ...)
+    old <- options(progressr.handlers = list(handler), progressr.enable = TRUE)
+    on.exit(options(old), add = TRUE)
+    expr
 }
 
 # -----------------------------------------------------------------------------

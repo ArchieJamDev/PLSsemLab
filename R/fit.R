@@ -47,14 +47,14 @@
 # ES: Corre testOMF() para el modelo estimado y el saturado. p es (valores
 # bootstrap admisibles al menos tan grandes como el observado + 1) /
 # (valores admisibles + 1), que nunca es 0.
-.pl_fit_test <- function(fit, reps, seed, level, checkpoint = function() NULL) {
+.pl_fit_test <- function(fit, reps, seed, level, checkpoint = function() NULL, tick = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
     rows <- list()
     adm <- c()
     for (sat in c(FALSE, TRUE)) {
         checkpoint()
-        t <- cSEM::testOMF(fit, .R = reps, .seed = seed, .alpha = 1 - level, .saturated = sat)
+        t <- .pl_with_ticks(cSEM::testOMF(fit, .R = reps, .seed = seed, .alpha = 1 - level, .saturated = sat), tick)
         boot <- do.call(rbind, t$Information$Bootstrap_values)
         key <- if (sat) "saturated" else "estimated"
         adm[[key]] <- t$Information$Number_admissibles

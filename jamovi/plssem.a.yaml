@@ -615,7 +615,7 @@ options:
   - name: showGuides
     title: How to read each table
     type: Bool
-    default: true
+    default: false
 
   # Versions and the equivalent R code of this run.
   # ES: Versiones y el código R equivalente de esta ejecución.

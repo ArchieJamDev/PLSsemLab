@@ -185,7 +185,7 @@
 # flushes the results and checks for a restart there).
 # ES: Corre los bloques y llama a progress(hechas, total) después de cada
 # uno (quien llama envía los resultados y revisa si hay que reiniciar).
-.pl_run_bootstrap <- function(fit, funs, reps, seed, progress = NULL) {
+.pl_run_bootstrap <- function(fit, funs, reps, seed, progress = NULL, tick = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
     n_blocks <- ceiling(reps / .PL_BLOCK)
@@ -195,8 +195,8 @@
     t0 <- Sys.time()
     for (k in seq_len(n_blocks)) {
         R <- min(.PL_BLOCK, reps - (k - 1L) * .PL_BLOCK)
-        r <- .pl_capture(cSEM::resamplecSEMResults(fit, .R = R, .seed = seed + k - 1L, .user_funs = funs,
-                                                   .handle_inadmissibles = "drop"))
+        r <- .pl_capture(.pl_with_ticks(cSEM::resamplecSEMResults(fit, .R = R, .seed = seed + k - 1L, .user_funs = funs,
+                                                                  .handle_inadmissibles = "drop"), tick))
         warnings <- c(warnings, r$warnings)
         if (!is.null(r$error)) errors <- c(errors, r$error)
         else objs[[length(objs) + 1L]] <- r$value

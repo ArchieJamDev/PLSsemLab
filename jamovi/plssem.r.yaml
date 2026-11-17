@@ -45,6 +45,52 @@ items:
     type: Html
     visible: (bootstrap)
 
+  # The same record as numbers (jamovi's audit of EGAnetLab: numeric summary
+  # tables, not numbers inside text).
+  # ES: El mismo registro en números (tablas de resumen numéricas).
+  - name: bootSummary
+    title: Bootstrap resamples
+    type: Table
+    rows: 1
+    visible: (bootstrap)
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - bootReps
+      - bootSeed
+      - ciLevel
+    columns:
+      - name: requested
+        title: Requested
+        type: integer
+      - name: drawn
+        title: Drawn
+        type: integer
+      - name: admissible
+        title: Admissible
+        type: integer
+      - name: seed
+        title: Seed
+        type: integer
+      - name: block
+        title: Block size
+        type: integer
+      - name: level
+        title: Confidence level
+        type: number
+        format: pc
+      - name: seconds
+        title: Seconds
+        type: number
+
   - name: choicesGuide
     title: About your choices
     type: Html

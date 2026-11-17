@@ -6,7 +6,7 @@ jms: '1.0'
 authors:
   - Arquímedes De León Chacón Chacón
 maintainer: Arquímedes De León Chacón Chacón <arquimedeschacon@gmail.com>
-date: '2026-11-10'
+date: '2026-11-17'
 type: R
 description: >
   PLSsemLab brings partial least squares structural equation modeling (PLS-SEM)

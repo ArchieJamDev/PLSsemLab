@@ -1,4 +1,4 @@
-# PLSsemLab 1.0.1
+# PLSsemLab 1.0.1 (released 2026-11-18, DOI 10.5281/zenodo.24341176)
 
 * New module icon and logo, in the visual line of the suite (MokkenLab,
   EGAnetLab): two constructs (blue circles) predict a third (amber circle).

@@ -1,12 +1,12 @@
 ---
 name: PLSsemLab
 title: PLS-SEM Lab
-version: 1.0.0
+version: 1.0.1
 jms: '1.0'
 authors:
   - Arquímedes De León Chacón Chacón
 maintainer: Arquímedes De León Chacón Chacón <arquimedeschacon@gmail.com>
-date: '2026-11-17'
+date: '2026-11-18'
 type: R
 description: >
   PLSsemLab brings partial least squares structural equation modeling (PLS-SEM)

@@ -1,3 +1,12 @@
+# PLSsemLab 1.0.1
+
+* New module icon and logo, in the visual line of the suite (MokkenLab,
+  EGAnetLab): two constructs (blue circles) predict a third (amber circle).
+  The icon is `jamovi/assets/plssemlab-icon.png`; `docs/logo/` holds its SVG,
+  the light and dark logos of the README and `analysis-plssemlab.svg`, a
+  74 x 44 icon for jamovi's Analyses ribbon. `docs/logo/build_logo.py` builds
+  them all.
+
 # PLSsemLab 1.0.0 (released 2026-11-17, DOI 10.5281/zenodo.24309058)
 
 Version prepared for the jamovi library. It covers every section of the

@@ -143,7 +143,9 @@ carry every rule below in full.
   tie with the observed one exactly and the package's raw `>=` drops some
   ties by rounding noise: the module counts ties within 1e-10; the
   package's bottleneck table prints one decimal. Scores = IPMA scores
-  (W / sd(x), normalized, 0-100 with the IPMA range).
+  (W / sd(x), normalized, 0-100 with the IPMA range). NCA is not in
+  DESCRIPTION (jmc bundles Suggests into the .jmo); CI installs it for the
+  validation only.
 - MGCFA (1.1.0, R/invariance.R): lavaan configural/metric/scalar on the
   reflective constructs with 2+ indicators; MLR default; configural judged
   by CFI and SRMR (RMSEA inflates with few df), steps by Chen (2007).

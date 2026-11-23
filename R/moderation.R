@@ -60,10 +60,11 @@
             out <- data.frame(value = v, slope = bx + bxm * v, se = NA_real_, lower = NA_real_, upper = NA_real_)
             if (has_draws) {
                 d <- outer(draws[, name_x], rep(1, length(v))) + outer(draws[, name_xm], v)
-                out$se <- apply(d, 2, stats::sd)
-                q <- apply(d, 2, stats::quantile, probs = c(alpha / 2, 1 - alpha / 2), na.rm = TRUE)
-                out$lower <- q[1, ]
-                out$upper <- q[2, ]
+                method <- if (is.null(sm$method)) "bootstrap" else sm$method
+                iv <- lapply(seq_along(v), function(i) .pl_draw_interval(d[, i], out$slope[i], 1 - alpha, method))
+                out$se <- vapply(iv, `[[`, 0, "se")
+                out$lower <- vapply(iv, `[[`, 0, "lower")
+                out$upper <- vapply(iv, `[[`, 0, "upper")
             }
             out
         }

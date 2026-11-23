@@ -1,3 +1,42 @@
+# PLSsemLab 1.2.0
+
+* **Weighting approaches** (Estimation box): besides PLS-PM, GSCA
+  (Hwang & Takane, 2004; GSCAm with consistent estimation), SUMCORR and
+  MAXVAR (generalized canonical correlation; Kettenring, 1971), PCA and
+  unit weights (sum scores), through cSEM. Combinations cSEM cannot estimate
+  stop with the reason (consistent estimation other than PLS-PM or GSCA,
+  higher-order constructs outside PLS-PM, GSCA with interactions, PCA with
+  single-indicator constructs); rho_A, the IPMA and the NCA, defined for
+  PLS-PM weights, say so with a note. SSQCORR and MINVAR are left out: in
+  cSEM 0.7.1 they return weights with reversed signs. MAXVAR weights are
+  fixed only up to a common sign and cSEM does not correct it in the
+  resamples (about one draw in five reversed every loading): the module turns
+  each construct of each draw back to its original sign, and the multigroup
+  tests are not computed with MAXVAR.
+* **Jackknife** as an alternative to the bootstrap (Bootstrap box): one
+  estimation per case left out, t intervals from the jackknife standard
+  error (Efron & Tibshirani, 1993) for every quantity of the report,
+  including specific indirect effects, simple effects and the HTMT upper
+  bound. cSEM's own jackknife interval subtracts the bootstrap-style bias;
+  the module reports the plain t interval. The report explains that the
+  bootstrap remains the standard of PLS-SEM.
+* **Mardia's multivariate skewness and kurtosis** of the indicators
+  (Measurement Model box; Mardia, 1970; Cain et al., 2017).
+* **Construct scores saved to the data set** (Save box): the standardized
+  scores of the estimated model, one new column per construct.
+* **PLSpredict: extra benchmark**: the same model with another weighting
+  approach (PLS-PM, GSCA, SUMCORR, MAXVAR, PCA or unit weights),
+  cross-validated on the same folds, with RMSE and MAE columns and a
+  two-sided CVPAT row. cSEM 0.7.1's predict() with test data returns the
+  model's residuals as the benchmark's, so the module estimates the
+  benchmark itself; the values equal cSEM's cross-validation mode.
+* **Model comparison** (Prediction box, "Compare the main and the competing
+  model"): the main model and the competing model (without the paths left
+  out) side by side, with R², adjusted R², AIC, AICu, BIC, GM and HQ of each
+  structural equation, SRMR and both sets of path coefficients; the reading
+  follows BIC and GM (Sharma et al., 2019, 2021).
+* `validation/csem_equivalence.R` adds the new options (69 checks, 0 failed).
+
 # PLSsemLab 1.1.0
 
 * Necessary condition analysis (NCA) combined with PLS-SEM (Dul, 2016;

@@ -27,7 +27,7 @@ name: plssem
 title: PLS-SEM
 menuGroup: PLS-SEM Lab
 menuTitle: PLS-SEM
-version: '1.1.0'
+version: '1.2.0'
 jas: '1.2'
 
 description:
@@ -174,6 +174,39 @@ options:
         name: plsc
     default: pls
 
+  # Weighting approach (1.2.0): how the indicator weights of each composite
+  # are obtained. PLS-PM is the PLS algorithm (the default, and the only one
+  # the IPMA, the NCA, rho_A and higher-order constructs accept); GSCA is
+  # generalized structured component analysis (Hwang & Takane, 2004; GSCAm
+  # with consistent estimation); SUMCORR, MAXVAR and PCA are generalized
+  # canonical correlation and principal component weights (Kettenring,
+  # 1971); unit weights give sum scores. SSQCORR, MINVAR and GENVAR are left
+  # out: in cSEM 0.7.1 SSQCORR and MINVAR return weights with reversed signs.
+  # ES: Enfoque de ponderación (1.2.0): cómo se obtienen los pesos de los
+  # indicadores de cada compuesto. PLS-PM es el algoritmo PLS (por defecto, y
+  # el único que aceptan el IPMA, el NCA, rho_A y los constructos de orden
+  # superior); GSCA es el análisis de componentes estructurados generalizado
+  # (GSCAm con estimación consistente); SUMCORR, MAXVAR y PCA son pesos de
+  # correlación canónica generalizada y de componentes principales; los pesos
+  # unitarios dan puntuaciones suma.
+  - name: weightApproach
+    title: Weighting approach
+    type: List
+    options:
+      - title: PLS-PM
+        name: pls
+      - title: GSCA
+        name: gsca
+      - title: SUMCORR (generalized canonical correlation)
+        name: sumcorr
+      - title: MAXVAR (generalized canonical correlation)
+        name: maxvar
+      - title: PCA (principal components)
+        name: pca
+      - title: Unit weights (sum scores)
+        name: unit
+    default: pls
+
   # Inner weighting scheme of the PLS algorithm (path is cSEM's and SmartPLS'
   # default).
   # ES: Esquema de ponderación interna del algoritmo PLS (path es el valor
@@ -255,6 +288,23 @@ options:
     type: Bool
     default: false
 
+  # Resampling method (1.2.0): the bootstrap (percentile intervals, the
+  # standard of the PLS-SEM literature) or the jackknife (n leave-one-out
+  # estimations, t intervals from the jackknife standard error; Efron &
+  # Tibshirani, 1993), offered for comparison.
+  # ES: Método de remuestreo (1.2.0): bootstrap (intervalos percentiles, el
+  # estándar de la literatura de PLS-SEM) o jackknife (n estimaciones
+  # dejando un caso fuera, intervalos t con el error estándar jackknife).
+  - name: resampleMethod
+    title: Method
+    type: List
+    options:
+      - title: Bootstrap (percentile intervals)
+        name: bootstrap
+      - title: Jackknife (t intervals)
+        name: jackknife
+    default: bootstrap
+
   - name: bootReps
     title: Resamples
     type: Integer
@@ -324,6 +374,40 @@ options:
     min: 1
     max: 100
     default: 10
+
+  # Extra PLSpredict benchmark (1.2.0): the same model estimated with
+  # another weighting approach, cross-validated on the same folds as the
+  # main model and compared by RMSE and MAE.
+  # ES: Referencia adicional de PLSpredict (1.2.0): el mismo modelo con otro
+  # enfoque de ponderación, validado en los mismos pliegues.
+  - name: predictBenchmark
+    title: Extra benchmark
+    type: List
+    options:
+      - title: None
+        name: none
+      - title: PLS-PM
+        name: pls
+      - title: GSCA
+        name: gsca
+      - title: SUMCORR
+        name: sumcorr
+      - title: MAXVAR
+        name: maxvar
+      - title: PCA
+        name: pca
+      - title: Unit weights (sum scores)
+        name: unit
+    default: none
+
+  # Side-by-side comparison of the main and the competing model (1.2.0):
+  # R², SRMR and the information criteria of each endogenous construct
+  # (Sharma et al., 2019), no resampling needed.
+  # ES: Comparación lado a lado del modelo principal y el competidor (1.2.0).
+  - name: compareRun
+    title: Compare the main and the competing model
+    type: Bool
+    default: false
 
   # CVPAT against a competing model: the paths of the model that the
   # competing model leaves out ("Predictor → Outcome", offered by the JS).
@@ -649,6 +733,21 @@ options:
     title: McDonald's ω (one-factor CFA)
     type: Bool
     default: false
+
+  # Mardia's multivariate skewness and kurtosis of the indicators (1.2.0).
+  # ES: Asimetría y curtosis multivariadas de Mardia de los indicadores.
+  - name: mardia
+    title: Mardia's multivariate normality
+    type: Bool
+    default: false
+
+  # Construct scores saved as new columns of the data set (1.2.0): the
+  # standardized scores of the estimated model, one column per construct.
+  # ES: Puntuaciones de los constructos guardadas como columnas nuevas del
+  # conjunto de datos (1.2.0).
+  - name: scoresOut
+    title: Construct scores
+    type: Output
 
   # ---------------------------------------------------------------------------
   # Report content.

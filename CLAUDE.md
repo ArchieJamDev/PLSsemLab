@@ -5,7 +5,9 @@ PLSsemLab is a jamovi module for PLS-SEM by Arquímedes De León Chacón
 FiabilityLab (all at github.com/ArchieJamDev). Status: 1.0.1 submitted to
 the jamovi library (main stays at 1.0.1 until jamovi answers); 1.1.0 (NCA,
 MGCFA) released 2026-11-23 from branch v1.1-nca-invariance, DOI
-10.5281/zenodo.24471195 (all versions: 10.5281/zenodo.24259622).
+10.5281/zenodo.24471195 (all versions: 10.5281/zenodo.24259622); 1.2.0
+(weighting approaches, jackknife, Mardia, scores, benchmarks, model
+comparison) on branch v1.2-weights-compare.
 
 ## Goal of v1
 
@@ -150,6 +152,19 @@ carry every rule below in full.
 - MGCFA (1.1.0, R/invariance.R): lavaan configural/metric/scalar on the
   reflective constructs with 2+ indicators; MLR default; configural judged
   by CFI and SRMR (RMSEA inflates with few df), steps by Chen (2007).
+- Weighting approaches (1.2.0, R/weights.R): every csem() call goes through
+  `.pl_csem_args()`. cSEM 0.7.1: SSQCORR/MINVAR give reversed signs (left
+  out); MAXVAR flips all signs in ~20% of bootstrap draws and
+  `.sign_change_option` does nothing for it (`.pl_fix_signs()` corrects per
+  construct); doIPMA is PLS-PM only; GSCA has no nonlinear terms; PCA fails
+  with single-indicator constructs; MAXVAR + disattenuation is absurd.
+- Jackknife (1.2.0): cSEM's sd is the jackknife SE, but its
+  CI_standard_t subtracts mean - estimate (bootstrap bias); the module uses
+  estimate +/- t(n-1) SE. Number_of_runs keeps 499; use
+  Number_of_observations.
+- cSEM 0.7.1 `predict(.test_data = ...)` returns the target residuals as
+  the benchmark's (benchmark not applied); its CV mode applies it. The
+  module refits the benchmark approach on each training fold.
 - Keep private users' names out of the repository (credit only with their
   consent).
 

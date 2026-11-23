@@ -49,6 +49,7 @@
 # terms, first-order constructs).
 # ES: Por qué no puede correr el NCA (NULL si puede). Categoría B.
 .pl_nca_reason <- function(model, hocs, options) {
+    if (!is.null(options$weightApproach) && options$weightApproach != "pls") return("nca_approach")
     if (identical(options$estimator, "plsc")) return("nca_plsc")
     if (isTRUE(model$nonlinear)) return("nca_nonlinear")
     if (length(hocs)) return("nca_hoc")

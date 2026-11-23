@@ -18,6 +18,10 @@ msgid "—"
 msgstr "—"
 
 #: R/texts.R
+msgid "—: the path is left out of the competing model. A path that changes markedly when another is removed signals overlap between the predictors."
+msgstr "—: la ruta queda fuera del modelo competidor. Una ruta que cambia mucho al quitar otra señala solapamiento entre los predictores."
+
+#: R/texts.R
 msgid "'%s' appears in the structural model but is not defined as a construct with indicators."
 msgstr "'%s' aparece en el modelo estructural, pero no está definido como un constructo con indicadores."
 
@@ -301,7 +305,7 @@ msgstr "Agregar constructo"
 msgid "Add the structural model: drag at least one predictor into the row of a construct."
 msgstr "Agregue el modelo estructural: arrastre al menos un predictor a la fila de un constructo."
 
-#: plssem/results/structuralSection/r2.columns.title
+#: R/texts.R plssem/results/structuralSection/r2.columns.title
 msgid "Adjusted R²"
 msgstr "R² ajustado"
 
@@ -312,6 +316,14 @@ msgstr "Admisibles"
 #: plssem/results/mgaSection/mgaGroups.columns.title
 msgid "Admissible estimates"
 msgstr "Estimaciones admisibles"
+
+#: R/texts.R
+msgid "AIC"
+msgstr "AIC"
+
+#: R/texts.R
+msgid "AICu"
+msgstr "AICu"
 
 #: R/texts.R
 msgid "All %d indicators of reflective constructs have a loading of 0.708 or more: each construct explains at least half of the variance of its indicators."
@@ -409,13 +421,17 @@ msgstr "Menor de 0.85: constructos distintos"
 msgid "Below 3: no collinearity problem"
 msgstr "Menor de 3: sin problema de colinealidad"
 
-#: plssem/results/predictSection/cvpat.columns.title
+#: plssem/results/predictSection/predict.columns.title plssem/results/predictSection/cvpat.columns.title
 msgid "Benchmark"
 msgstr "Referencia"
 
 #: plssem/results/predictSection/cvpat.columns.title
 msgid "Benchmark loss"
 msgstr "Pérdida de la referencia"
+
+#: R/texts.R
+msgid "BIC (recommended)"
+msgstr "BIC (recomendado)"
 
 #: plssem/options/edgeColor/black.title
 msgid "Black"
@@ -432,6 +448,10 @@ msgstr "Bonferroni"
 #: plssem/ui[4].label plssem/results/bootStatus.title
 msgid "Bootstrap"
 msgstr "Bootstrap"
+
+#: plssem/options/resampleMethod/bootstrap.title
+msgid "Bootstrap (percentile intervals)"
+msgstr "Bootstrap (intervalos percentiles)"
 
 #: plssem/results/bootSummary.title
 msgid "Bootstrap resamples"
@@ -521,6 +541,10 @@ msgstr "CFI"
 msgid "Change from the previous model"
 msgstr "Cambio respecto del modelo anterior"
 
+#: R/texts.R
+msgid "Choose, in the Prediction box, the paths left out of the competing model: the comparison needs two different models."
+msgstr "Elija, en la caja Predicción, las rutas que quedan fuera del modelo competidor: la comparación necesita dos modelos distintos."
+
 #: plssem/options/diagramLayout/circle.title
 msgid "Circle"
 msgstr "Círculo"
@@ -569,13 +593,25 @@ msgstr "Colinealidad de los predictores: todos los VIF estructurales son menores
 msgid "Collinearity of predictors: structural VIF of 3 or more for %s; their coefficients may be unstable."
 msgstr "Colinealidad de los predictores: VIF estructural de 3 o más en %s; sus coeficientes pueden ser inestables."
 
+#: plssem/options/compareRun.title
+msgid "Compare the main and the competing model"
+msgstr "Comparar el modelo principal y el competidor"
+
 #: plssem/results/mgaSection/micom.columns.title plssem/results/mgaSection/mga.columns.title
 msgid "Comparison"
 msgstr "Comparación"
 
 #: R/texts.R
+msgid "Competing"
+msgstr "Competidor"
+
+#: R/texts.R plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title
 msgid "Competing model"
 msgstr "Modelo competidor"
+
+#: R/texts.R
+msgid "Competing model: the main model without %s, estimated with the same data and settings. An outcome whose equation keeps all its predictors changes only slightly, through the weights. R² and adjusted R²: higher is better; AIC, AICu, BIC, GM and HQ of each structural equation: lower is better; SRMR: lower is better. Sharma et al. (2019, 2021) found BIC and GM the most reliable for choosing among PLS-SEM models; R² always favors the model with more paths."
+msgstr "Modelo competidor: el modelo principal sin %s, estimado con los mismos datos y ajustes. Un resultado cuya ecuación conserva todos sus predictores cambia solo levemente, a través de los pesos. R² y R² ajustado: mayor es mejor; AIC, AICu, BIC, GM y HQ de cada ecuación estructural: menor es mejor; SRMR: menor es mejor. Sharma et al. (2019, 2021) hallaron que BIC y GM son los más fiables para elegir entre modelos PLS-SEM; el R² siempre favorece al modelo con más rutas."
 
 #: R/texts.R
 msgid "Competing model: your model without %s, estimated on the same folds. Against it the test is two-sided (Liengaard et al., 2021): a negative difference favors your model, a positive one the competing model."
@@ -617,9 +653,17 @@ msgstr "Nivel de confianza"
 msgid "Configural"
 msgstr "Configural"
 
+#: R/texts.R
+msgid "Consistent estimation (PLSc) corrects PLS-PM weights for measurement error; with %s it is not defined (cSEM returns implausible estimates). Choose PLS as the estimator, or PLS-PM or GSCA as the weighting approach (with GSCA, consistent estimation is GSCAm; Hwang et al., 2017)."
+msgstr "La estimación consistente (PLSc) corrige los pesos de PLS-PM por el error de medida; con %s no está definida (cSEM devuelve estimaciones inverosímiles). Elija PLS como estimador, o PLS-PM o GSCA como enfoque de ponderación (con GSCA, la estimación consistente es GSCAm; Hwang et al., 2017)."
+
 #: plssem/options/estimator/plsc.title
 msgid "Consistent PLS (PLSc)"
 msgstr "PLS consistente (PLSc)"
+
+#: R/texts.R
+msgid "Consistent with normality"
+msgstr "Consistente con la normalidad"
 
 #: plssem/results/measurementSection/model.columns.title plssem/results/measurementSection/measurement.columns.title plssem/results/measurementSection/reliability.columns.title plssem/results/measurementSection/htmt.columns.title plssem/results/measurementSection/vif.columns.title plssem/results/measurementSection/hocHtmt.columns.title plssem/results/structuralSection/r2.columns.title plssem/results/predictSection/predict.columns.title plssem/results/predictSection/cvpat.columns.title plssem/results/ipmaSection/ipmaTable.columns.title plssem/results/mgaSection/micom.columns.title
 msgid "Construct"
@@ -632,6 +676,10 @@ msgstr "Construct 1"
 #: plssem/options/latentFill.title
 msgid "Construct fill"
 msgstr "Relleno de los constructos"
+
+#: plssem/options/scoresOut.title plssem/results/scoresOut.title
+msgid "Construct scores"
+msgstr "Puntuaciones de los constructos"
 
 #: plssem/options/latentSize.title
 msgid "Construct size"
@@ -670,12 +718,20 @@ msgid "Correction for multiple comparisons"
 msgstr "Corrección por comparaciones múltiples"
 
 #: R/texts.R
+msgid "costs less than the paths add in complexity, so the simpler model is preferred"
+msgstr "cuesta menos de lo que las rutas añaden en complejidad, así que se prefiere el modelo más simple"
+
+#: R/texts.R
 msgid "CR-FDH"
 msgstr "CR-FDH"
 
 #: plssem/options/ncaCeiling/cr_fdh.title
 msgid "CR-FDH (continuous scores)"
 msgstr "CR-FDH (puntuaciones continuas)"
+
+#: plssem/results/compareSection/compare.columns.title
+msgid "Criterion"
+msgstr "Criterio"
 
 #: plssem/results/fitSection/fit.columns.title
 msgid "Critical value"
@@ -696,6 +752,14 @@ msgstr "α de Cronbach"
 #: R/texts.R
 msgid "cSEM could not estimate the model: %s"
 msgstr "cSEM no pudo estimar el modelo: %s"
+
+#: R/texts.R
+msgid "cSEM does not estimate interaction terms with %s. Choose another weighting approach (PLS-PM is the usual one for moderation), or remove the interaction."
+msgstr "cSEM no estima términos de interacción con %s. Elija otro enfoque de ponderación (PLS-PM es el habitual para la moderación) o quite la interacción."
+
+#: R/texts.R
+msgid "cSEM's %s weights fail with constructs measured by a single indicator (a principal component of one variable is the variable itself). Choose another weighting approach, or give every construct two or more indicators."
+msgstr "Los pesos %s de cSEM fallan con constructos medidos por un solo indicador (el componente principal de una variable es la propia variable). Elija otro enfoque de ponderación o dé a cada constructo dos o más indicadores."
 
 #: plssem/options/hocApproach/csem.title
 msgid "cSEM's second-order routine"
@@ -720,6 +784,18 @@ msgstr "CVPAT frente al modelo competidor sin %s: el modelo competidor predice s
 #: R/texts.R
 msgid "CVPAT against the competing model without %s: your model predicts significantly better (loss difference %s, t = %s, p %s), so the left-out paths add predictive power."
 msgstr "CVPAT frente al modelo competidor sin %s: su modelo predice significativamente mejor (diferencia de pérdida %s, t = %s, p %s), así que las rutas excluidas aportan capacidad predictiva."
+
+#: R/texts.R
+msgid "CVPAT against the same model with %s weights: no significant difference in predictive ability (loss difference %s, t = %s, p %s); the choice of weighting approach does not change how well the model predicts."
+msgstr "CVPAT frente al mismo modelo con pesos %s: no hay diferencia significativa en la capacidad predictiva (diferencia de pérdida %s, t = %s, p %s); la elección del enfoque de ponderación no cambia lo bien que predice el modelo."
+
+#: R/texts.R
+msgid "CVPAT against the same model with %s weights: that approach predicts significantly better (loss difference %s, t = %s, p %s); if prediction is the goal of the study, consider estimating the model with it."
+msgstr "CVPAT frente al mismo modelo con pesos %s: ese enfoque predice significativamente mejor (diferencia de pérdida %s, t = %s, p %s); si la predicción es el objetivo del estudio, considere estimar el modelo con él."
+
+#: R/texts.R
+msgid "CVPAT against the same model with %s weights: the model's own weighting approach predicts significantly better (loss difference %s, t = %s, p %s)."
+msgstr "CVPAT frente al mismo modelo con pesos %s: el enfoque de ponderación del propio modelo predice significativamente mejor (diferencia de pérdida %s, t = %s, p %s)."
 
 #: R/texts.R
 msgid "CVPAT turns the comparison into a test (Liengaard et al., 2021; Sharma et al., 2023). For each case it averages the squared prediction errors over the indicators and the repetitions (the loss), and tests with a paired t test whether the average loss of PLS is lower than that of each benchmark: IA (indicator averages, the same naive benchmark as Q²predict) and LM. Beating IA is the minimum for a model that claims predictive relevance; beating LM is strong evidence. The test is reported for all endogenous constructs together and for each one. You can also leave out paths of your model in the Prediction box: CVPAT then compares your model with that competing model, a two-sided test of which one predicts better."
@@ -761,7 +837,11 @@ msgstr "Defina al menos dos constructos, cada uno con al menos un indicador."
 msgid "Define each construct in Reflective Constructs or Formative Constructs: give it a name and drag its indicators into it. Reflective: the construct causes its indicators, which should correlate highly. Formative: the indicators together form the construct and need not correlate."
 msgstr "Defina cada constructo en Constructos reflectivos o Constructos formativos: póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo causa sus indicadores, que deberían correlacionar alto. Formativo: los indicadores en conjunto forman el constructo y no necesitan correlacionar."
 
-#: plssem/results/mgaSection/mgcfa.columns.title
+#: R/texts.R
+msgid "Departs from normality"
+msgstr "Se aleja de la normalidad"
+
+#: plssem/results/measurementSection/mardia.columns.title plssem/results/mgaSection/mgcfa.columns.title
 msgid "df"
 msgstr "gl"
 
@@ -977,6 +1057,14 @@ msgstr "Exógeno"
 msgid "Explained variance"
 msgstr "Varianza explicada"
 
+#: plssem/options/predictBenchmark.title
+msgid "Extra benchmark"
+msgstr "Referencia adicional"
+
+#: R/texts.R
+msgid "Extra benchmark: the same model estimated with %s weights, cross-validated on the same folds as the model; in CVPAT the test against it is two-sided, as against a competing model."
+msgstr "Referencia adicional: el mismo modelo estimado con pesos %s, validado en los mismos pliegues que el modelo; en CVPAT la prueba frente a ella es bilateral, como frente a un modelo competidor."
+
 #: plssem/results/structuralSection/f2.columns.title
 msgid "f²"
 msgstr "f²"
@@ -1016,6 +1104,14 @@ msgstr "En %s los errores de predicción son claramente asimétricos, así que l
 #: R/texts.R
 msgid "For %s to reach %s%% of its range, %s has to be at least at %s%% of its range."
 msgstr "Para que %s alcance el %s%% de su rango, %s tiene que estar al menos en el %s%% de su rango."
+
+#: R/texts.R
+msgid "For %s, BIC and GM both prefer the %s model: removing %s %s."
+msgstr "Para %s, BIC y GM prefieren el modelo %s: quitar %s %s."
+
+#: R/texts.R
+msgid "For %s, BIC prefers the %s model and GM the %s model: the criteria disagree, so theory decides."
+msgstr "Para %s, BIC prefiere el modelo %s y GM el modelo %s: los criterios discrepan, así que decide la teoría."
 
 #: R/texts.R
 msgid "For the %s model the chi-square difference is significant (p %s), but the changes in CFI and RMSEA stay within Chen's (2007) limits: with large samples the chi-square test flags trivial differences, so the decision follows the fit indices. Report both."
@@ -1066,6 +1162,10 @@ msgid "Full"
 msgstr "Total"
 
 #: R/texts.R
+msgid "GM (recommended)"
+msgstr "GM (recomendado)"
+
+#: R/texts.R
 msgid "Good fit"
 msgstr "Buen ajuste"
 
@@ -1084,6 +1184,10 @@ msgstr "Grupos"
 #: R/texts.R
 msgid "Groups compared by %1$s: %2$s."
 msgstr "Grupos comparados según %1$s: %2$s."
+
+#: R/texts.R plssem/options/weightApproach/gsca.title plssem/options/predictBenchmark/gsca.title
+msgid "GSCA"
+msgstr "GSCA"
 
 #: plssem/options/reflectiveHoc.default[0].label
 msgid "Higher-order 1"
@@ -1120,6 +1224,10 @@ msgstr "Constructos de orden superior (etapa 2)"
 #: R/texts.R
 msgid "Higher-order constructs are estimated with PLS in two stages; consistent PLS with higher-order constructs is not available in this version. Choose PLS as the estimator."
 msgstr "Los constructos de orden superior se estiman con PLS en dos etapas; PLS consistente con constructos de orden superior no está disponible en esta versión. Elija PLS como estimador."
+
+#: R/texts.R
+msgid "Higher-order constructs are estimated with the disjoint two-stage approach of PLS-SEM, defined for PLS-PM weights; with %s they are not available in this version. Choose PLS-PM as the weighting approach."
+msgstr "Los constructos de orden superior se estiman con el enfoque disjunto en dos etapas de PLS-SEM, definido para los pesos de PLS-PM; con %s no están disponibles en esta versión. Elija PLS-PM como enfoque de ponderación."
 
 #: R/texts.R
 msgid "Higher-order constructs: %d of %d pair(s) with other reflective constructs have HTMT below 0.85 (stage 2)."
@@ -1177,6 +1285,10 @@ msgstr "Cómo leer el mapa importancia-desempeño"
 msgid "How to read the mediation analysis"
 msgstr "Cómo leer el análisis de mediación"
 
+#: plssem/results/compareSection/compareGuide.title
+msgid "How to read the model comparison"
+msgstr "Cómo leer la comparación de modelos"
+
 #: plssem/results/measurementSection/modelGuide.title
 msgid "How to read the model summary"
 msgstr "Cómo leer el resumen del modelo"
@@ -1197,6 +1309,10 @@ msgstr "Cómo leer la prueba de ajuste global"
 msgid "How to read the path coefficients"
 msgstr "Cómo leer los coeficientes de ruta"
 
+#: R/texts.R
+msgid "HQ"
+msgstr "HQ"
+
 #: plssem/options/htmtPlot.title plssem/results/measurementSection/htmt.columns.title plssem/results/measurementSection/htmt.columns.superTitle plssem/results/measurementSection/hocHtmt.columns.title plssem/results/measurementSection/hocHtmt.columns.superTitle
 msgid "HTMT"
 msgstr "HTMT"
@@ -1212,6 +1328,10 @@ msgstr "HTMT por par de constructos reflectivos; las celdas más oscuras alcanza
 #: R/texts.R
 msgid "HTMT per pair, with its one-sided 95% bootstrap upper bound in brackets; the shade follows the upper bound (darker: 0.85 or 0.90 reached)."
 msgstr "HTMT por par, con su límite superior bootstrap unilateral al 95% entre paréntesis; el sombreado sigue al límite superior (más oscuro: alcanza 0.85 o 0.90)."
+
+#: R/texts.R
+msgid "HTMT per pair, with its one-sided 95% jackknife upper bound in brackets; the shade follows the upper bound (darker: 0.85 or 0.90 reached)."
+msgstr "HTMT por par, con su límite superior jackknife unilateral al 95% entre corchetes; el sombreado sigue al límite superior (más oscuro: 0.85 o 0.90 alcanzado)."
 
 #: plssem/results/measurementSection/htmt.columns.title plssem/results/measurementSection/hocHtmt.columns.title
 msgid "HTMT2"
@@ -1322,6 +1442,10 @@ msgid "Indirect; direct path not in the model"
 msgstr "Indirecta; la ruta directa no está en el modelo"
 
 #: R/texts.R
+msgid "Indirect: product of the path coefficients of the chain. Interval: %s%% jackknife t interval of that product, from the same leave-one-out estimations as the paths. The type of mediation follows Zhao et al. (2010): an effect is significant when its interval excludes 0."
+msgstr "Indirecto: producto de los coeficientes de ruta de la cadena. Intervalo: intervalo t jackknife al %s%% de ese producto, con las mismas estimaciones dejando un caso fuera que las rutas. El tipo de mediación sigue a Zhao et al. (2010): un efecto es significativo cuando su intervalo excluye el 0."
+
+#: R/texts.R
 msgid "Indirect: product of the path coefficients of the chain. Interval: %s%% percentile bootstrap interval of that product, computed from the same resamples as the paths. The type of mediation follows Zhao et al. (2010): an effect is significant when its interval excludes 0."
 msgstr "Indirecto: producto de los coeficientes de ruta de la cadena. Intervalo: intervalo bootstrap percentil al %s%% de ese producto, calculado con las mismas réplicas que las rutas. El tipo de mediación sigue a Zhao et al. (2010): un efecto es significativo cuando su intervalo excluye el 0."
 
@@ -1358,6 +1482,14 @@ msgid "Intervals from %d admissible of %d bootstrap resamples (seed %d); a path 
 msgstr "Intervalos de %d réplicas bootstrap admisibles de %d (semilla %d); una ruta cuyo intervalo apenas excluye el 0 puede cambiar con otra semilla."
 
 #: R/texts.R
+msgid "Intervals from %d admissible of %d jackknife estimations (one per case left out); jackknife intervals approximate the bootstrap and can differ from it for skewed statistics."
+msgstr "Intervalos a partir de %d estimaciones jackknife admisibles de %d (una por caso dejado fuera); los intervalos jackknife aproximan al bootstrap y pueden diferir de él en estadísticos asimétricos."
+
+#: R/texts.R
+msgid "Intervals: %s%% jackknife t intervals (estimate ± t × jackknife standard error) from %d admissible leave-one-out estimations."
+msgstr "Intervalos: intervalos t jackknife al %s%% (estimación ± t × error estándar jackknife) a partir de %d estimaciones admisibles dejando un caso fuera."
+
+#: R/texts.R
 msgid "Intervals: %s%% percentile bootstrap intervals from %d admissible resamples."
 msgstr "Intervalos: percentiles bootstrap al %s%%, de %d réplicas admisibles."
 
@@ -1381,6 +1513,18 @@ msgstr "Su intervalo bootstrap incluye el 0: no hay evidencia de que %s modere e
 msgid "Its f² is %s (%s)."
 msgstr "Su f² es %s (%s)."
 
+#: plssem/options/resampleMethod/jackknife.title
+msgid "Jackknife (t intervals)"
+msgstr "Jackknife (intervalos t)"
+
+#: R/texts.R
+msgid "Jackknife: %d leave-one-out estimations, %d admissible and used; %d s. Intervals are jackknife t intervals at %s%% (estimate ± t × jackknife standard error)."
+msgstr "Jackknife: %d estimaciones dejando un caso fuera, %d admisibles y usadas; %d s. Los intervalos son intervalos t jackknife al %s%% (estimación ± t × error estándar jackknife)."
+
+#: R/texts.R
+msgid "Jackknife: one estimation per case left out, so the number of estimations is the sample size and no seed is needed."
+msgstr "Jackknife: una estimación por cada caso dejado fuera, así que el número de estimaciones es el tamaño de la muestra y no hace falta semilla."
+
 #: plssem/options/latentFill/theme.title plssem/options/manifestFill/theme.title plssem/options/edgeColor/theme.title
 msgid "jamovi theme"
 msgstr "Tema de jamovi"
@@ -1396,6 +1540,10 @@ msgstr "Mantener (importante, desempeño alto); efecto total no significativo"
 #: plssem/options/showKeySummary.title plssem/results/keySummary.title
 msgid "Key findings"
 msgstr "Hallazgos clave"
+
+#: R/texts.R
+msgid "Kurtosis (b2)"
+msgstr "Curtosis (b2)"
 
 #: plssem/options/nodeLabelSize.title
 msgid "Label size"
@@ -1426,12 +1574,16 @@ msgid "Left out of the CFA: %s (formative constructs or reflective constructs wi
 msgstr "Quedan fuera del AFC: %s (constructos formativos o reflectivos con un indicador)."
 
 #: plssem/ui[6]/pathSupplier[0].label
-msgid "Left Out of the Competing Model (CVPAT)"
-msgstr "Fuera del modelo competidor (CVPAT)"
+msgid "Left Out of the Competing Model"
+msgstr "Excluidas del Modelo Competidor"
 
 #: R/texts.R
 msgid "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator with its %s%% bootstrap interval (band); vertical lines: Johnson-Neyman points, where the interval starts or stops including 0."
 msgstr "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple en el rango observado del moderador con su intervalo bootstrap al %s%% (banda); líneas verticales: puntos de Johnson-Neyman, donde el intervalo empieza o deja de incluir el 0."
+
+#: R/texts.R
+msgid "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator with its %s%% jackknife interval (band); vertical lines: Johnson-Neyman points, where the interval starts or stops including 0."
+msgstr "Izquierda: resultado predicho según el predictor en tres valores del moderador. Derecha: el efecto simple a lo largo del rango observado del moderador con su intervalo jackknife al %s%% (banda); líneas verticales: puntos de Johnson-Neyman, donde el intervalo empieza o deja de incluir el 0."
 
 #: R/texts.R
 msgid "Left: predicted outcome over the predictor at three values of the moderator. Right: the simple effect over the observed range of the moderator. Run the bootstrap to add its interval and the Johnson-Neyman points."
@@ -1490,6 +1642,10 @@ msgid "Loadings of reflective indicators with their %s%% bootstrap interval; das
 msgstr "Cargas de los indicadores reflectivos con su intervalo bootstrap al %s%%; línea discontinua en 0.708. Triángulos: menores de 0.708."
 
 #: R/texts.R
+msgid "Loadings of reflective indicators with their %s%% jackknife interval; dashed line at 0.708. Triangles: below 0.708."
+msgstr "Cargas de los indicadores reflectivos con su intervalo jackknife al %s%%; línea discontinua en 0.708. Triángulos: por debajo de 0.708."
+
+#: R/texts.R
 msgid "Loadings of reflective indicators; dashed line at 0.708. Triangles: below 0.708."
 msgstr "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
 
@@ -1530,8 +1686,28 @@ msgid "MAE"
 msgstr "MAE"
 
 #: R/texts.R
+msgid "Main"
+msgstr "Principal"
+
+#: plssem/results/compareSection/compare.title
+msgid "Main and competing model"
+msgstr "Modelo principal y competidor"
+
+#: R/texts.R
 msgid "Main findings"
 msgstr "Hallazgos principales"
+
+#: plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title
+msgid "Main model"
+msgstr "Modelo principal"
+
+#: R/texts.R
+msgid "Mardia (1970): multivariate skewness b1 (statistic n b1 / 6, chi-square) and kurtosis b2 (statistic z; expected value under normality p(p + 2) = %3$d) of the %1$d indicators, n = %2$d. PLS-SEM does not assume normality and its percentile bootstrap does not need it; the measures matter for maximum-likelihood steps such as the multigroup CFA and for judging skewed bootstrap distributions (Cain et al., 2017)."
+msgstr "Mardia (1970): asimetría multivariada b1 (estadístico n b1 / 6, chi cuadrado) y curtosis b2 (estadístico z; valor esperado bajo normalidad p(p + 2) = %3$d) de los %1$d indicadores, n = %2$d. PLS-SEM no supone normalidad y su bootstrap percentil no la necesita; las medidas importan en pasos de máxima verosimilitud como el AFC multigrupo y para juzgar distribuciones bootstrap asimétricas (Cain et al., 2017)."
+
+#: plssem/options/mardia.title
+msgid "Mardia's multivariate normality"
+msgstr "Normalidad multivariada de Mardia"
 
 #: plssem/options/ipmaMax.title
 msgid "Maximum"
@@ -1544,6 +1720,14 @@ msgstr "Máxima verosimilitud (ML)"
 #: R/texts.R
 msgid "maximum likelihood, ML"
 msgstr "máxima verosimilitud, ML"
+
+#: R/texts.R plssem/options/predictBenchmark/maxvar.title
+msgid "MAXVAR"
+msgstr "MAXVAR"
+
+#: plssem/options/weightApproach/maxvar.title
+msgid "MAXVAR (generalized canonical correlation)"
+msgstr "MAXVAR (correlación canónica generalizada)"
 
 #: plssem/options/omegaCfa.title
 msgid "McDonald's ω (one-factor CFA)"
@@ -1568,6 +1752,10 @@ msgstr "Media de %s"
 #: R/texts.R
 msgid "Mean replacement cannot be used with ordinal indicators: the mean of an ordinal indicator is usually not one of its categories. Choose Exclude cases listwise in Missing values, or treat the indicators as continuous."
 msgstr "El reemplazo por la media no puede usarse con indicadores ordinales: la media de un indicador ordinal casi nunca es una de sus categorías. Elija Excluir casos por lista en Valores perdidos, o trate los indicadores como continuos."
+
+#: plssem/results/measurementSection/mardia.columns.title
+msgid "Measure"
+msgstr "Medida"
 
 #: plssem/results/mgaSection/micom.title
 msgid "Measurement invariance of composites (MICOM)"
@@ -1604,6 +1792,10 @@ msgstr "Mediación: %d de %d efectos indirectos específicos son significativos 
 #: R/texts.R
 msgid "Medium"
 msgstr "Mediano"
+
+#: plssem/options/resampleMethod.title
+msgid "Method"
+msgstr "Método"
 
 #: plssem/results/predictSection/predict.columns.title
 msgid "Metric"
@@ -1656,6 +1848,14 @@ msgstr "Valores perdidos: cada valor perdido se reemplaza por la media de su ind
 #: plssem/results/fitSection/fit.columns.title plssem/results/mgaSection/mgcfa.columns.title
 msgid "Model"
 msgstr "Modelo"
+
+#: R/texts.R plssem/results/compareSection.title
+msgid "Model comparison"
+msgstr "Comparación de modelos"
+
+#: R/texts.R
+msgid "Model comparison: for the %2$d outcome(s) that lose a path (without %3$s), BIC and GM prefer the main model for %1$d and the competing model for %4$d."
+msgstr "Comparación de modelos: en los %2$d resultado(s) que pierden una ruta (sin %3$s), BIC y GM prefieren el modelo principal en %1$d y el competidor en %4$d."
 
 #: plssem/ui[5].label
 msgid "Model Fit"
@@ -1728,6 +1928,18 @@ msgstr "AFC multigrupo de los constructos reflectivos: el modelo configural no a
 #: R/texts.R
 msgid "Multigroup CFA of the reflective constructs: the configural model has %s (CFI = %s, SRMR = %s)."
 msgstr "AFC multigrupo de los constructos reflectivos: el modelo configural tiene %s (CFI = %s, SRMR = %s)."
+
+#: R/texts.R
+msgid "Multivariate normality (Mardia): skewness b1 = %s (p %s) and kurtosis b2 = %s (z = %s, p %s) do not depart from normality."
+msgstr "Normalidad multivariada (Mardia): la asimetría b1 = %s (p %s) y la curtosis b2 = %s (z = %s, p %s) no se alejan de la normalidad."
+
+#: R/texts.R
+msgid "Multivariate normality (Mardia): skewness b1 = %s (p %s), kurtosis b2 = %s (z = %s, p %s); the indicators depart from multivariate normality. This does not affect the PLS estimates or the resampling intervals, but it is a reason to prefer robust ML (MLR) in the multigroup CFA and to read intervals of skewed statistics with care. Report it, as Cain et al. (2017) recommend."
+msgstr "Normalidad multivariada (Mardia): asimetría b1 = %s (p %s), curtosis b2 = %s (z = %s, p %s); los indicadores se alejan de la normalidad multivariada. Esto no afecta a las estimaciones PLS ni a los intervalos de remuestreo, pero es una razón para preferir ML robusta (MLR) en el AFC multigrupo y para leer con cuidado los intervalos de estadísticos asimétricos. Infórmelo, como recomiendan Cain et al. (2017)."
+
+#: plssem/results/measurementSection/mardia.title
+msgid "Multivariate normality of the indicators (Mardia)"
+msgstr "Normalidad multivariada de los indicadores (Mardia)"
 
 #: R/texts.R
 msgid "Must-have (path not tested)"
@@ -1830,6 +2042,10 @@ msgid "Next step: for the priority constructs, look at the indicator weights and
 msgstr "Siguiente paso: para los constructos prioritarios, mire los pesos y cargas de sus indicadores para ver qué aspectos concretos (los indicadores) impulsan su desempeño, y compruebe que sus efectos totales sean significativos."
 
 #: R/texts.R
+msgid "Next step: report BIC and GM of both models for each outcome, with the paths removed; if the simpler model is preferred, discuss whether the removed paths were theoretically required, and check CVPAT against the competing model for the predictive side."
+msgstr "Siguiente paso: informe BIC y GM de ambos modelos para cada resultado, junto con las rutas quitadas; si se prefiere el modelo más simple, discuta si las rutas quitadas eran teóricamente necesarias, y revise CVPAT frente al modelo competidor para el lado predictivo."
+
+#: R/texts.R
 msgid "Next step: report each specific indirect effect with its interval and type of mediation, and discuss the mediators in light of the theory that proposed them; a significant indirect effect supports the chain only as far as the design allows causal claims."
 msgstr "Siguiente paso: informe cada efecto indirecto específico con su intervalo y su tipo de mediación, y discuta los mediadores a la luz de la teoría que los propuso; un efecto indirecto significativo respalda la cadena solo hasta donde el diseño permite afirmaciones causales."
 
@@ -1889,6 +2105,10 @@ msgstr "Sin significación ni intervalos de confianza: no se ejecutó el bootstr
 msgid "No: the competing model predicts better"
 msgstr "No: el modelo competidor predice mejor"
 
+#: R/texts.R
+msgid "No: the other weighting approach predicts better"
+msgstr "No: el otro enfoque de ponderación predice mejor"
+
 #: plssem/ui[11][1][0].label
 msgid "Nodes and Labels"
 msgstr "Nodos y Etiquetas"
@@ -1897,7 +2117,7 @@ msgstr "Nodos y Etiquetas"
 msgid "Non-significant paths dashed"
 msgstr "Rutas no significativas discontinuas"
 
-#: R/texts.R plssem/options/mgaAdjust/none.title
+#: R/texts.R plssem/options/predictBenchmark/none.title plssem/options/mgaAdjust/none.title
 msgid "None"
 msgstr "Ninguna"
 
@@ -1946,8 +2166,20 @@ msgid "Not computable with consistent PLS: the NCA uses the composite scores of 
 msgstr "No calculable con PLS consistente: el NCA usa las puntuaciones compuestas del IPMA (Richter et al., 2020, véanse las referencias), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación."
 
 #: R/texts.R
+msgid "Not computable with MAXVAR: its weights are fixed only up to a common sign, which can differ between groups, so MICOM and the path differences would compare composites of opposite sign. Choose another weighting approach (the multigroup CFA does not depend on it)."
+msgstr "No calculable con MAXVAR: sus pesos se fijan solo hasta un signo común, que puede diferir entre grupos, así que MICOM y las diferencias de rutas compararían compuestos de signo opuesto. Elija otro enfoque de ponderación (el AFC multigrupo no depende de él)."
+
+#: R/texts.R
 msgid "Not computable with ordinal indicators: cSEM's testMICOM() builds the scores from the raw category codes and stops. The path differences are still computed."
 msgstr "No calculable con indicadores ordinales: testMICOM() de cSEM forma las puntuaciones con los códigos brutos de las categorías y se detiene. Las diferencias de rutas sí se calculan."
+
+#: R/texts.R
+msgid "Not computable with this weighting approach: cSEM computes the importance-performance map only with PLS-PM weights. Choose PLS-PM in the Estimation box."
+msgstr "No calculable con este enfoque de ponderación: cSEM calcula el mapa importancia-desempeño solo con pesos de PLS-PM. Elija PLS-PM en la caja Estimación."
+
+#: R/texts.R
+msgid "Not computable with this weighting approach: the NCA uses the scores of the IPMA, which cSEM defines only with PLS-PM weights. Choose PLS-PM in the Estimation box."
+msgstr "No calculable con este enfoque de ponderación: el NCA usa las puntuaciones del IPMA, que cSEM define solo con pesos de PLS-PM. Elija PLS-PM en la caja Estimación."
 
 #: R/texts.R
 msgid "Not computable: %1$s. Each group needs at least %2$d cases (a minimum of this module) to estimate the model on its own; merge small categories or collect more data."
@@ -1990,12 +2222,20 @@ msgid "Not computable: no reflective construct has two or more indicators, and a
 msgstr "No calculable: ningún constructo reflectivo tiene dos o más indicadores, y un factor común con un solo indicador no está identificado."
 
 #: R/texts.R
+msgid "Not computable: the comparison stopped with: %s"
+msgstr "No calculable: la comparación se detuvo con: %s"
+
+#: R/texts.R
 msgid "Not computable: the competing model could not be estimated: %s"
 msgstr "No calculable: el modelo competidor no se pudo estimar: %s"
 
 #: R/texts.R
 msgid "Not computable: the competing model would have no structural paths left."
 msgstr "No calculable: el modelo competidor no tendría rutas estructurales."
+
+#: R/texts.R
+msgid "Not computable: the covariance matrix of the indicators is singular (an indicator is a linear combination of others)."
+msgstr "No calculable: la matriz de covarianzas de los indicadores es singular (un indicador es combinación lineal de otros)."
 
 #: R/texts.R
 msgid "Not computable: the cross-validation stopped with: %s"
@@ -2036,6 +2276,10 @@ msgstr "No calculable: los indicadores de estos constructos correlacionan con si
 #: R/texts.R
 msgid "Not computable: the maximum of the scale must be larger than its minimum."
 msgstr "No calculable: el máximo de la escala debe ser mayor que su mínimo."
+
+#: R/texts.R
+msgid "Not computable: the model could not be estimated with the extra benchmark's weighting approach: %s"
+msgstr "No calculable: el modelo no pudo estimarse con el enfoque de ponderación de la referencia adicional: %s"
 
 #: R/texts.R
 msgid "Not computable: the necessary condition analysis stopped with: %s"
@@ -2121,7 +2365,7 @@ msgstr "Ordinales (correlaciones policóricas)"
 msgid "Out-of-sample prediction"
 msgstr "Predicción fuera de la muestra"
 
-#: plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/f2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/ncaSection/ncaCombined.columns.title plssem/results/mgaSection/mga.columns.title
+#: plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/f2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/ncaSection/ncaCombined.columns.title plssem/results/mgaSection/mga.columns.title
 msgid "Outcome"
 msgstr "Resultado"
 
@@ -2145,7 +2389,7 @@ msgstr "Ajuste global del modelo"
 msgid "Overall model fit (bootstrap test of exact fit)"
 msgstr "Ajuste global del modelo (prueba bootstrap de ajuste exacto)"
 
-#: plssem/results/structuralSection/paths.columns.title plssem/results/predictSection/cvpat.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/mgaSection/micom.columns.title plssem/results/mgaSection/mgcfa.columns.title
+#: plssem/results/measurementSection/mardia.columns.title plssem/results/structuralSection/paths.columns.title plssem/results/predictSection/cvpat.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/mgaSection/micom.columns.title plssem/results/mgaSection/mgcfa.columns.title
 msgid "p"
 msgstr "p"
 
@@ -2169,6 +2413,10 @@ msgstr "p (peso)"
 msgid "p values come from cSEM: t = estimate / bootstrap standard error."
 msgstr "Los valores p vienen de cSEM: t = estimación / error estándar bootstrap."
 
+#: R/texts.R
+msgid "p values: t = estimate / jackknife standard error, with n - 1 degrees of freedom."
+msgstr "Valores p: t = estimación / error estándar jackknife, con n - 1 grados de libertad."
+
 #: plssem/results/mgaSection/mga.columns.title
 msgid "P(first ≤ second)"
 msgstr "P(primero ≤ segundo)"
@@ -2189,9 +2437,17 @@ msgstr "Path"
 msgid "Path coefficients"
 msgstr "Coeficientes de ruta"
 
+#: plssem/results/compareSection/comparePaths.title
+msgid "Path coefficients of both models"
+msgstr "Coeficientes de ruta de ambos modelos"
+
 #: R/texts.R
 msgid "Path coefficients; * the %s%% bootstrap interval excludes 0 (solid line); dashed line: not significant."
 msgstr "Coeficientes de ruta; * el intervalo bootstrap al %s%% excluye el 0 (línea continua); línea discontinua: no significativa."
+
+#: R/texts.R
+msgid "Path coefficients; * the %s%% jackknife interval excludes 0 (solid line); dashed line: not significant."
+msgstr "Coeficientes de ruta; * el intervalo jackknife al %s%% excluye el 0 (línea continua); línea discontinua: no significativo."
 
 #: R/texts.R
 msgid "Path coefficients; line width follows the coefficient. Run the bootstrap to mark which paths are significant."
@@ -2220,6 +2476,14 @@ msgstr "Rutas excluidas del modelo competidor"
 #: plssem/ui[6]/pathSupplier.label
 msgid "Paths of the Model"
 msgstr "Rutas del modelo"
+
+#: R/texts.R plssem/options/predictBenchmark/pca.title
+msgid "PCA"
+msgstr "PCA"
+
+#: plssem/options/weightApproach/pca.title
+msgid "PCA (principal components)"
+msgstr "PCA (componentes principales)"
 
 #: R/texts.R plssem/results/ipmaSection/ipmaTable.columns.title
 msgid "Performance (0-100)"
@@ -2285,6 +2549,10 @@ msgstr "PLS-MGA"
 msgid "PLS-MGA only"
 msgstr "Solo PLS-MGA"
 
+#: R/texts.R plssem/options/weightApproach/pls.title plssem/options/predictBenchmark/pls.title
+msgid "PLS-PM"
+msgstr "PLS-PM"
+
 #: package/analyses/plssem.title package/analyses/plssem.menuTitle plssem/options.title plssem/options.menuTitle plssem/ui.title plssem/results.title plssem/results/intro.title
 msgid "PLS-SEM"
 msgstr "PLS-SEM"
@@ -2349,13 +2617,17 @@ msgstr "Predicción: Q²predict por encima de 0 en %d de %d indicadores endógen
 msgid "Predictive power and explanatory power are different questions: a model can explain the sample well (high R²) and predict new cases poorly, or the reverse. Report both if prediction matters for your conclusions."
 msgstr "La capacidad predictiva y la explicativa son preguntas distintas: un modelo puede explicar bien la muestra (R² alto) y predecir mal casos nuevos, o al revés. Informe ambas si la predicción importa para sus conclusiones."
 
-#: plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/f2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/mgaSection/mga.columns.title
+#: plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/f2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/compareSection/comparePaths.columns.title plssem/results/mgaSection/mga.columns.title
 msgid "Predictor"
 msgstr "Predictor"
 
 #: plssem/ui[2]/constructSupplier[0].label
 msgid "Predictors of Each Construct"
 msgstr "Predictores de cada constructo"
+
+#: plssem/results/compareSection/compare.columns.title
+msgid "Preferred"
+msgstr "Preferido"
 
 #: plssem/results/predictSection/predict.columns.title
 msgid "Q²predict"
@@ -2377,7 +2649,7 @@ msgstr "Q²predict no es el Q² que informan los textos de PLS-SEM más antiguos
 msgid "Q²predict is not the Stone-Geisser Q² of blindfolding: that one omits data points and predicts them from the same sample (in-sample), while Q²predict predicts cases left out of the estimation (out-of-sample)."
 msgstr "Q²predict no es el Q² de Stone-Geisser del blindfolding: ese omite datos y los predice con la misma muestra (dentro de la muestra), mientras que Q²predict predice casos que quedaron fuera de la estimación (fuera de la muestra)."
 
-#: plssem/results/structuralSection/r2.columns.title
+#: R/texts.R plssem/results/structuralSection/r2.columns.title
 msgid "R²"
 msgstr "R²"
 
@@ -2393,7 +2665,11 @@ msgstr "Rango de la escala"
 msgid "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say how many bootstrap resamples and which seed you used. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box; to compare groups, use the Multigroup Analysis box."
 msgstr "Lea primero el modelo de medida, luego las rutas significativas y sus tamaños de efecto. Informe cada ruta con su coeficiente, intervalo y f², e indique cuántas réplicas bootstrap y qué semilla usó. Si el modelo tiene mediadores, lea los efectos indirectos específicos; si la predicción importa, ejecute PLSpredict y CVPAT en la caja Predicción; para comparar grupos, use la caja Análisis multigrupo."
 
-#: plssem/results/ipmaSection/ipmaTable.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/ncaSection/ncaCombined.columns.title
+#: R/texts.R
+msgid "Read the measurement model first, then the significant paths and their effect sizes. Report each path with its coefficient, interval and f², and say that the intervals are jackknife t intervals; before reporting, run the bootstrap too and check that the conclusions agree, since the bootstrap is the standard of PLS-SEM. If the model has mediators, read the specific indirect effects; if prediction matters, run PLSpredict and CVPAT in the Prediction box; to compare groups, use the Multigroup Analysis box."
+msgstr "Lea primero el modelo de medida, luego las rutas significativas y sus tamaños del efecto. Informe cada ruta con su coeficiente, intervalo y f², e indique que los intervalos son intervalos t jackknife; antes de informar, ejecute también el bootstrap y compruebe que las conclusiones coinciden, ya que el bootstrap es el estándar de PLS-SEM. Si el modelo tiene mediadores, lea los efectos indirectos específicos; si importa la predicción, ejecute PLSpredict y CVPAT en la caja Predicción; para comparar grupos, use la caja Análisis Multigrupo."
+
+#: plssem/results/measurementSection/mardia.columns.title plssem/results/ipmaSection/ipmaTable.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/ncaSection/ncaCombined.columns.title
 msgid "Reading"
 msgstr "Lectura"
 
@@ -2485,7 +2761,7 @@ msgstr "Repeticiones"
 msgid "Replace by the indicator mean"
 msgstr "Reemplazar por la media del indicador"
 
-#: plssem/ui[13].label
+#: plssem/ui[14].label
 msgid "Report Content"
 msgstr "Contenido del informe"
 
@@ -2504,6 +2780,10 @@ msgstr "Solicitadas"
 #: plssem/options/bootReps.title plssem/options/fitReps.title
 msgid "Resamples"
 msgstr "Réplicas"
+
+#: R/texts.R
+msgid "Resampling: jackknife, %d leave-one-out estimations; t intervals at %s%% from the jackknife standard error (Efron & Tibshirani, 1993, see references). The jackknife is deterministic (no seed) but approximates the bootstrap only for smooth statistics and tends to give wider or less accurate intervals for skewed ones such as indirect effects and HTMT; the PLS-SEM literature recommends the bootstrap (Hair et al., 2019, see references), so use the jackknife to compare, not as the main result. Each estimation drops one case, so with large samples it takes as many estimations as cases."
+msgstr "Remuestreo: jackknife, %d estimaciones dejando un caso fuera; intervalos t al %s%% a partir del error estándar jackknife (Efron y Tibshirani, 1993, véanse las referencias). El jackknife es determinista (sin semilla), pero aproxima al bootstrap solo en estadísticos suaves y tiende a dar intervalos más anchos o menos precisos en los asimétricos, como los efectos indirectos y el HTMT; la literatura de PLS-SEM recomienda el bootstrap (Hair et al., 2019, véanse las referencias), así que use el jackknife para comparar, no como resultado principal. Cada estimación deja fuera un caso, así que con muestras grandes requiere tantas estimaciones como casos."
 
 #: R/texts.R
 msgid "Results reused from an earlier run with the same model, data and bootstrap options; Seconds is the time of that run."
@@ -2577,6 +2857,10 @@ msgstr "Modelo saturado (solo el modelo de medida): el ajuste exacto se rechaza 
 msgid "Saturated model (measurement model only): no discrepancy rejects exact fit (critical values at %s%%)."
 msgstr "Modelo saturado (solo el modelo de medida): ninguna discrepancia rechaza el ajuste exacto (valores críticos al %s%%)."
 
+#: plssem/ui[13].label
+msgid "Save"
+msgstr "Guardar"
+
 #: R/texts.R
 msgid "Scalar (equal loadings and intercepts)"
 msgstr "Escalar (cargas e interceptos iguales)"
@@ -2638,6 +2922,10 @@ msgid "Simple effect CI"
 msgstr "IC del efecto simple"
 
 #: R/texts.R
+msgid "Simple effect of the predictor at each value of the moderator: b(X) + b(X × M) × M, with M in standard deviations; %s%% jackknife t intervals from %d admissible leave-one-out estimations."
+msgstr "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar; intervalos t jackknife al %s%% a partir de %d estimaciones admisibles dejando un caso fuera."
+
+#: R/texts.R
 msgid "Simple effect of the predictor at each value of the moderator: b(X) + b(X × M) × M, with M in standard deviations; %s%% percentile bootstrap intervals from %d admissible resamples."
 msgstr "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar; intervalos percentiles bootstrap al %s%%, de %d réplicas admisibles."
 
@@ -2664,6 +2952,10 @@ msgstr "Indicador único (%s): c = 1 por definición, así que la invarianza com
 #: R/texts.R
 msgid "Single predictor: no collinearity"
 msgstr "Predictor único: sin colinealidad"
+
+#: R/texts.R
+msgid "Skewness (b1)"
+msgstr "Asimetría (b1)"
 
 #: R/texts.R
 msgid "Small"
@@ -2696,6 +2988,18 @@ msgstr "SRMR"
 #: R/texts.R
 msgid "SRMR %s against a critical value of %s."
 msgstr "SRMR %s frente a un valor crítico de %s."
+
+#: R/texts.R
+msgid "SRMR is not computed for one of the models (cSEM cannot build the model-implied correlations with an interaction term)."
+msgstr "El SRMR no se calcula para uno de los modelos (cSEM no puede armar las correlaciones implicadas por el modelo con un término de interacción)."
+
+#: R/texts.R
+msgid "Standardized construct score of %s (PLSsemLab)"
+msgstr "Puntuación estandarizada del constructo %s (PLSsemLab)"
+
+#: plssem/results/measurementSection/mardia.columns.title
+msgid "Statistic"
+msgstr "Estadístico"
 
 #: R/texts.R
 msgid "Step 1 (configural invariance) holds by construction: every group uses the same indicators, the same data treatment and the same algorithm settings. Step 2: c is the correlation between the scores built with the weights of each group; compositional invariance holds when c is not significantly below 1 (one-sided permutation p of .05 or more, that is, c above the 5%% quantile of its permutation distribution). Step 3: difference of the means and log of the ratio of the variances of the standardized pooled scores (first group minus second), with two-sided permutation p. %1$d permutations (%2$d admissible), seed %3$d, %4$d s."
@@ -2732,6 +3036,14 @@ msgstr "sustancial"
 #: plssem/results/ncaSection/ncaCombined.title
 msgid "Sufficiency (PLS-SEM) and necessity (NCA)"
 msgstr "Suficiencia (PLS-SEM) y necesidad (NCA)"
+
+#: R/texts.R plssem/options/predictBenchmark/sumcorr.title
+msgid "SUMCORR"
+msgstr "SUMCORR"
+
+#: plssem/options/weightApproach/sumcorr.title
+msgid "SUMCORR (generalized canonical correlation)"
+msgstr "SUMCORR (correlación canónica generalizada)"
 
 #: R/texts.R
 msgid "Supported"
@@ -2792,6 +3104,10 @@ msgstr "Las estimaciones no son admisibles (%s). Se muestran los resultados, per
 #: R/texts.R
 msgid "The estimates are not admissible; do not interpret them until the cause is fixed."
 msgstr "Las estimaciones no son admisibles; no las interprete hasta corregir la causa."
+
+#: R/texts.R
+msgid "The extra benchmark is the weighting approach of the model itself; choose a different one to compare."
+msgstr "La referencia adicional es el enfoque de ponderación del propio modelo; elija uno distinto para comparar."
 
 #: R/texts.R
 msgid "The f² of an interaction is judged on smaller benchmarks than other paths: 0.005, 0.01 and 0.025 for small, medium and large (Kenny, 2018; Hair et al., 2021, see references), because moderating effects are typically small."
@@ -2872,6 +3188,14 @@ msgstr "El modelo de medida ajusta y el estimado no: el desajuste viene del mode
 #: R/texts.R
 msgid "The misfit is already present in the measurement model. Check indicators with low loadings or cross-loadings, and whether every indicator belongs to its construct; changing structural paths will not fix it."
 msgstr "El desajuste ya está en el modelo de medida. Revise los indicadores con cargas bajas o cargas cruzadas, y si cada indicador pertenece a su constructo; cambiar rutas estructurales no lo resolverá."
+
+#: R/texts.R
+msgid "The model comparison sets the main model against a competing one, the same model without the paths you list in “Left out of the competing model” (Prediction box), estimated with the same settings. R² always favors the model with more paths, so the decision rests on the information criteria, which balance fit against the number of paths: Sharma et al. (2019, 2021, see references) found BIC and GM, computed for each structural equation, the most reliable for choosing among PLS-SEM models. The model with the lower BIC and GM is preferred; when they disagree, or the differences are small, theory decides. For predictive comparison, run CVPAT against the competing model in the same box."
+msgstr "La comparación de modelos enfrenta el modelo principal con uno competidor, el mismo modelo sin las rutas que indique en “Excluidas del modelo competidor” (caja Predicción), estimado con los mismos ajustes. El R² siempre favorece al modelo con más rutas, así que la decisión descansa en los criterios de información, que equilibran ajuste y número de rutas: Sharma et al. (2019, 2021, véanse las referencias) hallaron que BIC y GM, calculados para cada ecuación estructural, son los más fiables para elegir entre modelos PLS-SEM. Se prefiere el modelo con menor BIC y GM; cuando discrepan, o las diferencias son pequeñas, decide la teoría. Para la comparación predictiva, ejecute CVPAT frente al modelo competidor en la misma caja."
+
+#: R/texts.R
+msgid "The model comparison was not computed. %s"
+msgstr "No se calculó la comparación de modelos. %s"
 
 #: R/texts.R
 msgid "The model has interaction terms: chains through them (conditional indirect effects, moderated mediation) are not listed in this version."
@@ -2981,7 +3305,7 @@ msgstr "Aquí el modelo saturado es el mismo modelo (su modelo estructural relac
 msgid "The seed is the one in the Bootstrap box; the range of the scale, the one in Importance-Performance Map."
 msgstr "La semilla es la de la caja Bootstrap; el rango de la escala, el de Mapa Importancia-Desempeño."
 
-#: plssem/ui[5][0][3].label plssem/ui[6][0][3].label plssem/ui[9][1][6].label
+#: plssem/ui[5][0][3].label plssem/ui[6][0][4].label plssem/ui[9][1][6].label
 msgid "The seed is the one in the Bootstrap box."
 msgstr "La semilla es la de la caja Bootstrap."
 
@@ -3061,6 +3385,14 @@ msgstr "Incertidumbres"
 msgid "Uniform"
 msgstr "Uniforme"
 
+#: R/texts.R
+msgid "unit weights"
+msgstr "pesos unitarios"
+
+#: plssem/options/weightApproach/unit.title plssem/options/predictBenchmark/unit.title
+msgid "Unit weights (sum scores)"
+msgstr "Pesos unitarios (puntuaciones suma)"
+
 #: plssem/results/measurementSection/measurement.columns.title plssem/results/measurementSection/reliability.columns.title plssem/results/measurementSection/vif.columns.title plssem/results/measurementSection/hocMeasurement.columns.title plssem/results/measurementSection/hocReliability.columns.title plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/r2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/structuralSection/mediation.columns.title plssem/results/structuralSection/simpleSlopes.columns.title
 msgid "Upper"
 msgstr "Superior"
@@ -3085,7 +3417,11 @@ msgstr "Límite superior menor de 0.85: constructos distintos"
 msgid "Upper bound: the one-sided 95%% bootstrap upper bound (the 95th percentile of %d admissible resamples). Discriminant validity holds when it stays below the threshold (Henseler et al., 2015, see references)."
 msgstr "Límite superior: el límite superior bootstrap unilateral al 95%% (el percentil 95 de %d réplicas admisibles). Hay validez discriminante cuando queda por debajo del umbral (Henseler et al., 2015, vea las referencias)."
 
-#: plssem/results/fitSection/fit.columns.title
+#: R/texts.R
+msgid "Upper bound: the one-sided 95%% jackknife upper bound (estimate + t × jackknife standard error, from %d admissible leave-one-out estimations). Discriminant validity holds when it stays below the threshold (Henseler et al., 2015, see references)."
+msgstr "Límite superior: el límite superior jackknife unilateral al 95%% (estimación + t × error estándar jackknife, a partir de %d estimaciones admisibles dejando un caso fuera). La validez discriminante se sostiene cuando queda por debajo del umbral (Henseler et al., 2015, véanse las referencias)."
+
+#: plssem/results/measurementSection/mardia.columns.title plssem/results/fitSection/fit.columns.title
 msgid "Value"
 msgstr "Valor"
 
@@ -3120,6 +3456,30 @@ msgstr "Peso"
 #: plssem/results/measurementSection/measurement.columns.superTitle plssem/results/measurementSection/hocMeasurement.columns.superTitle
 msgid "Weight CI"
 msgstr "IC del peso"
+
+#: plssem/options/weightApproach.title
+msgid "Weighting approach"
+msgstr "Enfoque de ponderación"
+
+#: R/texts.R
+msgid "Weighting approach: GSCA, generalized structured component analysis (Hwang & Takane, 2004, see references). Weights and paths are estimated together by minimizing one global least-squares criterion, instead of PLS-PM's alternating steps; reflective and formative constructs both become composites with GSCA weights (with consistent estimation, reflective constructs are common factors: GSCAm; Hwang et al., 2017). It is an alternative to PLS-PM with a global fit criterion; the IPMA, the NCA, ρA and higher-order constructs need PLS-PM."
+msgstr "Enfoque de ponderación: GSCA, análisis de componentes estructurados generalizado (Hwang y Takane, 2004, véanse las referencias). Los pesos y las rutas se estiman juntos minimizando un único criterio global de mínimos cuadrados, en lugar de los pasos alternos de PLS-PM; los constructos reflectivos y formativos pasan a ser compuestos con pesos GSCA (con estimación consistente, los reflectivos son factores comunes: GSCAm; Hwang et al., 2017). Es una alternativa a PLS-PM con un criterio de ajuste global; el IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
+
+#: R/texts.R
+msgid "Weighting approach: MAXVAR, generalized canonical correlation (Kettenring, 1971, see references). The weights maximize the largest eigenvalue of the composite correlation matrix, without using the structural model. Its weights are fixed only up to a common sign; the module turns each bootstrap draw back to the sign of the original estimate, and the multigroup tests are not computed. The IPMA, the NCA, ρA and higher-order constructs need PLS-PM."
+msgstr "Enfoque de ponderación: MAXVAR, correlación canónica generalizada (Kettenring, 1971, véanse las referencias). Los pesos maximizan el mayor autovalor de la matriz de correlaciones de los compuestos, sin usar el modelo estructural. Sus pesos se fijan solo hasta un signo común; el módulo devuelve cada réplica bootstrap al signo de la estimación original, y no se calculan las pruebas multigrupo. El IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
+
+#: R/texts.R
+msgid "Weighting approach: PCA. Each composite is the first principal component of its indicators: the weights explain as much of the indicators' variance as possible, ignoring the rest of the model. The IPMA, the NCA, ρA and higher-order constructs need PLS-PM."
+msgstr "Enfoque de ponderación: PCA. Cada compuesto es el primer componente principal de sus indicadores: los pesos explican la mayor varianza posible de los indicadores, sin tener en cuenta el resto del modelo. El IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
+
+#: R/texts.R
+msgid "Weighting approach: SUMCORR, generalized canonical correlation (Kettenring, 1971, see references). The weights maximize the sum of the correlations among all composites, without using the structural model, so the measurement does not depend on the paths you draw. The IPMA, the NCA, ρA and higher-order constructs need PLS-PM."
+msgstr "Enfoque de ponderación: SUMCORR, correlación canónica generalizada (Kettenring, 1971, véanse las referencias). Los pesos maximizan la suma de las correlaciones entre todos los compuestos, sin usar el modelo estructural, así que la medición no depende de las rutas que dibuje. El IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
+
+#: R/texts.R
+msgid "Weighting approach: unit weights. Each composite is the standardized sum of its standardized indicators (sum scores), so all indicators count the same. It is the benchmark that tells whether estimating weights is worth it: if PLS-PM gives the same paths, the indicators are close to interchangeable. The IPMA, the NCA, ρA and higher-order constructs need PLS-PM."
+msgstr "Enfoque de ponderación: pesos unitarios. Cada compuesto es la suma estandarizada de sus indicadores estandarizados (puntuaciones suma), así que todos los indicadores cuentan lo mismo. Es la referencia que indica si vale la pena estimar pesos: si PLS-PM da las mismas rutas, los indicadores son casi intercambiables. El IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
 
 #: R/texts.R
 msgid "What to do now"
@@ -3190,6 +3550,10 @@ msgid "Without the bootstrap the paths are untested and the combined reading use
 msgstr "Sin el bootstrap las rutas no se prueban y la lectura combinada usa solo el NCA. Ejecute el bootstrap para saber qué condiciones necesarias son también convenientes."
 
 #: R/texts.R
+msgid "worsens the model enough to matter"
+msgstr "empeora el modelo lo suficiente como para importar"
+
+#: R/texts.R
 msgid "Yes"
 msgstr "Sí"
 
@@ -3228,6 +3592,10 @@ msgstr "ρA"
 #: R/texts.R
 msgid "ρA comes from a consistent PLS estimation of the same model (same weights): it is the reliability that consistent PLS uses to correct for measurement error (Dijkstra & Henseler, 2015, see references)."
 msgstr "ρA sale de una estimación PLS consistente del mismo modelo (mismos pesos): es la fiabilidad que PLS consistente usa para corregir el error de medida (Dijkstra y Henseler, 2015, vea las referencias)."
+
+#: R/texts.R
+msgid "ρA is defined for PLS-PM weights (Dijkstra & Henseler, 2015, see references); with %s it is not computed. Read Cronbach's α and ρC, which bound reliability from below and from above."
+msgstr "ρA está definido para los pesos de PLS-PM (Dijkstra y Henseler, 2015, véanse las referencias); con %s no se calcula. Lea el α de Cronbach y ρC, que acotan la fiabilidad por abajo y por arriba."
 
 #: plssem/results/measurementSection/reliability.columns.title plssem/results/measurementSection/hocReliability.columns.title
 msgid "ρC"

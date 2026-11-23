@@ -53,6 +53,8 @@ items:
     type: Table
     rows: 1
     visible: (bootstrap)
+    refs:
+      - efron_1993
     clearWith:
       - reflective
       - formative
@@ -62,9 +64,11 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
       - bootReps
+      - resampleMethod
       - bootSeed
       - ciLevel
     columns:
@@ -126,6 +130,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
         columns:
@@ -157,6 +162,8 @@ items:
         type: Table
         rows: 0
         refs:
+          - hwang_2004
+          - kettenring_1971
           - tenenhaus_2005
           - hair_2019
         clearWith:
@@ -168,10 +175,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -241,10 +250,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
           - omegaCfa
@@ -292,6 +303,44 @@ items:
             title: Assessment
             type: text
 
+      - name: mardia
+        title: Multivariate normality of the indicators (Mardia)
+        type: Table
+        rows: 2
+        visible: (mardia)
+        refs:
+          - mardia_1970
+          - cain_2017
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - indicatorScale
+          - missing
+        columns:
+          - name: measure
+            title: Measure
+            type: text
+          - name: value
+            title: Value
+            type: number
+          - name: statistic
+            title: Statistic
+            type: number
+          - name: df
+            title: df
+            type: number
+          - name: p
+            title: p
+            type: number
+            format: zto,pvalue
+          - name: reading
+            title: Reading
+            type: text
+
       - name: htmtGuide
         title: How to read discriminant validity
         type: Html
@@ -315,10 +364,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -366,6 +417,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - fornellLarcker
@@ -396,10 +448,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -451,10 +505,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -528,10 +584,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -591,10 +649,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -652,10 +712,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -713,10 +775,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -762,6 +826,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
         columns:
@@ -798,10 +863,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -850,10 +917,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -922,10 +991,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -981,10 +1052,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
         columns:
@@ -1037,10 +1110,12 @@ items:
             - structural
             - estimator
             - innerScheme
+            - weightApproach
             - indicatorScale
             - missing
             - bootstrap
             - bootReps
+            - resampleMethod
             - bootSeed
             - ciLevel
 
@@ -1079,6 +1154,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - fitReps
@@ -1140,10 +1216,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - predictFolds
           - predictReps
+          - predictBenchmark
           - cvpatDrop
           - bootSeed
         columns:
@@ -1165,6 +1243,11 @@ items:
             title: LM
             type: number
             superTitle: RMSE
+          - name: rmseBench
+            title: Benchmark
+            type: number
+            superTitle: RMSE
+            visible: false
           - name: maePls
             title: PLS
             type: number
@@ -1173,6 +1256,11 @@ items:
             title: LM
             type: number
             superTitle: MAE
+          - name: maeBench
+            title: Benchmark
+            type: number
+            superTitle: MAE
+            visible: false
           - name: skew
             title: Error skewness
             type: number
@@ -1200,10 +1288,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - predictFolds
           - predictReps
+          - predictBenchmark
           - cvpatDrop
           - bootSeed
         columns:
@@ -1233,6 +1323,92 @@ items:
           - name: decision
             title: PLS predicts better
             type: text
+
+  # Section: comparison of the main and the competing model (1.2.0).
+  # ES: Sección: comparación del modelo principal y el competidor (1.2.0).
+  - name: compareSection
+    title: Model comparison
+    type: Group
+    visible: (compareRun)
+    items:
+      - name: compareGuide
+        title: How to read the model comparison
+        type: Html
+        visible: (showGuides && compareRun)
+
+      - name: compare
+        title: Main and competing model
+        type: Table
+        rows: 0
+        visible: (compareRun)
+        refs:
+          - sharma_2019
+          - sharma_2021
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - weightApproach
+          - indicatorScale
+          - missing
+          - cvpatDrop
+        columns:
+          - name: construct
+            title: Outcome
+            type: text
+            combineBelow: true
+          - name: criterion
+            title: Criterion
+            type: text
+          - name: main
+            title: Main model
+            type: number
+          - name: competing
+            title: Competing model
+            type: number
+          - name: preferred
+            title: Preferred
+            type: text
+
+      - name: comparePaths
+        title: Path coefficients of both models
+        type: Table
+        rows: 0
+        visible: (compareRun)
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - weightApproach
+          - indicatorScale
+          - missing
+          - cvpatDrop
+        columns:
+          - name: from
+            title: Predictor
+            type: text
+          - name: arrow
+            title: ""
+            type: text
+          - name: to
+            title: Outcome
+            type: text
+          - name: main
+            title: Main model
+            type: number
+          - name: competing
+            title: Competing model
+            type: number
 
   # Section: Importance-performance map. Groups give the report headings that tell the reader
   # where each part starts.
@@ -1268,6 +1444,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - ipmaRange
@@ -1314,6 +1491,7 @@ items:
             - structural
             - estimator
             - innerScheme
+            - weightApproach
             - indicatorScale
             - missing
             - ipmaRange
@@ -1352,6 +1530,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - ipmaRange
@@ -1405,6 +1584,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - ipmaRange
@@ -1415,6 +1595,7 @@ items:
           - ncaCeiling
           - bootstrap
           - bootReps
+          - resampleMethod
           - ciLevel
         columns:
           - name: target
@@ -1459,6 +1640,7 @@ items:
             - structural
             - estimator
             - innerScheme
+            - weightApproach
             - indicatorScale
             - missing
             - ipmaRange
@@ -1492,6 +1674,7 @@ items:
             - structural
             - estimator
             - innerScheme
+            - weightApproach
             - indicatorScale
             - missing
             - ipmaRange
@@ -1532,6 +1715,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - groupVar
@@ -1566,6 +1750,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - groupVar
@@ -1638,6 +1823,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - groupVar
@@ -1712,6 +1898,7 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - groupVar
@@ -1798,10 +1985,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
 
@@ -1825,10 +2014,12 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
 
@@ -1852,16 +2043,35 @@ items:
           - structural
           - estimator
           - innerScheme
+          - weightApproach
           - indicatorScale
           - missing
           - bootstrap
           - bootReps
+          - resampleMethod
           - bootSeed
           - ciLevel
 
   # Small cache of bootstrap results (MokkenLab pattern), cleared when the
   # model or the data options change.
   # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
+  - name: scoresOut
+    title: Construct scores
+    type: Output
+    measureType: continuous
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - indicatorScale
+      - missing
+      - estimator
+      - weightApproach
+      - innerScheme
+
   - name: cacheStore
     type: Html
     visible: false
@@ -1874,6 +2084,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
 
@@ -1891,6 +2102,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
 
@@ -1906,6 +2118,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
 
@@ -1921,6 +2134,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
       - ipmaRange
@@ -1941,6 +2155,7 @@ items:
       - structural
       - estimator
       - innerScheme
+      - weightApproach
       - indicatorScale
       - missing
       - groupVar

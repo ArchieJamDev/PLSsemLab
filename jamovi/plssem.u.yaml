@@ -272,7 +272,10 @@ children:
           - type: ComboBox
             name: estimator
           - type: ComboBox
+            name: weightApproach
+          - type: ComboBox
             name: innerScheme
+            enable: (weightApproach:pls)
           - type: ComboBox
             name: indicatorScale
           - type: ComboBox
@@ -287,10 +290,13 @@ children:
         children:
           - type: CheckBox
             name: bootstrap
+          - type: ComboBox
+            name: resampleMethod
+            enable: (bootstrap)
           - type: TextBox
             name: bootReps
             format: number
-            enable: (bootstrap)
+            enable: (bootstrap && resampleMethod:bootstrap)
           - type: TextBox
             name: bootSeed
             format: number
@@ -337,8 +343,13 @@ children:
             name: predictReps
             format: number
             enable: (predictRun)
+          - type: ComboBox
+            name: predictBenchmark
+            enable: (predictRun)
           - type: Label
             label: The seed is the one in the Bootstrap box.
+          - type: CheckBox
+            name: compareRun
       - type: Supplier
         label: Paths of the Model
         name: pathSupplier
@@ -350,14 +361,14 @@ children:
           change: './plssem.events::onChangeConstructSupplier'
         children:
           - type: TargetLayoutBox
-            label: Left Out of the Competing Model (CVPAT)
+            label: Left Out of the Competing Model
             children:
               - type: ListBox
                 name: cvpatDrop
                 height: small
                 isTarget: true
                 valueFilter: unique
-                enable: (predictRun)
+                enable: (predictRun || compareRun)
                 template:
                   type: TermLabel
   - type: CollapseBox
@@ -569,6 +580,18 @@ children:
             name: omegaCfa
           - type: CheckBox
             name: fornellLarcker
+          - type: CheckBox
+            name: mardia
+  - type: CollapseBox
+    label: Save
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: Output
+            name: scoresOut
   - type: CollapseBox
     label: Report Content
     collapsed: true

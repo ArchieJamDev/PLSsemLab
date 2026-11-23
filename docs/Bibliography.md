@@ -173,6 +173,39 @@ Ringle, C. M., & Sarstedt, M. (2016). Gain more insight from your PLS-SEM
 results: The importance-performance map analysis. *Industrial Management &
 Data Systems, 116*(9), 1865–1886. https://doi.org/10.1108/IMDS-10-2015-0449
 
+## Weighting approaches, resampling, normality and model selection (1.2.0)
+
+Cain, M. K., Zhang, Z., & Yuan, K.-H. (2017). Univariate and multivariate
+skewness and kurtosis for measuring nonnormality: Prevalence, influence and
+estimation. *Behavior Research Methods, 49*(5), 1716–1735.
+https://doi.org/10.3758/s13428-016-0814-1
+
+Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*.
+Chapman & Hall.
+
+Hwang, H., & Takane, Y. (2004). Generalized structured component analysis.
+*Psychometrika, 69*(1), 81–99. https://doi.org/10.1007/BF02295841
+
+Hwang, H., Takane, Y., & Jung, K. (2017). Generalized structured component
+analysis with uniqueness terms for accommodating measurement error.
+*Frontiers in Psychology, 8*, 2137. https://doi.org/10.3389/fpsyg.2017.02137
+
+Kettenring, J. R. (1971). Canonical analysis of several sets of variables.
+*Biometrika, 58*(3), 433–451. https://doi.org/10.1093/biomet/58.3.433
+
+Mardia, K. V. (1970). Measures of multivariate skewness and kurtosis with
+applications. *Biometrika, 57*(3), 519–530.
+https://doi.org/10.1093/biomet/57.3.519
+
+Sharma, P. N., Sarstedt, M., Shmueli, G., Kim, K. H., & Thiele, K. O. (2019).
+PLS-based model selection: The role of alternative explanations in
+information systems research. *Journal of the Association for Information
+Systems, 20*(4), 346–397. https://doi.org/10.17705/1jais.00538
+
+Sharma, P. N., Shmueli, G., Sarstedt, M., Danks, N., & Ray, S. (2021).
+Prediction-oriented model selection in partial least squares path modeling.
+*Decision Sciences, 52*(3), 567–607. https://doi.org/10.1111/deci.12329
+
 ## Measurement invariance of common factors (MGCFA)
 
 Chen, F. F. (2007). Sensitivity of goodness of fit indexes to lack of

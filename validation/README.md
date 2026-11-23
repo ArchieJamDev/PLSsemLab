@@ -17,7 +17,7 @@ Rscript validation/nca_equivalence.R   # needs the NCA package
 The module runs through its R6 class, as jamovi runs it, and the same
 analysis is computed with direct cSEM calls written by hand in the script.
 Ten scenarios on the bundled corporate reputation data and on cSEM's
-satisfaction data, 54 checks and 346 values
+satisfaction data, 69 checks and 419 values (with the options of 1.2.0)
 (`csem_equivalence_results.csv`): estimates and quality criteria of the
 extended model with PLS (paths, loadings, weights, R², adjusted R², alpha,
 rho_C, AVE, rho_A, HTMT, HTMT2, VIF, f², structural VIF, total and indirect

@@ -251,10 +251,33 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     self$results$predictSection$predict$addRow(rowKey = paste(cn, v, sep = "::"), values = list(construct = cn, indicator = v))
             }
             alt_on <- nrow(.pl_cvpat_drop(self$options$cvpatDrop, paths)) > 0
-            for (cn in c("", endo)) for (bn in c("IA", "LM", if (alt_on) "ALT"))
+            bm_on <- self$options$predictBenchmark != "none"
+            for (col in c("rmseBench", "maeBench")) {
+                cc <- self$results$predictSection$predict$getColumn(col)
+                cc$setVisible(bm_on)
+                if (bm_on) cc$setTitle(ptxt(paste0("approach_", self$options$predictBenchmark)))
+            }
+            for (cn in c("", endo)) for (bn in c("IA", "LM", if (alt_on) "ALT", if (bm_on) "BM"))
                 self$results$predictSection$cvpat$addRow(rowKey = paste(cn, bn, sep = "::"),
                                           values = list(construct = if (nzchar(cn)) cn else ptxt("cvpat_all"),
-                                                        bench = ptxt(paste0("bench_", bn))))
+                                                        bench = if (bn == "BM") ptxt(paste0("approach_", self$options$predictBenchmark))
+                                                                else ptxt(paste0("bench_", bn))))
+
+            # Model comparison (1.2.0): per endogenous construct of the main
+            # model, R², adjusted R² and the information criteria; one row of
+            # SRMR for the whole model; one row per path of the main model.
+            # ES: Comparación de modelos (1.2.0): por constructo endógeno del
+            # modelo principal, R², R² ajustado y los criterios de
+            # información; una fila de SRMR; una fila por ruta.
+            if (self$options$compareRun) {
+                ct2 <- self$results$compareSection$compare
+                for (cn in endo) for (cr in .PL_COMPARE)
+                    ct2$addRow(rowKey = paste(cn, cr, sep = "::"), values = list(construct = cn, criterion = ptxt(paste0("crit_", cr))))
+                ct2$addRow(rowKey = "::SRMR", values = list(construct = ptxt("cvpat_all"), criterion = "SRMR"))
+                for (k in seq_len(nrow(paths)))
+                    self$results$compareSection$comparePaths$addRow(rowKey = paste(paths$from[k], paths$to[k], sep = "::"),
+                        values = list(from = paths$from[k], arrow = "\u2192", to = paths$to[k]))
+            }
 
             # IPMA (phase 6): each endogenous construct and every construct
             # with an effect on it; one map per target.
@@ -338,12 +361,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # modelo; las secciones opcionales; 5. avisos y textos.
             e <- private$.estimate(blocks, hocs, paths, lang, txt)
             t <- private$.fillTables(e, blocks, paths, hocs, txt)
+            t$quality$mardia <- private$.fillMardia(e, txt)
+            private$.saveScores(e, blocks, hocs)
             o <- private$.optionalSections(e, t, blocks, paths, hocs, txt)
             private$.reportNotices(e, t, o, cons, blocks, hocs, txt)
             private$.interpretation(lang, blocks, t$loadings, t$path_tab, t$r2_tab, t$quality, t$structural,
-                                    o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga, o$nca)
+                                    o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga, o$nca, o$cmp)
             private$.keySummary(lang, blocks, e$vars, paths, e$prep, t$loadings, t$r2_tab, e$admissible, t$quality,
-                                o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga, o$nca)
+                                o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga, o$nca, o$cmp)
             private$.choices(lang, e$prep, o$boot)
             private$.guides(lang)
             private$.reproducibility(lang, e$smodel, e$prep, blocks, paths)
@@ -384,6 +409,13 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # 3. Build and estimate.
             # ES: 3. Armar y estimar.
             model <- .pl_build_syntax(blocks, paths1, self$options$estimator)
+            # Weighting approach (1.2.0): combinations cSEM cannot estimate
+            # stop here with the reason (Category A).
+            # ES: Enfoque de ponderación (1.2.0): las combinaciones que cSEM
+            # no puede estimar se detienen aquí con la razón (Categoría A).
+            ar <- .pl_approach_reject(self$options, blocks, hocs, isTRUE(model$nonlinear))
+            if (!is.null(ar))
+                jmvcore::reject(sprintf(txt("errors", ar), txt("labels", paste0("approach_", self$options$weightApproach))))
             d <- prep$data[, names(model$vmap), drop = FALSE]
             names(d) <- unname(model$vmap)
             # Ordinal indicators go to cSEM as ordered factors, which makes it
@@ -403,11 +435,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     model$csem_syntax <- c1$value$syntax
                 }
                 list(value = c1$value$fit1, error = c1$error, warnings = c1$warnings)
-            } else .pl_capture(cSEM::csem(
-                .data = d, .model = model$syntax,
-                .PLS_modes = if (length(model$modes)) model$modes else NULL,
-                .disattenuate = self$options$estimator == "plsc",
-                .PLS_weight_scheme_inner = self$options$innerScheme))
+            } else .pl_capture(do.call(cSEM::csem, c(list(.data = d, .model = model$syntax),
+                                                       .pl_csem_args(self$options, model$modes))))
             if (!is.null(fit$error))
                 jmvcore::reject(sprintf(txt("errors", "estimation"), fit$error))
             est <- fit$value$Estimates
@@ -503,13 +532,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 private$.fillNca(fit$value, model, d, blocks, paths, hocs, txt, t$path_tab, boot$summary) else NULL
             prd <- if (self$options$predictRun)
                 private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
+            cmp <- if (self$options$compareRun)
+                private$.compareModels(fit$value, model, d, blocks, paths, hocs, txt) else NULL
             gv <- self$options$groupVar
             mga <- if (self$options$mgaRun && !is.null(gv) && nzchar(gv))
                 private$.multigroup(model, d, blocks, paths, hocs, txt) else NULL
             private$.prepareDiagram(blocks, t$loadings, t$path_tab, t$r2_tab, boot$summary, smodel, t$hocq)
             private$.preparePlots(t$loadings, t$quality, boot$summary, model, txt)
 
-            list(boot = boot, med = med, mod = mod, omf = omf, ipm = ipm, nca = nca, prd = prd, mga = mga)
+            list(boot = boot, med = med, mod = mod, omf = omf, ipm = ipm, nca = nca, prd = prd, mga = mga, cmp = cmp)
         },
 
         # ---------------------------------------------------------------------
@@ -586,7 +617,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             rel <- quality$reliability
             if (is.null(rel)) return()
             table <- self$results$measurementSection$reliability
-            if (self$options$estimator == "pls")
+            if (self$options$weightApproach != "pls")
+                table$setNote("rhoA", sprintf(txt("footnotes", "rho_a_approach"),
+                                              txt("labels", paste0("approach_", self$options$weightApproach))))
+            else if (self$options$estimator == "pls")
                 table$setNote("rhoA", txt("footnotes", "rho_a_pls"))
             if (self$options$indicatorScale == "ordinal")
                 table$setNote("ordinal", txt("footnotes", "ordinal_note"))
@@ -788,14 +822,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             level <- as.numeric(self$options$ciLevel)
             status <- self$results$bootStatus
             spec <- .pl_boot_spec(blocks, model, fit, self$options, smodel, paths)
-            key <- list("plssem-boot-2", model$syntax, model$modes, smodel$m2$syntax, d, self$options$estimator,
+            key <- list("plssem-boot-3", self$options$weightApproach, self$options$resampleMethod, model$syntax, model$modes, smodel$m2$syntax, d, self$options$estimator,
                         self$options$innerScheme, reps, seed, level,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$cacheStore, key, function() {
+                jack <- self$options$resampleMethod == "jackknife"
                 run <- .pl_run_bootstrap(fit, spec$funs, reps, seed, progress = function(done, total) {
-                    status$setContent(.pl_html_block(sprintf(txt("boot", "running"), done, total)))
+                    if (!jack) status$setContent(.pl_html_block(sprintf(txt("boot", "running"), done, total)))
                     private$.checkpoint()
-                }, tick = private$.tick)
+                }, tick = private$.tick, method = self$options$resampleMethod)
                 sm <- if (!is.null(run$value)) .pl_capture(.pl_boot_summary(run$value, level, spec)) else NULL
                 list(summary = sm$value, error = c(run$errors, sm$error), warnings = run$warnings,
                      seconds = run$seconds)
@@ -806,7 +841,17 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # fila queda con lo conocido y una nota
             bs <- self$results$bootSummary
             known <- list(requested = reps, seed = seed, block = .PL_BLOCK, level = level)
-            if (!is.null(res$summary)) {
+            if (!is.null(res$summary) && identical(res$summary$method, "jackknife")) {
+                # jackknife (1.2.0): n leave-one-out estimations, no seed and no blocks
+                # ES: jackknife (1.2.0): n estimaciones dejando un caso fuera, sin semilla ni bloques
+                status$setContent(.pl_html_block(sprintf(txt("boot", "done_jk"), res$summary$runs, res$summary$admissible,
+                    round(res$seconds), format(100 * level))))
+                bs$setRow(rowNo = 1, values = list(requested = res$summary$runs, drawn = res$summary$runs,
+                    admissible = res$summary$admissible, seed = "\u2014", block = "\u2014", level = level,
+                    seconds = res$seconds))
+                bs$setNote("jk", txt("boot", "jk_summary_note"))
+                if (isTRUE(res$cached)) bs$setNote("cached", txt("boot", "cached_note"))
+            } else if (!is.null(res$summary)) {
                 status$setContent(.pl_html_block(sprintf(txt("boot", "done"), res$summary$runs, res$summary$admissible,
                     seed, .PL_BLOCK, round(res$seconds), format(100 * level))))
                 bs$setRow(rowNo = 1, values = c(known, list(drawn = res$summary$runs,
@@ -818,6 +863,68 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 bs$setNote("failed", txt("boot", "not_done"))
             }
             res
+        },
+
+        # ---------------------------------------------------------------------
+        # Mardia's multivariate skewness and kurtosis of the indicators
+        # (1.2.0), on the data the model was estimated with.
+        # ES: Asimetría y curtosis multivariadas de Mardia de los indicadores
+        # (1.2.0), con los datos con que se estimó el modelo.
+        # ---------------------------------------------------------------------
+        .fillMardia = function(e, txt) {
+            if (!self$options$mardia) return(NULL)
+            table <- self$results$measurementSection$mardia
+            lab <- function(k) txt("labels", k)
+            r <- .pl_capture(.pl_mardia(.pl_numeric(e$prep$data)))
+            if (is.null(r$value)) {
+                for (k in 1:2) table$setRow(rowNo = k, values = list(measure = lab(c("mardia_skew", "mardia_kurt")[k]),
+                                                                     reading = lab("not_computable")))
+                table$setNote("reason", txt("footnotes", "mardia_singular"))
+                return(NULL)
+            }
+            m <- r$value
+            for (k in 1:2)
+                table$setRow(rowNo = k, values = list(
+                    measure = lab(c("mardia_skew", "mardia_kurt")[k]), value = m$value[k], statistic = m$statistic[k],
+                    df = if (k == 1) m$df[1] else "", p = m$p[k],
+                    reading = lab(if (m$p[k] < 0.05) "mardia_departs" else "mardia_consistent")))
+            table$setNote("what", sprintf(txt("footnotes", "mardia_note"), m$k[1], m$n[1], m$k[1] * (m$k[1] + 2)))
+            m
+        },
+
+        # ---------------------------------------------------------------------
+        # Construct scores as new columns of the data set (1.2.0): the
+        # standardized scores of the estimated model (stage 2 for the
+        # higher-order constructs), in the rows the model used.
+        # ES: Puntuaciones de los constructos como columnas nuevas del
+        # conjunto de datos (1.2.0): las puntuaciones estandarizadas del
+        # modelo estimado, en las filas que usó el modelo.
+        # ---------------------------------------------------------------------
+        .saveScores = function(e, blocks, hocs) {
+            out <- self$results$scoresOut
+            if (!self$options$scoresOut || !out$isNotFilled()) return()
+            S <- e$est$Construct_scores
+            labels <- vapply(blocks, `[[`, "", "label")
+            cols <- list()
+            for (lb in labels) {
+                id <- e$model$cmap[[lb]]
+                if (!is.null(id) && id %in% colnames(S)) cols[[lb]] <- S[, id]
+            }
+            if (length(hocs)) {
+                S2 <- e$sest$Construct_scores
+                for (h in hocs) {
+                    id <- e$smodel$cmap[[h$label]]
+                    if (!is.null(id) && id %in% colnames(S2)) cols[[h$label]] <- S2[, id]
+                }
+            }
+            if (!length(cols)) return()
+            lang <- .pl_lang(self$options)
+            keys <- paste0("score", seq_along(cols))
+            out$set(keys = keys, titles = paste0(names(cols), "_score"),
+                    descriptions = sprintf(.pl_text(lang, "labels", "score_desc"), names(cols)),
+                    measureTypes = rep("continuous", length(cols)))
+            out$setRowNums(as.integer(rownames(e$prep$data)))
+            for (k in seq_along(cols)) out$setValues(index = k, cols[[k]])
         },
 
         # ---------------------------------------------------------------------
@@ -834,7 +941,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             table <- self$results$structuralSection$mediation
             B <- fit$Estimates$Path_estimates
             level <- as.numeric(self$options$ciLevel)
-            med <- .pl_mediation(chains, B, model$cmap, draws = sm$path_draws, level = level, direct_ci = sm$paths)
+            med <- .pl_mediation(chains, B, model$cmap, draws = sm$path_draws, level = level, direct_ci = sm$paths,
+                                 method = if (is.null(sm$method)) "bootstrap" else sm$method)
             for (k in seq_len(nrow(med))) {
                 v <- list(chain = med$label[k], indirect = med$estimate[k])
                 if (!is.na(med$direct[k])) v$direct <- med$direct[k] else v$direct <- "\u2014"
@@ -844,7 +952,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (any(grepl(.PL_X, paths$from, fixed = TRUE)))
                 table$setNote("inter", txt("footnotes", "med_interaction"))
-            if (!is.null(sm)) table$setNote("ci", sprintf(txt("boot", "med_note"), format(100 * level)))
+            if (!is.null(sm)) table$setNote("ci", sprintf(txt("boot", paste0("med_note", if (identical(sm$method, "jackknife")) "_jk" else "")), format(100 * level)))
             med
         },
 
@@ -883,7 +991,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                            # ES: etiquetas completas, una por cuadrante y significación
                                            quadrant = txt("labels", paste0(ip$quadrant[k], if (isFALSE(ip$sig[k])) "_ns" else ""))))
             if (is.null(sm)) table$setNote("sig", txt("footnotes", "ipma_no_boot"))
-            else if (any(!is.na(ip$sig) & !ip$sig)) table$setNote("sig", txt("footnotes", "ipma_ns"))
+            else if (any(!is.na(ip$sig) & !ip$sig))
+                table$setNote("sig", if (identical(sm$method, "jackknife")) gsub("bootstrap", "jackknife", txt("footnotes", "ipma_ns"), fixed = TRUE)
+                                     else txt("footnotes", "ipma_ns"))
             table$setNote("range", sprintf(txt("boot", "ipma_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
                                            txt("labels", paste0("ipma_range_", self$options$ipmaRange))))
             if (isTRUE(r$value$negative)) table$setNote("negative", txt("footnotes", "ipma_negative"))
@@ -941,7 +1051,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             scores <- .pl_capture(.pl_nca_scores(fit, d, range))
             if (is.null(scores$value)) return(notcomp(sprintf(txt("footnotes", "nca_error"), paste(scores$error, collapse = "; "))))
             sc <- scores$value
-            key <- list("plssem-nca-1", model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
+            key <- list("plssem-nca-2", self$options$weightApproach, model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
                         range, reps, seed, pairs)
             res <- .pl_cached_bootstrap(self$results$ncaCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
@@ -990,7 +1100,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             tab$setNote("rule", sprintf(txt("footnotes", "nca_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
                                         txt("labels", paste0("ipma_range_", self$options$ipmaRange)), reps, seed))
-            comb$setNote("ceiling", sprintf(txt("footnotes", "nca_combined_note"), lab(paste0("nca_", verdict_ceiling))))
+            cnote <- sprintf(txt("footnotes", "nca_combined_note"), lab(paste0("nca_", verdict_ceiling)))
+            if (identical(sm$method, "jackknife")) cnote <- gsub("bootstrap", "jackknife", cnote, fixed = TRUE)
+            comb$setNote("ceiling", cnote)
             if (is.null(sm)) comb$setNote("boot", txt("footnotes", "nca_no_boot"))
 
             # bottleneck tables and plots
@@ -1065,11 +1177,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             reps <- as.integer(self$options$predictReps)
             seed <- as.integer(self$options$bootSeed)
             if (folds > nrow(d)) return(notcomp(txt("footnotes", "predict_small")))
-            refit_with <- function(syntax) function(data) suppressWarnings(cSEM::csem(
-                .data = data, .model = syntax,
-                .PLS_modes = if (length(model$modes)) model$modes else NULL,
-                .disattenuate = self$options$estimator == "plsc",
-                .PLS_weight_scheme_inner = self$options$innerScheme))
+            refit_with <- function(syntax, approach = self$options$weightApproach) function(data)
+                suppressWarnings(do.call(cSEM::csem, c(list(.data = data, .model = syntax),
+                                                       .pl_csem_args(self$options, model$modes, approach))))
             refit <- refit_with(model$syntax)
             # Competing model: the same constructs without the left-out paths;
             # checked on the whole sample first (it must estimate and be
@@ -1091,14 +1201,32 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     else alt_refit <- refit_with(alt_syntax)
                 }
             }
-            key <- list("plssem-predict-2", model$syntax, model$modes, d, self$options$estimator,
+            # Extra benchmark (1.2.0): the same model with another weighting
+            # approach; checked on the whole sample first.
+            # ES: Referencia adicional (1.2.0): el mismo modelo con otro
+            # enfoque de ponderación; se comprueba antes con toda la muestra.
+            bench <- self$options$predictBenchmark
+            bench_refit <- NULL
+            bench_reason <- NULL
+            if (bench != "none") {
+                ar <- .pl_approach_reject(list(weightApproach = bench, estimator = self$options$estimator), blocks, hocs,
+                                          isTRUE(model$nonlinear))
+                if (bench == self$options$weightApproach) bench_reason <- txt("footnotes", "bench_same")
+                else if (!is.null(ar)) bench_reason <- sprintf(txt("errors", ar), txt("labels", paste0("approach_", bench)))
+                else {
+                    chk <- .pl_capture(refit_with(model$syntax, bench)(d))
+                    if (is.null(chk$value)) bench_reason <- sprintf(txt("footnotes", "bench_error"), paste(chk$error, collapse = "; "))
+                    else bench_refit <- refit_with(model$syntax, bench)
+                }
+            }
+            key <- list("plssem-predict-3", self$options$weightApproach, self$options$predictBenchmark, model$syntax, model$modes, d, self$options$estimator,
                         self$options$innerScheme, folds, reps, seed, alt_syntax,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
                 r <- .pl_capture(local({
                     cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, alt_refit = alt_refit,
-                                           checkpoint = function() private$.checkpoint())
+                                           checkpoint = function() private$.checkpoint(), bench_refit = bench_refit)
                     vinv <- stats::setNames(names(model$vmap), model$vmap)
                     endo <- unique(paths$to)
                     ind_of <- function(cn) {
@@ -1126,17 +1254,19 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     r <- m[m$indicator == v, ]
                     if (!nrow(r)) next
                     lower <- if (r$tie) txt("labels", "equal") else if (r$pls_better) "PLS" else "LM"
-                    pt$setRow(rowKey = paste(cn, v, sep = "::"),
-                              values = list(q2 = r$q2, rmsePls = r$rmse_pls, rmseLm = r$rmse_lm,
-                                            maePls = r$mae_pls, maeLm = r$mae_lm, skew = r$skew,
-                                            metric = r$metric, lower = lower))
+                    vals <- list(q2 = r$q2, rmsePls = r$rmse_pls, rmseLm = r$rmse_lm,
+                                 maePls = r$mae_pls, maeLm = r$mae_lm, skew = r$skew,
+                                 metric = r$metric, lower = lower)
+                    if (!is.null(r$rmse_bm)) { vals$rmseBench <- r$rmse_bm; vals$maeBench <- r$mae_bm }
+                    pt$setRow(rowKey = paste(cn, v, sep = "::"), values = vals)
                 }
             }
             cv <- res$summary$cvpat
             for (k in seq_len(nrow(cv))) {
                 cn <- if (cv$group[k] == "all") "" else cv$group[k]
-                dec <- if (cv$bench[k] != "ALT") { if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no" }
-                       else if (cv$p[k] >= 0.05) "alt_same" else if (cv$diff[k] < 0) "yes" else "alt_better"
+                dec <- if (!cv$bench[k] %in% c("ALT", "BM")) { if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no" }
+                       else if (cv$p[k] >= 0.05) "alt_same" else if (cv$diff[k] < 0) "yes"
+                       else if (cv$bench[k] == "BM") "bm_better" else "alt_better"
                 ct$setRow(rowKey = paste(cn, cv$bench[k], sep = "::"),
                           values = list(lossPls = cv$loss_pls[k], lossBench = cv$loss_bench[k], diff = cv$diff[k],
                                         t = cv$t[k], p = cv$p[k], decision = txt("labels", dec)))
@@ -1148,6 +1278,18 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     ct$setNote("alt", alt_reason)
                 } else
                     ct$setNote("alt", sprintf(txt("boot", "cvpat_alt_note"), paste(drop$from, "\u2192", drop$to, collapse = ", ")))
+            }
+            if (bench != "none") {
+                blab <- txt("labels", paste0("approach_", bench))
+                if (!is.null(bench_reason)) {
+                    for (cn in c("", unique(paths$to)))
+                        ct$setCell(rowKey = paste(cn, "BM", sep = "::"), col = "decision", value = txt("labels", "not_computable"))
+                    ct$setNote("bm", bench_reason)
+                    pt$setNote("bm", bench_reason)
+                } else {
+                    ct$setNote("bm", sprintf(txt("footnotes", "bench_note"), blab))
+                    pt$setNote("bm", sprintf(txt("footnotes", "bench_note"), blab))
+                }
             }
             note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
             pt$setNote("cv", note)
@@ -1167,7 +1309,66 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
             c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings, small = small,
+                                bench = if (bench != "none" && is.null(bench_reason)) txt("labels", paste0("approach_", bench)),
                                 drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
+        },
+
+        # ---------------------------------------------------------------------
+        # Model comparison (1.2.0): the main model and the competing model
+        # (the main model without the paths listed in "Left out of the
+        # competing model"), estimated with the same settings and compared
+        # by R², adjusted R², the information criteria of each endogenous
+        # construct (Sharma et al., 2019, 2021: BIC and GM for PLS-SEM) and
+        # SRMR. No resampling.
+        # ES: Comparación de modelos (1.2.0): el modelo principal y el
+        # competidor, estimados con los mismos ajustes y comparados por R²,
+        # R² ajustado, los criterios de información de cada constructo
+        # endógeno y el SRMR. Sin remuestreo.
+        # ---------------------------------------------------------------------
+        .compareModels = function(fit, model, d, blocks, paths, hocs, txt) {
+            tab <- self$results$compareSection$compare
+            ptab <- self$results$compareSection$comparePaths
+            lab <- function(k) txt("labels", k)
+            notcomp <- function(why) {
+                for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = "preferred", value = lab("not_computable"))
+                tab$setNote("reason", why)
+                list(reason = why)
+            }
+            if (length(hocs)) return(notcomp(txt("footnotes", "compare_hoc")))
+            drop <- .pl_cvpat_drop(self$options$cvpatDrop, paths)
+            if (!nrow(drop)) return(notcomp(txt("footnotes", "compare_nodrop")))
+            keep <- paths[!(paste(paths$from, paths$to) %in% paste(drop$from, drop$to)), , drop = FALSE]
+            if (!nrow(keep)) return(notcomp(txt("footnotes", "cvpat_alt_empty")))
+            alt <- .pl_build_syntax(blocks, keep, self$options$estimator)
+            f2 <- .pl_capture(do.call(cSEM::csem, c(list(.data = d, .model = alt$syntax), .pl_csem_args(self$options, model$modes))))
+            if (is.null(f2$value)) return(notcomp(sprintf(txt("footnotes", "cvpat_alt_error"), paste(f2$error, collapse = "; "))))
+            r <- .pl_capture(.pl_compare(fit, f2$value, model$cmap, unique(paths$to)))
+            if (is.null(r$value)) return(notcomp(sprintf(txt("footnotes", "compare_error"), paste(r$error, collapse = "; "))))
+            cm <- r$value
+            for (k in seq_len(nrow(cm$table))) {
+                row <- cm$table[k, ]
+                tab$setRow(rowKey = paste(row$construct, row$criterion, sep = "::"), values = list(
+                    main = row$main, competing = if (is.na(row$competing)) "\u2014" else row$competing,
+                    preferred = if (is.na(row$preferred)) "\u2014" else lab(paste0("pref_", row$preferred))))
+            }
+            sr <- cm$srmr
+            tab$setRow(rowKey = "::SRMR", values = list(main = if (is.na(sr[1])) "\u2014" else sr[1],
+                competing = if (is.na(sr[2])) "\u2014" else sr[2],
+                preferred = if (anyNA(sr)) "\u2014" else lab(paste0("pref_", if (sr[1] <= sr[2]) "main" else "competing"))))
+            if (anyNA(sr)) tab$setNote("srmr", txt("footnotes", "compare_srmr"))
+            tab$setNote("drop", sprintf(txt("footnotes", "compare_note"), paste(drop$from, "\u2192", drop$to, collapse = ", ")))
+            if (sum(cSEM::verify(f2$value)) != 0) tab$setNote("inadm", txt("footnotes", "cvpat_alt_inadmissible"))
+            B1 <- fit$Estimates$Path_estimates
+            B2 <- f2$value$Estimates$Path_estimates
+            for (k in seq_len(nrow(paths))) {
+                fr <- model$cmap[[paths$from[k]]]
+                to <- model$cmap[[paths$to[k]]]
+                dropped <- paste(paths$from[k], paths$to[k]) %in% paste(drop$from, drop$to)
+                ptab$setRow(rowKey = paste(paths$from[k], paths$to[k], sep = "::"), values = list(
+                    main = B1[to, fr], competing = if (dropped || !(to %in% rownames(B2))) "\u2014" else B2[to, fr]))
+            }
+            ptab$setNote("drop", txt("footnotes", "compare_paths_note"))
+            c(cm, list(drop = paste(drop$from, "\u2192", drop$to, collapse = ", "), changed = unique(drop$to)))
         },
 
         # A result item by name, wherever it sits: at the top of the report or
@@ -1178,7 +1379,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             r <- self$results
             top <- r$get(name)
             if (!is.null(top)) return(top)
-            for (g in c("measurementSection", "structuralSection", "fitSection", "predictSection",
+            for (g in c("measurementSection", "structuralSection", "fitSection", "predictSection", "compareSection",
                         "ipmaSection", "ncaSection", "mgaSection", "plotsSection")) {
                 it <- r$get(g)$get(name)
                 if (!is.null(it)) return(it)
@@ -1272,11 +1473,18 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             # ES: MGCFA (1.1.0): lavaan con los mismos grupos; no necesita las
             # estimaciones PLS de cada grupo.
             mgc <- private$.fillMgcfa(mg, model, blocks, txt)
-            fit <- .pl_capture(cSEM::csem(
-                .data = mg$data, .model = model$syntax, .id = "PLgroup",
-                .PLS_modes = if (length(model$modes)) model$modes else NULL,
-                .disattenuate = self$options$estimator == "plsc",
-                .PLS_weight_scheme_inner = self$options$innerScheme))
+            # MAXVAR fixes the weights only up to a common sign, which can
+            # differ between groups: MICOM and the path differences would
+            # compare composites of opposite sign (1.2.0).
+            # ES: MAXVAR fija los pesos solo hasta un signo común, que puede
+            # diferir entre grupos (1.2.0).
+            if (self$options$weightApproach == "maxvar") {
+                why <- txt("footnotes", "mga_maxvar")
+                notcomp(why, groups = TRUE)
+                return(list(reason = why, n_missing = mg$n_missing, mgcfa = mgc))
+            }
+            fit <- .pl_capture(do.call(cSEM::csem, c(list(.data = mg$data, .model = model$syntax, .id = "PLgroup"),
+                                                     .pl_csem_args(self$options, model$modes))))
             if (!is.null(fit$error)) {
                 why <- sprintf(txt("footnotes", "mga_error"), paste(fit$error, collapse = "; "))
                 notcomp(why, groups = TRUE)
@@ -1298,7 +1506,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             adjust <- self$options$mgaAdjust
             micom_reason <- .pl_micom_reason(self$options$estimator, self$options$indicatorScale)
             compare <- .pl_mga_compare(paths, model$cmap)
-            key <- list("plssem-mga-1", model$syntax, model$modes, mg$data, self$options$estimator,
+            key <- list("plssem-mga-2", self$options$weightApproach, model$syntax, model$modes, mg$data, self$options$estimator,
                         self$options$innerScheme, perms, boots, seed, micom_reason,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$mgaCacheStore, key, function() {
@@ -1571,7 +1779,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             reps <- as.integer(self$options$fitReps)
             seed <- as.integer(self$options$bootSeed)
             level <- as.numeric(self$options$fitLevel)
-            key <- list("plssem-fit-1", model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
+            key <- list("plssem-fit-2", self$options$weightApproach, model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
                         reps, seed, level, tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$fitCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
@@ -1617,7 +1825,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             row_of <- function(df, name) if (is.null(df)) NULL else df[df$name == name, , drop = FALSE]
             pct <- format(100 * as.numeric(self$options$ciLevel))
-            note <- sprintf(txt("boot", "ci_note"), pct, sm$admissible)
+            note <- sprintf(txt("boot", paste0("ci_note", if (identical(sm$method, "jackknife")) "_jk" else "")), pct, sm$admissible)
 
             # Paths: SE, t, p and interval (cSEM's summarize).
             # ES: Rutas: EE, t, p e intervalo (summarize de cSEM).
@@ -1636,7 +1844,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         self$results$structuralSection$paths$addFootnote(rowNo = k, col = "p", txt("boot", "p_ci_disagree"))
                 }
             }
-            self$results$structuralSection$paths$setNote("ci", paste(note, txt("boot", "p_note")))
+            self$results$structuralSection$paths$setNote("ci", paste(note, txt("boot", paste0("p_note", if (identical(sm$method, "jackknife")) "_jk" else ""))))
 
             # Loadings and weights.
             # ES: Cargas y pesos.
@@ -1679,7 +1887,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         self$results$measurementSection$htmt$setCell(col = "assessment", value = txt("labels", band), rowKey = key)
                     }
                 }
-                self$results$measurementSection$htmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
+                self$results$measurementSection$htmt$setNote("ci", sprintf(txt("boot", paste0("htmt_note", if (identical(sm$method, "jackknife")) "_jk" else "")), sm$admissible))
             }
 
             for (i in seq_along(blocks)) {
@@ -1741,11 +1949,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                    x_axis = txt("moderation", "x_axis"), y_axis = txt("moderation", "y_axis"),
                                    m_axis = txt("moderation", "m_axis"), effect_axis = txt("moderation", "effect_axis"),
                                    slopes = txt("moderation", "slopes_title"), floodlight = txt("moderation", "flood_title"))
-                    caption <- if (md$boot) sprintf(txt("moderation", "caption_boot"), pct) else txt("moderation", "caption")
+                    caption <- if (md$boot) sprintf(txt("moderation", paste0("caption_boot", if (identical(sm$method, "jackknife")) "_jk" else "")), pct) else txt("moderation", "caption")
                     item$setState(.pl_moderation_state(md, labels, caption))
                 }
             }
-            note <- if (!is.null(sm)) sprintf(txt("moderation", "table_note_boot"), pct, sm$admissible)
+            note <- if (!is.null(sm)) sprintf(txt("moderation", paste0("table_note_boot", if (identical(sm$method, "jackknife")) "_jk" else "")), pct, sm$admissible)
                     else txt("moderation", "table_note")
             self$results$structuralSection$simpleSlopes$setNote("mod", note)
             mod
@@ -1762,7 +1970,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!self$options$pathDiagram) return()
             lang <- .pl_lang(self$options)
             caption <- if (is.null(sm)) .pl_text(lang, "labels", "diagram_caption")
-                       else sprintf(.pl_text(lang, "labels", "diagram_caption_boot"),
+                       else sprintf(.pl_text(lang, "labels", paste0("diagram_caption_boot", if (identical(sm$method, "jackknife")) "_jk" else "")),
                                     format(100 * as.numeric(self$options$ciLevel)))
             if (any(grepl(.PL_X, path_tab$from, fixed = TRUE)))
                 caption <- paste(caption, .pl_text(lang, "labels", "diagram_moderation"))
@@ -1796,7 +2004,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             pct <- format(100 * as.numeric(self$options$ciLevel))
             if (self$options$loadingsPlot) {
                 st <- .pl_loadings_state(loadings, sm, model, if (is.null(sm)) txt("labels", "loadings_caption")
-                                         else sprintf(txt("labels", "loadings_caption_boot"), pct))
+                                         else sprintf(txt("labels", paste0("loadings_caption_boot", if (identical(sm$method, "jackknife")) "_jk" else "")), pct))
                 if (is.null(st))
                     .pl_notice_before(self$results$plotsSection, self$options, "loadingsPlot",
                                       txt("notapply", "na_loadings_plot"))
@@ -1807,7 +2015,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             if (self$options$htmtPlot) {
                 st <- .pl_htmt_state(quality, sm, model, if (is.null(sm)) txt("labels", "htmt_caption")
-                                     else txt("labels", "htmt_caption_boot"))
+                                     else txt("labels", paste0("htmt_caption_boot", if (identical(sm$method, "jackknife")) "_jk" else "")))
                 if (is.null(st))
                     .pl_notice_before(self$results$plotsSection, self$options, "htmtPlot",
                                       txt("notapply", "na_htmt_plot"))
@@ -1951,7 +2159,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     self$results$measurementSection$hocHtmt$setCell(rowKey = key, col = "htmtUpper", value = u)
                     band <- if (u < 0.85) "htmt_ok_ci" else if (u < 0.90) "htmt_similar_ci" else "htmt_doubt_ci"
                     self$results$measurementSection$hocHtmt$setCell(rowKey = key, col = "assessment", value = txt("labels", band))
-                    self$results$measurementSection$hocHtmt$setNote("ci", sprintf(txt("boot", "htmt_note"), sm$admissible))
+                    self$results$measurementSection$hocHtmt$setNote("ci", sprintf(txt("boot", paste0("htmt_note", if (identical(sm$method, "jackknife")) "_jk" else "")), sm$admissible))
                 }
             set <- function(table, key, values) for (col in names(values)) {
                 v <- values[[col]]
@@ -1979,7 +2187,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }
             }
             pct <- format(100 * as.numeric(self$options$ciLevel))
-            note <- sprintf(txt("boot", "ci_note"), pct, sm$admissible)
+            note <- sprintf(txt("boot", paste0("ci_note", if (identical(sm$method, "jackknife")) "_jk" else "")), pct, sm$admissible)
             self$results$measurementSection$hocMeasurement$setNote("ci", note)
             self$results$measurementSection$hocReliability$setNote("ci", note)
         },
@@ -2036,7 +2244,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
                                    model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, ipm = NULL,
-                                   mga = NULL, nca = NULL) {
+                                   mga = NULL, nca = NULL, cmp = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -2050,16 +2258,32 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ilines <- private$.ipmaLines(txt, ipm)
             nlines <- private$.ncaLines(txt, nca)
             glines <- private$.mgaLines(txt, mga)
+            clines <- private$.compareLines(txt, cmp)
+            # Jackknife (1.2.0): the sections whose intervals come from the
+            # main resampling name it; the term is the same loanword in
+            # English and Spanish. The multigroup tests and the overall fit
+            # test always bootstrap, so their lines are left as they are.
+            # ES: Jackknife (1.2.0): las secciones cuyos intervalos vienen
+            # del remuestreo principal lo nombran; el término es el mismo
+            # préstamo en inglés y español. Las pruebas multigrupo y la de
+            # ajuste global siempre usan bootstrap, así que no se tocan.
+            if (identical(sm$method, "jackknife")) {
+                jk <- function(x) gsub("bootstrap", "jackknife", x, fixed = TRUE)
+                meas <- jk(meas); struct <- jk(struct); mlines <- jk(mlines); hlines <- jk(hlines)
+                dlines <- jk(dlines); ilines <- jk(ilines); nlines <- jk(nlines)
+            }
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
                            .pl_html_block(c(struct, mlines), txt("title_structural")),
                            if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
                            if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
+                           if (length(clines)) .pl_html_block(clines, txt("title_compare")) else "",
                            if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
                            if (length(nlines)) .pl_html_block(nlines, txt("title_nca")) else "",
                            if (length(glines)) .pl_html_block(glines, txt("title_mga")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
-                           .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
+                           .pl_html_block(txt(if (is.null(sm)) "next_steps" else if (identical(sm$method, "jackknife"))
+                                                  "next_steps_jk" else "next_steps_boot"), txt("title_next")))
             self$results$interpretation$setContent(html)
         },
 
@@ -2157,6 +2381,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (nrow(drop)) meas <- c(meas, sprintf(txt("weights_ns_drop"), listed(drop$indicator, drop$loading)))
                     if (!any(ns)) meas <- c(meas, txt("weights_all_sig"))
                 }
+            }
+            # Mardia (1.2.0)
+            mt <- quality$mardia
+            if (!is.null(mt)) {
+                dep <- mt$p < 0.05
+                meas <- c(meas, sprintf(txt(if (any(dep)) "mardia_dep" else "mardia_ok"),
+                                        .pl_fmt(mt$value[1]), .pl_fmt_p(mt$p[1]), .pl_fmt(mt$value[2]),
+                                        .pl_fmt(mt$statistic[2]), .pl_fmt_p(mt$p[2])))
             }
             meas
         },
@@ -2339,11 +2571,40 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 key <- if (r$p >= 0.05) "cvpat_alt_same" else if (r$diff < 0) "cvpat_alt_worse" else "cvpat_alt_better"
                 out <- c(out, sprintf(txt(key), prd$drop, .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
             }
+            r <- cv[cv$bench == "BM", ]
+            if (nrow(r) == 1 && !is.null(prd$bench)) {
+                key <- if (r$p >= 0.05) "cvpat_bm_same" else if (r$diff < 0) "cvpat_bm_worse" else "cvpat_bm_better"
+                out <- c(out, sprintf(txt(key), prd$bench, .pl_fmt(r$diff), .pl_fmt(r$t), .pl_fmt_p(r$p)))
+            }
             if (isTRUE(prd$small$small))
                 out <- c(out, sprintf(txt("predict_small_interp"), prd$small$test, prd$small$train, prd$small$n_exog))
             ia <- cv[cv$bench == "IA", ]
             c(out, txt("predict_caution"),
               txt(if (any(m$q2 <= 0) || !(ia$p < 0.05 && ia$diff < 0)) "predict_next_weak" else "predict_next"))
+        },
+
+        # Interpretation of the model comparison (1.2.0): what BIC and GM
+        # say for each outcome. ES: Interpretación de la comparación de
+        # modelos (1.2.0): qué dicen BIC y GM para cada resultado.
+        .compareLines = function(txt, cmp) {
+            if (is.null(cmp)) return(character(0))
+            if (!is.null(cmp$reason)) return(sprintf(txt("compare_none"), cmp$reason))
+            tb <- cmp$table
+            lang <- .pl_lang(self$options)
+            pl <- function(k) tolower(.pl_text(lang, "labels", paste0("pref_", k)))
+            out <- character(0)
+            # only the outcomes whose equation loses a path: the others
+            # differ only through the weights
+            # ES: solo los resultados cuya ecuación pierde una ruta
+            for (cn in intersect(unique(tb$construct), cmp$changed)) {
+                b <- tb$preferred[tb$construct == cn & tb$criterion == "BIC"]
+                g <- tb$preferred[tb$construct == cn & tb$criterion == "GM"]
+                if (is.na(b) || is.na(g)) next
+                out <- c(out, if (b == g && b != "equal")
+                    sprintf(txt("compare_both"), cn, pl(b), cmp$drop, txt(if (b == "main") "compare_drop_worse" else "compare_drop_better"))
+                else sprintf(txt("compare_split"), cn, pl(b), pl(g)))
+            }
+            c(out, txt("compare_next"))
         },
 
         # Interpretation of the overall fit test: exact fit kept or rejected
@@ -2471,7 +2732,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
                                model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, mga = NULL,
-                               nca = NULL) {
+                               nca = NULL, cmp = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -2530,6 +2791,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             paste(sprintf("%s \u2192 %s", nt$from[nt$necessary], nt$to[nt$necessary]), collapse = ", "))
                 else sprintf(txt("nca_none"), nrow(nt), .pl_text(lang, "labels", paste0("nca_", nca$ceiling))))
             }
+            if (!is.null(cmp$table)) {
+                ct <- cmp$table
+                both <- function(w) sum(vapply(intersect(unique(ct$construct), cmp$changed), function(cn)
+                    identical(ct$preferred[ct$construct == cn & ct$criterion == "BIC"], w) &&
+                    identical(ct$preferred[ct$construct == cn & ct$criterion == "GM"], w), TRUE))
+                findings <- c(findings, sprintf(txt("compare"), both("main"), length(intersect(unique(ct$construct), cmp$changed)), cmp$drop,
+                                                both("competing")))
+            }
             mt <- mga$mgcfa$table
             if (!is.null(mt)) {
                 held <- c("mgcfa_good", "mgcfa_acceptable", "mgcfa_supported")
@@ -2554,7 +2823,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 }, TRUE)
                 pct <- format(100 * as.numeric(self$options$ciLevel))
                 findings <- c(findings, sprintf(txt("paths_sig"), sum(sig), nrow(paths), pct))
-                uncertain <- sprintf(txt("boot_basis"), sm$admissible, sm$runs, as.integer(self$options$bootSeed))
+                uncertain <- if (identical(sm$method, "jackknife")) sprintf(txt("jk_basis"), sm$admissible, sm$runs)
+                             else sprintf(txt("boot_basis"), sm$admissible, sm$runs, as.integer(self$options$bootSeed))
             }
             warnings <- c(if (!admissible) txt("admissible_no"),
                           private$.negativeLoadings(loadings, function(section, key) .pl_text(lang, section, key)),
@@ -2602,10 +2872,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!self$options$showChoicesGuide) return()
             txt <- function(key) .pl_text(lang, "choices", key)
             scheme <- c(path = "path", centroid = "centroid", factorial = "factorial")[[self$options$innerScheme]]
-            paras <- c(txt(self$options$estimator), sprintf(txt("scheme"), scheme), txt(self$options$indicatorScale),
+            wa <- self$options$weightApproach
+            paras <- c(txt(self$options$estimator),
+                       if (wa != "pls") txt(paste0("approach_", wa)) else sprintf(txt("scheme"), scheme),
+                       txt(self$options$indicatorScale),
                        if (self$options$missing == "mean") sprintf(txt("mean"), prep$n_replaced)
                        else sprintf(txt("listwise"), prep$n_used, prep$n_total),
-                       if (self$options$bootstrap)
+                       if (self$options$bootstrap && self$options$resampleMethod == "jackknife")
+                           sprintf(txt("jackknife"), prep$n_used, format(100 * as.numeric(self$options$ciLevel)))
+                       else if (self$options$bootstrap)
                            sprintf(txt("bootstrap"), as.integer(self$options$bootReps), as.integer(self$options$bootSeed),
                                    format(100 * as.numeric(self$options$ciLevel)))
                        else txt("no_bootstrap"),
@@ -2628,6 +2903,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$measurementSection$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
             self$results$structuralSection$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
             self$results$ipmaSection$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
+            self$results$compareSection$compareGuide$setContent(.pl_html_block(txt("compare")))
             self$results$ncaSection$ncaGuide$setContent(.pl_html_block(c(txt("nca"), txt("nca_reading"), txt("nca_bottleneck"),
                                                                          txt("nca_combined"))))
             self$results$predictSection$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
@@ -2662,6 +2938,10 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 paste0("list(", paste(sprintf("%s = \"%s\"", names(m), unlist(m)), collapse = ", "), ")")
             else "NULL"
             modes <- modes_of(model$modes)
+            # Weighting approach (1.2.0): PLS modes only under PLS-PM
+            # ES: Enfoque de ponderación (1.2.0): modos PLS solo con PLS-PM
+            wa <- .pl_approach(self$options$weightApproach)
+            if (wa != "PLS-PM") modes <- sprintf("NULL, .approach_weights = \"%s\"", wa)
             missing_line <- if (self$options$missing == "mean")
                 "for (v in names(d)) d[[v]][is.na(d[[v]])] <- mean(d[[v]], na.rm = TRUE)"
             else "d <- d[complete.cases(d), ]"
@@ -2729,7 +3009,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Código R equivalente de las secciones opcionales que corrieron.
         .reproOptional = function(model, paths, q, modes, blocks = list()) {
             code <- character(0)
-            if (self$options$bootstrap) {
+            if (self$options$mardia)
+                code <- c(code, "",
+                    "# Mardia's multivariate skewness and kurtosis (covariance with denominator n, as Mardia, 1970)",
+                    "X <- as.matrix(d); X <- X[complete.cases(X), ]; n <- nrow(X); p <- ncol(X); Z <- scale(X, scale = FALSE)",
+                    "D <- Z %*% solve(crossprod(Z) / n) %*% t(Z); b1 <- sum(D^3) / n^2; b2 <- sum(diag(D)^2) / n",
+                    "c(b1 = b1, p_skew = pchisq(n * b1 / 6, p * (p + 1) * (p + 2) / 6, lower.tail = FALSE),",
+                    "  b2 = b2, z_kurt = (b2 - p * (p + 2)) / sqrt(8 * p * (p + 2) / n))")
+            if (self$options$bootstrap && self$options$resampleMethod == "jackknife") {
+                code <- c(code, "",
+                    "# Jackknife: one estimation per case left out; t intervals estimate +/- t(n - 1) * jackknife SE",
+                    "jk <- cSEM::resamplecSEMResults(fit, .resample_method = \"jackknife\", .handle_inadmissibles = \"drop\")",
+                    "pe <- jk$Estimates$Estimates_resample$Estimates1$Path_estimates; n <- nrow(pe$Resampled)",
+                    "se <- sqrt((n - 1) / n * colSums(sweep(pe$Resampled, 2, colMeans(pe$Resampled))^2))",
+                    sprintf("cbind(estimate = pe$Original, se = se, lower = pe$Original - qt(%s, n - 1) * se, upper = pe$Original + qt(%s, n - 1) * se)",
+                            format(1 - (1 - as.numeric(self$options$ciLevel)) / 2), format(1 - (1 - as.numeric(self$options$ciLevel)) / 2)),
+                    "# cSEM's summarize(.ci = \"CI_standard_t\") subtracts the bootstrap-style bias mean - estimate; PLSsemLab does not")
+            } else if (self$options$bootstrap) {
                 # The same blocks and seeds as the module: up to 200 resamples
                 # this is a single cSEM call with the seed.
                 # ES: Los mismos bloques y semillas que el módulo.
@@ -2744,7 +3040,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "for (n in q) boot$Estimates$Estimates_resample$Estimates1[[n]]$Resampled <- do.call(rbind, lapply(parts, function(o) o$Estimates$Estimates_resample$Estimates1[[n]]$Resampled))",
                     "boot$Information$Information_resample$Number_of_admissibles <- sum(sapply(parts, function(o) o$Information$Information_resample$Number_of_admissibles))",
                     sprintf("cSEM::summarize(boot, .alpha = %s, .ci = \"CI_percentile\")", format(1 - as.numeric(self$options$ciLevel))),
-                    "# Intervals of R2, reliability, AVE, HTMT and VIF: the same resampling with .user_funs (see R/bootstrap.R in PLSsemLab)")
+                    "# Intervals of R2, reliability, AVE, HTMT and VIF: the same resampling with .user_funs (see R/bootstrap.R in PLSsemLab)",
+                    if (self$options$weightApproach == "maxvar")
+                        "# MAXVAR: PLSsemLab turns each construct of each draw back to the sign of its original loadings (R/weights.R); cSEM does not")
+            }
+            if (self$options$compareRun) {
+                drop <- .pl_cvpat_drop(self$options$cvpatDrop, paths)
+                if (nrow(drop) && !length(model$hocs)) {
+                    keep <- paths[!(paste(paths$from, paths$to) %in% paste(drop$from, drop$to)), , drop = FALSE]
+                    alt <- .pl_build_syntax(blocks, keep, self$options$estimator)$syntax
+                    code <- c(code, "",
+                        sprintf("# Model comparison: the competing model leaves out %s", paste(drop$from, "->", drop$to, collapse = ", ")),
+                        sprintf("model_alt <- \"%s\"", gsub("\n", "\\\\n", alt)),
+                        sprintf("fit_alt <- cSEM::csem(d, model_alt, .PLS_modes = %s, .disattenuate = %s, .PLS_weight_scheme_inner = \"%s\")",
+                                modes, if (self$options$estimator == "plsc") "TRUE" else "FALSE", self$options$innerScheme),
+                        "sapply(list(main = fit, competing = fit_alt), function(f) unlist(cSEM::calculateModelSelectionCriteria(f, .by_equation = TRUE, .only_structural = TRUE)[c(\"BIC\", \"GM\")]))",
+                        "c(main = cSEM::calculateSRMR(fit), competing = cSEM::calculateSRMR(fit_alt))")
+                }
             }
             if (self$options$ipma && is.null(.pl_ipma_reason(model, model$hocs, self$options))) {
                 code <- c(code, "",
@@ -2781,6 +3093,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                             as.integer(self$options$predictReps), as.integer(self$options$predictFolds),
                             as.integer(self$options$bootSeed)),
                     "Reduce(`+`, lapply(pred, function(p) p$Prediction_metrics[, c(\"Q2_predict\", \"RMSE_target\", \"MAE_target\")])) / length(pred)",
+                    if (self$options$predictBenchmark != "none")
+                        sprintf("# Extra benchmark: the same folds and cSEM::predict(.benchmark = \"%s\") (RMSE_benchmark, MAE_benchmark columns)",
+                                .pl_approach(self$options$predictBenchmark)),
                     "# LM benchmark (Shmueli et al., 2019): each endogenous indicator regressed WITH an intercept on the",
                     "# exogenous indicators, on the same folds; cSEM::predict(.benchmark = \"lm\") omits the intercept",
                     "exo <- colnames(fit$Information$Model$measurement)[colSums(fit$Information$Model$measurement[rowSums(fit$Information$Model$structural) == 0, , drop = FALSE]) > 0]",

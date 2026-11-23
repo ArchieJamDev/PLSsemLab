@@ -441,4 +441,87 @@ refs:
         pages: '486-507'
         url: https://doi.org/10.1177/0049124114543236
 
+    hwang_2004:
+        type: 'article'
+        author: 'Hwang, H., & Takane, Y.'
+        year: 2004
+        title: 'Generalized structured component analysis'
+        publisher: 'Psychometrika'
+        volume: '69'
+        issue: '1'
+        pages: '81-99'
+        url: https://doi.org/10.1007/BF02295841
+
+    hwang_2017:
+        type: 'article'
+        author: 'Hwang, H., Takane, Y., & Jung, K.'
+        year: 2017
+        title: 'Generalized structured component analysis with uniqueness terms for accommodating measurement error'
+        publisher: 'Frontiers in Psychology'
+        volume: '8'
+        pages: '2137'
+        url: https://doi.org/10.3389/fpsyg.2017.02137
+
+    kettenring_1971:
+        type: 'article'
+        author: 'Kettenring, J. R.'
+        year: 1971
+        title: 'Canonical analysis of several sets of variables'
+        publisher: 'Biometrika'
+        volume: '58'
+        issue: '3'
+        pages: '433-451'
+        url: https://doi.org/10.1093/biomet/58.3.433
+
+    mardia_1970:
+        type: 'article'
+        author: 'Mardia, K. V.'
+        year: 1970
+        title: 'Measures of multivariate skewness and kurtosis with applications'
+        publisher: 'Biometrika'
+        volume: '57'
+        issue: '3'
+        pages: '519-530'
+        url: https://doi.org/10.1093/biomet/57.3.519
+
+    cain_2017:
+        type: 'article'
+        author: 'Cain, M. K., Zhang, Z., & Yuan, K.-H.'
+        year: 2017
+        title: 'Univariate and multivariate skewness and kurtosis for measuring nonnormality: Prevalence, influence and estimation'
+        publisher: 'Behavior Research Methods'
+        volume: '49'
+        issue: '5'
+        pages: '1716-1735'
+        url: https://doi.org/10.3758/s13428-016-0814-1
+
+    efron_1993:
+        type: 'book'
+        author: 'Efron, B., & Tibshirani, R. J.'
+        year: 1993
+        title: 'An introduction to the bootstrap'
+        publisher: 'Chapman & Hall'
+
+    sharma_2019:
+        type: 'article'
+        author: 'Sharma, P. N., Sarstedt, M., Shmueli, G., Kim, K. H., & Thiele, K. O.'
+        year: 2019
+        title: 'PLS-based model selection: The role of alternative explanations in information systems research'
+        publisher: 'Journal of the Association for Information Systems'
+        volume: '20'
+        issue: '4'
+        pages: '346-397'
+        url: https://doi.org/10.17705/1jais.00538
+
+    sharma_2021:
+        type: 'article'
+        author: 'Sharma, P. N., Shmueli, G., Sarstedt, M., Danks, N., & Ray, S.'
+        year: 2021
+        title: 'Prediction-oriented model selection in partial least squares path modeling'
+        publisher: 'Decision Sciences'
+        volume: '52'
+        issue: '3'
+        pages: '567-607'
+        url: https://doi.org/10.1111/deci.12329
+
 ...

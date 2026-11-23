@@ -56,7 +56,7 @@
 # with estimate, se, lower, upper, the direct effect X -> Y (NA when not in
 # the model), its interval, and the Zhao et al. (2010) type key.
 # ES: Estimaciones (e intervalos bootstrap si hay réplicas) de las cadenas.
-.pl_mediation <- function(chains, B, cmap, draws = NULL, level = 0.95, direct_ci = NULL) {
+.pl_mediation <- function(chains, B, cmap, draws = NULL, level = 0.95, direct_ci = NULL, method = "bootstrap") {
     if (!nrow(chains)) return(chains)
     a <- (1 - level) / 2
     out <- chains
@@ -72,10 +72,9 @@
         if (B[y, x] != 0) out$direct[k] <- B[y, x]
         if (!is.null(draws) && all(steps %in% colnames(draws))) {
             d <- apply(draws[, steps, drop = FALSE], 1, prod)
-            d <- d[is.finite(d)]
-            out$se[k] <- stats::sd(d)
-            q <- stats::quantile(d, c(a, 1 - a), names = FALSE)
-            out$lower[k] <- q[1]; out$upper[k] <- q[2]
+            iv <- .pl_draw_interval(d, out$estimate[k], level, method)
+            out$se[k] <- iv$se
+            out$lower[k] <- iv$lower; out$upper[k] <- iv$upper
             dn <- paste(y, "~", x)
             if (!is.null(direct_ci) && dn %in% direct_ci$name) {
                 out$dlower[k] <- direct_ci$lower[direct_ci$name == dn]

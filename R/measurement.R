@@ -81,7 +81,13 @@
         rhoC <- if (isTRUE(model$nonlinear)) grab("rhoC", .pl_rhoC_loadings(fit, rint))
                 else grab("rhoC", cSEM::calculateRhoC(fit, .only_common_factors = FALSE))
         ave <- grab("ave", cSEM::calculateAVE(fit, .only_common_factors = FALSE))
-        rhoA <- if (options$estimator == "plsc") {
+        # rho_A is defined for PLS-PM weights (Dijkstra & Henseler, 2015):
+        # with another weighting approach it is not computed (1.2.0).
+        # ES: rho_A se define para los pesos de PLS-PM: con otro enfoque de
+        # ponderación no se calcula (1.2.0).
+        rhoA <- if (!is.null(options$weightApproach) && options$weightApproach != "pls") {
+            NULL
+        } else if (options$estimator == "plsc") {
             fit$Estimates$Reliabilities
         } else {
             plsc <- .pl_build_syntax(blocks, paths, "plsc")

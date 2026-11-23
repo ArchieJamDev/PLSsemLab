@@ -27,6 +27,7 @@
 # Why IPMA cannot run for this model (NULL when it can). Category B.
 # ES: Por qué el IPMA no puede correr con este modelo (NULL si puede).
 .pl_ipma_reason <- function(model, hocs, options) {
+    if (!is.null(options$weightApproach) && options$weightApproach != "pls") return("ipma_approach")
     if (identical(options$estimator, "plsc")) return("ipma_plsc")
     if (isTRUE(model$nonlinear)) return("ipma_nonlinear")
     if (length(hocs)) return("ipma_hoc")

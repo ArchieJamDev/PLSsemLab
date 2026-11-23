@@ -19,22 +19,27 @@ why, what it means and what to do next, in English and Spanish.
 - **Models built from boxes**, no syntax: reflective and formative
   constructs, structural paths, higher-order constructs and interactions,
   with a validator that explains each modeling mistake.
-- **Estimators:** PLS and consistent PLS (PLSc); continuous or ordinal
-  indicators (polychoric correlations).
+- **Estimators:** PLS and consistent PLS (PLSc), with the PLS-PM, GSCA,
+  SUMCORR, MAXVAR, PCA or unit-weight approaches; continuous or ordinal
+  indicators (polychoric correlations); Mardia's multivariate normality;
+  construct scores saved to the data set.
 - **Measurement model:** Cronbach's alpha, rho_A, rho_C, AVE, HTMT and HTMT2
   with bootstrap intervals, Fornell-Larcker, indicator VIF, loadings and
   weights.
 - **Structural model:** paths, R², f², VIF, direct, indirect and total
-  effects; bootstrap in blocks with intervals for every measure, cancellable
-  and with a visible seed; path diagram, loadings and HTMT plots.
+  effects; bootstrap in blocks (or jackknife) with intervals for every
+  measure, cancellable and with a visible seed; path diagram, loadings and
+  HTMT plots.
 - **Higher-order constructs** (disjoint two-stage approach by default; cSEM's
   second-order routine as an option) and **two-way interactions** with simple
   effects, floodlight and Johnson-Neyman.
 - **Overall model fit:** bootstrap test with SRMR, d_G, d_L and d_ML for the
   estimated and the saturated model, with decision and reading.
-- **Prediction and more:** PLSpredict, CVPAT (against the indicator average,
-  a linear model and a competing model), mediation with specific indirect
-  effects, and the importance-performance map (IPMA).
+- **Prediction and more:** PLSpredict (with an extra benchmark from another
+  weighting approach), CVPAT (against the indicator average, a linear model,
+  a competing model and that benchmark), the side-by-side comparison of the
+  main and a competing model (BIC, GM and other criteria), mediation with
+  specific indirect effects, and the importance-performance map (IPMA).
 - **Necessary condition analysis (NCA)** combined with PLS-SEM: CE-FDH and
   CR-FDH effect sizes with permutation tests, bottleneck tables, ceiling
   plots and the combined must-have / should-have reading of each path.
@@ -117,7 +122,11 @@ guiada al estilo de AssumptionsLab, EGAnetLab y MokkenLab: cada resultado
 dice qué pasó, por qué, qué significa y qué hacer después, en español e
 inglés.
 
-**Qué hace:** modelos armados con cajas, sin sintaxis; PLS y PLS consistente;
+**Qué hace:** modelos armados con cajas, sin sintaxis; PLS y PLS consistente,
+con los enfoques de ponderación PLS-PM, GSCA, SUMCORR, MAXVAR, PCA o pesos
+unitarios; normalidad multivariada de Mardia; puntuaciones guardadas en los
+datos; bootstrap o jackknife; comparación lado a lado con un modelo
+competidor;
 fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
 bootstrap por bloques; constructos de orden superior e interacciones con
 pendientes simples y Johnson-Neyman; ajuste global por bootstrap (SRMR, d_G,

@@ -34,7 +34,15 @@ test_that("the MGCFA table equals lavaan on corp_rep by service type", {
     # CUSA has one indicator: left out, and the note says so
     # ES: CUSA tiene un indicador: queda fuera y la nota lo dice
     expect_true("left" %in% names(a$results$mgaSection$mgcfa$notes))
-    expect_match(gsub("<[^>]+>", " ", a$results$interpretation$content), "Multigroup CFA of the reflective constructs")
+    html <- gsub("<[^>]+>", " ", a$results$interpretation$content)
+    expect_match(html, "Multigroup CFA of the reflective constructs")
+    # RMSEA (about 0.093 with 48 df) would call the configural fit poor; CFI
+    # and SRMR decide, and the report says so
+    # ES: el RMSEA calificaría de pobre el ajuste configural; deciden CFI y
+    # SRMR, y el informe lo dice
+    expect_gt(tab$rmsea[1], 0.08)
+    expect_equal(tab$decision[1], "Good fit")
+    expect_match(html, "RMSEA overstates misfit in models with few degrees of freedom")
 })
 
 test_that("MGCFA decisions follow the configural fit and Chen's limits", {

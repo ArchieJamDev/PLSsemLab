@@ -188,6 +188,10 @@ covariance structure analysis: Conventional criteria versus new
 alternatives. *Structural Equation Modeling, 6*(1), 1–55.
 https://doi.org/10.1080/10705519909540118
 
+Kenny, D. A., Kaniskan, B., & McCoach, D. B. (2015). The performance of
+RMSEA in models with small degrees of freedom. *Sociological Methods &
+Research, 44*(3), 486–507. https://doi.org/10.1177/0049124114543236
+
 Putnick, D. L., & Bornstein, M. H. (2016). Measurement invariance conventions
 and reporting: The state of the art and future directions for psychological
 research. *Developmental Review, 41*, 71–90.

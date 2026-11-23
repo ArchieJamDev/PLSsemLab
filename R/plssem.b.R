@@ -1365,6 +1365,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             form <- vapply(Filter(function(b) !identical(b$type, "reflective"), blocks), `[[`, "", "label")
             if (length(c(single, form)))
                 tab$setNote("left", sprintf(txt("footnotes", "mgcfa_left"), paste(c(single, form), collapse = ", ")))
+            # configural RMSEA above .08 while CFI and SRMR hold: say why
+            # RMSEA does not decide (Kenny et al., 2015)
+            # ES: RMSEA configural sobre .08 con CFI y SRMR aceptables
+            if (private$.rmseaOverruled(t))
+                tab$addFootnote(rowKey = "configural", col = "rmsea",
+                                sprintf(txt("footnotes", "mgcfa_rmsea_cell"), .pl_fmt(t$rmsea[1]), format(round(t$df[1]))))
             if (!all(t$converged))
                 tab$setNote("conv", sprintf(txt("footnotes", "mgcfa_nonconv"),
                                             paste(lab(paste0("mgcfa_", t$step[!t$converged])), collapse = ", ")))
@@ -1497,6 +1503,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             c(out, txt("mga_caution"), txt("mga_next"))
         },
 
+        # TRUE when the configural RMSEA alone (> .08) would have called the
+        # fit poor while CFI and SRMR call it good or acceptable.
+        # ES: TRUE cuando solo el RMSEA configural (> .08) habría calificado
+        # el ajuste de pobre y CFI y SRMR lo aceptan.
+        .rmseaOverruled = function(t) {
+            is.finite(t$rmsea[1]) && t$rmsea[1] > 0.08 && t$decision[1] %in% c("mgcfa_good", "mgcfa_acceptable")
+        },
+
         # Interpretation of the MGCFA: how far the invariance of the
         # reflective constructs as common factors goes, and how it relates to
         # MICOM. ES: Interpretación del MGCFA y su relación con MICOM.
@@ -1506,6 +1520,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             t <- mgc$table
             lab <- function(k) .pl_text(.pl_lang(self$options), "labels", k)
             out <- sprintf(txt("mgcfa_configural"), tolower(lab(t$decision[1])), .pl_fmt(t$cfi[1]), .pl_fmt(t$srmr[1]))
+            if (private$.rmseaOverruled(t))
+                out <- c(out, sprintf(txt("mgcfa_rmsea"), .pl_fmt(t$rmsea[1]), format(round(t$df[1])),
+                                      .pl_fmt(t$cfi[1]), .pl_fmt(t$srmr[1])))
             if (t$decision[2] == "mgcfa_supported") {
                 out <- c(out, sprintf(txt("mgcfa_metric_ok"), .pl_fmt(t$dcfi[2]), .pl_fmt(t$drmsea[2])))
                 out <- c(out, if (t$decision[3] == "mgcfa_supported")

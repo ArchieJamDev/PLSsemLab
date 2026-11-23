@@ -1288,6 +1288,12 @@
             "Multigroup CFA of the reflective constructs with lavaan (%s), %d groups, correlated factors. Each model adds equality constraints to the previous one: metric, equal loadings; scalar, equal loadings and intercepts. Configural: good fit with CFI ≥ .95 and SRMR ≤ .08, acceptable with CFI ≥ .90 and SRMR ≤ .10 (Hu & Bentler, 1999); RMSEA is shown but not used, because with few degrees of freedom it overstates misfit (Kenny, Kaniskan & McCoach, 2015). Metric and scalar are supported when CFI drops by no more than .010 and RMSEA rises by no more than .015 (SRMR by no more than .030 for metric and .010 for scalar; Chen, 2007). The chi-square difference is shown too, but with large samples it flags trivial differences (Cheung & Rensvold, 2002).": [
                 "AFC multigrupo de los constructos reflectivos con lavaan (%s), %d grupos, factores correlacionados. Cada modelo agrega restricciones de igualdad al anterior: métrico, cargas iguales; escalar, cargas e interceptos iguales. Configural: buen ajuste con CFI ≥ .95 y SRMR ≤ .08, aceptable con CFI ≥ .90 y SRMR ≤ .10 (Hu y Bentler, 1999); el RMSEA se muestra pero no se usa, porque con pocos grados de libertad exagera el desajuste (Kenny, Kaniskan y McCoach, 2015). Métrica y escalar se sostienen cuando el CFI baja no más de .010 y el RMSEA sube no más de .015 (el SRMR no más de .030 en la métrica y .010 en la escalar; Chen, 2007). También se muestra la diferencia de chi cuadrado, pero con muestras grandes señala diferencias triviales (Cheung y Rensvold, 2002)."
             ],
+            "Multigroup CFA of the reflective constructs: invariance holds up to the %s model.": [
+                "AFC multigrupo de los constructos reflectivos: la invarianza se sostiene hasta el modelo %s."
+            ],
+            "Multigroup CFA of the reflective constructs: the configural model does not fit.": [
+                "AFC multigrupo de los constructos reflectivos: el modelo configural no ajusta."
+            ],
             "Multigroup CFA of the reflective constructs: the configural model has %s (CFI = %s, SRMR = %s).": [
                 "AFC multigrupo de los constructos reflectivos: el modelo configural tiene %s (CFI = %s, SRMR = %s)."
             ],
@@ -1341,6 +1347,12 @@
             ],
             "Necessary condition analysis (NCA; Dul, 2016, see references) asks a different question from the path coefficients: not whether more of a construct gives more of the outcome on average, but whether a high outcome is possible without a certain level of the construct. If it is not, the construct is a necessary condition: its absence cannot be compensated by the other constructs. Combined with PLS-SEM (Richter et al., 2020, see references), it works on the construct scores of the IPMA (0-100) of every construct with a direct path to each outcome.": [
                 "El análisis de condición necesaria (NCA; Dul, 2016, véanse las referencias) hace una pregunta distinta de la de los coeficientes de ruta: no si más de un constructo da más del resultado en promedio, sino si un resultado alto es posible sin cierto nivel del constructo. Si no lo es, el constructo es una condición necesaria: los demás constructos no pueden compensar su ausencia. Combinado con PLS-SEM (Richter et al., 2020, véanse las referencias), trabaja con las puntuaciones de los constructos del IPMA (0-100) de cada constructo con una ruta directa a cada resultado."
+            ],
+            "Necessary conditions (NCA, %2$s): none of %1$d condition-outcome pairs.": [
+                "Condiciones necesarias (NCA, %2$s): ninguno de %1$d pares condición-resultado."
+            ],
+            "Necessary conditions (NCA, %3$s): %1$d of %2$d condition-outcome pairs (%4$s).": [
+                "Condiciones necesarias (NCA, %3$s): %1$d de %2$d pares condición-resultado (%4$s)."
             ],
             "Necessary conditions (NCA)": [
                 "Condiciones necesarias (NCA)"

@@ -267,14 +267,24 @@
 .pl_nca_bn_cell <- function(v, nn, na) {
     if (is.na(v)) return(na)
     if (is.infinite(v)) return(nn)
-    v
+    # one decimal, as the NCA package prints it; a text column, because
+    # jamovi formats each cell on its own when a column mixes numbers and
+    # text (NN / NA), which gave uneven decimals
+    # ES: un decimal, como lo imprime el paquete NCA; columna de texto,
+    # porque jamovi formatea cada celda por separado cuando se mezclan
+    # números y texto
+    formatC(v, format = "f", digits = 1)
 }
 
 # Scatter plot of one condition with both ceiling lines, from image$state.
 # Colours follow jamovi's theme: the points and CR-FDH (dashed) in the ink
 # colour, CE-FDH in the accent colour.
+# The theme goes first: jamovi's ggtheme carries its own colour scale, which
+# would otherwise replace this one and split the legend in two.
 # ES: Diagrama de dispersión de una condición con ambos techos, desde
-# image$state; los colores siguen el tema de jamovi.
+# image$state; los colores siguen el tema de jamovi. El tema va primero:
+# trae su propia escala de color, que si no reemplazaría a esta y partiría
+# la leyenda en dos.
 .pl_plot_nca <- function(state, ggtheme, theme) {
     s <- state$scope
     pk <- state$peers
@@ -296,16 +306,18 @@
     }
     lines$line <- factor(lines$line, levels = c(state$labels[["ce"]], state$labels[["cr"]]))
     ggplot2::ggplot() +
+        ggtheme +
         ggplot2::annotate("rect", xmin = s[1], xmax = s[2], ymin = s[3], ymax = s[4],
                           fill = NA, colour = ink, alpha = 0.4, linetype = "dotted") +
         ggplot2::geom_point(data = pts, ggplot2::aes(x = x, y = y), colour = ink, alpha = 0.45, size = 1.6) +
         ggplot2::geom_path(data = lines, ggplot2::aes(x = x, y = y, colour = line, linetype = line), linewidth = 1) +
-        ggplot2::scale_colour_manual(values = stats::setNames(pal, levels(lines$line)), drop = FALSE, name = NULL) +
+        ggplot2::scale_colour_manual(values = stats::setNames(pal, levels(lines$line)), drop = FALSE, name = "") +
         ggplot2::scale_linetype_manual(values = stats::setNames(c("solid", "dashed"), levels(lines$line)),
-                                       drop = FALSE, name = NULL) +
-        ggplot2::labs(x = state$x_lab, y = state$y_lab, title = state$title, caption = state$caption) +
-        ggtheme +
-        ggplot2::theme(legend.position = "bottom")
+                                       drop = FALSE, name = "") +
+        ggplot2::labs(x = state$x_lab, y = state$y_lab, title = state$title,
+                      caption = paste(strwrap(state$caption, 70), collapse = "\n")) +
+        ggplot2::theme(legend.position = "bottom", legend.title = ggplot2::element_blank(),
+                       plot.caption = ggplot2::element_text(hjust = 0))
 }
 
 # Outcome-condition pairs of the NCA: every direct path between two

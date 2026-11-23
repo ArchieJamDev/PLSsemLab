@@ -289,7 +289,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (self$options$ncaBottleneck) {
                     bt <- nsec$ncaBottlenecks$addItem(key = tg)
                     bt$setTitle(sprintf(ptxt("nca_bn_title"), tg, ptxt(paste0("nca_", substr(self$options$ncaCeiling, 1, 2)))))
-                    for (j in seq_along(conds)) bt$addColumn(name = paste0("c", j), title = conds[j], type = "number")
+                    for (j in seq_along(conds)) bt$addColumn(name = paste0("c", j), title = conds[j], type = "text")
                     for (lv in .PL_NCA_STEPS) bt$addRow(rowKey = lv, values = list(level = lv))
                 }
             }
@@ -343,7 +343,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.interpretation(lang, blocks, t$loadings, t$path_tab, t$r2_tab, t$quality, t$structural,
                                     o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga, o$nca)
             private$.keySummary(lang, blocks, e$vars, paths, e$prep, t$loadings, t$r2_tab, e$admissible, t$quality,
-                                o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga)
+                                o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga, o$nca)
             private$.choices(lang, e$prep, o$boot)
             private$.guides(lang)
             private$.reproducibility(lang, e$smodel, e$prep, blocks, paths)
@@ -1516,6 +1516,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # MICOM. ES: Interpretación del MGCFA y su relación con MICOM.
         .mgcfaLines = function(txt, mgc) {
             if (is.null(mgc)) return(character(0))
+            # changes rounded to three decimals, without a negative zero
+            # ES: cambios con tres decimales, sin cero negativo
+            fd <- function(v) formatC(if (abs(v) < 5e-4) 0 else v, format = "f", digits = 3)
             if (!is.null(mgc$reason)) return(sprintf(txt("mgcfa_none"), mgc$reason))
             t <- mgc$table
             lab <- function(k) .pl_text(.pl_lang(self$options), "labels", k)
@@ -1524,12 +1527,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 out <- c(out, sprintf(txt("mgcfa_rmsea"), .pl_fmt(t$rmsea[1]), format(round(t$df[1])),
                                       .pl_fmt(t$cfi[1]), .pl_fmt(t$srmr[1])))
             if (t$decision[2] == "mgcfa_supported") {
-                out <- c(out, sprintf(txt("mgcfa_metric_ok"), .pl_fmt(t$dcfi[2]), .pl_fmt(t$drmsea[2])))
+                out <- c(out, sprintf(txt("mgcfa_metric_ok"), fd(t$dcfi[2]), fd(t$drmsea[2])))
                 out <- c(out, if (t$decision[3] == "mgcfa_supported")
-                                  sprintf(txt("mgcfa_scalar_ok"), .pl_fmt(t$dcfi[3]), .pl_fmt(t$drmsea[3]))
-                              else sprintf(txt("mgcfa_scalar_fail"), .pl_fmt(t$dcfi[3]), .pl_fmt(t$drmsea[3])))
+                                  sprintf(txt("mgcfa_scalar_ok"), fd(t$dcfi[3]), fd(t$drmsea[3]))
+                              else sprintf(txt("mgcfa_scalar_fail"), fd(t$dcfi[3]), fd(t$drmsea[3])))
             } else if (t$decision[2] == "mgcfa_not_supported") {
-                out <- c(out, sprintf(txt("mgcfa_metric_fail"), .pl_fmt(t$dcfi[2]), .pl_fmt(t$drmsea[2])))
+                out <- c(out, sprintf(txt("mgcfa_metric_fail"), fd(t$dcfi[2]), fd(t$drmsea[2])))
             } else {
                 out <- c(out, txt("mgcfa_configural_fail"))
             }
@@ -2467,7 +2470,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         },
 
         .keySummary = function(lang, blocks, vars, paths, prep, loadings, r2, admissible, quality, sm = NULL,
-                               model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, mga = NULL) {
+                               model = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, mga = NULL,
+                               nca = NULL) {
             if (!self$options$showKeySummary) return()
             txt <- function(key) .pl_text(lang, "key", key)
             types <- vapply(blocks, `[[`, "", "type")
@@ -2516,6 +2520,23 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 findings <- c(findings, if (!is.null(mga$micom))
                     sprintf(txt("mga"), mga$group, sum(mga$micom$verdict != "inv_none"), nrow(mga$micom), both, nrow(mga$mgd))
                 else sprintf(txt("mga_no_micom"), mga$group, both, nrow(mga$mgd)))
+            }
+            # NCA and MGCFA (1.1.0)
+            # ES: NCA y AFCMG (1.1.0)
+            if (!is.null(nca$table)) {
+                nt <- nca$table
+                findings <- c(findings, if (any(nt$necessary))
+                    sprintf(txt("nca"), sum(nt$necessary), nrow(nt), .pl_text(lang, "labels", paste0("nca_", nca$ceiling)),
+                            paste(sprintf("%s \u2192 %s", nt$from[nt$necessary], nt$to[nt$necessary]), collapse = ", "))
+                else sprintf(txt("nca_none"), nrow(nt), .pl_text(lang, "labels", paste0("nca_", nca$ceiling))))
+            }
+            mt <- mga$mgcfa$table
+            if (!is.null(mt)) {
+                held <- c("mgcfa_good", "mgcfa_acceptable", "mgcfa_supported")
+                level <- if (mt$decision[3] %in% held) "mgcfa_scalar" else if (mt$decision[2] %in% held) "mgcfa_metric"
+                         else if (mt$decision[1] %in% held) "mgcfa_configural" else NA
+                findings <- c(findings, if (is.na(level)) txt("mgcfa_none")
+                                        else sprintf(txt("mgcfa"), tolower(.pl_text(lang, "labels", level))))
             }
             if (!is.null(omf$table)) {
                 e <- omf$table[omf$table$model == "estimated", ]

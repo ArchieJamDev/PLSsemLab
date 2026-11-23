@@ -572,6 +572,10 @@
         key = list(
             mga = .("Multigroup (%1$s): invariance at least partial for %2$d of %3$d constructs; %4$d of %5$d path comparisons significant in both tests."),
             mga_no_micom = .("Multigroup (%1$s): %2$d of %3$d path comparisons significant in both tests (MICOM not computed)."),
+            nca = .("Necessary conditions (NCA, %3$s): %1$d of %2$d condition-outcome pairs (%4$s)."),
+            nca_none = .("Necessary conditions (NCA, %2$s): none of %1$d condition-outcome pairs."),
+            mgcfa = .("Multigroup CFA of the reflective constructs: invariance holds up to the %s model."),
+            mgcfa_none = .("Multigroup CFA of the reflective constructs: the configural model does not fit."),
             findings = .("Main findings"),
             uncertain = .("Uncertainties"),
             warnings = .("Warnings"),

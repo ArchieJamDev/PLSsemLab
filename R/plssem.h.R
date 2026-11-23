@@ -2471,6 +2471,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 "vandenberg_2000",
                                 "putnick_2016",
                                 "hu_1999",
+                                "kenny_2015",
                                 "cheung_2002",
                                 "chen_2007"),
                             clearWith=list(
@@ -2831,7 +2832,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(1,0,1),
+                version = c(1,1,0),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,

@@ -1279,8 +1279,14 @@
             "Multigroup Analysis": [
                 "Análisis multigrupo"
             ],
-            "Multigroup CFA of the reflective constructs with lavaan (%s), %d groups, correlated factors. Each model adds equality constraints to the previous one: metric, equal loadings; scalar, equal loadings and intercepts. Configural: good fit with CFI ≥ .95 and SRMR ≤ .08, acceptable with CFI ≥ .90 and SRMR ≤ .10 (Hu & Bentler, 1999); RMSEA is shown but not used, because with few degrees of freedom it overstates misfit. Metric and scalar are supported when CFI drops by no more than .010 and RMSEA rises by no more than .015 (SRMR by no more than .030 for metric and .010 for scalar; Chen, 2007). The chi-square difference is shown too, but with large samples it flags trivial differences (Cheung & Rensvold, 2002).": [
-                "AFC multigrupo de los constructos reflectivos con lavaan (%s), %d grupos, factores correlacionados. Cada modelo agrega restricciones de igualdad al anterior: métrico, cargas iguales; escalar, cargas e interceptos iguales. Configural: buen ajuste con CFI ≥ .95 y SRMR ≤ .08, aceptable con CFI ≥ .90 y SRMR ≤ .10 (Hu y Bentler, 1999); el RMSEA se muestra pero no se usa, porque con pocos grados de libertad exagera el desajuste. Métrica y escalar se sostienen cuando el CFI baja no más de .010 y el RMSEA sube no más de .015 (el SRMR no más de .030 en la métrica y .010 en la escalar; Chen, 2007). También se muestra la diferencia de chi cuadrado, pero con muestras grandes señala diferencias triviales (Cheung y Rensvold, 2002)."
+            "Multigroup CFA estimator: maximum likelihood (ML). It assumes multivariate normal indicators; with skewed rating scales the chi-square and its differences are too large, so MLR is usually safer.": [
+                "Estimador del AFC multigrupo: máxima verosimilitud (ML). Supone indicadores con normalidad multivariada; con escalas de valoración asimétricas el chi cuadrado y sus diferencias son demasiado grandes, así que MLR suele ser más seguro."
+            ],
+            "Multigroup CFA estimator: robust maximum likelihood (MLR). Rating-scale indicators are rarely normal; MLR keeps the ML estimates and corrects the chi-square, its differences and the fit indices for non-normality. Choose ML only when the indicators are close to normal. The configural model is judged by CFI and SRMR, not by RMSEA, which overstates misfit with few degrees of freedom (Kenny, Kaniskan & McCoach, 2015, see references); RMSEA is still shown and used for the changes between models.": [
+                "Estimador del AFC multigrupo: máxima verosimilitud robusta (MLR). Los indicadores de escalas de valoración rara vez son normales; MLR conserva las estimaciones de ML y corrige el chi cuadrado, sus diferencias y los índices de ajuste por la falta de normalidad. Elija ML solo cuando los indicadores sean cercanos a la normal. El modelo configural se juzga por CFI y SRMR, no por el RMSEA, que exagera el desajuste con pocos grados de libertad (Kenny, Kaniskan y McCoach, 2015, véanse las referencias); el RMSEA se muestra igual y se usa para los cambios entre modelos."
+            ],
+            "Multigroup CFA of the reflective constructs with lavaan (%s), %d groups, correlated factors. Each model adds equality constraints to the previous one: metric, equal loadings; scalar, equal loadings and intercepts. Configural: good fit with CFI ≥ .95 and SRMR ≤ .08, acceptable with CFI ≥ .90 and SRMR ≤ .10 (Hu & Bentler, 1999); RMSEA is shown but not used, because with few degrees of freedom it overstates misfit (Kenny, Kaniskan & McCoach, 2015). Metric and scalar are supported when CFI drops by no more than .010 and RMSEA rises by no more than .015 (SRMR by no more than .030 for metric and .010 for scalar; Chen, 2007). The chi-square difference is shown too, but with large samples it flags trivial differences (Cheung & Rensvold, 2002).": [
+                "AFC multigrupo de los constructos reflectivos con lavaan (%s), %d grupos, factores correlacionados. Cada modelo agrega restricciones de igualdad al anterior: métrico, cargas iguales; escalar, cargas e interceptos iguales. Configural: buen ajuste con CFI ≥ .95 y SRMR ≤ .08, aceptable con CFI ≥ .90 y SRMR ≤ .10 (Hu y Bentler, 1999); el RMSEA se muestra pero no se usa, porque con pocos grados de libertad exagera el desajuste (Kenny, Kaniskan y McCoach, 2015). Métrica y escalar se sostienen cuando el CFI baja no más de .010 y el RMSEA sube no más de .015 (el SRMR no más de .030 en la métrica y .010 en la escalar; Chen, 2007). También se muestra la diferencia de chi cuadrado, pero con muestras grandes señala diferencias triviales (Cheung y Rensvold, 2002)."
             ],
             "Multigroup CFA of the reflective constructs: the configural model has %s (CFI = %s, SRMR = %s).": [
                 "AFC multigrupo de los constructos reflectivos: el modelo configural tiene %s (CFI = %s, SRMR = %s)."
@@ -1317,6 +1323,12 @@
             ],
             "NCA p": [
                 "p del NCA"
+            ],
+            "NCA verdict: CE-FDH ceiling, %d permutations. CE-FDH is a step function through the upper-left peers, with no case above it; it suits scores with few distinct values. With continuous construct scores CR-FDH is usually preferred, because the steps follow single cases and are more sensitive to outliers.": [
+                "Veredicto del NCA: techo CE-FDH, %d permutaciones. CE-FDH es una escalera por los picos superiores izquierdos, sin ningún caso por encima; conviene para puntuaciones con pocos valores distintos. Con puntuaciones continuas de los constructos suele preferirse CR-FDH, porque los escalones siguen casos individuales y son más sensibles a los atípicos."
+            ],
+            "NCA verdict: CR-FDH ceiling, %d permutations. CR-FDH is a straight line through the upper-left peers and suits continuous scores such as construct scores; it allows some cases above the line (see its accuracy). Choose CE-FDH when the scores take few distinct values, for example a construct with a single 5-point indicator.": [
+                "Veredicto del NCA: techo CR-FDH, %d permutaciones. CR-FDH es una recta por los picos superiores izquierdos y conviene para puntuaciones continuas, como las de los constructos; admite algunos casos por encima de la recta (véase su precisión). Elija CE-FDH cuando las puntuaciones toman pocos valores distintos, por ejemplo un constructo con un único indicador de 5 puntos."
             ],
             "Necessary condition": [
                 "Condición necesaria"
@@ -1867,6 +1879,9 @@
             "RMSEA": [
                 "RMSEA"
             ],
+            "RMSEA = %s, above .08, would call the configural fit poor, but with %s degrees of freedom RMSEA overstates misfit (Kenny, Kaniskan & McCoach, 2015): the configural decision uses CFI and SRMR.": [
+                "RMSEA = %s, por encima de .08, calificaría de pobre el ajuste configural, pero con %s grados de libertad el RMSEA exagera el desajuste (Kenny, Kaniskan y McCoach, 2015): la decisión configural usa CFI y SRMR."
+            ],
             "Robust maximum likelihood (MLR)": [
                 "Máxima verosimilitud robusta (MLR)"
             ],
@@ -2196,6 +2211,9 @@
             ],
             "The R code below reproduces this analysis with cSEM directly, from the data set loaded in jamovi (called data). Constructs and indicators get internal names (C1, C2, ... and V1, V2, ...) because cSEM fails with spaces or accents in names; the comments map them back to the names used in jamovi.": [
                 "El código R de abajo reproduce este análisis directamente con cSEM, a partir del conjunto de datos cargado en jamovi (llamado data). Los constructos e indicadores reciben nombres internos (C1, C2, ... y V1, V2, ...) porque cSEM falla con espacios o acentos en los nombres; los comentarios los traducen a los nombres usados en jamovi."
+            ],
+            "The RMSEA of the configural model (%s, with %s degrees of freedom) would call its fit poor, but RMSEA overstates misfit in models with few degrees of freedom (Kenny, Kaniskan & McCoach, 2015, see references). The module therefore judges the configural model by CFI (%s) and SRMR (%s), the combination proposed by Hu and Bentler (1999). Report the three indices and this choice.": [
+                "El RMSEA del modelo configural (%s, con %s grados de libertad) calificaría su ajuste de pobre, pero el RMSEA exagera el desajuste en modelos con pocos grados de libertad (Kenny, Kaniskan y McCoach, 2015, véanse las referencias). Por eso el módulo juzga el modelo configural por el CFI (%s) y el SRMR (%s), la combinación que proponen Hu y Bentler (1999). Informe los tres índices y esta decisión."
             ],
             "The sample is small for the cross-validation (%d cases per held-out fold, %d per training set, %d predictors of LM): the prediction metrics and CVPAT are unstable and have little power. Treat them as indicative.": [
                 "La muestra es pequeña para la validación cruzada (%d casos por partición de prueba, %d por conjunto de entrenamiento, %d predictores de LM): las métricas de predicción y CVPAT son inestables y tienen poca potencia. Tómelos como orientativos."

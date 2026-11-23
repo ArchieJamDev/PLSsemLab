@@ -359,4 +359,14 @@
         `volume`="6", 
         `issue`="1", 
         `pages`="1-55", 
-        `url`="https://doi.org/10.1080/10705519909540118"))
+        `url`="https://doi.org/10.1080/10705519909540118"), 
+    `kenny_2015`=list(
+        `type`="article", 
+        `author`="Kenny, D. A., Kaniskan, B., & McCoach, D. B.", 
+        `year`=2015, 
+        `title`="The performance of RMSEA in models with small degrees of freedom", 
+        `publisher`="Sociological Methods & Research", 
+        `volume`="44", 
+        `issue`="3", 
+        `pages`="486-507", 
+        `url`="https://doi.org/10.1177/0049124114543236"))

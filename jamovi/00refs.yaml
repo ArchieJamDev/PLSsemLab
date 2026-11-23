@@ -501,6 +501,7 @@ refs:
         year: 1993
         title: 'An introduction to the bootstrap'
         publisher: 'Chapman & Hall'
+        url: https://doi.org/10.1201/9780429246593
 
     sharma_2019:
         type: 'article'

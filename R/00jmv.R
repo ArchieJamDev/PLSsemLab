@@ -424,7 +424,8 @@
         `author`="Efron, B., & Tibshirani, R. J.", 
         `year`=1993, 
         `title`="An introduction to the bootstrap", 
-        `publisher`="Chapman & Hall"), 
+        `publisher`="Chapman & Hall", 
+        `url`="https://doi.org/10.1201/9780429246593"), 
     `sharma_2019`=list(
         `type`="article", 
         `author`="Sharma, P. N., Sarstedt, M., Shmueli, G., Kim, K. H., & Thiele, K. O.", 

@@ -181,7 +181,7 @@ estimation. *Behavior Research Methods, 49*(5), 1716–1735.
 https://doi.org/10.3758/s13428-016-0814-1
 
 Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*.
-Chapman & Hall.
+Chapman & Hall. https://doi.org/10.1201/9780429246593
 
 Hwang, H., & Takane, Y. (2004). Generalized structured component analysis.
 *Psychometrika, 69*(1), 81–99. https://doi.org/10.1007/BF02295841

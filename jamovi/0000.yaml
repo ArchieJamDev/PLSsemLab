@@ -19,6 +19,8 @@ description: >
 usesNative: false
 minApp: 1.0.8
 icon: assets/plssemlab-icon.png
+menuIcons:
+  PLS-SEM Lab: icons/plssemlab.svg
 analyses:
   - title: PLS-SEM
     name: plssem

@@ -1,3 +1,10 @@
+# PLSsemLab (development version)
+
+* Ribbon menu icon for jamovi (`menuIcons` in `jamovi/0000.yaml`):
+  `jamovi/icons/plssemlab.svg`, 74 x 44, jamovi's palette, strokes of 2-4
+  units, plain SVG without metadata, mapped to the "PLS-SEM Lab" menu group.
+  jamovi ignores it until its support for module icons is released.
+
 # PLSsemLab 1.0.1 (released 2026-11-18, DOI 10.5281/zenodo.24341176)
 
 * New module icon and logo, in the visual line of the suite (MokkenLab,

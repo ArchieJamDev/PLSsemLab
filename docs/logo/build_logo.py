@@ -68,11 +68,12 @@ def icon():
 
 
 def ribbon():
-    # 74 x 44, no text: the same mark with jamovi's ribbon proportions
-    # ES: 74 x 44, sin texto: el mismo símbolo en las proporciones de la cinta
-    body = mark((14, 11), (14, 33), (58, 22), 6.5, 4.5, 4.0, 7)
-    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
-            f'<svg version="1.1" viewBox="0 0 74 44" xmlns="http://www.w3.org/2000/svg">\n{body}</svg>\n')
+    # jamovi's Analyses ribbon (menuIcons): viewBox 74 x 44, strokes of 2-4
+    # units, jamovi's palette, a little padding, plain SVG with no metadata.
+    # ES: Cinta de análisis de jamovi: 74 x 44, trazos de 2 a 4, sin metadatos.
+    body = mark((15, 12), (15, 32), (58, 22), 6.5, 3.5, 3.0, 6.5)
+    return ('<svg version="1.1" viewBox="0 0 74 44" xmlns="http://www.w3.org/2000/svg">\n'
+            + body.replace("  <", "<") + '</svg>\n')
 
 
 def logo(theme):
@@ -93,6 +94,8 @@ def logo(theme):
 if __name__ == "__main__":
     (OUT / "plssemlab-icon.svg").write_text(icon(), encoding="utf-8")
     (OUT / "analysis-plssemlab.svg").write_text(ribbon(), encoding="utf-8")
+    (OUT.parent.parent / "jamovi" / "icons").mkdir(exist_ok=True)
+    (OUT.parent.parent / "jamovi" / "icons" / "plssemlab.svg").write_text(ribbon(), encoding="utf-8")
     (OUT / "plssemlab-logo.svg").write_text(logo("light"), encoding="utf-8")
     (OUT / "plssemlab-logo-dark.svg").write_text(logo("dark"), encoding="utf-8")
     if shutil.which("rsvg-convert"):

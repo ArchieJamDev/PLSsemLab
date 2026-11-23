@@ -307,7 +307,7 @@ sc <- "8 simple, multigroup"
 dg <- corp
 dg$servicetype <- factor(dg$servicetype)
 a <- runModule(dg, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
-               groupVar = "servicetype", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, bootSeed = 11)
+               groupVar = "servicetype", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, bootSeed = 11, mgcfa = TRUE)
 dd <- meanReplaced(dg[, c(corpVars, "servicetype")])
 dd$PLgroup <- sprintf("G%02d", as.integer(dd$servicetype))
 dd$servicetype <- NULL
@@ -327,6 +327,21 @@ record(sc, "path differences", dt$diff, mg$Chin$Test_statistic[[1]])
 record(sc, "permutation p", dt$pPerm, mg$Chin$P_value$none[[1]])
 record(sc, "PLS-MGA P(first <= second)", dt$pOne, mg$Henseler$P_value$none[[1]])
 record(sc, "PLS-MGA two-sided p = 2 min(P, 1 - P)", dt$pHens, pmin(1, 2 * pmin(dt$pOne, 1 - dt$pOne)))
+# Multigroup CFA of the reflective constructs with two or more indicators
+# (1.1.0), lavaan with MLR, written here by hand
+# ES: AFC multigrupo de los constructos reflectivos (1.1.0), lavaan con MLR
+cfaSyn <- "COMP =~ comp_1 + comp_2 + comp_3\nLIKE =~ like_1 + like_2 + like_3\nCUSL =~ cusl_1 + cusl_2 + cusl_3"
+cf <- lapply(list(character(0), "loadings", c("loadings", "intercepts")), function(eq)
+    lavaan::cfa(cfaSyn, data = dd, group = "PLgroup", estimator = "MLR", meanstructure = TRUE, group.equal = eq))
+ct <- tab(a, "mgaSection", "mgcfa")
+fmc <- sapply(cf, lavaan::fitMeasures, c("chisq.scaled", "df.scaled", "cfi.robust", "rmsea.robust", "srmr"))
+record(sc, "MGCFA scaled chi-square", ct$chisq, fmc["chisq.scaled", ])
+record(sc, "MGCFA df", ct$df, fmc["df.scaled", ])
+record(sc, "MGCFA robust CFI, robust RMSEA, SRMR", c(ct$cfi, ct$rmsea, ct$srmr),
+       c(fmc["cfi.robust", ], fmc["rmsea.robust", ], fmc["srmr", ]))
+record(sc, "MGCFA scaled chi-square differences",
+       ct$dchisq[2:3], c(lavaan::lavTestLRT(cf[[1]], cf[[2]])[["Chisq diff"]][2],
+                         lavaan::lavTestLRT(cf[[2]], cf[[3]])[["Chisq diff"]][2]))
 
 # -----------------------------------------------------------------------------
 # 9. Higher-order construct, disjoint two-stage approach (Sarstedt et al.,

@@ -173,6 +173,63 @@ Ringle, C. M., & Sarstedt, M. (2016). Gain more insight from your PLS-SEM
 results: The importance-performance map analysis. *Industrial Management &
 Data Systems, 116*(9), 1865–1886. https://doi.org/10.1108/IMDS-10-2015-0449
 
+## Measurement invariance of common factors (MGCFA)
+
+Chen, F. F. (2007). Sensitivity of goodness of fit indexes to lack of
+measurement invariance. *Structural Equation Modeling, 14*(3), 464–504.
+https://doi.org/10.1080/10705510701301834
+
+Cheung, G. W., & Rensvold, R. B. (2002). Evaluating goodness-of-fit indexes
+for testing measurement invariance. *Structural Equation Modeling, 9*(2),
+233–255. https://doi.org/10.1207/S15328007SEM0902_5
+
+Hu, L., & Bentler, P. M. (1999). Cutoff criteria for fit indexes in
+covariance structure analysis: Conventional criteria versus new
+alternatives. *Structural Equation Modeling, 6*(1), 1–55.
+https://doi.org/10.1080/10705519909540118
+
+Putnick, D. L., & Bornstein, M. H. (2016). Measurement invariance conventions
+and reporting: The state of the art and future directions for psychological
+research. *Developmental Review, 41*, 71–90.
+https://doi.org/10.1016/j.dr.2016.06.004
+
+Rosseel, Y. (2012). lavaan: An R package for structural equation modeling.
+*Journal of Statistical Software, 48*(2), 1–36.
+https://doi.org/10.18637/jss.v048.i02
+
+Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test
+statistic for moment structure analysis. *Psychometrika, 66*(4), 507–514.
+https://doi.org/10.1007/BF02296192
+
+Vandenberg, R. J., & Lance, C. E. (2000). A review and synthesis of the
+measurement invariance literature: Suggestions, practices, and
+recommendations for organizational research. *Organizational Research
+Methods, 3*(1), 4–70. https://doi.org/10.1177/109442810031002
+
+## Necessary condition analysis
+
+Dul, J. (2016). Necessary condition analysis (NCA): Logic and methodology of
+"necessary but not sufficient" causality. *Organizational Research Methods,
+19*(1), 10–52. https://doi.org/10.1177/1094428115584005
+
+Dul, J. (2026). *NCA: Necessary condition analysis* (R package version
+5.1.0) [Computer software]. https://CRAN.R-project.org/package=NCA
+
+Dul, J., van der Laan, E., & Kuik, R. (2020). A statistical significance test
+for necessary condition analysis. *Organizational Research Methods, 23*(2),
+385–395. https://doi.org/10.1177/1094428118795272
+
+Richter, N. F., Hauff, S., Ringle, C. M., Sarstedt, M., Kolev, A. E., &
+Schubring, S. (2023). How to apply necessary condition analysis in PLS-SEM.
+In H. Latan, J. F. Hair, Jr., & R. Noonan (Eds.), *Partial least squares path
+modeling: Basic concepts, methodological issues and applications* (2nd ed.,
+pp. 267–297). Springer. https://doi.org/10.1007/978-3-031-37772-3_10
+
+Richter, N. F., Schubring, S., Hauff, S., Ringle, C. M., & Sarstedt, M.
+(2020). When predictors of outcomes are necessary: Guidelines for the
+combined use of PLS-SEM and NCA. *Industrial Management & Data Systems,
+120*(12), 2243–2267. https://doi.org/10.1108/IMDS-11-2019-0638
+
 ## Multigroup analysis
 
 Henseler, J., Ringle, C. M., & Sarstedt, M. (2016). Testing measurement

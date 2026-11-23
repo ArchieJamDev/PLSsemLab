@@ -27,7 +27,7 @@ name: plssem
 title: PLS-SEM
 menuGroup: PLS-SEM Lab
 menuTitle: PLS-SEM
-version: '1.0.1'
+version: '1.1.0'
 jas: '1.2'
 
 description:
@@ -364,6 +364,47 @@ options:
     type: Number
     default: 7
 
+  # Necessary condition analysis (1.1.0; Dul, 2016; Richter et al., 2020):
+  # each construct with a direct path to an endogenous construct is tested
+  # as a necessary condition on the 0-100 construct scores of the IPMA (same
+  # range of the scale). Long: its own Run checkbox; the seed is the
+  # bootstrap's.
+  # ES: Análisis de condición necesaria (1.1.0): cada constructo con una ruta
+  # directa a un constructo endógeno se prueba como condición necesaria con
+  # las puntuaciones 0-100 del IPMA (mismo rango de la escala). Largo: su
+  # propia casilla Ejecutar; la semilla es la del bootstrap.
+  - name: ncaRun
+    title: Run necessary condition analysis (NCA)
+    type: Bool
+    default: false
+
+  - name: ncaPerm
+    title: Permutations
+    type: Integer
+    min: 99
+    max: 100000
+    default: 10000
+
+  - name: ncaCeiling
+    title: Ceiling line for the verdict
+    type: List
+    options:
+      - name: cr_fdh
+        title: CR-FDH (continuous scores)
+      - name: ce_fdh
+        title: CE-FDH (few distinct values)
+    default: cr_fdh
+
+  - name: ncaBottleneck
+    title: Bottleneck tables
+    type: Bool
+    default: true
+
+  - name: ncaPlots
+    title: Ceiling plots
+    type: Bool
+    default: true
+
   # Multigroup analysis (phase 7): MICOM and the path differences between
   # the groups of a grouping variable. Long: its own Run checkbox; the seed
   # is the bootstrap's.
@@ -410,6 +451,26 @@ options:
       - name: bonferroni
         title: Bonferroni
     default: none
+
+  # Measurement invariance of the reflective constructs as common factors
+  # (1.1.0): multigroup CFA with lavaan, next to MICOM. Runs with the
+  # multigroup analysis.
+  # ES: Invarianza de medida de los constructos reflectivos como factores
+  # comunes (1.1.0): AFC multigrupo con lavaan, junto a MICOM.
+  - name: mgcfa
+    title: Measurement invariance of the reflective constructs (MGCFA)
+    type: Bool
+    default: false
+
+  - name: mgcfaEstimator
+    title: CFA estimator
+    type: List
+    options:
+      - name: MLR
+        title: Robust maximum likelihood (MLR)
+      - name: ML
+        title: Maximum likelihood (ML)
+    default: MLR
 
   # Path diagram drawn by the module (cSEM's uses DiagrammeR, which jamovi
   # cannot show).

@@ -284,6 +284,47 @@ refs:
         pages: '1865-1886'
         url: https://doi.org/10.1108/IMDS-10-2015-0449
 
+    dul_2016:
+        type: 'article'
+        author: 'Dul, J.'
+        year: 2016
+        title: 'Necessary condition analysis (NCA): Logic and methodology of "necessary but not sufficient" causality'
+        publisher: 'Organizational Research Methods'
+        volume: '19'
+        issue: '1'
+        pages: '10-52'
+        url: https://doi.org/10.1177/1094428115584005
+
+    dul_2020:
+        type: 'article'
+        author: 'Dul, J., van der Laan, E., & Kuik, R.'
+        year: 2020
+        title: 'A statistical significance test for necessary condition analysis'
+        publisher: 'Organizational Research Methods'
+        volume: '23'
+        issue: '2'
+        pages: '385-395'
+        url: https://doi.org/10.1177/1094428118795272
+
+    richter_2020:
+        type: 'article'
+        author: 'Richter, N. F., Schubring, S., Hauff, S., Ringle, C. M., & Sarstedt, M.'
+        year: 2020
+        title: 'When predictors of outcomes are necessary: Guidelines for the combined use of PLS-SEM and NCA'
+        publisher: 'Industrial Management & Data Systems'
+        volume: '120'
+        issue: '12'
+        pages: '2243-2267'
+        url: https://doi.org/10.1108/IMDS-11-2019-0638
+
+    richter_2023:
+        type: 'chapter'
+        author: 'Richter, N. F., Hauff, S., Ringle, C. M., Sarstedt, M., Kolev, A. E., & Schubring, S.'
+        year: 2023
+        title: 'How to apply necessary condition analysis in PLS-SEM'
+        publisher: 'In H. Latan, J. F. Hair, Jr., & R. Noonan (Eds.), Partial least squares path modeling: Basic concepts, methodological issues and applications (2nd ed., pp. 267-297). Springer'
+        url: https://doi.org/10.1007/978-3-031-37772-3_10
+
     henseler_2016b:
         type: 'article'
         author: 'Henseler, J., Ringle, C. M., & Sarstedt, M.'
@@ -322,5 +363,71 @@ refs:
         volume: '22'
         pages: '195-218'
         url: https://doi.org/10.1108/S1474-7979(2011)0000022012
+
+
+    lavaan:
+        type: 'article'
+        author: 'Rosseel, Y.'
+        year: 2012
+        title: 'lavaan: An R package for structural equation modeling'
+        publisher: 'Journal of Statistical Software'
+        volume: '48'
+        issue: '2'
+        pages: '1-36'
+        url: https://doi.org/10.18637/jss.v048.i02
+
+    vandenberg_2000:
+        type: 'article'
+        author: 'Vandenberg, R. J., & Lance, C. E.'
+        year: 2000
+        title: 'A review and synthesis of the measurement invariance literature: Suggestions, practices, and recommendations for organizational research'
+        publisher: 'Organizational Research Methods'
+        volume: '3'
+        issue: '1'
+        pages: '4-70'
+        url: https://doi.org/10.1177/109442810031002
+
+    cheung_2002:
+        type: 'article'
+        author: 'Cheung, G. W., & Rensvold, R. B.'
+        year: 2002
+        title: 'Evaluating goodness-of-fit indexes for testing measurement invariance'
+        publisher: 'Structural Equation Modeling'
+        volume: '9'
+        issue: '2'
+        pages: '233-255'
+        url: https://doi.org/10.1207/S15328007SEM0902_5
+
+    chen_2007:
+        type: 'article'
+        author: 'Chen, F. F.'
+        year: 2007
+        title: 'Sensitivity of goodness of fit indexes to lack of measurement invariance'
+        publisher: 'Structural Equation Modeling'
+        volume: '14'
+        issue: '3'
+        pages: '464-504'
+        url: https://doi.org/10.1080/10705510701301834
+
+    putnick_2016:
+        type: 'article'
+        author: 'Putnick, D. L., & Bornstein, M. H.'
+        year: 2016
+        title: 'Measurement invariance conventions and reporting: The state of the art and future directions for psychological research'
+        publisher: 'Developmental Review'
+        volume: '41'
+        pages: '71-90'
+        url: https://doi.org/10.1016/j.dr.2016.06.004
+
+    hu_1999:
+        type: 'article'
+        author: 'Hu, L., & Bentler, P. M.'
+        year: 1999
+        title: 'Cutoff criteria for fit indexes in covariance structure analysis: Conventional criteria versus new alternatives'
+        publisher: 'Structural Equation Modeling'
+        volume: '6'
+        issue: '1'
+        pages: '1-55'
+        url: https://doi.org/10.1080/10705519909540118
 
 ...

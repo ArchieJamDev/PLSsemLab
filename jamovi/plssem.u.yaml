@@ -294,7 +294,7 @@ children:
           - type: TextBox
             name: bootSeed
             format: number
-            enable: (bootstrap || fitTest || predictRun || mgaRun)
+            enable: (bootstrap || fitTest || predictRun || mgaRun || ncaRun)
           - type: TextBox
             name: ciLevel
             format: number
@@ -372,15 +372,40 @@ children:
             name: ipma
           - type: ComboBox
             name: ipmaRange
-            enable: (ipma)
+            enable: (ipma || ncaRun)
           - type: TextBox
             name: ipmaMin
             format: number
-            enable: (ipma && ipmaRange:manual)
+            enable: ((ipma || ncaRun) && ipmaRange:manual)
           - type: TextBox
             name: ipmaMax
             format: number
-            enable: (ipma && ipmaRange:manual)
+            enable: ((ipma || ncaRun) && ipmaRange:manual)
+  - type: CollapseBox
+    label: Necessary Condition Analysis
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: ncaRun
+          - type: TextBox
+            name: ncaPerm
+            format: number
+            enable: (ncaRun)
+          - type: ComboBox
+            name: ncaCeiling
+            enable: (ncaRun)
+          - type: CheckBox
+            name: ncaBottleneck
+            enable: (ncaRun)
+          - type: CheckBox
+            name: ncaPlots
+            enable: (ncaRun)
+          - type: Label
+            label: The seed is the one in the Bootstrap box; the range of the scale, the one in Importance-Performance Map.
   - type: CollapseBox
     label: Multigroup Analysis
     collapsed: true
@@ -413,6 +438,12 @@ children:
           - type: ComboBox
             name: mgaAdjust
             enable: (mgaRun)
+          - type: CheckBox
+            name: mgcfa
+            enable: (mgaRun)
+          - type: ComboBox
+            name: mgcfaEstimator
+            enable: (mgaRun && mgcfa)
           - type: Label
             label: The seed is the one in the Bootstrap box.
   - type: CollapseBox

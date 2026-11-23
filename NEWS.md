@@ -1,5 +1,36 @@
-# PLSsemLab (development version)
+# PLSsemLab 1.1.0
 
+* Necessary condition analysis (NCA) combined with PLS-SEM (Dul, 2016;
+  Richter et al., 2020, 2023), suggested by a user. A new
+  *Necessary Condition Analysis* box, with its own Run checkbox, tests every
+  construct with a direct path to an endogenous construct as a necessary
+  condition, on the unstandardized construct scores of the IPMA rescaled to
+  0-100 (same range of the scale). Tables: CE-FDH and CR-FDH effect sizes d
+  with Dul's benchmarks, permutation p values (Dul, van der Laan & Kuik,
+  2020; 10 000 permutations by default, the bootstrap's seed), accuracy and a
+  verdict (necessary when d >= 0.1 and p < .05); the combined reading with
+  the PLS-SEM paths (must-have, should-have, both or neither); bottleneck
+  tables per outcome; ceiling plots; interpretation, guide and the
+  equivalent R code. The module computes the NCA itself, because the NCA
+  package's peers come from an R loop that makes 10 000 permutations take
+  many minutes without a way to cancel them: here they take seconds and can
+  be cancelled. `validation/nca_equivalence.R` checks in CI that the scores,
+  effect sizes, accuracy, bottlenecks and p values (with the same
+  permutations) equal `NCA::nca_analysis()`. Not computable (with the reason)
+  with PLSc, interactions or higher-order constructs, as the IPMA.
+
+* Measurement invariance of the reflective constructs as common factors,
+  suggested by a user: in the *Multigroup Analysis* box, a
+  multigroup CFA with lavaan (configural, metric and scalar models; MLR by
+  default, ML as an option) next to MICOM. Each step is compared with the
+  previous one by the chi-square difference (scaled with MLR) and by the
+  change in CFI, RMSEA and SRMR, with Chen's (2007) limits; the configural
+  model is judged by CFI and SRMR (Hu & Bentler, 1999). The interpretation
+  reads MICOM (composites) and the MGCFA (common factors) together.
+  Reflective constructs with one indicator and formative constructs are left
+  out with a note; not computable with ordinal indicators in this version.
+  `validation/csem_equivalence.R` checks the table against direct lavaan
+  calls.
 * Ribbon menu icon for jamovi (`menuIcons` in `jamovi/0000.yaml`):
   `jamovi/icons/plssemlab.svg`, 74 x 44, jamovi's palette, strokes of 2-4
   units, plain SVG without metadata, mapped to the "PLS-SEM Lab" menu group.

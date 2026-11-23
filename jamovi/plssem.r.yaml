@@ -1320,6 +1320,186 @@ items:
             - ipmaMin
             - ipmaMax
 
+  # Section: Necessary condition analysis (1.1.0). Rows laid out in
+  # .init(): each endogenous construct and every construct with a direct
+  # path to it.
+  # ES: Sección: análisis de condición necesaria (1.1.0). Filas en .init().
+  - name: ncaSection
+    title: Necessary condition analysis
+    type: Group
+    visible: (ncaRun)
+    items:
+      - name: ncaGuide
+        title: How to read the necessary condition analysis
+        type: Html
+        visible: (showGuides && ncaRun)
+
+      - name: ncaTable
+        title: Necessary conditions (NCA)
+        type: Table
+        rows: 0
+        visible: (ncaRun)
+        refs:
+          - dul_2016
+          - dul_2020
+          - richter_2020
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - ipmaRange
+          - ipmaMin
+          - ipmaMax
+          - ncaPerm
+          - bootSeed
+        columns:
+          - name: target
+            title: Outcome
+            type: text
+            combineBelow: true
+          - name: condition
+            title: Condition
+            type: text
+            combineBelow: true
+          - name: ceiling
+            title: Ceiling
+            type: text
+          - name: d
+            title: d
+            type: number
+          - name: size
+            title: Effect size
+            type: text
+          - name: p
+            title: p
+            type: number
+            format: zto,pvalue
+          - name: accuracy
+            title: Accuracy (%)
+            type: number
+          - name: verdict
+            title: Reading
+            type: text
+
+      - name: ncaCombined
+        title: Sufficiency (PLS-SEM) and necessity (NCA)
+        type: Table
+        rows: 0
+        visible: (ncaRun)
+        refs:
+          - richter_2020
+          - richter_2023
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - ipmaRange
+          - ipmaMin
+          - ipmaMax
+          - ncaPerm
+          - bootSeed
+          - ncaCeiling
+          - bootstrap
+          - bootReps
+          - ciLevel
+        columns:
+          - name: target
+            title: Outcome
+            type: text
+            combineBelow: true
+          - name: condition
+            title: Condition
+            type: text
+          - name: path
+            title: Path
+            type: number
+          - name: pathSig
+            title: Path significant
+            type: text
+          - name: d
+            title: NCA d
+            type: number
+          - name: p
+            title: NCA p
+            type: number
+            format: zto,pvalue
+          - name: reading
+            title: Reading
+            type: text
+
+      - name: ncaBottlenecks
+        title: Bottleneck tables
+        type: Array
+        items: 0
+        visible: (ncaRun && ncaBottleneck)
+        template:
+          title: $key
+          type: Table
+          rows: 0
+          clearWith:
+            - reflective
+            - formative
+            - reflectiveHoc
+            - formativeHoc
+            - hocApproach
+            - structural
+            - estimator
+            - innerScheme
+            - indicatorScale
+            - missing
+            - ipmaRange
+            - ipmaMin
+            - ipmaMax
+            - ncaPerm
+            - bootSeed
+            - ncaCeiling
+          columns:
+            - name: level
+              title: Outcome level (%)
+              type: integer
+
+      - name: ncaPlots
+        title: Ceiling plots
+        type: Array
+        items: 0
+        visible: (ncaRun && ncaPlots)
+        template:
+          title: $key
+          type: Image
+          width: 520
+          height: 420
+          renderFun: .plotNca
+          clearWith:
+            - reflective
+            - formative
+            - reflectiveHoc
+            - formativeHoc
+            - hocApproach
+            - structural
+            - estimator
+            - innerScheme
+            - indicatorScale
+            - missing
+            - ipmaRange
+            - ipmaMin
+            - ipmaMax
+            - ncaPerm
+            - bootSeed
+
   # Section: Multigroup analysis. Groups give the report headings that tell the reader
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
@@ -1434,6 +1614,83 @@ items:
             superTitle: Step 3 (means and variances)
           - name: invariance
             title: Invariance
+            type: text
+
+      - name: mgcfa
+        title: Measurement invariance of the reflective constructs (MGCFA)
+        type: Table
+        rows: 0
+        visible: (mgaRun && mgcfa)
+        refs:
+          - lavaan
+          - vandenberg_2000
+          - putnick_2016
+          - hu_1999
+          - cheung_2002
+          - chen_2007
+        clearWith:
+          - reflective
+          - formative
+          - reflectiveHoc
+          - formativeHoc
+          - hocApproach
+          - structural
+          - estimator
+          - innerScheme
+          - indicatorScale
+          - missing
+          - groupVar
+          - mgcfaEstimator
+        columns:
+          - name: step
+            title: Model
+            type: text
+          - name: chisq
+            title: χ²
+            type: number
+          - name: df
+            title: df
+            type: integer
+          - name: p
+            title: p
+            type: number
+            format: zto,pvalue
+          - name: cfi
+            title: CFI
+            type: number
+          - name: rmsea
+            title: RMSEA
+            type: number
+          - name: srmr
+            title: SRMR
+            type: number
+          - name: dchisq
+            title: Δχ²
+            type: number
+            superTitle: Change from the previous model
+          - name: ddf
+            title: Δdf
+            type: integer
+            superTitle: Change from the previous model
+          - name: dp
+            title: p
+            type: number
+            format: zto,pvalue
+            superTitle: Change from the previous model
+          - name: dcfi
+            title: ΔCFI
+            type: number
+            superTitle: Change from the previous model
+          - name: drmsea
+            title: ΔRMSEA
+            type: number
+            superTitle: Change from the previous model
+          - name: dsrmr
+            title: ΔSRMR
+            type: number
+            superTitle: Change from the previous model
+          - name: decision
+            title: Decision
             type: text
 
       - name: mga
@@ -1650,6 +1907,26 @@ items:
       - innerScheme
       - indicatorScale
       - missing
+
+  - name: ncaCacheStore
+    type: Html
+    visible: false
+    clearWith:
+      - reflective
+      - formative
+      - reflectiveHoc
+      - formativeHoc
+      - hocApproach
+      - structural
+      - estimator
+      - innerScheme
+      - indicatorScale
+      - missing
+      - ipmaRange
+      - ipmaMin
+      - ipmaMax
+      - ncaPerm
+      - bootSeed
 
   - name: mgaCacheStore
     type: Html

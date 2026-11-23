@@ -3,8 +3,8 @@ bibentry(
     title = "PLSsemLab: A jamovi Module for Partial Least Squares Structural Equation Modeling",
     author = person("Arquímedes De León", "Chacón Chacón"),
     year = "2026",
-    note = "Version 1.0.1 [jamovi module]",
+    note = "Version 1.1.0 [jamovi module]",
     doi = "10.5281/zenodo.24259622",
     url = "https://github.com/ArchieJamDev/PLSsemLab",
-    textVersion = "Chacón Chacón, A. D. L. (2026). PLSsemLab: A jamovi module for partial least squares structural equation modeling (Version 1.0.1) [jamovi module]. https://doi.org/10.5281/zenodo.24259622"
+    textVersion = "Chacón Chacón, A. D. L. (2026). PLSsemLab: A jamovi module for partial least squares structural equation modeling (Version 1.1.0) [jamovi module]. https://doi.org/10.5281/zenodo.24259622"
 )

@@ -35,8 +35,13 @@ why, what it means and what to do next, in English and Spanish.
 - **Prediction and more:** PLSpredict, CVPAT (against the indicator average,
   a linear model and a competing model), mediation with specific indirect
   effects, and the importance-performance map (IPMA).
-- **Multigroup analysis:** MICOM (steps 1-3) and path differences
-  (permutation test and PLS-MGA).
+- **Necessary condition analysis (NCA)** combined with PLS-SEM: CE-FDH and
+  CR-FDH effect sizes with permutation tests, bottleneck tables, ceiling
+  plots and the combined must-have / should-have reading of each path.
+- **Multigroup analysis:** MICOM (steps 1-3), measurement invariance of the
+  reflective constructs as common factors (configural, metric and scalar
+  multigroup CFA with lavaan) and path differences (permutation test and
+  PLS-MGA).
 - **Reproducibility:** the equivalent R code of every analysis.
 
 ## Install
@@ -116,8 +121,11 @@ inglés.
 fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
 bootstrap por bloques; constructos de orden superior e interacciones con
 pendientes simples y Johnson-Neyman; ajuste global por bootstrap (SRMR, d_G,
-d_L); PLSpredict, CVPAT, mediación, IPMA y análisis multigrupo (MICOM, PLS-MGA
-y prueba de permutación); y el código R equivalente de cada análisis.
+d_L); PLSpredict, CVPAT, mediación, IPMA, análisis de condición necesaria
+(NCA) combinado con PLS-SEM y análisis multigrupo (MICOM, invarianza
+configural, métrica y escalar de los constructos reflectivos con un AFC
+multigrupo, PLS-MGA y prueba de permutación); y el código R equivalente de
+cada análisis.
 
 **Instalación:** en Windows (jamovi 2.7.41), descargar
 `PLSsemLab_<versión>_win64.jmo` de la

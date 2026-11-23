@@ -269,6 +269,31 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 if (length(k)) self$results$ipmaSection$ipmaPlots$addItem(key = tg)
             }
 
+            # NCA (1.1.0): per outcome (endogenous construct), two rows per
+            # condition (CE-FDH, CR-FDH), one combined row, a bottleneck
+            # table with a column per condition and one plot per condition.
+            # ES: NCA (1.1.0): por resultado, dos filas por condición, una
+            # fila combinada, una tabla de cuellos de botella y un gráfico por
+            # condición.
+            npairs <- .pl_nca_pairs(paths)
+            nsec <- self$results$ncaSection
+            for (tg in unique(npairs$to)) {
+                conds <- npairs$from[npairs$to == tg]
+                for (cn in conds) {
+                    for (ce in c("ce", "cr"))
+                        nsec$ncaTable$addRow(rowKey = paste(tg, cn, ce, sep = "::"),
+                                             values = list(target = tg, condition = cn, ceiling = ptxt(paste0("nca_", ce))))
+                    nsec$ncaCombined$addRow(rowKey = paste(tg, cn, sep = "::"), values = list(target = tg, condition = cn))
+                    if (self$options$ncaPlots) nsec$ncaPlots$addItem(key = paste(cn, "\u2192", tg))
+                }
+                if (self$options$ncaBottleneck) {
+                    bt <- nsec$ncaBottlenecks$addItem(key = tg)
+                    bt$setTitle(sprintf(ptxt("nca_bn_title"), tg, ptxt(paste0("nca_", substr(self$options$ncaCeiling, 1, 2)))))
+                    for (j in seq_along(conds)) bt$addColumn(name = paste0("c", j), title = conds[j], type = "number")
+                    for (lv in .PL_NCA_STEPS) bt$addRow(rowKey = lv, values = list(level = lv))
+                }
+            }
+
             # Multigroup analysis (phase 7): one row per group, per pair of
             # groups and construct (MICOM) and per pair and path. With two
             # groups the coefficient columns carry the group names.
@@ -316,7 +341,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             o <- private$.optionalSections(e, t, blocks, paths, hocs, txt)
             private$.reportNotices(e, t, o, cons, blocks, hocs, txt)
             private$.interpretation(lang, blocks, t$loadings, t$path_tab, t$r2_tab, t$quality, t$structural,
-                                    o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga)
+                                    o$boot$summary, e$smodel, o$mod, t$hocq, o$omf, o$med, o$prd, o$ipm, o$mga, o$nca)
             private$.keySummary(lang, blocks, e$vars, paths, e$prep, t$loadings, t$r2_tab, e$admissible, t$quality,
                                 o$boot$summary, e$smodel, t$hocq, o$omf, o$med, o$prd, o$mga)
             private$.choices(lang, e$prep, o$boot)
@@ -474,6 +499,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 private$.fitTest(fit$value, model, d, hocs, admissible, txt) else NULL
             ipm <- if (self$options$ipma)
                 private$.fillIpma(fit$value, model, d, blocks, paths, hocs, txt, boot$summary) else NULL
+            nca <- if (self$options$ncaRun)
+                private$.fillNca(fit$value, model, d, blocks, paths, hocs, txt, t$path_tab, boot$summary) else NULL
             prd <- if (self$options$predictRun)
                 private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
             gv <- self$options$groupVar
@@ -482,7 +509,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.prepareDiagram(blocks, t$loadings, t$path_tab, t$r2_tab, boot$summary, smodel, t$hocq)
             private$.preparePlots(t$loadings, t$quality, boot$summary, model, txt)
 
-            list(boot = boot, med = med, mod = mod, omf = omf, ipm = ipm, prd = prd, mga = mga)
+            list(boot = boot, med = med, mod = mod, omf = omf, ipm = ipm, nca = nca, prd = prd, mga = mga)
         },
 
         # ---------------------------------------------------------------------
@@ -837,10 +864,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             pairs <- .pl_effect_pairs(paths)
             pairs <- pairs[pairs$to %in% paths$to[!grepl(.PL_X, paths$from, fixed = TRUE)], , drop = FALSE]
-            vars <- unlist(lapply(blocks, `[[`, "vars"))
-            vals <- unlist(lapply(d[, unname(model$vmap[vars]), drop = FALSE], function(x) as.numeric(x)))
-            range <- if (self$options$ipmaRange == "manual") c(as.numeric(self$options$ipmaMin), as.numeric(self$options$ipmaMax))
-                     else range(vals, na.rm = TRUE)
+            range <- private$.scaleRange(model, d, blocks)
             if (!(range[2] > range[1])) {
                 table$setNote("reason", txt("footnotes", "ipma_range"))
                 return(list(reason = txt("footnotes", "ipma_range")))
@@ -874,6 +898,140 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                    caption = .pl_text(lang, "labels", "ipma_caption")))
             }
             list(table = ip, range = range, negative = r$value$negative, boot = !is.null(sm))
+        },
+
+        # The range of the scale shared by the IPMA and the NCA: from the
+        # data (observed minimum and maximum of the indicators) or set by the
+        # user. ES: El rango de la escala que comparten el IPMA y el NCA.
+        .scaleRange = function(model, d, blocks) {
+            if (self$options$ipmaRange == "manual")
+                return(c(as.numeric(self$options$ipmaMin), as.numeric(self$options$ipmaMax)))
+            vars <- unlist(lapply(blocks, `[[`, "vars"))
+            vals <- unlist(lapply(d[, unname(model$vmap[vars]), drop = FALSE], function(x) as.numeric(x)))
+            range(vals, na.rm = TRUE)
+        },
+
+        # ---------------------------------------------------------------------
+        # NCA (1.1.0): the effect sizes and permutation tests of every
+        # outcome-condition pair, the combined reading with the PLS-SEM
+        # paths, the bottleneck tables and the ceiling plots. Long: cached,
+        # with checkpoints during the permutations.
+        # ES: NCA (1.1.0): tamaños del efecto y pruebas de permutación de cada
+        # par resultado-condición, la lectura combinada con las rutas de
+        # PLS-SEM, las tablas de cuellos de botella y los gráficos de techo.
+        # ---------------------------------------------------------------------
+        .fillNca = function(fit, model, d, blocks, paths, hocs, txt, path_tab, sm = NULL) {
+            sec <- self$results$ncaSection
+            tab <- sec$ncaTable
+            comb <- sec$ncaCombined
+            notcomp <- function(why) {
+                for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = "verdict", value = txt("labels", "not_computable"))
+                for (k in seq_len(comb$rowCount)) comb$setCell(rowNo = k, col = "reading", value = txt("labels", "not_computable"))
+                tab$setNote("reason", why)
+                comb$setNote("reason", why)
+                list(reason = why)
+            }
+            reason <- .pl_nca_reason(model, hocs, self$options)
+            if (!is.null(reason)) return(notcomp(txt("footnotes", reason)))
+            range <- private$.scaleRange(model, d, blocks)
+            if (!(range[2] > range[1])) return(notcomp(txt("footnotes", "ipma_range")))
+            pairs <- .pl_nca_pairs(paths)
+            reps <- as.integer(self$options$ncaPerm)
+            seed <- as.integer(self$options$bootSeed)
+            scores <- .pl_capture(.pl_nca_scores(fit, d, range))
+            if (is.null(scores$value)) return(notcomp(sprintf(txt("footnotes", "nca_error"), paste(scores$error, collapse = "; "))))
+            sc <- scores$value
+            key <- list("plssem-nca-1", model$syntax, model$modes, d, self$options$estimator, self$options$innerScheme,
+                        range, reps, seed, pairs)
+            res <- .pl_cached_bootstrap(self$results$ncaCacheStore, key, function() {
+                t0 <- proc.time()[["elapsed"]]
+                r <- .pl_capture(.pl_nca_run(sc, pairs, model$cmap, reps, seed, tick = private$.tick))
+                list(summary = r$value, error = r$error, seconds = proc.time()[["elapsed"]] - t0)
+            }, max_entries = .PL_CACHE_BOOT$entries, max_bytes = .PL_CACHE_BOOT$bytes)
+            if (is.null(res$summary)) return(notcomp(sprintf(txt("footnotes", "nca_error"), paste(res$error, collapse = "; "))))
+            verdict_ceiling <- substr(self$options$ncaCeiling, 1, 2)
+            lab <- function(k) txt("labels", k)
+            rows <- list()
+            for (k in seq_len(nrow(pairs))) {
+                tg <- pairs$to[k]
+                cn <- pairs$from[k]
+                r <- res$summary[[tg]][[model$cmap[[cn]]]]
+                for (ce in c("ce", "cr")) {
+                    dd <- r$effects[[ce]]
+                    pp <- r$p[[ce]]
+                    v <- .pl_nca_verdict(dd, pp)
+                    tab$setRow(rowKey = paste(tg, cn, ce, sep = "::"),
+                               values = list(d = dd, size = if (is.na(dd)) "" else lab(.pl_nca_size(dd)), p = pp,
+                                             accuracy = if (ce == "cr") r$accuracy else 100,
+                                             verdict = if (is.na(v)) lab("not_computable") else lab(v)))
+                    if (is.na(dd)) tab$addFootnote(rowKey = paste(tg, cn, ce, sep = "::"), col = "d", txt("footnotes", "nca_negative_slope"))
+                }
+                # combined reading: necessity (NCA) and sufficiency in degree
+                # (a significant PLS-SEM path)
+                # ES: lectura combinada: necesidad (NCA) y suficiencia en grado
+                # (ruta de PLS-SEM significativa)
+                dd <- r$effects[[verdict_ceiling]]
+                pp <- r$p[[verdict_ceiling]]
+                nec <- identical(.pl_nca_verdict(dd, pp), "nca_necessary")
+                est <- path_tab$estimate[path_tab$from == cn & path_tab$to == tg][1]
+                sig <- NA
+                if (!is.null(sm)) {
+                    pr <- sm$paths[sm$paths$name == paste(model$cmap[[tg]], "~", model$cmap[[cn]]), , drop = FALSE]
+                    if (nrow(pr) == 1 && is.finite(pr$lower)) sig <- pr$lower > 0 || pr$upper < 0
+                }
+                reading <- if (is.na(sig)) (if (nec) "nca_must_noboot" else "nca_not_must_noboot")
+                           else if (nec && sig) "nca_both" else if (nec) "nca_must" else if (sig) "nca_should" else "nca_neither"
+                comb$setRow(rowKey = paste(tg, cn, sep = "::"),
+                            values = list(path = est, pathSig = if (is.na(sig)) "\u2014" else lab(if (sig) "yes" else "no"),
+                                          d = dd, p = pp, reading = lab(reading)))
+                rows[[k]] <- data.frame(to = tg, from = cn, d_ce = r$effects[["ce"]], d_cr = r$effects[["cr"]],
+                                        p_ce = r$p[["ce"]], p_cr = r$p[["cr"]], d = dd, p = pp, necessary = nec,
+                                        path = est, sig = sig, reading = reading, stringsAsFactors = FALSE)
+            }
+            tab$setNote("rule", sprintf(txt("footnotes", "nca_note"), .pl_fmt(range[1]), .pl_fmt(range[2]),
+                                        txt("labels", paste0("ipma_range_", self$options$ipmaRange)), reps, seed))
+            comb$setNote("ceiling", sprintf(txt("footnotes", "nca_combined_note"), lab(paste0("nca_", verdict_ceiling))))
+            if (is.null(sm)) comb$setNote("boot", txt("footnotes", "nca_no_boot"))
+
+            # bottleneck tables and plots
+            # ES: tablas de cuellos de botella y gráficos
+            lang <- .pl_lang(self$options)
+            bn <- list()
+            for (tg in unique(pairs$to)) {
+                conds <- pairs$from[pairs$to == tg]
+                if (self$options$ncaBottleneck) {
+                    bt <- sec$ncaBottlenecks$get(key = tg)
+                    for (j in seq_along(conds)) {
+                        b <- res$summary[[tg]][[model$cmap[[conds[j]]]]]$bottleneck[[verdict_ceiling]]
+                        for (i in seq_along(.PL_NCA_STEPS))
+                            bt$setCell(rowKey = .PL_NCA_STEPS[i], col = paste0("c", j),
+                                       value = .pl_nca_bn_cell(b[i], lab("nca_nn"), lab("nca_na")))
+                    }
+                    bt$setNote("read", txt("footnotes", "nca_bn_note"))
+                }
+                for (cn in conds) {
+                    r <- res$summary[[tg]][[model$cmap[[cn]]]]
+                    bn[[paste(tg, cn, sep = "::")]] <- r$bottleneck[[verdict_ceiling]]
+                    if (!self$options$ncaPlots) next
+                    ok <- stats::complete.cases(sc[[model$cmap[[cn]]]], sc[[model$cmap[[tg]]]])
+                    item <- sec$ncaPlots$get(key = paste(cn, "\u2192", tg))
+                    item$setState(list(x = sc[[model$cmap[[cn]]]][ok], y = sc[[model$cmap[[tg]]]][ok], peers = unname(r$peers),
+                                       scope = r$scope, intercept = r$intercept, slope = r$slope,
+                                       labels = list(ce = lab("nca_ce"), cr = lab("nca_cr")),
+                                       title = sprintf(.pl_text(lang, "labels", "nca_title"), cn, tg),
+                                       x_lab = sprintf(.pl_text(lang, "labels", "nca_axis"), cn),
+                                       y_lab = sprintf(.pl_text(lang, "labels", "nca_axis"), tg),
+                                       caption = .pl_text(lang, "labels", "nca_caption")))
+                }
+            }
+            list(table = do.call(rbind, rows), bottleneck = bn, reps = reps, seed = seed, range = range,
+                 boot = !is.null(sm), ceiling = verdict_ceiling, seconds = res$seconds)
+        },
+
+        .plotNca = function(image, ggtheme, theme, ...) {
+            if (is.null(image$state) || is.null(image$state$x)) return(FALSE)
+            print(.pl_plot_nca(image$state, ggtheme, theme))
+            TRUE
         },
 
         .plotIpma = function(image, ggtheme, theme, ...) {
@@ -1021,7 +1179,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             top <- r$get(name)
             if (!is.null(top)) return(top)
             for (g in c("measurementSection", "structuralSection", "fitSection", "predictSection",
-                        "ipmaSection", "mgaSection", "plotsSection")) {
+                        "ipmaSection", "ncaSection", "mgaSection", "plotsSection")) {
                 it <- r$get(g)$get(name)
                 if (!is.null(it)) return(it)
             }
@@ -1039,6 +1197,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # son otros.
         .mgaRows = function(lev, labels, paths, vs) {
             for (g in lev) self$results$mgaSection$mgaGroups$addRow(rowKey = g, values = list(group = g))
+            # MGCFA (1.1.0): one row per model, whatever the groups
+            # ES: MGCFA (1.1.0): una fila por modelo, sean cuales sean los grupos
+            mc <- self$results$mgaSection$mgcfa
+            if (self$options$mgcfa && mc$rowCount == 0)
+                for (st in .PL_MGCFA_STEPS)
+                    mc$addRow(rowKey = st, values = list(step = .pl_text(.pl_lang(self$options), "labels", paste0("mgcfa_", st))))
             if (length(lev) < 2 || length(lev) > .PL_MGA_MAX_GROUPS) return(invisible(NULL))
             prs <- utils::combn(lev, 2, simplify = FALSE)
             for (k in seq_along(prs)) {
@@ -1099,9 +1263,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             r <- .pl_mga_reason(hocs, gv, unlist(lapply(blocks, `[[`, "vars")), n)
             if (!is.null(r)) {
                 why <- do.call(sprintf, c(list(txt("footnotes", r$key)), r$args))
-                notcomp(why, groups = TRUE)
+                notcomp(why, tables = if (self$options$mgcfa) list(mt, dt, self$results$mgaSection$mgcfa) else list(mt, dt),
+                        groups = TRUE)
                 return(list(reason = why, n_missing = mg$n_missing))
             }
+            # MGCFA (1.1.0): lavaan on the same groups; it does not need the
+            # PLS estimates of each group.
+            # ES: MGCFA (1.1.0): lavaan con los mismos grupos; no necesita las
+            # estimaciones PLS de cada grupo.
+            mgc <- private$.fillMgcfa(mg, model, blocks, txt)
             fit <- .pl_capture(cSEM::csem(
                 .data = mg$data, .model = model$syntax, .id = "PLgroup",
                 .PLS_modes = if (length(model$modes)) model$modes else NULL,
@@ -1110,7 +1280,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(fit$error)) {
                 why <- sprintf(txt("footnotes", "mga_error"), paste(fit$error, collapse = "; "))
                 notcomp(why, groups = TRUE)
-                return(list(reason = why, error = fit$error, n_missing = mg$n_missing))
+                return(list(reason = why, error = fit$error, n_missing = mg$n_missing, mgcfa = mgc))
             }
             fg <- fit$value
             adm <- vapply(mg$ids, function(id) sum(cSEM::verify(fg[[id]])) == 0, TRUE)
@@ -1120,7 +1290,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!all(adm)) {
                 why <- sprintf(txt("footnotes", "mga_inadmissible"), paste(lev[!adm], collapse = ", "))
                 notcomp(why)
-                return(list(reason = why, n_missing = mg$n_missing))
+                return(list(reason = why, n_missing = mg$n_missing, mgcfa = mgc))
             }
             perms <- as.integer(self$options$mgaPerm)
             boots <- as.integer(self$options$mgaBoot)
@@ -1157,11 +1327,50 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             cmp_of <- function(k) sprintf(lab("mga_vs"), mg$labels[[prs[[k]][1]]], mg$labels[[prs[[k]][2]]])
             out <- list(group = gv, labels = lev, n = n, n_missing = mg$n_missing, adjust = adjust,
                         warnings = res$warnings, perms = perms, boots = boots, seed = seed)
+            out$mgcfa <- mgc
 
             ctx <- list(txt = txt, lab = lab, notcomp = notcomp, cmp_of = cmp_of, cinv = cinv, mg = mg,
                         perms = perms, boots = boots, seed = seed, adjust = adjust, mt = mt, dt = dt)
             out <- private$.fillMicom(out, s, micom_reason, blocks, ctx)
             private$.fillMgd(out, s, model, paths, ctx)
+        },
+
+        # MGCFA rows (configural, metric, scalar) or the reason they are not
+        # computable. ES: Filas del MGCFA o la razón por la que no se calculan.
+        .fillMgcfa = function(mg, model, blocks, txt) {
+            if (!self$options$mgcfa) return(NULL)
+            tab <- self$results$mgaSection$mgcfa
+            lab <- function(k) txt("labels", k)
+            notcomp <- function(why) {
+                for (k in seq_len(tab$rowCount)) tab$setCell(rowNo = k, col = "decision", value = lab("not_computable"))
+                tab$setNote("reason", why)
+                list(reason = why)
+            }
+            syn <- .pl_mgcfa_syntax(blocks, model$cmap, model$vmap)
+            reason <- .pl_mgcfa_reason(syn, self$options$indicatorScale)
+            if (!is.null(reason)) return(notcomp(txt("footnotes", reason)))
+            est <- self$options$mgcfaEstimator
+            r <- .pl_capture(.pl_mgcfa(.pl_numeric(mg$data), syn, est))
+            if (is.null(r$value)) return(notcomp(sprintf(txt("footnotes", "mgcfa_error"), paste(r$error, collapse = "; "))))
+            t <- r$value
+            for (k in seq_len(nrow(t)))
+                tab$setRow(rowKey = t$step[k], values = list(
+                    chisq = t$chisq[k], df = t$df[k], p = t$p[k], cfi = t$cfi[k], rmsea = t$rmsea[k], srmr = t$srmr[k],
+                    dchisq = if (k > 1) t$dchisq[k] else "", ddf = if (k > 1) t$ddf[k] else "",
+                    dp = if (k > 1) t$dp[k] else "", dcfi = if (k > 1) t$dcfi[k] else "",
+                    drmsea = if (k > 1) t$drmsea[k] else "", dsrmr = if (k > 1) t$dsrmr[k] else "",
+                    decision = lab(t$decision[k])))
+            tab$setNote("rule", sprintf(txt("footnotes", "mgcfa_note"), lab(paste0("mgcfa_est_", est)), length(mg$ids)))
+            single <- vapply(Filter(function(b) identical(b$type, "reflective") && length(b$vars) == 1, blocks), `[[`, "", "label")
+            form <- vapply(Filter(function(b) !identical(b$type, "reflective"), blocks), `[[`, "", "label")
+            if (length(c(single, form)))
+                tab$setNote("left", sprintf(txt("footnotes", "mgcfa_left"), paste(c(single, form), collapse = ", ")))
+            if (!all(t$converged))
+                tab$setNote("conv", sprintf(txt("footnotes", "mgcfa_nonconv"),
+                                            paste(lab(paste0("mgcfa_", t$step[!t$converged])), collapse = ", ")))
+            if (length(r$warnings))
+                tab$setNote("warn", sprintf(txt("footnotes", "mgcfa_warnings"), paste(unique(r$warnings), collapse = "; ")))
+            list(table = t, estimator = est, warnings = r$warnings)
         },
 
         # MICOM rows (steps 2 and 3) or the reason they are not computable.
@@ -1250,7 +1459,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ES: Interpretación del análisis multigrupo.
         .mgaLines = function(txt, mga) {
             if (is.null(mga)) return(character(0))
-            if (!is.null(mga$reason) && is.null(mga$mgd)) return(sprintf(txt("mga_none"), mga$reason))
+            mcl <- private$.mgcfaLines(txt, mga$mgcfa)
+            if (!is.null(mga$reason) && is.null(mga$mgd)) return(c(sprintf(txt("mga_none"), mga$reason), mcl))
             out <- sprintf(txt("mga_groups"), mga$group,
                            paste(sprintf("%s (n = %d)", mga$labels, mga$n), collapse = ", "))
             if (!is.null(mga$micom)) {
@@ -1264,6 +1474,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                                   else sprintf(txt("micom_full"), cmp))
                 }
             } else out <- c(out, sprintf(txt("micom_not"), mga$why_micom))
+            out <- c(out, mcl)
             t <- mga$mgd
             tests <- c(mgd_both = "mgd_tests_both", mgd_perm_only = "mgd_tests_perm", mgd_hens_only = "mgd_tests_hens")
             for (cmp in unique(t$comparison)) {
@@ -1284,6 +1495,35 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (min(mga$n) < 100) out <- c(out, sprintf(txt("mgd_small"), min(mga$n)))
             if (mga$adjust == "none" && nrow(t) > 1) out <- c(out, sprintf(txt("mgd_multiple"), nrow(t)))
             c(out, txt("mga_caution"), txt("mga_next"))
+        },
+
+        # Interpretation of the MGCFA: how far the invariance of the
+        # reflective constructs as common factors goes, and how it relates to
+        # MICOM. ES: Interpretación del MGCFA y su relación con MICOM.
+        .mgcfaLines = function(txt, mgc) {
+            if (is.null(mgc)) return(character(0))
+            if (!is.null(mgc$reason)) return(sprintf(txt("mgcfa_none"), mgc$reason))
+            t <- mgc$table
+            lab <- function(k) .pl_text(.pl_lang(self$options), "labels", k)
+            out <- sprintf(txt("mgcfa_configural"), tolower(lab(t$decision[1])), .pl_fmt(t$cfi[1]), .pl_fmt(t$srmr[1]))
+            if (t$decision[2] == "mgcfa_supported") {
+                out <- c(out, sprintf(txt("mgcfa_metric_ok"), .pl_fmt(t$dcfi[2]), .pl_fmt(t$drmsea[2])))
+                out <- c(out, if (t$decision[3] == "mgcfa_supported")
+                                  sprintf(txt("mgcfa_scalar_ok"), .pl_fmt(t$dcfi[3]), .pl_fmt(t$drmsea[3]))
+                              else sprintf(txt("mgcfa_scalar_fail"), .pl_fmt(t$dcfi[3]), .pl_fmt(t$drmsea[3])))
+            } else if (t$decision[2] == "mgcfa_not_supported") {
+                out <- c(out, sprintf(txt("mgcfa_metric_fail"), .pl_fmt(t$dcfi[2]), .pl_fmt(t$drmsea[2])))
+            } else {
+                out <- c(out, txt("mgcfa_configural_fail"))
+            }
+            # a significant chi-square difference under supported indices
+            # ES: diferencia de chi cuadrado significativa con índices que sí
+            # sostienen el paso
+            k <- which(t$decision == "mgcfa_supported" & is.finite(t$dp) & t$dp < 0.05)
+            if (length(k))
+                out <- c(out, sprintf(txt("mgcfa_chisq"), paste(tolower(lab(paste0("mgcfa_", t$step[k]))), collapse = ", "),
+                                      paste(vapply(t$dp[k], .pl_fmt_p, ""), collapse = ", ")))
+            c(out, txt("mgcfa_vs_micom"))
         },
 
         # ---------------------------------------------------------------------
@@ -1776,7 +2016,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # ---------------------------------------------------------------------
         .interpretation = function(lang, blocks, loadings, paths, r2, quality, structural = NULL, sm = NULL,
                                    model = NULL, mod = NULL, hocq = NULL, omf = NULL, med = NULL, prd = NULL, ipm = NULL,
-                                   mga = NULL) {
+                                   mga = NULL, nca = NULL) {
             txt <- function(key) .pl_text(lang, "interp", key)
             listed <- function(names, values)
                 paste(sprintf("%s (%s)", .pl_short(names), vapply(values, .pl_fmt, "")), collapse = ", ")
@@ -1788,6 +2028,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             dlines <- private$.mediationLines(txt, med)
             plines <- private$.predictLines(txt, prd)
             ilines <- private$.ipmaLines(txt, ipm)
+            nlines <- private$.ncaLines(txt, nca)
             glines <- private$.mgaLines(txt, mga)
             html <- paste0(.pl_html_block(meas, txt("title_measurement")),
                            if (length(hlines)) .pl_html_block(hlines, txt("title_hoc")) else "",
@@ -1795,6 +2036,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                            if (length(dlines)) .pl_html_block(dlines, txt("title_mediation")) else "",
                            if (length(plines)) .pl_html_block(plines, txt("title_predict")) else "",
                            if (length(ilines)) .pl_html_block(ilines, txt("title_ipma")) else "",
+                           if (length(nlines)) .pl_html_block(nlines, txt("title_nca")) else "",
                            if (length(glines)) .pl_html_block(glines, txt("title_mga")) else "",
                            if (length(flines)) .pl_html_block(flines, txt("title_fit")) else "",
                            .pl_html_block(txt(if (is.null(sm)) "next_steps" else "next_steps_boot"), txt("title_next")))
@@ -2005,6 +2247,47 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                          sprintf(txt("ipma_top"), top, .pl_fmt(max(r$importance)), tg))
             }
             c(out, if (!isTRUE(ipm$boot)) txt("ipma_no_boot_interp"), txt("ipma_caution"), txt("ipma_next"))
+        },
+
+        # Interpretation of the NCA: which constructs are necessary for each
+        # outcome, the bottleneck that matters, the combined reading with the
+        # PLS-SEM paths, cautions and next step.
+        # ES: Interpretación del NCA: qué constructos son necesarios para cada
+        # resultado, el cuello de botella relevante, la lectura combinada con
+        # las rutas de PLS-SEM, precauciones y siguiente paso.
+        .ncaLines = function(txt, nca) {
+            if (is.null(nca)) return(character(0))
+            if (!is.null(nca$reason)) return(sprintf(txt("nca_none"), nca$reason))
+            if (is.null(nca$table)) return(character(0))
+            tb <- nca$table
+            cl <- .pl_text(.pl_lang(self$options), "labels", paste0("nca_", nca$ceiling))
+            out <- character(0)
+            for (k in which(tb$necessary)) {
+                out <- c(out, sprintf(txt("nca_line_nec"), tb$from[k], tb$to[k], cl, .pl_fmt(tb$d[k]), .pl_fmt_p(tb$p[k])))
+                b <- nca$bottleneck[[paste(tb$to[k], tb$from[k], sep = "::")]]
+                j <- which(is.finite(b) & b > 0)
+                if (length(j)) {
+                    j <- max(j)
+                    out <- c(out, sprintf(txt("nca_line_bn"), tb$to[k], format(.PL_NCA_STEPS[j]), tb$from[k],
+                                                  formatC(b[j], format = "f", digits = 1)))
+                }
+            }
+            if (!any(tb$necessary)) out <- c(out, sprintf(txt("nca_line_none"), cl))
+            small <- !tb$necessary & !is.na(tb$d) & tb$d < 0.1 & !is.na(tb$p) & tb$p < 0.05
+            if (any(small))
+                out <- c(out, sprintf(txt("nca_line_small"), paste(sprintf("%s \u2192 %s", tb$from[small], tb$to[small]), collapse = ", ")))
+            if (isTRUE(nca$boot)) {
+                must <- tb$reading == "nca_must"
+                both <- tb$reading == "nca_both"
+                should <- tb$reading == "nca_should"
+                lst <- function(i) paste(sprintf("%s \u2192 %s", tb$from[i], tb$to[i]), collapse = ", ")
+                if (any(both)) out <- c(out, sprintf(txt("nca_combo_both"), lst(both)))
+                if (any(must)) out <- c(out, sprintf(txt("nca_combo_must"), lst(must)))
+                if (any(should)) out <- c(out, sprintf(txt("nca_combo_should"), lst(should)))
+            } else {
+                out <- c(out, txt("nca_no_boot_interp"))
+            }
+            c(out, txt("nca_caution"), txt("nca_next"))
         },
 
         # Interpretation of PLSpredict (Shmueli et al., 2019: Q2predict > 0,
@@ -2287,7 +2570,9 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                        if (self$options$bootstrap)
                            sprintf(txt("bootstrap"), as.integer(self$options$bootReps), as.integer(self$options$bootSeed),
                                    format(100 * as.numeric(self$options$ciLevel)))
-                       else txt("no_bootstrap"))
+                       else txt("no_bootstrap"),
+                       if (self$options$ncaRun) sprintf(txt(paste0("nca_", self$options$ncaCeiling)), as.integer(self$options$ncaPerm)),
+                       if (self$options$mgaRun && self$options$mgcfa) txt(paste0("mgcfa_", self$options$mgcfaEstimator)))
             self$results$choicesGuide$setContent(.pl_html_block(paras))
         },
 
@@ -2305,9 +2590,12 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             self$results$measurementSection$hocGuide$setContent(.pl_html_block(c(txt("hoc"), txt("hoc_htmt"))))
             self$results$structuralSection$mediationGuide$setContent(.pl_html_block(c(txt("mediation"), txt("mediation_types"))))
             self$results$ipmaSection$ipmaGuide$setContent(.pl_html_block(c(txt("ipma"), txt("ipma_reading"))))
+            self$results$ncaSection$ncaGuide$setContent(.pl_html_block(c(txt("nca"), txt("nca_reading"), txt("nca_bottleneck"),
+                                                                         txt("nca_combined"))))
             self$results$predictSection$predictGuide$setContent(.pl_html_block(c(txt("predict"), txt("predict_metrics"), txt("q2_clarify"),
                                                                  txt("predict_power"), txt("cvpat"))))
-            self$results$mgaSection$mgaGuide$setContent(.pl_html_block(c(txt("mga"), txt("micom"), txt("mgd"), txt("mga_cautions"))))
+            self$results$mgaSection$mgaGuide$setContent(.pl_html_block(c(txt("mga"), txt("micom"), txt("mgcfa"), txt("mgd"),
+                                                                                    txt("mga_cautions"))))
             self$results$fitSection$fitGuide$setContent(.pl_html_block(c(txt("fit"), txt("fit_saturated"), txt("fit_not_shown"))))
         },
 
@@ -2390,7 +2678,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     "cSEM::summarize(fit2)",
                     "# Bootstrap of a higher-order model: in each resample of stage 1, stage 2 is re-estimated from that resample (.user_funs; see R/bootstrap.R in PLSsemLab)")
             }
-            code <- c(code, private$.reproOptional(model, paths, q, modes),
+            code <- c(code, private$.reproOptional(model, paths, q, modes, blocks),
                       private$.reproQuality(model, blocks, paths, q, modes_of))
             esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x, fixed = TRUE), fixed = TRUE), fixed = TRUE)
             self$results$reproducibilityCode$setContent(paste0(
@@ -2401,7 +2689,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # Equivalent R code of the optional sections that ran: bootstrap,
         # IPMA, prediction, multigroup analysis and overall fit.
         # ES: Código R equivalente de las secciones opcionales que corrieron.
-        .reproOptional = function(model, paths, q, modes) {
+        .reproOptional = function(model, paths, q, modes, blocks = list()) {
             code <- character(0)
             if (self$options$bootstrap) {
                 # The same blocks and seeds as the module: up to 200 resamples
@@ -2429,6 +2717,24 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         sprintf("100 * (ip$Construct$Performance - %s) / (%s - %s)", format(self$options$ipmaMin),
                                 format(self$options$ipmaMax), format(self$options$ipmaMin))
                     else "rg <- range(unlist(lapply(d, as.numeric)), na.rm = TRUE); 100 * (ip$Construct$Performance - rg[1]) / diff(rg)")
+            }
+            if (self$options$ncaRun && is.null(.pl_nca_reason(model, model$hocs, self$options))) {
+                np <- .pl_nca_pairs(paths)
+                code <- c(code, "",
+                    "# NCA: unstandardized construct scores (the IPMA's) rescaled to 0-100 with the range of the scale",
+                    "W <- fit$Estimates$Weight_estimates; X <- as.matrix(d[, colnames(W)])",
+                    "S <- sapply(rownames(W), function(c) { w <- W[c, ] / apply(X, 2, sd); X %*% (w / sum(w)) })",
+                    if (self$options$ipmaRange == "manual")
+                        sprintf("S <- as.data.frame(100 * (S - %s) / (%s - %s))", format(self$options$ipmaMin),
+                                format(self$options$ipmaMax), format(self$options$ipmaMin))
+                    else "rg <- range(unlist(lapply(d, as.numeric)), na.rm = TRUE); S <- as.data.frame(100 * (S - rg[1]) / diff(rg))",
+                    "# The NCA package (Dul) gives the same d, accuracy and bottlenecks; its permutations draw other",
+                    "# random numbers than PLSsemLab's, so the p values agree within Monte Carlo error",
+                    sprintf("set.seed(%d)", as.integer(self$options$bootSeed)))
+                for (tg in unique(np$to))
+                    code <- c(code, sprintf("NCA::nca_analysis(S, c(%s), \"%s\", ceilings = c(\"ce_fdh\", \"cr_fdh\"), test.rep = %d)",
+                                            paste(sprintf("\"%s\"", unname(unlist(model$cmap[np$from[np$to == tg]]))), collapse = ", "),
+                                            model$cmap[[tg]], as.integer(self$options$ncaPerm)))
             }
             if (self$options$predictRun && is.null(.pl_predict_reason(model, model$hocs, TRUE))) {
                 code <- c(code, "",
@@ -2478,6 +2784,18 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     if (self$options$mgaAdjust != "none")
                         sprintf("# correction: stats::p.adjust(p, method = \"%s\") over every path and pair, each test on its own",
                                 self$options$mgaAdjust))
+                syn <- .pl_mgcfa_syntax(blocks, model$cmap, model$vmap)
+                if (self$options$mgcfa && is.null(.pl_mgcfa_reason(syn, self$options$indicatorScale))) {
+                    est <- self$options$mgcfaEstimator
+                    code <- c(code, "",
+                        "# Measurement invariance of the reflective constructs as common factors (multigroup CFA, lavaan)",
+                        sprintf("cfa_model <- \"%s\"", gsub("\n", "\\\\n", syn)),
+                        sprintf("mi <- lapply(list(configural = character(0), metric = \"loadings\", scalar = c(\"loadings\", \"intercepts\")), function(eq) lavaan::cfa(cfa_model, data = dg, group = \"PLgroup\", estimator = \"%s\", meanstructure = TRUE, group.equal = eq))", est),
+                        sprintf("sapply(mi, lavaan::fitMeasures, c(%s))", if (est == "MLR")
+                            "\"chisq.scaled\", \"df.scaled\", \"pvalue.scaled\", \"cfi.robust\", \"rmsea.robust\", \"srmr\""
+                            else "\"chisq\", \"df\", \"pvalue\", \"cfi\", \"rmsea\", \"srmr\""),
+                        "lavaan::lavTestLRT(mi$configural, mi$metric); lavaan::lavTestLRT(mi$metric, mi$scalar)")
+                }
             }
             if (self$options$fitTest && is.null(.pl_fit_reason(model, model$hocs, TRUE))) {
                 args <- sprintf(".R = %d, .seed = %d, .alpha = %s", as.integer(self$options$fitReps),

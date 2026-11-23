@@ -79,6 +79,13 @@ jobs:
       - name: Check the values published by Hair et al.
         run: Rscript validation/hair_published.R
 
+      # The NCA (1.1.0) is computed by the module itself; every number must
+      # equal the NCA package's (installed from Suggests).
+      # ES: El NCA (1.1.0) lo calcula el módulo; cada número debe ser igual
+      # al del paquete NCA (instalado desde Suggests).
+      - name: Check numerical equivalence with the NCA package
+        run: Rscript validation/nca_equivalence.R
+
       - name: Keep the validation results
         if: always()
         uses: actions/upload-artifact@v4

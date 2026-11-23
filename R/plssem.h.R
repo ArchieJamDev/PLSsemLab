@@ -35,11 +35,18 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             ipmaRange = "data",
             ipmaMin = 1,
             ipmaMax = 7,
+            ncaRun = FALSE,
+            ncaPerm = 10000,
+            ncaCeiling = "cr_fdh",
+            ncaBottleneck = TRUE,
+            ncaPlots = TRUE,
             groupVar = NULL,
             mgaRun = FALSE,
             mgaPerm = 1000,
             mgaBoot = 1000,
             mgaAdjust = "none",
+            mgcfa = FALSE,
+            mgcfaEstimator = "MLR",
             pathDiagram = TRUE,
             loadingsPlot = FALSE,
             htmtPlot = FALSE,
@@ -262,6 +269,31 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "ipmaMax",
                 ipmaMax,
                 default=7)
+            private$..ncaRun <- jmvcore::OptionBool$new(
+                "ncaRun",
+                ncaRun,
+                default=FALSE)
+            private$..ncaPerm <- jmvcore::OptionInteger$new(
+                "ncaPerm",
+                ncaPerm,
+                min=99,
+                max=100000,
+                default=10000)
+            private$..ncaCeiling <- jmvcore::OptionList$new(
+                "ncaCeiling",
+                ncaCeiling,
+                options=list(
+                    "cr_fdh",
+                    "ce_fdh"),
+                default="cr_fdh")
+            private$..ncaBottleneck <- jmvcore::OptionBool$new(
+                "ncaBottleneck",
+                ncaBottleneck,
+                default=TRUE)
+            private$..ncaPlots <- jmvcore::OptionBool$new(
+                "ncaPlots",
+                ncaPlots,
+                default=TRUE)
             private$..groupVar <- jmvcore::OptionVariable$new(
                 "groupVar",
                 groupVar,
@@ -295,6 +327,17 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "holm",
                     "bonferroni"),
                 default="none")
+            private$..mgcfa <- jmvcore::OptionBool$new(
+                "mgcfa",
+                mgcfa,
+                default=FALSE)
+            private$..mgcfaEstimator <- jmvcore::OptionList$new(
+                "mgcfaEstimator",
+                mgcfaEstimator,
+                options=list(
+                    "MLR",
+                    "ML"),
+                default="MLR")
             private$..pathDiagram <- jmvcore::OptionBool$new(
                 "pathDiagram",
                 pathDiagram,
@@ -453,11 +496,18 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..ipmaRange)
             self$.addOption(private$..ipmaMin)
             self$.addOption(private$..ipmaMax)
+            self$.addOption(private$..ncaRun)
+            self$.addOption(private$..ncaPerm)
+            self$.addOption(private$..ncaCeiling)
+            self$.addOption(private$..ncaBottleneck)
+            self$.addOption(private$..ncaPlots)
             self$.addOption(private$..groupVar)
             self$.addOption(private$..mgaRun)
             self$.addOption(private$..mgaPerm)
             self$.addOption(private$..mgaBoot)
             self$.addOption(private$..mgaAdjust)
+            self$.addOption(private$..mgcfa)
+            self$.addOption(private$..mgcfaEstimator)
             self$.addOption(private$..pathDiagram)
             self$.addOption(private$..loadingsPlot)
             self$.addOption(private$..htmtPlot)
@@ -510,11 +560,18 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ipmaRange = function() private$..ipmaRange$value,
         ipmaMin = function() private$..ipmaMin$value,
         ipmaMax = function() private$..ipmaMax$value,
+        ncaRun = function() private$..ncaRun$value,
+        ncaPerm = function() private$..ncaPerm$value,
+        ncaCeiling = function() private$..ncaCeiling$value,
+        ncaBottleneck = function() private$..ncaBottleneck$value,
+        ncaPlots = function() private$..ncaPlots$value,
         groupVar = function() private$..groupVar$value,
         mgaRun = function() private$..mgaRun$value,
         mgaPerm = function() private$..mgaPerm$value,
         mgaBoot = function() private$..mgaBoot$value,
         mgaAdjust = function() private$..mgaAdjust$value,
+        mgcfa = function() private$..mgcfa$value,
+        mgcfaEstimator = function() private$..mgcfaEstimator$value,
         pathDiagram = function() private$..pathDiagram$value,
         loadingsPlot = function() private$..loadingsPlot$value,
         htmtPlot = function() private$..htmtPlot$value,
@@ -566,11 +623,18 @@ plssemOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..ipmaRange = NA,
         ..ipmaMin = NA,
         ..ipmaMax = NA,
+        ..ncaRun = NA,
+        ..ncaPerm = NA,
+        ..ncaCeiling = NA,
+        ..ncaBottleneck = NA,
+        ..ncaPlots = NA,
         ..groupVar = NA,
         ..mgaRun = NA,
         ..mgaPerm = NA,
         ..mgaBoot = NA,
         ..mgaAdjust = NA,
+        ..mgcfa = NA,
+        ..mgcfaEstimator = NA,
         ..pathDiagram = NA,
         ..loadingsPlot = NA,
         ..htmtPlot = NA,
@@ -611,11 +675,13 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         fitSection = function() private$.items[["fitSection"]],
         predictSection = function() private$.items[["predictSection"]],
         ipmaSection = function() private$.items[["ipmaSection"]],
+        ncaSection = function() private$.items[["ncaSection"]],
         mgaSection = function() private$.items[["mgaSection"]],
         plotsSection = function() private$.items[["plotsSection"]],
         cacheStore = function() private$.items[["cacheStore"]],
         fitCacheStore = function() private$.items[["fitCacheStore"]],
         predictCacheStore = function() private$.items[["predictCacheStore"]],
+        ncaCacheStore = function() private$.items[["ncaCacheStore"]],
         mgaCacheStore = function() private$.items[["mgaCacheStore"]],
         interpretation = function() private$.items[["interpretation"]],
         reproducibility = function() private$.items[["reproducibility"]],
@@ -2064,9 +2130,212 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(R6::R6Class(
                 inherit = jmvcore::Group,
                 active = list(
+                    ncaGuide = function() private$.items[["ncaGuide"]],
+                    ncaTable = function() private$.items[["ncaTable"]],
+                    ncaCombined = function() private$.items[["ncaCombined"]],
+                    ncaBottlenecks = function() private$.items[["ncaBottlenecks"]],
+                    ncaPlots = function() private$.items[["ncaPlots"]]),
+                private = list(),
+                public=list(
+                    initialize=function(options) {
+                        super$initialize(
+                            options=options,
+                            name="ncaSection",
+                            title="Necessary condition analysis")
+                        self$add(jmvcore::Html$new(
+                            options=options,
+                            name="ncaGuide",
+                            title="How to read the necessary condition analysis",
+                            visible="(showGuides && ncaRun)"))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="ncaTable",
+                            title="Necessary conditions (NCA)",
+                            rows=0,
+                            visible="(ncaRun)",
+                            refs=list(
+                                "dul_2016",
+                                "dul_2020",
+                                "richter_2020"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "ipmaRange",
+                                "ipmaMin",
+                                "ipmaMax",
+                                "ncaPerm",
+                                "bootSeed"),
+                            columns=list(
+                                list(
+                                    `name`="target", 
+                                    `title`="Outcome", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="condition", 
+                                    `title`="Condition", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="ceiling", 
+                                    `title`="Ceiling", 
+                                    `type`="text"),
+                                list(
+                                    `name`="d", 
+                                    `title`="d", 
+                                    `type`="number"),
+                                list(
+                                    `name`="size", 
+                                    `title`="Effect size", 
+                                    `type`="text"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="accuracy", 
+                                    `title`="Accuracy (%)", 
+                                    `type`="number"),
+                                list(
+                                    `name`="verdict", 
+                                    `title`="Reading", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="ncaCombined",
+                            title="Sufficiency (PLS-SEM) and necessity (NCA)",
+                            rows=0,
+                            visible="(ncaRun)",
+                            refs=list(
+                                "richter_2020",
+                                "richter_2023"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "ipmaRange",
+                                "ipmaMin",
+                                "ipmaMax",
+                                "ncaPerm",
+                                "bootSeed",
+                                "ncaCeiling",
+                                "bootstrap",
+                                "bootReps",
+                                "ciLevel"),
+                            columns=list(
+                                list(
+                                    `name`="target", 
+                                    `title`="Outcome", 
+                                    `type`="text", 
+                                    `combineBelow`=TRUE),
+                                list(
+                                    `name`="condition", 
+                                    `title`="Condition", 
+                                    `type`="text"),
+                                list(
+                                    `name`="path", 
+                                    `title`="Path", 
+                                    `type`="number"),
+                                list(
+                                    `name`="pathSig", 
+                                    `title`="Path significant", 
+                                    `type`="text"),
+                                list(
+                                    `name`="d", 
+                                    `title`="NCA d", 
+                                    `type`="number"),
+                                list(
+                                    `name`="p", 
+                                    `title`="NCA p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="reading", 
+                                    `title`="Reading", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Array$new(
+                            options=options,
+                            name="ncaBottlenecks",
+                            title="Bottleneck tables",
+                            items=0,
+                            visible="(ncaRun && ncaBottleneck)",
+                            template=jmvcore::Table$new(
+                                options=options,
+                                title="$key",
+                                rows=0,
+                                clearWith=list(
+                                    "reflective",
+                                    "formative",
+                                    "reflectiveHoc",
+                                    "formativeHoc",
+                                    "hocApproach",
+                                    "structural",
+                                    "estimator",
+                                    "innerScheme",
+                                    "indicatorScale",
+                                    "missing",
+                                    "ipmaRange",
+                                    "ipmaMin",
+                                    "ipmaMax",
+                                    "ncaPerm",
+                                    "bootSeed",
+                                    "ncaCeiling"),
+                                columns=list(
+                                    list(
+                                        `name`="level", 
+                                        `title`="Outcome level (%)", 
+                                        `type`="integer")))))
+                        self$add(jmvcore::Array$new(
+                            options=options,
+                            name="ncaPlots",
+                            title="Ceiling plots",
+                            items=0,
+                            visible="(ncaRun && ncaPlots)",
+                            template=jmvcore::Image$new(
+                                options=options,
+                                title="$key",
+                                width=520,
+                                height=420,
+                                renderFun=".plotNca",
+                                clearWith=list(
+                                    "reflective",
+                                    "formative",
+                                    "reflectiveHoc",
+                                    "formativeHoc",
+                                    "hocApproach",
+                                    "structural",
+                                    "estimator",
+                                    "innerScheme",
+                                    "indicatorScale",
+                                    "missing",
+                                    "ipmaRange",
+                                    "ipmaMin",
+                                    "ipmaMax",
+                                    "ncaPerm",
+                                    "bootSeed"))))}))$new(options=options))
+            self$add(R6::R6Class(
+                inherit = jmvcore::Group,
+                active = list(
                     mgaGuide = function() private$.items[["mgaGuide"]],
                     mgaGroups = function() private$.items[["mgaGroups"]],
                     micom = function() private$.items[["micom"]],
+                    mgcfa = function() private$.items[["mgcfa"]],
                     mga = function() private$.items[["mga"]]),
                 private = list(),
                 public=list(
@@ -2190,6 +2459,97 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                 list(
                                     `name`="invariance", 
                                     `title`="Invariance", 
+                                    `type`="text"))))
+                        self$add(jmvcore::Table$new(
+                            options=options,
+                            name="mgcfa",
+                            title="Measurement invariance of the reflective constructs (MGCFA)",
+                            rows=0,
+                            visible="(mgaRun && mgcfa)",
+                            refs=list(
+                                "lavaan",
+                                "vandenberg_2000",
+                                "putnick_2016",
+                                "hu_1999",
+                                "cheung_2002",
+                                "chen_2007"),
+                            clearWith=list(
+                                "reflective",
+                                "formative",
+                                "reflectiveHoc",
+                                "formativeHoc",
+                                "hocApproach",
+                                "structural",
+                                "estimator",
+                                "innerScheme",
+                                "indicatorScale",
+                                "missing",
+                                "groupVar",
+                                "mgcfaEstimator"),
+                            columns=list(
+                                list(
+                                    `name`="step", 
+                                    `title`="Model", 
+                                    `type`="text"),
+                                list(
+                                    `name`="chisq", 
+                                    `title`="\u03C7\u00B2", 
+                                    `type`="number"),
+                                list(
+                                    `name`="df", 
+                                    `title`="df", 
+                                    `type`="integer"),
+                                list(
+                                    `name`="p", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue"),
+                                list(
+                                    `name`="cfi", 
+                                    `title`="CFI", 
+                                    `type`="number"),
+                                list(
+                                    `name`="rmsea", 
+                                    `title`="RMSEA", 
+                                    `type`="number"),
+                                list(
+                                    `name`="srmr", 
+                                    `title`="SRMR", 
+                                    `type`="number"),
+                                list(
+                                    `name`="dchisq", 
+                                    `title`="\u0394\u03C7\u00B2", 
+                                    `type`="number", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="ddf", 
+                                    `title`="\u0394df", 
+                                    `type`="integer", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="dp", 
+                                    `title`="p", 
+                                    `type`="number", 
+                                    `format`="zto,pvalue", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="dcfi", 
+                                    `title`="\u0394CFI", 
+                                    `type`="number", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="drmsea", 
+                                    `title`="\u0394RMSEA", 
+                                    `type`="number", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="dsrmr", 
+                                    `title`="\u0394SRMR", 
+                                    `type`="number", 
+                                    `superTitle`="Change from the previous model"),
+                                list(
+                                    `name`="decision", 
+                                    `title`="Decision", 
                                     `type`="text"))))
                         self$add(jmvcore::Table$new(
                             options=options,
@@ -2411,6 +2771,26 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "missing")))
             self$add(jmvcore::Html$new(
                 options=options,
+                name="ncaCacheStore",
+                visible=FALSE,
+                clearWith=list(
+                    "reflective",
+                    "formative",
+                    "reflectiveHoc",
+                    "formativeHoc",
+                    "hocApproach",
+                    "structural",
+                    "estimator",
+                    "innerScheme",
+                    "indicatorScale",
+                    "missing",
+                    "ipmaRange",
+                    "ipmaMin",
+                    "ipmaMax",
+                    "ncaPerm",
+                    "bootSeed")))
+            self$add(jmvcore::Html$new(
+                options=options,
                 name="mgaCacheStore",
                 visible=FALSE,
                 clearWith=list(
@@ -2451,7 +2831,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             super$initialize(
                 package = "PLSsemLab",
                 name = "plssem",
-                version = c(0,7,6),
+                version = c(1,0,1),
                 options = options,
                 results = plssemResults$new(options=options),
                 data = data,
@@ -2501,11 +2881,18 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param ipmaRange .
 #' @param ipmaMin .
 #' @param ipmaMax .
+#' @param ncaRun .
+#' @param ncaPerm .
+#' @param ncaCeiling .
+#' @param ncaBottleneck .
+#' @param ncaPlots .
 #' @param groupVar .
 #' @param mgaRun .
 #' @param mgaPerm .
 #' @param mgaBoot .
 #' @param mgaAdjust .
+#' @param mgcfa .
+#' @param mgcfaEstimator .
 #' @param pathDiagram .
 #' @param loadingsPlot .
 #' @param htmtPlot .
@@ -2572,9 +2959,15 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$ipmaSection$ipmaGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$ipmaSection$ipmaTable} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$ipmaSection$ipmaPlots} \tab \tab \tab \tab \tab an array \cr
+#'   \code{results$ncaSection$ncaGuide} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$ncaSection$ncaTable} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ncaSection$ncaCombined} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$ncaSection$ncaBottlenecks} \tab \tab \tab \tab \tab an array \cr
+#'   \code{results$ncaSection$ncaPlots} \tab \tab \tab \tab \tab an array \cr
 #'   \code{results$mgaSection$mgaGuide} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$mgaSection$mgaGroups} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mgaSection$micom} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mgaSection$mgcfa} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$mgaSection$mga} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$plotsSection$pathDiagram} \tab \tab \tab \tab \tab an image \cr
 #'   \code{results$plotsSection$loadingsPlot} \tab \tab \tab \tab \tab an image \cr
@@ -2582,6 +2975,7 @@ plssemBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$cacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$fitCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$predictCacheStore} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$ncaCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$mgaCacheStore} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$interpretation} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$reproducibility} \tab \tab \tab \tab \tab a html \cr
@@ -2626,11 +3020,18 @@ plssem <- function(
     ipmaRange = "data",
     ipmaMin = 1,
     ipmaMax = 7,
+    ncaRun = FALSE,
+    ncaPerm = 10000,
+    ncaCeiling = "cr_fdh",
+    ncaBottleneck = TRUE,
+    ncaPlots = TRUE,
     groupVar = NULL,
     mgaRun = FALSE,
     mgaPerm = 1000,
     mgaBoot = 1000,
     mgaAdjust = "none",
+    mgcfa = FALSE,
+    mgcfaEstimator = "MLR",
     pathDiagram = TRUE,
     loadingsPlot = FALSE,
     htmtPlot = FALSE,
@@ -2695,11 +3096,18 @@ plssem <- function(
         ipmaRange = ipmaRange,
         ipmaMin = ipmaMin,
         ipmaMax = ipmaMax,
+        ncaRun = ncaRun,
+        ncaPerm = ncaPerm,
+        ncaCeiling = ncaCeiling,
+        ncaBottleneck = ncaBottleneck,
+        ncaPlots = ncaPlots,
         groupVar = groupVar,
         mgaRun = mgaRun,
         mgaPerm = mgaPerm,
         mgaBoot = mgaBoot,
         mgaAdjust = mgaAdjust,
+        mgcfa = mgcfa,
+        mgcfaEstimator = mgcfaEstimator,
         pathDiagram = pathDiagram,
         loadingsPlot = loadingsPlot,
         htmtPlot = htmtPlot,

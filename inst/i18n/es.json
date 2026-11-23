@@ -85,6 +85,9 @@
             "%d path comparisons were made without correction: if no path differed, about one in twenty would still be significant by chance. Treat isolated differences as exploratory, or choose the Holm correction.": [
                 "Se hicieron %d comparaciones de rutas sin corrección: aunque ninguna ruta difiriera, alrededor de una de cada veinte saldría significativa por azar. Trate las diferencias aisladas como exploratorias, o elija la corrección de Holm."
             ],
+            "%s (0-100)": [
+                "%s (0-100)"
+            ],
             "%s (formative): weights of its dimensions %s.": [
                 "%s (formativo): pesos de sus dimensiones %s."
             ],
@@ -93,6 +96,9 @@
             ],
             "%s has a single indicator: cSEM takes its within-construct correlation as 1 (perfect reliability), so this HTMT is a lower bound of the overlap between the two constructs.": [
                 "%s tiene un solo indicador: cSEM toma su correlación dentro del constructo como 1 (fiabilidad perfecta), así que este HTMT es un límite inferior del solapamiento entre los dos constructos."
+            ],
+            "%s is a necessary condition for %s (%s d = %s, p %s): high levels of %2$s do not occur without enough %1$s, and the other constructs cannot make up for its lack.": [
+                "%1$s es una condición necesaria para %2$s (%3$s d = %4$s, p %5$s): no se dan niveles altos de %2$s sin suficiente %1$s, y los demás constructos no pueden compensar su falta."
             ],
             "%s would also be a priority by position on the map, but its total effect is not significant: do not base a decision on it.": [
                 "%s también sería prioritario por su posición en el mapa, pero su efecto total no es significativo: no base una decisión en él."
@@ -205,6 +211,12 @@
             "About your choices": [
                 "Acerca de sus elecciones"
             ],
+            "Acceptable fit": [
+                "Ajuste aceptable"
+            ],
+            "Accuracy (%)": [
+                "Precisión (%)"
+            ],
             "Add Higher-Order Construct": [
                 "Agregar constructo de orden superior"
             ],
@@ -283,6 +295,9 @@
             "Bank customers, with demographics (n=675)": [
                 "Clientes de bancos, con variables demográficas (n=675)"
             ],
+            "Because the configural model does not fit, the metric and scalar steps were not judged: the factor structure itself may differ between the groups. Check the loadings in each group before comparing them.": [
+                "Como el modelo configural no ajusta, los pasos métrico y escalar no se juzgaron: la propia estructura factorial puede diferir entre los grupos. Revise las cargas en cada grupo antes de compararlos."
+            ],
             "Below 0.02: no effect": [
                 "Menor de 0.02: sin efecto"
             ],
@@ -331,6 +346,12 @@
             "both tests": [
                 "ambas pruebas"
             ],
+            "Bottleneck tables": [
+                "Tablas de cuellos de botella"
+            ],
+            "Bottlenecks for %s (%s, percentage of the range)": [
+                "Cuellos de botella para %s (%s, porcentaje del rango)"
+            ],
             "c": [
                 "c"
             ],
@@ -340,8 +361,35 @@
             "Cautions. Each group must, on its own, have enough cases for the model: with small groups only large differences reach significance, so a non-significant difference is not evidence that the paths are equal. Comparing many paths and pairs of groups multiplies the chance of a false positive: use the correction of the Multigroup Analysis box if the comparisons are confirmatory, or present them as exploratory. The groups are observed, not assigned at random: a difference describes the groups, and does not show that belonging to a group causes it. Groups defined by an observed variable do not rule out other, unobserved differences between the cases (unobserved heterogeneity), which this module does not test.": [
                 "Cautelas. Cada grupo, por sí solo, debe tener casos suficientes para el modelo: con grupos pequeños solo las diferencias grandes alcanzan significación, así que una diferencia no significativa no es evidencia de que las rutas sean iguales. Comparar muchas rutas y pares de grupos multiplica la probabilidad de un falso positivo: use la corrección de la caja Análisis multigrupo si las comparaciones son confirmatorias, o preséntelas como exploratorias. Los grupos se observan, no se asignan al azar: una diferencia describe a los grupos y no muestra que pertenecer a uno de ellos la cause. Los grupos definidos por una variable observada no descartan otras diferencias no observadas entre los casos (heterogeneidad no observada), que este módulo no prueba."
             ],
+            "CE-FDH": [
+                "CE-FDH"
+            ],
+            "CE-FDH (few distinct values)": [
+                "CE-FDH (pocos valores distintos)"
+            ],
+            "Ceiling": [
+                "Techo"
+            ],
+            "Ceiling line for the verdict": [
+                "Línea de techo para el veredicto"
+            ],
+            "Ceiling lines: %s → %s": [
+                "Líneas de techo: %s → %s"
+            ],
+            "Ceiling plots": [
+                "Gráficos de techo"
+            ],
             "Centroid": [
                 "Centroide"
+            ],
+            "CFA estimator": [
+                "Estimador del AFC"
+            ],
+            "CFI": [
+                "CFI"
+            ],
+            "Change from the previous model": [
+                "Cambio respecto del modelo anterior"
             ],
             "Circle": [
                 "Círculo"
@@ -406,8 +454,14 @@
             "Computed from polychoric correlations (ordinal indicators): the values refer to the reliability of the latent continuous responses assumed behind the categories, not to the observed sum score, which is usually lower (Chalmers, 2018, see references).": [
                 "Calculado con correlaciones policóricas (indicadores ordinales): los valores se refieren a la fiabilidad de las respuestas latentes continuas que se suponen detrás de las categorías, no a la del puntaje observado, que suele ser menor (Chalmers, 2018, vea las referencias)."
             ],
+            "Condition": [
+                "Condición"
+            ],
             "Confidence level": [
                 "Nivel de confianza"
+            ],
+            "Configural": [
+                "Configural"
             ],
             "Consistent PLS (PLSc)": [
                 "PLS consistente (PLSc)"
@@ -447,6 +501,12 @@
             ],
             "Correction for multiple comparisons": [
                 "Corrección por comparaciones múltiples"
+            ],
+            "CR-FDH": [
+                "CR-FDH"
+            ],
+            "CR-FDH (continuous scores)": [
+                "CR-FDH (puntuaciones continuas)"
             ],
             "Critical value": [
                 "Valor crítico"
@@ -490,6 +550,9 @@
             "CVPAT: there is no evidence that the model predicts better than %s (loss difference %s, t = %s, p %s).": [
                 "CVPAT: no hay evidencia de que el modelo prediga mejor que %s (diferencia de pérdida %s, t = %s, p %s)."
             ],
+            "d": [
+                "d"
+            ],
             "Dark gray": [
                 "Gris oscuro"
             ],
@@ -507,6 +570,9 @@
             ],
             "Define each construct in Reflective Constructs or Formative Constructs: give it a name and drag its indicators into it. Reflective: the construct causes its indicators, which should correlate highly. Formative: the indicators together form the construct and need not correlate.": [
                 "Defina cada constructo en Constructos reflectivos o Constructos formativos: póngale un nombre y arrastre sus indicadores. Reflectivo: el constructo causa sus indicadores, que deberían correlacionar alto. Formativo: los indicadores en conjunto forman el constructo y no necesitan correlacionar."
+            ],
+            "df": [
+                "gl"
             ],
             "Diagonal: square root of the AVE. Below the diagonal: correlations between constructs. Discriminant validity holds for a pair when both square roots exceed their correlation.": [
                 "Diagonal: raíz cuadrada de la AVE. Debajo de la diagonal: correlaciones entre constructos. Hay validez discriminante en un par cuando ambas raíces superan su correlación."
@@ -568,6 +634,9 @@
             "Disjoint (Sarstedt et al., 2019)": [
                 "Disjunto (Sarstedt et al., 2019)"
             ],
+            "Dotted box: the observed scope. The empty upper-left zone above the ceiling is the ceiling zone.": [
+                "Recuadro punteado: el alcance observado. La zona vacía superior izquierda, sobre el techo, es la zona techo."
+            ],
             "drag first-order constructs here": [
                 "arrastre aquí los constructos de primer orden"
             ],
@@ -579,6 +648,9 @@
             ],
             "Drawn": [
                 "Extraídas"
+            ],
+            "Each cell is the minimum level of the condition (percentage of its range) needed for the level of the outcome in the row (percentage of its range). NN: not necessary at that level. NA: the ceiling line asks for more than the highest observed level of the condition.": [
+                "Cada celda es el nivel mínimo de la condición (porcentaje de su rango) necesario para el nivel del resultado de la fila (porcentaje de su rango). NN: no es necesaria en ese nivel. NA: la línea de techo pide más que el nivel más alto observado de la condición."
             ],
             "Each coefficient is the change in the outcome construct, in standard deviations, when the predictor increases by one standard deviation and the other predictors of the same outcome stay constant. R² is the share of the outcome's variance explained by its predictors. Common misreading: treating a large coefficient as significant. Significance needs the bootstrap (Bootstrap box): a path is significant at the chosen level when its interval excludes 0.": [
                 "Cada coeficiente es el cambio del constructo resultado, en desviaciones estándar, cuando el predictor aumenta una desviación estándar y los demás predictores del mismo resultado se mantienen constantes. El R² es la proporción de la varianza del resultado explicada por sus predictores. Lectura errónea frecuente: tratar un coeficiente grande como significativo. La significación requiere el bootstrap (caja Bootstrap): una ruta es significativa al nivel elegido cuando su intervalo excluye el 0."
@@ -594,6 +666,9 @@
             ],
             "Effect of %s on %s": [
                 "Efecto de %s sobre %s"
+            ],
+            "Effect size": [
+                "Tamaño del efecto"
             ],
             "Effect size (f²)": [
                 "Tamaño del efecto (f²)"
@@ -670,6 +745,9 @@
             "First-Order Constructs": [
                 "Constructos de primer orden"
             ],
+            "Fit not available": [
+                "Ajuste no disponible"
+            ],
             "Floodlight": [
                 "Floodlight"
             ],
@@ -681,6 +759,12 @@
             ],
             "For %s the prediction errors are clearly asymmetric, so the comparison with LM uses the MAE instead of the RMSE.": [
                 "En %s los errores de predicción son claramente asimétricos, así que la comparación con LM usa el MAE en lugar del RMSE."
+            ],
+            "For %s to reach %s%% of its range, %s has to be at least at %s%% of its range.": [
+                "Para que %s alcance el %s%% de su rango, %s tiene que estar al menos en el %s%% de su rango."
+            ],
+            "For the %s model the chi-square difference is significant (p %s), but the changes in CFI and RMSEA stay within Chen's (2007) limits: with large samples the chi-square test flags trivial differences, so the decision follows the fit indices. Report both.": [
+                "En el modelo %s la diferencia de chi cuadrado es significativa (p %s), pero los cambios en CFI y RMSEA se mantienen dentro de los límites de Chen (2007): con muestras grandes la prueba de chi cuadrado señala diferencias triviales, así que la decisión sigue a los índices de ajuste. Informe ambos."
             ],
             "Formative": [
                 "Formativo"
@@ -714,6 +798,9 @@
             ],
             "Full": [
                 "Total"
+            ],
+            "Good fit": [
+                "Buen ajuste"
             ],
             "Group": [
                 "Grupo"
@@ -801,6 +888,9 @@
             ],
             "How to read the multigroup analysis": [
                 "Cómo leer el análisis multigrupo"
+            ],
+            "How to read the necessary condition analysis": [
+                "Cómo leer el análisis de condición necesaria"
             ],
             "How to read the overall fit test": [
                 "Cómo leer la prueba de ajuste global"
@@ -961,11 +1051,23 @@
             "Label size": [
                 "Tamaño de etiqueta"
             ],
+            "Large": [
+                "Grande"
+            ],
+            "lavaan did not converge for: %s. Do not interpret those rows.": [
+                "lavaan no convergió en: %s. No interprete esas filas."
+            ],
+            "lavaan warned: %s": [
+                "lavaan advirtió: %s"
+            ],
             "Layout": [
                 "Disposición"
             ],
             "Learning data, simulated (n=600)": [
                 "Datos para aprender, simulados (n=600)"
+            ],
+            "Left out of the CFA: %s (formative constructs or reflective constructs with one indicator).": [
+                "Quedan fuera del AFC: %s (constructos formativos o reflectivos con un indicador)."
             ],
             "Left Out of the Competing Model (CVPAT)": [
                 "Fuera del modelo competidor (CVPAT)"
@@ -1051,6 +1153,12 @@
             "Maximum": [
                 "Máximo"
             ],
+            "Maximum likelihood (ML)": [
+                "Máxima verosimilitud (ML)"
+            ],
+            "maximum likelihood, ML": [
+                "máxima verosimilitud, ML"
+            ],
             "McDonald's ω (one-factor CFA)": [
                 "ω de McDonald (AFC de un factor)"
             ],
@@ -1072,6 +1180,9 @@
             "Measurement invariance of composites (MICOM)": [
                 "Invarianza de medida de los compuestos (MICOM)"
             ],
+            "Measurement invariance of the reflective constructs (MGCFA)": [
+                "Invarianza de medida de los constructos reflectivos (AFCMG)"
+            ],
             "Measurement model": [
                 "Modelo de medida"
             ],
@@ -1090,11 +1201,26 @@
             "Mediation: %d of %d specific indirect effects are significant (bootstrap interval excludes 0).": [
                 "Mediación: %d de %d efectos indirectos específicos son significativos (el intervalo bootstrap excluye el 0)."
             ],
+            "Medium": [
+                "Mediano"
+            ],
             "Metric": [
                 "Métrica"
             ],
+            "Metric (equal loadings)": [
+                "Métrica (cargas iguales)"
+            ],
+            "Metric invariance is not supported (ΔCFI = %s, ΔRMSEA = %s): at least one loading differs between the groups, so differences in paths that involve these constructs may come from measurement and not from the relationships.": [
+                "La invarianza métrica no se sostiene (ΔCFI = %s, ΔRMSEA = %s): al menos una carga difiere entre los grupos, así que las diferencias en rutas que involucran estos constructos pueden venir de la medición y no de las relaciones."
+            ],
+            "Metric invariance is supported (ΔCFI = %s, ΔRMSEA = %s): the loadings can be taken as equal, so the reflective constructs relate to their indicators in the same way in every group.": [
+                "La invarianza métrica se sostiene (ΔCFI = %s, ΔRMSEA = %s): las cargas pueden tomarse como iguales, así que los constructos reflectivos se relacionan con sus indicadores de la misma manera en todos los grupos."
+            ],
             "Metric: the comparison of PLS with LM uses the RMSE, or the MAE when the prediction errors of PLS are clearly asymmetric (|skewness| > 1, a rule of thumb of this module), as Shmueli et al. (2019) recommend.": [
                 "Métrica: la comparación de PLS con LM usa el RMSE, o el MAE cuando los errores de predicción de PLS son claramente asimétricos (|asimetría| > 1, una regla práctica de este módulo), como recomiendan Shmueli et al. (2019)."
+            ],
+            "MICOM and the MGCFA answer the question for the composites and for the common factors: read them together and report both.": [
+                "MICOM y el AFCMG responden la pregunta para los compuestos y para los factores comunes: léalos juntos e informe ambos."
             ],
             "MICOM has three steps. Step 1, configural invariance: the same indicators, data treatment and algorithm in every group; the module guarantees it. Step 2, compositional invariance: the weights of each group build the same composite. c is the correlation between the scores computed with the weights of one group and those computed with the weights of the other; if c is not significantly below 1 (permutation p of .05 or more), step 2 holds. Step 3: equal means and equal variances of the composites in both groups, also tested by permutation. Reading: if step 2 fails, the construct cannot be compared (no invariance); if step 2 holds, its paths can be compared (partial invariance); if step 3 also holds, the groups could be pooled and analyzed together (full invariance). A non-significant result means that no difference was detected, not that the groups are proven equal.": [
                 "MICOM tiene tres pasos. Paso 1, invarianza configural: los mismos indicadores, tratamiento de los datos y algoritmo en todos los grupos; el módulo lo garantiza. Paso 2, invarianza composicional: los pesos de cada grupo forman el mismo compuesto. c es la correlación entre las puntuaciones calculadas con los pesos de un grupo y las calculadas con los pesos del otro; si c no es significativamente menor que 1 (p de permutación de .05 o más), el paso 2 se cumple. Paso 3: medias iguales y varianzas iguales de los compuestos en ambos grupos, también por permutación. Lectura: si falla el paso 2, el constructo no se puede comparar (sin invarianza); si se cumple el paso 2, sus rutas se pueden comparar (invarianza parcial); si además se cumple el paso 3, los grupos se podrían juntar y analizar como uno solo (invarianza total). Un resultado no significativo significa que no se detectó una diferencia, no que se haya demostrado que los grupos son iguales."
@@ -1153,14 +1279,71 @@
             "Multigroup Analysis": [
                 "Análisis multigrupo"
             ],
+            "Multigroup CFA of the reflective constructs with lavaan (%s), %d groups, correlated factors. Each model adds equality constraints to the previous one: metric, equal loadings; scalar, equal loadings and intercepts. Configural: good fit with CFI ≥ .95 and SRMR ≤ .08, acceptable with CFI ≥ .90 and SRMR ≤ .10 (Hu & Bentler, 1999); RMSEA is shown but not used, because with few degrees of freedom it overstates misfit. Metric and scalar are supported when CFI drops by no more than .010 and RMSEA rises by no more than .015 (SRMR by no more than .030 for metric and .010 for scalar; Chen, 2007). The chi-square difference is shown too, but with large samples it flags trivial differences (Cheung & Rensvold, 2002).": [
+                "AFC multigrupo de los constructos reflectivos con lavaan (%s), %d grupos, factores correlacionados. Cada modelo agrega restricciones de igualdad al anterior: métrico, cargas iguales; escalar, cargas e interceptos iguales. Configural: buen ajuste con CFI ≥ .95 y SRMR ≤ .08, aceptable con CFI ≥ .90 y SRMR ≤ .10 (Hu y Bentler, 1999); el RMSEA se muestra pero no se usa, porque con pocos grados de libertad exagera el desajuste. Métrica y escalar se sostienen cuando el CFI baja no más de .010 y el RMSEA sube no más de .015 (el SRMR no más de .030 en la métrica y .010 en la escalar; Chen, 2007). También se muestra la diferencia de chi cuadrado, pero con muestras grandes señala diferencias triviales (Cheung y Rensvold, 2002)."
+            ],
+            "Multigroup CFA of the reflective constructs: the configural model has %s (CFI = %s, SRMR = %s).": [
+                "AFC multigrupo de los constructos reflectivos: el modelo configural tiene %s (CFI = %s, SRMR = %s)."
+            ],
+            "Must-have (path not tested)": [
+                "Imprescindible (ruta no probada)"
+            ],
+            "Must-have and should-have": [
+                "Imprescindible y conveniente"
+            ],
+            "Must-have and should-have: %s. These constructs set a minimum that has to be secured and, above it, raise the outcome on average.": [
+                "Imprescindibles y convenientes: %s. Estos constructos fijan un mínimo que hay que asegurar y, por encima de él, elevan el resultado en promedio."
+            ],
+            "Must-have only": [
+                "Solo imprescindible"
+            ],
+            "Must-have only: %s. The path is not significant, so more of the construct does not raise the outcome on average, but the outcome cannot be high without its minimum level.": [
+                "Solo imprescindibles: %s. La ruta no es significativa, así que más del constructo no eleva el resultado en promedio, pero el resultado no puede ser alto sin su nivel mínimo."
+            ],
             "N": [
                 "N"
+            ],
+            "NA": [
+                "NA"
             ],
             "Navy": [
                 "Azul marino"
             ],
+            "NCA d": [
+                "d del NCA"
+            ],
+            "NCA d and p: the %s ceiling. Path significant: the bootstrap interval of the path coefficient excludes 0. Must-have: a necessary condition; should-have: a construct whose higher levels raise the outcome on average (Richter et al., 2020).": [
+                "d y p del NCA: el techo %s. Ruta significativa: el intervalo bootstrap del coeficiente de ruta excluye el 0. Imprescindible: una condición necesaria; conveniente: un constructo cuyos niveles más altos elevan el resultado en promedio (Richter et al., 2020)."
+            ],
+            "NCA p": [
+                "p del NCA"
+            ],
+            "Necessary condition": [
+                "Condición necesaria"
+            ],
+            "Necessary condition analysis": [
+                "Análisis de condición necesaria"
+            ],
+            "Necessary Condition Analysis": [
+                "Análisis de Condición Necesaria"
+            ],
+            "Necessary condition analysis (NCA; Dul, 2016, see references) asks a different question from the path coefficients: not whether more of a construct gives more of the outcome on average, but whether a high outcome is possible without a certain level of the construct. If it is not, the construct is a necessary condition: its absence cannot be compensated by the other constructs. Combined with PLS-SEM (Richter et al., 2020, see references), it works on the construct scores of the IPMA (0-100) of every construct with a direct path to each outcome.": [
+                "El análisis de condición necesaria (NCA; Dul, 2016, véanse las referencias) hace una pregunta distinta de la de los coeficientes de ruta: no si más de un constructo da más del resultado en promedio, sino si un resultado alto es posible sin cierto nivel del constructo. Si no lo es, el constructo es una condición necesaria: los demás constructos no pueden compensar su ausencia. Combinado con PLS-SEM (Richter et al., 2020, véanse las referencias), trabaja con las puntuaciones de los constructos del IPMA (0-100) de cada constructo con una ruta directa a cada resultado."
+            ],
+            "Necessary conditions (NCA)": [
+                "Condiciones necesarias (NCA)"
+            ],
+            "Necessity, like the paths, rests on the model and on cross-sectional data: it describes which combinations of scores occur, not a causal mechanism. Outliers in the upper-left corner can create or remove a ceiling; check the ceiling plots.": [
+                "La necesidad, como las rutas, descansa en el modelo y en datos transversales: describe qué combinaciones de puntuaciones se dan, no un mecanismo causal. Los casos atípicos en la esquina superior izquierda pueden crear o eliminar un techo; revise los gráficos de techo."
+            ],
             "Needs the bootstrap": [
                 "Necesita el bootstrap"
+            ],
+            "Negligible (d < 0.1)": [
+                "Despreciable (d < 0.1)"
+            ],
+            "Neither": [
+                "Ninguna de las dos"
             ],
             "Next step: for the priority constructs, look at the indicator weights and loadings to see which concrete aspects (the indicators) drive their performance, and check that their total effects are significant.": [
                 "Siguiente paso: para los constructos prioritarios, mire los pesos y cargas de sus indicadores para ver qué aspectos concretos (los indicadores) impulsan su desempeño, y compruebe que sus efectos totales sean significativos."
@@ -1174,8 +1357,14 @@
             "Next step: report Q²predict, the RMSE or MAE comparison with LM and the CVPAT results, with the folds, repetitions and seed. If prediction is a goal of the study, discuss the indicators where LM predicts better.": [
                 "Siguiente paso: informe Q²predict, la comparación de RMSE o MAE con LM y los resultados de CVPAT, con las particiones, repeticiones y semilla. Si la predicción es un objetivo del estudio, discuta los indicadores en los que LM predice mejor."
             ],
+            "Next step: report, per outcome and condition, d with its ceiling, the p value with the number of permutations and the seed, the accuracy of CR-FDH and the bottleneck levels that matter for practice; discuss the must-haves next to the significant paths.": [
+                "Siguiente paso: informe, por resultado y condición, d con su techo, el valor p con el número de permutaciones y la semilla, la precisión de CR-FDH y los niveles de cuello de botella relevantes para la práctica; discuta los imprescindibles junto a las rutas significativas."
+            ],
             "Next step: the model does not show predictive relevance for every indicator. Present the model as explanatory rather than predictive, or revise the indicators and constructs with the weakest predictions; do not claim predictive power.": [
                 "Siguiente paso: el modelo no muestra relevancia predictiva en todos los indicadores. Presente el modelo como explicativo más que predictivo, o revise los indicadores y constructos con las peores predicciones; no afirme capacidad predictiva."
+            ],
+            "NN": [
+                "NN"
             ],
             "No": [
                 "No"
@@ -1216,6 +1405,9 @@
             "None.": [
                 "Ninguna."
             ],
+            "Not a must-have (path not tested)": [
+                "No imprescindible (ruta no probada)"
+            ],
             "Not computable": [
                 "No calculable"
             ],
@@ -1231,11 +1423,17 @@
             "Not computable in this version for models with higher-order constructs.": [
                 "No calculable en esta versión para modelos con constructos de orden superior."
             ],
+            "Not computable in this version with ordinal indicators (the categorical MGCFA, with thresholds, is planned).": [
+                "No calculable en esta versión con indicadores ordinales (el AFCMG categórico, con umbrales, está previsto)."
+            ],
             "Not computable with consistent PLS: MICOM is defined for composites (Henseler, Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box to test the invariance of the composites; for common factors, invariance is usually tested with a multigroup CFA.": [
                 "No calculable con PLS consistente: MICOM se define para compuestos (Henseler, Ringle y Sarstedt, 2016), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación para probar la invarianza de los compuestos; con factores comunes, la invarianza suele probarse con un AFC multigrupo."
             ],
             "Not computable with consistent PLS: the IPMA needs composite scores (Ringle & Sarstedt, 2016), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box.": [
                 "No calculable con PLS consistente: el IPMA necesita puntuaciones de compuestos (Ringle y Sarstedt, 2016), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación."
+            ],
+            "Not computable with consistent PLS: the NCA uses the composite scores of the IPMA (Richter et al., 2020, see references), and PLSc treats the reflective constructs as common factors. Choose PLS in the Estimation box.": [
+                "No calculable con PLS consistente: el NCA usa las puntuaciones compuestas del IPMA (Richter et al., 2020, véanse las referencias), y PLSc trata los constructos reflectivos como factores comunes. Elija PLS en la caja Estimación."
             ],
             "Not computable with ordinal indicators: cSEM's testMICOM() builds the scores from the raw category codes and stops. The path differences are still computed.": [
                 "No calculable con indicadores ordinales: testMICOM() de cSEM forma las puntuaciones con los códigos brutos de las categorías y se detiene. Las diferencias de rutas sí se calculan."
@@ -1263,6 +1461,12 @@
             ],
             "Not computable: cSEM's testOMF() stopped with: %s": [
                 "No calculable: testOMF() de cSEM se detuvo con: %s"
+            ],
+            "Not computable: lavaan stopped with: %s": [
+                "No calculable: lavaan se detuvo con: %s"
+            ],
+            "Not computable: no reflective construct has two or more indicators, and a common factor with one indicator is not identified.": [
+                "No calculable: ningún constructo reflectivo tiene dos o más indicadores, y un factor común con un solo indicador no está identificado."
             ],
             "Not computable: the competing model could not be estimated: %s": [
                 "No calculable: el modelo competidor no se pudo estimar: %s"
@@ -1300,17 +1504,32 @@
             "Not computable: the maximum of the scale must be larger than its minimum.": [
                 "No calculable: el máximo de la escala debe ser mayor que su mínimo."
             ],
+            "Not computable: the necessary condition analysis stopped with: %s": [
+                "No calculable: el análisis de condición necesaria se detuvo con: %s"
+            ],
             "Not computable: there are more folds than cases.": [
                 "No calculable: hay más particiones que casos."
             ],
             "Not computable: with an interaction term the model implies no indicator correlation matrix, so the discrepancies of the overall fit test are not defined (cSEM; Dijkstra & Henseler, 2015).": [
                 "No calculable: con un término de interacción el modelo no implica una matriz de correlaciones de los indicadores, así que las discrepancias de la prueba de ajuste global no están definidas (cSEM; Dijkstra y Henseler, 2015)."
             ],
+            "Not computable: with an interaction term the scores of the IPMA, on which the NCA works, are not defined in this version.": [
+                "No calculable: con un término de interacción, las puntuaciones del IPMA, con las que trabaja el NCA, no están definidas en esta versión."
+            ],
             "Not computable: with an interaction term the total effects are not constant, so the importance of a construct is not a single number.": [
                 "No calculable: con un término de interacción los efectos totales no son constantes, así que la importancia de un constructo no es un solo número."
             ],
+            "Not judged (the previous model does not hold)": [
+                "No juzgado (el modelo anterior no se sostiene)"
+            ],
             "Not rejected": [
                 "No rechazado"
+            ],
+            "Not significant": [
+                "No significativo"
+            ],
+            "Not supported": [
+                "No se sostiene"
             ],
             "observed in the data": [
                 "observado en los datos"
@@ -1350,6 +1569,9 @@
             ],
             "Outcome": [
                 "Resultado"
+            ],
+            "Outcome level (%)": [
+                "Nivel del resultado (%)"
             ],
             "Overall fit: %d of 4 discrepancies reject exact fit of the estimated model (critical values at %s%%; SRMR %s).": [
                 "Ajuste global: %d de 4 discrepancias rechazan el ajuste exacto del modelo estimado (valores críticos al %s%%; SRMR %s)."
@@ -1411,6 +1633,9 @@
             "Path differences between groups": [
                 "Diferencias de rutas entre grupos"
             ],
+            "Path significant": [
+                "Ruta significativa"
+            ],
             "Paths left out of the competing model": [
                 "Rutas excluidas del modelo competidor"
             ],
@@ -1425,6 +1650,9 @@
             ],
             "permutation test only": [
                 "solo la prueba de permutación"
+            ],
+            "Permutations": [
+                "Permutaciones"
             ],
             "Permutations (MICOM and permutation test)": [
                 "Permutaciones (MICOM y prueba de permutación)"
@@ -1486,6 +1714,9 @@
             "PLSsemLab brings partial least squares structural equation modeling (PLS-SEM) to jamovi with the cSEM package and pairs every result with evidence-based methodological guidance, interpretation and educational support. The model is built from boxes, never typed: reflective and formative constructs with their indicators, and for each construct the constructs that predict it. The model is checked before estimation, with messages that name the construct or indicator at fault.": [
                 "PLSsemLab lleva los modelos de ecuaciones estructurales por mínimos cuadrados parciales (PLS-SEM) a jamovi con el paquete cSEM y acompaña cada resultado con orientación metodológica basada en evidencia, interpretación y apoyo educativo. El modelo se arma con cajas, nunca escribiendo sintaxis: constructos reflectivos y formativos con sus indicadores y, para cada constructo, los constructos que lo predicen. El modelo se revisa antes de estimar, con mensajes que nombran el constructo o indicador con problemas."
             ],
+            "Poor fit": [
+                "Ajuste pobre"
+            ],
             "Possible overkill (less important, high performance)": [
                 "Posible exceso (menos importante, desempeño alto)"
             ],
@@ -1545,6 +1776,9 @@
             ],
             "Reading (Shmueli et al., 2019): first check that Q²predict is above 0 for every indicator. Then compare the RMSE (or the MAE if the prediction errors are very asymmetric) of PLS with that of LM: lower for all indicators, high predictive power; for most or half of them, medium; for a minority, low; for none, the model lacks predictive power. LM is a demanding benchmark: it uses every exogenous indicator without the constraints of the model.": [
                 "Lectura (Shmueli et al., 2019): primero compruebe que Q²predict esté por encima de 0 en todos los indicadores. Luego compare el RMSE (o el MAE si los errores de predicción son muy asimétricos) de PLS con el de LM: menor en todos los indicadores, capacidad predictiva alta; en la mayoría o la mitad, media; en una minoría, baja; en ninguno, el modelo carece de capacidad predictiva. LM es una referencia exigente: usa todos los indicadores exógenos sin las restricciones del modelo."
+            ],
+            "Reading: the ceiling line separates the area with cases from an empty upper-left zone. d is the size of that empty zone relative to the scope; d ≥ 0.1 with a permutation p < .05 indicates a necessary condition. CR-FDH (a straight line) suits continuous scores; CE-FDH (a step function) suits scores with few distinct values. The verdict uses the ceiling chosen in the panel; both are shown.": [
+                "Lectura: la línea de techo separa el área con casos de una zona vacía superior izquierda. d es el tamaño de esa zona vacía respecto del alcance; d ≥ 0.1 con un p de permutación < .05 indica una condición necesaria. CR-FDH (una recta) conviene para puntuaciones continuas; CE-FDH (una escalera), para puntuaciones con pocos valores distintos. El veredicto usa el techo elegido en el panel; se muestran ambos."
             ],
             "Reading: the dashed lines are the means of importance and performance among the constructs shown. Constructs in the lower right (important, low performance) are where an improvement would raise the target most: improve them first. Upper right: keep up. Upper left: performance is high but matters little for the target (possible overkill). Lower left: low priority. The map is descriptive and rests on the model being right; it says where to look, not what to do.": [
                 "Lectura: las líneas discontinuas son las medias de importancia y desempeño entre los constructos mostrados. Los constructos de abajo a la derecha (importantes, desempeño bajo) son donde una mejora elevaría más el objetivo: mejórelos primero. Arriba a la derecha: mantener. Arriba a la izquierda: el desempeño es alto pero importa poco para el objetivo (posible exceso). Abajo a la izquierda: baja prioridad. El mapa es descriptivo y supone que el modelo es correcto; dice dónde mirar, no qué hacer."
@@ -1630,6 +1864,15 @@
             "RMSE or MAE? Both measure the typical size of the prediction errors in the metric of the indicator. The RMSE (root mean squared error) squares the errors before averaging, so a few large errors weigh a lot; the MAE (mean absolute error) gives every error its own weight. When the errors are roughly symmetric, the RMSE is the usual choice; when they are clearly asymmetric (long tail on one side), the MAE describes the typical error better (Shmueli et al., 2019). The table shows both, the skewness of the PLS errors and the metric used for each indicator.": [
                 "¿RMSE o MAE? Ambos miden el tamaño típico de los errores de predicción en la métrica del indicador. El RMSE (raíz del error cuadrático medio) eleva los errores al cuadrado antes de promediar, así que unos pocos errores grandes pesan mucho; el MAE (error absoluto medio) da a cada error su propio peso. Cuando los errores son aproximadamente simétricos, el RMSE es la elección habitual; cuando son claramente asimétricos (cola larga hacia un lado), el MAE describe mejor el error típico (Shmueli et al., 2019). La tabla muestra ambos, la asimetría de los errores de PLS y la métrica usada en cada indicador."
             ],
+            "RMSEA": [
+                "RMSEA"
+            ],
+            "Robust maximum likelihood (MLR)": [
+                "Máxima verosimilitud robusta (MLR)"
+            ],
+            "robust maximum likelihood, MLR: scaled chi-square difference and robust CFI and RMSEA": [
+                "máxima verosimilitud robusta, MLR: diferencia de chi cuadrado escalada y CFI y RMSEA robustos"
+            ],
             "Role": [
                 "Papel"
             ],
@@ -1641,6 +1884,9 @@
             ],
             "Run multigroup analysis": [
                 "Ejecutar análisis multigrupo"
+            ],
+            "Run necessary condition analysis (NCA)": [
+                "Ejecutar el análisis de condición necesaria (NCA)"
             ],
             "Run overall fit test": [
                 "Ejecutar la prueba de ajuste global"
@@ -1659,6 +1905,18 @@
             ],
             "Saturated model (measurement model only): no discrepancy rejects exact fit (critical values at %s%%).": [
                 "Modelo saturado (solo el modelo de medida): ninguna discrepancia rechaza el ajuste exacto (valores críticos al %s%%)."
+            ],
+            "Scalar (equal loadings and intercepts)": [
+                "Escalar (cargas e interceptos iguales)"
+            ],
+            "Scalar invariance is not supported (ΔCFI = %s, ΔRMSEA = %s): compare relationships between groups, but not construct means.": [
+                "La invarianza escalar no se sostiene (ΔCFI = %s, ΔRMSEA = %s): compare relaciones entre grupos, pero no medias de los constructos."
+            ],
+            "Scalar invariance is supported too (ΔCFI = %s, ΔRMSEA = %s): the construct means can be compared between the groups.": [
+                "La invarianza escalar también se sostiene (ΔCFI = %s, ΔRMSEA = %s): las medias de los constructos pueden compararse entre los grupos."
+            ],
+            "Scores: unstandardized construct scores rescaled to 0-100 with a scale range of %s to %s (%s), as in the IPMA. d: ceiling zone / scope (Dul, 2016); 0.1 to 0.3 medium, 0.3 to 0.5 large, 0.5 or more very large. p: permutation test with %d permutations, seed %d (Dul, van der Laan & Kuik, 2020). A condition is read as necessary when d ≥ 0.1 and p < .05. Accuracy: percentage of cases on or below the ceiling line (CE-FDH is 100%% by construction).": [
+                "Puntuaciones: puntuaciones no estandarizadas de los constructos reescaladas a 0-100 con un rango de la escala de %s a %s (%s), como en el IPMA. d: zona techo / alcance (Dul, 2016); de 0.1 a 0.3 mediano, de 0.3 a 0.5 grande, 0.5 o más muy grande. p: prueba de permutación con %d permutaciones, semilla %d (Dul, van der Laan y Kuik, 2020). Una condición se lee como necesaria cuando d ≥ 0.1 y p < .05. Precisión: porcentaje de casos sobre la línea de techo o por debajo de ella (CE-FDH es 100%% por construcción)."
             ],
             "SE": [
                 "EE"
@@ -1680,6 +1938,12 @@
             ],
             "Settle the measurement model before reading the paths: a construct that is poorly measured, or not distinct from another, makes its paths hard to interpret. Any indicator you remove changes every number, so remove one at a time and run the analysis again. Run the bootstrap (Bootstrap box) to turn the HTMT thresholds into a test and to get the significance of paths and weights; until then, treat these estimates as descriptive.": [
                 "Resuelva el modelo de medida antes de leer las rutas: un constructo mal medido, o que no se distingue de otro, hace difícil interpretar sus rutas. Cada indicador que quite cambia todos los números, así que quítelos de uno en uno y vuelva a ejecutar el análisis. Ejecute el bootstrap (caja Bootstrap) para convertir los umbrales del HTMT en una prueba y obtener la significación de rutas y pesos; mientras tanto, trate estas estimaciones como descriptivas."
+            ],
+            "Should-have only": [
+                "Solo conveniente"
+            ],
+            "Should-have only: %s. Raising these constructs raises the outcome on average, but none is a bottleneck.": [
+                "Solo convenientes: %s. Elevar estos constructos eleva el resultado en promedio, pero ninguno es un cuello de botella."
             ],
             "Simple effect": [
                 "Efecto simple"
@@ -1708,6 +1972,9 @@
             "Single predictor: no collinearity": [
                 "Predictor único: sin colinealidad"
             ],
+            "Small": [
+                "Pequeño"
+            ],
             "Small sample for the cross-validation: %d cases, %d per held-out fold and %d per training set for %d predictors of LM. With fewer than 20 cases per fold or fewer than 10 training cases per predictor of LM (rules of thumb of this module) the metrics vary from one set of folds to another and CVPAT has little power: read the results as indicative, use fewer folds or more repetitions, or collect more data.": [
                 "Muestra pequeña para la validación cruzada: %d casos, %d por partición de prueba y %d por conjunto de entrenamiento para %d predictores de LM. Con menos de 20 casos por partición o menos de 10 casos de entrenamiento por predictor de LM (reglas prácticas de este módulo) las métricas varían de un conjunto de particiones a otro y CVPAT tiene poca potencia: lea los resultados como orientativos, use menos particiones o más repeticiones, o reúna más datos."
             ],
@@ -1722,6 +1989,9 @@
             ],
             "Spring": [
                 "Resorte"
+            ],
+            "SRMR": [
+                "SRMR"
             ],
             "SRMR %s against a critical value of %s.": [
                 "SRMR %s frente a un valor crítico de %s."
@@ -1750,6 +2020,12 @@
             "substantial": [
                 "sustancial"
             ],
+            "Sufficiency (PLS-SEM) and necessity (NCA)": [
+                "Suficiencia (PLS-SEM) y necesidad (NCA)"
+            ],
+            "Supported": [
+                "Se sostiene"
+            ],
             "t": [
                 "t"
             ],
@@ -1762,8 +2038,20 @@
             "The bootstrap could not be computed, so the tables show estimates without intervals: %s": [
                 "No se pudo calcular el bootstrap, así que las tablas muestran estimaciones sin intervalos: %s"
             ],
+            "The bottleneck table says, for each level of the outcome, the minimum level of each condition needed to reach it. NN means the condition is not necessary at that level.": [
+                "La tabla de cuellos de botella indica, para cada nivel del resultado, el nivel mínimo de cada condición necesario para alcanzarlo. NN significa que la condición no es necesaria en ese nivel."
+            ],
+            "The ceiling zone is statistically significant but too small to matter (d < 0.1) for %s: report it as negligible necessity.": [
+                "La zona techo es estadísticamente significativa pero demasiado pequeña para importar (d < 0.1) en %s: infórmela como una necesidad despreciable."
+            ],
+            "The combined table crosses both logics: a must-have is necessary (NCA), a should-have raises the outcome on average (significant path). A construct can be one, both or neither, and each calls for a different action: secure the minimum level of a must-have, increase a should-have.": [
+                "La tabla combinada cruza ambas lógicas: un imprescindible es necesario (NCA), un conveniente eleva el resultado en promedio (ruta significativa). Un constructo puede ser uno, ambos o ninguno, y cada caso pide una acción distinta: asegurar el nivel mínimo de un imprescindible, aumentar un conveniente."
+            ],
             "The correlation with %s exceeds the square root of the AVE of one of the two constructs.": [
                 "La correlación con %s supera la raíz cuadrada de la AVE de uno de los dos constructos."
+            ],
+            "The CR-FDH line through the peers has a negative slope: there is no ceiling in the upper-left corner, so its effect size is not defined (the permutations that give such a line are left out of the test).": [
+                "La recta CR-FDH por los picos tiene pendiente negativa: no hay techo en la esquina superior izquierda, así que su tamaño del efecto no está definido (las permutaciones que dan una recta así quedan fuera de la prueba)."
             ],
             "The direct effect is the path itself; the indirect effect is the sum of all routes through other constructs (the product of the paths along each route); the total effect is their sum. An indirect effect whose bootstrap interval excludes 0 means mediation: whether it is full or partial depends on the direct effect, as the mediation section of a later version explains. Common misreading: testing mediation by the significance of each path separately instead of the indirect effect itself.": [
                 "El efecto directo es la ruta misma; el efecto indirecto es la suma de todos los caminos a través de otros constructos (el producto de las rutas de cada camino); el efecto total es su suma. Un efecto indirecto cuyo intervalo bootstrap excluye el 0 indica mediación: que sea completa o parcial depende del efecto directo, como explicará la sección de mediación de una versión posterior. Lectura errónea frecuente: probar la mediación por la significación de cada ruta por separado en lugar del efecto indirecto mismo."
@@ -1873,8 +2161,17 @@
             "The multigroup analysis was not computed. %s": [
                 "El análisis multigrupo no se calculó. %s"
             ],
+            "The multigroup CFA (MGCFA) asks the same question as MICOM from the common-factor side (Vandenberg & Lance, 2000; Putnick & Bornstein, 2016, see references): do the reflective indicators measure their constructs in the same way in every group? Configural invariance: the same indicators load on the same factors; metric: the loadings are equal, so relationships between constructs can be compared; scalar: the intercepts are equal too, so construct means can be compared. MICOM tests the composites that PLS estimates; the MGCFA tests the reading of the reflective constructs as common factors, the one PLSc estimates. When they agree the conclusion is robust; when they disagree, say which reading of the constructs your study takes.": [
+                "El AFC multigrupo (AFCMG) hace la misma pregunta que MICOM desde el lado de los factores comunes (Vandenberg y Lance, 2000; Putnick y Bornstein, 2016, véanse las referencias): ¿miden los indicadores reflectivos sus constructos de la misma manera en todos los grupos? Invarianza configural: los mismos indicadores cargan en los mismos factores; métrica: las cargas son iguales, así que pueden compararse las relaciones entre constructos; escalar: también los interceptos son iguales, así que pueden compararse las medias de los constructos. MICOM prueba los compuestos que estima PLS; el AFCMG prueba la lectura de los constructos reflectivos como factores comunes, la que estima PLSc. Cuando coinciden, la conclusión es robusta; cuando discrepan, indique qué lectura de los constructos adopta su estudio."
+            ],
+            "The multigroup CFA was not computed. %s": [
+                "No se calculó el AFC multigrupo. %s"
+            ],
             "The name '%s' is used for more than one construct. Give each construct a different name.": [
                 "El nombre '%s' se usa en más de un constructo. Dé a cada constructo un nombre distinto."
+            ],
+            "The necessary condition analysis was not computed. %s": [
+                "No se calculó el análisis de condición necesaria. %s"
             ],
             "The one-factor CFA did not converge, so ω cannot be estimated.": [
                 "El AFC de un factor no convergió, así que ω no puede estimarse."
@@ -1905,6 +2202,9 @@
             ],
             "The saturated model is the same model here (your structural model relates every pair of constructs), so its test says the same.": [
                 "Aquí el modelo saturado es el mismo modelo (su modelo estructural relaciona cada par de constructos), así que su prueba dice lo mismo."
+            ],
+            "The seed is the one in the Bootstrap box; the range of the scale, the one in Importance-Performance Map.": [
+                "La semilla es la de la caja Bootstrap; el rango de la escala, el de Mapa Importancia-Desempeño."
             ],
             "The seed is the one in the Bootstrap box.": [
                 "La semilla es la de la caja Bootstrap."
@@ -1987,6 +2287,9 @@
             "Value": [
                 "Valor"
             ],
+            "Very large": [
+                "Muy grande"
+            ],
             "very weak": [
                 "muy débil"
             ],
@@ -2023,6 +2326,9 @@
             "With several chains between the same two constructs, each specific indirect effect is the part that travels through its own mediators, and their sum is the total indirect effect of the effects table. A specific effect can be non-significant while the total indirect effect is significant (several small paths add up), or the reverse (paths with opposite signs cancel out): read both.": [
                 "Con varias cadenas entre los mismos dos constructos, cada efecto indirecto específico es la parte que pasa por sus propios mediadores, y su suma es el efecto indirecto total de la tabla de efectos. Un efecto específico puede no ser significativo mientras el indirecto total sí lo es (varias rutas pequeñas se suman), o al revés (rutas con signos opuestos se cancelan): lea ambos."
             ],
+            "With the %s ceiling no construct is a necessary condition for its outcome (d ≥ 0.1 with p < .05): each one helps in degree, if its path is significant, but none is indispensable.": [
+                "Con el techo %s ningún constructo es una condición necesaria para su resultado (d ≥ 0.1 con p < .05): cada uno ayuda en grado, si su ruta es significativa, pero ninguno es indispensable."
+            ],
             "With the bootstrap, %d of %d paths are significant at %s%%. Not significant (interval includes 0): %s.": [
                 "Con el bootstrap, %d de %d rutas son significativas al %s%%. No significativas (el intervalo incluye el 0): %s."
             ],
@@ -2050,6 +2356,12 @@
             "Without the bootstrap the importance values are not tested: a construct can look important with a total effect that does not differ from 0. Run the bootstrap before deciding priorities.": [
                 "Sin el bootstrap los valores de importancia no están probados: un constructo puede parecer importante con un efecto total que no difiere de 0. Ejecute el bootstrap antes de decidir prioridades."
             ],
+            "Without the bootstrap the paths are not tested: the reading uses only the NCA. Run the bootstrap to complete the combined reading.": [
+                "Sin el bootstrap las rutas no se prueban: la lectura usa solo el NCA. Ejecute el bootstrap para completar la lectura combinada."
+            ],
+            "Without the bootstrap the paths are untested and the combined reading uses only the NCA. Run the bootstrap to know which necessary conditions are also should-haves.": [
+                "Sin el bootstrap las rutas no se prueban y la lectura combinada usa solo el NCA. Ejecute el bootstrap para saber qué condiciones necesarias son también convenientes."
+            ],
             "Yes": [
                 "Sí"
             ],
@@ -2058,6 +2370,21 @@
             ],
             "Your structural model already relates every pair of constructs, so the estimated and the saturated model are the same model and both tests coincide.": [
                 "Su modelo estructural ya relaciona cada par de constructos, así que el modelo estimado y el saturado son el mismo modelo y ambas pruebas coinciden."
+            ],
+            "ΔCFI": [
+                "ΔCFI"
+            ],
+            "Δdf": [
+                "Δgl"
+            ],
+            "ΔRMSEA": [
+                "ΔRMSEA"
+            ],
+            "ΔSRMR": [
+                "ΔSRMR"
+            ],
+            "Δχ²": [
+                "Δχ²"
             ],
             "ρA": [
                 "ρA"
@@ -2073,6 +2400,9 @@
             ],
             "ρC is McDonald's ω computed with the loadings of the PLS model. With PLS these are composite loadings, which are inflated, so ρC is an upper bound of reliability; with consistent PLS they are common-factor loadings and ρC is close to the ω of a factor analysis. The optional ω (CFA) column estimates a one-factor confirmatory factor analysis of each construct, outside the PLS model (McDonald, 1999, see references): it is the reference used in psychometrics. Common misreading: reporting ρC from plain PLS as if it were the ω of a factor analysis.": [
                 "ρC es la ω de McDonald calculada con las cargas del modelo PLS. Con PLS son cargas de compuestos, que están infladas, así que ρC es un límite superior de la fiabilidad; con PLS consistente son cargas de factor común y ρC queda cerca de la ω de un análisis factorial. La columna opcional ω (AFC) estima un análisis factorial confirmatorio de un factor para cada constructo, fuera del modelo PLS (McDonald, 1999, vea las referencias): es la referencia usada en psicometría. Lectura errónea frecuente: informar la ρC de PLS simple como si fuera la ω de un análisis factorial."
+            ],
+            "χ²": [
+                "χ²"
             ],
             "ω (CFA)": [
                 "ω (AFC)"

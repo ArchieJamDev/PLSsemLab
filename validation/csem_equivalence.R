@@ -450,7 +450,11 @@ record(sc, "BIC and GM of CUSL, competing model", as.numeric(ct$competing[k]), c
 record(sc, "SRMR of both models", c(ct$main[ct$criterion == "SRMR"], as.numeric(ct$competing[ct$criterion == "SRMR"])),
        c(cSEM::calculateSRMR(f), cSEM::calculateSRMR(f2)))
 sc <- "11 simple, PLSpredict GSCA benchmark"
-a <- runModule(corp, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
+# Same data as cSEM (corpMean, no missing values): since 1.2.0 the module fills each
+# fold from its training means, so the raw data with NAs would not be comparable.
+# ES: Mismos datos que cSEM (corpMean, sin NA): desde 1.2.0 el módulo imputa cada
+# partición con las medias de su entrenamiento, así que los datos con NA no son comparables.
+a <- runModule(corpMean, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
                predictRun = TRUE, predictFolds = 5, predictReps = 1, predictBenchmark = "gsca", bootSeed = 2026)
 pr <- tab(a, "predictSection", "predict")
 # cSEM 0.7.1 applies the benchmark only in its cross-validation mode

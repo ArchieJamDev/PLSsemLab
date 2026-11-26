@@ -96,6 +96,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             private$.initMeasurement(blocks, hocs, paths)
             private$.initStructural(blocks, paths)
             private$.initOptional(blocks, paths)
+            private$.initVisibility(blocks, hocs, paths)
         },
 
         # Records a part of the report that does not apply (see .na).
@@ -130,9 +131,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             for (k in seq_len(if (is.null(hp)) 0 else nrow(hp)))
                 self$results$measurementSection$hocHtmt$addRow(rowKey = paste(hp$hoc[k], hp$other[k], sep = "::"),
                                             values = list(c1 = hp$hoc[k], sep = "\u2013", c2 = hp$other[k]))
-            if (!length(hocs))
-                private$.notApply("measurementSection", "hocMeasurement", "na_hoc")
-            else if (!any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
+            # A feature the model does not use is hidden (see .initVisibility);
+            # one that applies but cannot be computed keeps its place and a notice.
+            # ES: Una función que el modelo no usa se oculta; una que aplica pero
+            # no se puede calcular conserva su sitio y un aviso.
+            if (length(hocs) && !any(vapply(hocs, function(h) h$type == "reflective", TRUE)))
                 private$.notApply("measurementSection", "hocReliability", "na_hoc_reliability")
             if (length(hocs) && is.null(hp))
                 private$.notApply("measurementSection", "hocHtmt", "na_hoc_htmt")
@@ -163,12 +166,39 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     self$results$measurementSection$vif$addRow(rowKey = paste(i, v, sep = "::"),
                                             values = list(construct = blocks[[i]]$label, indicator = v))
             }
-            if (length(refl) == 0)
-                private$.notApply("measurementSection", "reliability", "na_reliability")
+            # A single reflective construct has no HTMT: that table stays with its notice.
+            # ES: Con un solo constructo reflectivo no hay HTMT: esa tabla conserva su aviso.
             if (length(refl) < 2)
                 private$.notApply("measurementSection", "htmt", "na_htmt", list(length(refl)))
-            if (!any(vapply(blocks, function(b) b$type == "formative", TRUE)))
-                private$.notApply("measurementSection", "vif", "na_vif")
+        },
+
+        # Shows the optional tables and guides only when the model uses them
+        # (jamovi's review: the layout must not carry empty sections). Called
+        # from .init(), so the layout is stable from the first frame.
+        # ES: Muestra las tablas y guías opcionales solo cuando el modelo las
+        # usa (revisión de jamovi). Se llama desde .init(), así el diseño es
+        # estable desde el primer fotograma.
+        .initVisibility = function(blocks, hocs, paths) {
+            ms <- self$results$measurementSection
+            ss <- self$results$structuralSection
+            refl <- vapply(blocks, function(b) b$type == "reflective", TRUE)
+            formative <- vapply(blocks, function(b) b$type == "formative", TRUE)
+            has_hoc <- length(hocs) > 0
+            has_chain <- nrow(.pl_mediation_chains(paths)) > 0
+            has_inter <- any(grepl(.PL_X, paths$from, fixed = TRUE))
+            ms$hocGuide$setVisible(has_hoc)
+            ms$hocMeasurement$setVisible(has_hoc)
+            ms$hocReliability$setVisible(has_hoc)
+            ms$hocHtmt$setVisible(has_hoc)
+            ms$reliabilityGuide$setVisible(any(refl))
+            ms$reliability$setVisible(any(refl))
+            ms$vifGuide$setVisible(any(formative))
+            ms$vif$setVisible(any(formative))
+            ss$mediationGuide$setVisible(has_chain)
+            ss$mediation$setVisible(has_chain)
+            ss$moderationGuide$setVisible(has_inter)
+            ss$simpleSlopes$setVisible(has_inter)
+            ss$moderationPlots$setVisible(has_inter)
         },
 
         # Rows of the structural tables: paths, R², f², VIF, effects,
@@ -200,8 +230,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             chains <- .pl_mediation_chains(paths)
             for (k in seq_len(nrow(chains)))
                 self$results$structuralSection$mediation$addRow(rowKey = chains$label[k], values = list(chain = chains$label[k]))
-            if (!nrow(chains))
-                private$.notApply("structuralSection", "mediation", "na_mediation")
 
             # Moderation (phase 4): three rows (moderator at -1 SD, the mean,
             # +1 SD) and one plot per interaction.
@@ -219,9 +247,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                         level = sprintf(lv[j], parts[2])))
                 self$results$structuralSection$moderationPlots$addItem(key = paste(inter$from[k], "\u2192", inter$to[k]))
             }
-            if (!nrow(inter))
-                private$.notApply("structuralSection", "simpleSlopes", "na_moderation")
-
         },
 
         # Rows of the optional sections: overall fit, prediction, IPMA and
@@ -821,6 +846,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             seed <- as.integer(self$options$bootSeed)
             level <- as.numeric(self$options$ciLevel)
             status <- self$results$bootStatus
+            status$setVisible(TRUE)
             spec <- .pl_boot_spec(blocks, model, fit, self$options, smodel, paths)
             key <- list("plssem-boot-3", self$options$weightApproach, self$options$resampleMethod, model$syntax, model$modes, smodel$m2$syntax, d, self$options$estimator,
                         self$options$innerScheme, reps, seed, level,
@@ -844,21 +870,20 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             if (!is.null(res$summary) && identical(res$summary$method, "jackknife")) {
                 # jackknife (1.2.0): n leave-one-out estimations, no seed and no blocks
                 # ES: jackknife (1.2.0): n estimaciones dejando un caso fuera, sin semilla ni bloques
-                status$setContent(.pl_html_block(sprintf(txt("boot", "done_jk"), res$summary$runs, res$summary$admissible,
-                    round(res$seconds), format(100 * level))))
+                status$setVisible(FALSE)
                 bs$setRow(rowNo = 1, values = list(requested = res$summary$runs, drawn = res$summary$runs,
-                    admissible = res$summary$admissible, seed = "\u2014", block = "\u2014", level = level,
-                    seconds = res$seconds))
+                    admissible = res$summary$admissible, seed = "\u2014", block = "\u2014", level = level))
                 bs$setNote("jk", txt("boot", "jk_summary_note"))
+                bs$setNote("time", jmvcore::format(txt("boot", "time_note"), seconds = round(res$seconds)))
                 if (isTRUE(res$cached)) bs$setNote("cached", txt("boot", "cached_note"))
             } else if (!is.null(res$summary)) {
-                status$setContent(.pl_html_block(sprintf(txt("boot", "done"), res$summary$runs, res$summary$admissible,
-                    seed, .PL_BLOCK, round(res$seconds), format(100 * level))))
+                status$setVisible(FALSE)
                 bs$setRow(rowNo = 1, values = c(known, list(drawn = res$summary$runs,
-                    admissible = res$summary$admissible, seconds = res$seconds)))
+                    admissible = res$summary$admissible)))
+                bs$setNote("time", jmvcore::format(txt("boot", "time_note"), seconds = round(res$seconds)))
                 if (isTRUE(res$cached)) bs$setNote("cached", txt("boot", "cached_note"))
             } else {
-                status$setContent(.pl_html_block(txt("boot", "not_done")))
+                status$setVisible(FALSE)
                 bs$setRow(rowNo = 1, values = known)
                 bs$setNote("failed", txt("boot", "not_done"))
             }
@@ -1181,6 +1206,66 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                 suppressWarnings(do.call(cSEM::csem, c(list(.data = data, .model = syntax),
                                                        .pl_csem_args(self$options, model$modes, approach))))
             refit <- refit_with(model$syntax)
+            pm <- private$.predictModels(model, blocks, paths, hocs, d, txt, refit_with)
+            drop <- pm$drop; alt_refit <- pm$alt_refit; alt_reason <- pm$alt_reason; alt_syntax <- pm$alt_syntax
+            bench <- pm$bench; bench_refit <- pm$bench_refit; bench_reason <- pm$bench_reason
+            key <- list("plssem-predict-3", self$options$weightApproach, self$options$predictBenchmark, model$syntax, model$modes, d, self$options$estimator,
+                        self$options$innerScheme, folds, reps, seed, alt_syntax,
+                        tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
+            res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
+                t0 <- proc.time()[["elapsed"]]
+                r <- .pl_capture(local({
+                    cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, alt_refit = alt_refit,
+                                           checkpoint = function() private$.checkpoint(), bench_refit = bench_refit)
+                    vinv <- stats::setNames(names(model$vmap), model$vmap)
+                    endo <- unique(paths$to)
+                    ind_of <- function(cn) {
+                        b <- Filter(function(x) identical(x$label, cn), blocks)
+                        unname(model$vmap[b[[1]]$vars])
+                    }
+                    groups <- c(list(all = unique(unlist(lapply(endo, ind_of)))),
+                                stats::setNames(lapply(endo, ind_of), endo))
+                    m <- .pl_predict_metrics(cv)
+                    m$indicator <- vinv[m$indicator]
+                    list(metrics = m, cvpat = .pl_cvpat(cv, groups), inadmissible = cv$inadmissible)
+                }))
+                list(summary = r$value, error = r$error, warnings = r$warnings,
+                     seconds = proc.time()[["elapsed"]] - t0)
+            })
+            if (is.null(res$summary)) {
+                notcomp(sprintf(txt("footnotes", "predict_error"), paste(res$error, collapse = "; ")))
+                return(list(error = res$error))
+            }
+            private$.fillPredict(res$summary$metrics, paths, blocks, pt, txt)
+            private$.fillCvpat(res$summary$cvpat, paths, pt, ct, pm, txt)
+            note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
+            pt$setNote("cv", note)
+            pt$setNote("metric", txt("boot", "predict_metric_note"))
+            pt$setNote("q2", txt("boot", "q2_not_blindfolding"))
+            # sample size for the cross-validation
+            # ES: tamaño de muestra para la validación cruzada
+            n_exog <- length(unique(unlist(lapply(setdiff(unique(paths$from), unique(paths$to)), function(cn) {
+                b <- Filter(function(x) identical(x$label, cn), blocks)
+                if (length(b)) b[[1]]$vars else character(0)
+            }))))
+            small <- .pl_predict_small(nrow(d), folds, n_exog)
+            if (small$small) {
+                msg <- sprintf(txt("footnotes", "predict_small_sample"), nrow(d), small$test, small$train, small$n_exog)
+                pt$setNote("small", msg)
+                ct$setNote("small", msg)
+            }
+            ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
+            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings, small = small,
+                                bench = if (bench != "none" && is.null(bench_reason)) txt("labels", paste0("approach_", bench)),
+                                drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
+        },
+
+        # Competing model and extra benchmark of PLSpredict and CVPAT. Each is
+        # checked on the whole sample first (it must estimate and be
+        # admissible); otherwise its rows say why. Split from .prediction.
+        # ES: Modelo competidor y referencia adicional de PLSpredict y CVPAT. Cada
+        # uno se comprueba antes con toda la muestra. Separado de .prediction.
+        .predictModels = function(model, blocks, paths, hocs, d, txt, refit_with) {
             # Competing model: the same constructs without the left-out paths;
             # checked on the whole sample first (it must estimate and be
             # admissible), otherwise its rows say why.
@@ -1219,34 +1304,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     else bench_refit <- refit_with(model$syntax, bench)
                 }
             }
-            key <- list("plssem-predict-3", self$options$weightApproach, self$options$predictBenchmark, model$syntax, model$modes, d, self$options$estimator,
-                        self$options$innerScheme, folds, reps, seed, alt_syntax,
-                        tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
-            res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
-                t0 <- proc.time()[["elapsed"]]
-                r <- .pl_capture(local({
-                    cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, alt_refit = alt_refit,
-                                           checkpoint = function() private$.checkpoint(), bench_refit = bench_refit)
-                    vinv <- stats::setNames(names(model$vmap), model$vmap)
-                    endo <- unique(paths$to)
-                    ind_of <- function(cn) {
-                        b <- Filter(function(x) identical(x$label, cn), blocks)
-                        unname(model$vmap[b[[1]]$vars])
-                    }
-                    groups <- c(list(all = unique(unlist(lapply(endo, ind_of)))),
-                                stats::setNames(lapply(endo, ind_of), endo))
-                    m <- .pl_predict_metrics(cv)
-                    m$indicator <- vinv[m$indicator]
-                    list(metrics = m, cvpat = .pl_cvpat(cv, groups), inadmissible = cv$inadmissible)
-                }))
-                list(summary = r$value, error = r$error, warnings = r$warnings,
-                     seconds = proc.time()[["elapsed"]] - t0)
-            })
-            if (is.null(res$summary)) {
-                notcomp(sprintf(txt("footnotes", "predict_error"), paste(res$error, collapse = "; ")))
-                return(list(error = res$error))
-            }
-            m <- res$summary$metrics
+            list(drop = drop, alt_refit = alt_refit, alt_reason = alt_reason, alt_syntax = alt_syntax,
+                 bench = bench, bench_refit = bench_refit, bench_reason = bench_reason)
+        },
+
+        # Rows of PLSpredict: one per indicator of an endogenous construct, with
+        # the benchmark columns when an extra benchmark was asked for.
+        # ES: Filas de PLSpredict: una por indicador de un constructo endógeno.
+        .fillPredict = function(m, paths, blocks, pt, txt) {
             endo <- unique(paths$to)
             for (cn in endo) {
                 b <- Filter(function(x) identical(x$label, cn), blocks)
@@ -1261,7 +1326,14 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     pt$setRow(rowKey = paste(cn, v, sep = "::"), values = vals)
                 }
             }
-            cv <- res$summary$cvpat
+        },
+
+        # Rows of CVPAT and their notes: the competing model and the benchmark
+        # say why when they could not be estimated. Split from .prediction.
+        # ES: Filas de CVPAT y sus notas: el modelo competidor y la referencia
+        # explican por qué no se pudieron estimar. Separado de .prediction.
+        .fillCvpat = function(cv, paths, pt, ct, pm, txt) {
+            drop <- pm$drop; alt_reason <- pm$alt_reason; bench <- pm$bench; bench_reason <- pm$bench_reason
             for (k in seq_len(nrow(cv))) {
                 cn <- if (cv$group[k] == "all") "" else cv$group[k]
                 dec <- if (!cv$bench[k] %in% c("ALT", "BM")) { if (cv$p[k] < 0.05 && cv$diff[k] < 0) "yes" else "no" }
@@ -1291,26 +1363,6 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
                     pt$setNote("bm", sprintf(txt("footnotes", "bench_note"), blab))
                 }
             }
-            note <- sprintf(txt("boot", "predict_note"), folds, reps, seed, round(res$seconds))
-            pt$setNote("cv", note)
-            pt$setNote("metric", txt("boot", "predict_metric_note"))
-            pt$setNote("q2", txt("boot", "q2_not_blindfolding"))
-            # sample size for the cross-validation
-            # ES: tamaño de muestra para la validación cruzada
-            n_exog <- length(unique(unlist(lapply(setdiff(unique(paths$from), unique(paths$to)), function(cn) {
-                b <- Filter(function(x) identical(x$label, cn), blocks)
-                if (length(b)) b[[1]]$vars else character(0)
-            }))))
-            small <- .pl_predict_small(nrow(d), folds, n_exog)
-            if (small$small) {
-                msg <- sprintf(txt("footnotes", "predict_small_sample"), nrow(d), small$test, small$train, small$n_exog)
-                pt$setNote("small", msg)
-                ct$setNote("small", msg)
-            }
-            ct$setNote("cv", paste(note, txt("boot", "cvpat_note")))
-            c(res$summary, list(folds = folds, reps = reps, seed = seed, warnings = res$warnings, small = small,
-                                bench = if (bench != "none" && is.null(bench_reason)) txt("labels", paste0("approach_", bench)),
-                                drop = if (nrow(drop)) paste(drop$from, "\u2192", drop$to, collapse = ", ")))
         },
 
         # ---------------------------------------------------------------------
@@ -2998,10 +3050,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             code <- c(code, private$.reproOptional(model, paths, q, modes, blocks),
                       private$.reproQuality(model, blocks, paths, q, modes_of))
-            esc <- function(x) gsub(">", "&gt;", gsub("<", "&lt;", gsub("&", "&amp;", x, fixed = TRUE), fixed = TRUE), fixed = TRUE)
-            self$results$reproducibilityCode$setContent(paste0(
-                "<pre style=\"white-space: pre-wrap; font-family: monospace; font-size: 0.85em;\">",
-                esc(paste(code, collapse = "\n")), "</pre>"))
+            self$results$reproducibilityCode$setContent(paste(code, collapse = "\n"))
         },
 
         # Equivalent R code of the optional sections that ran: bootstrap,

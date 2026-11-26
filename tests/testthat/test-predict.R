@@ -93,7 +93,7 @@ test_that("CVPAT against a competing model through the options equals cSEM::test
     a <- runPlssem(s$d, s$m, predictRun = TRUE, predictFolds = 10, predictReps = 1, bootSeed = 11,
                    cvpatDrop = list("IMAG → LOY"))
     tab <- a$results$predictSection$cvpat$asDF
-    r <- tab[tab$bench == "Competing model" & tab$construct == "All endogenous constructs", ]
+    r <- tab[tab$bench == "Competing Model" & tab$construct == "All endogenous constructs", ]
     f1 <- cSEM::csem(s$d, s$syntax, .PLS_modes = s$modes, .disattenuate = FALSE)
     f2 <- cSEM::csem(s$d, sub("LOY ~ SAT + IMAG", "LOY ~ SAT", s$syntax, fixed = TRUE), .PLS_modes = s$modes,
                      .disattenuate = FALSE)

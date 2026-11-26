@@ -49,6 +49,19 @@ why, what it means and what to do next, in English and Spanish.
   PLS-MGA).
 - **Reproducibility:** the equivalent R code of every analysis.
 
+## Compared with CompositeSEM
+
+The jamovi library already includes CompositeSEM, which also uses cSEM. On
+the same engine, PLSsemLab adds MICOM, CVPAT, the importance-performance map,
+f² and VIF for the structural paths, a reading guide and an interpretation
+for every result, Spanish and English, and the equivalent R code.
+
+Prediction figures can differ between the two modules for a known reason:
+PLSsemLab fits its linear benchmark (LM) with an intercept, as Hair et al.
+(2022) do, while the LM benchmark of cSEM's `predict()` has no intercept
+(regression through the origin), which inflates its errors. Compare the
+figures only against a benchmark with the same definition.
+
 ## Install
 
 **Windows (jamovi 2.7.41):** download `PLSsemLab_<version>_win64.jmo` from
@@ -152,6 +165,19 @@ conjunto usar para probar cada opción.
 partial least squares structural equation modeling* (Versión 1.1.0)
 [Software]. Zenodo. https://doi.org/10.5281/zenodo.24471195 (el DOI
 https://doi.org/10.5281/zenodo.24259622 abarca todas las versiones). Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
+
+## Frente a CompositeSEM
+
+La biblioteca de jamovi ya incluye CompositeSEM, que también usa cSEM. Sobre
+el mismo motor, PLSsemLab añade MICOM, CVPAT, el mapa de importancia-desempeño,
+f² y VIF de las rutas estructurales, una guía de lectura e interpretación de
+cada resultado, español e inglés, y el código R equivalente.
+
+Las cifras de predicción pueden diferir entre ambos módulos por una razón
+concreta: PLSsemLab ajusta su referencia lineal (LM) con intercepto, como
+hacen Hair et al. (2022), mientras que la referencia LM de `predict()` de cSEM
+no tiene intercepto (regresión por el origen), lo que infla sus errores.
+Compara las cifras solo con una referencia de la misma definición.
 
 ## License
 

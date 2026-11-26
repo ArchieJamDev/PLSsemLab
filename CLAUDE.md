@@ -11,7 +11,7 @@ comparison) on branch v1.2-weights-compare.
 
 ## Goal of v1
 
-Be the first PLS-SEM module for jamovi and meet, from the first release, six
+Be a complete PLS-SEM module for jamovi and meet, from the first release, six
 requirements of a complete PLS-SEM analysis (priority = most requested by
 users first): D2 HTMT/VIF with bootstrap CI · D3 higher-order constructs and
 interactions · D4 bootstrap speed/robustness · D5 syntax errors and help ·

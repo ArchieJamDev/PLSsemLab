@@ -93,7 +93,7 @@
     body <- paste0("<p>", .pl_html_escape(paragraphs), "</p>", collapse = "")
     if (!is.null(title))
         body <- paste0("<h3>", .pl_html_escape(title), "</h3>", body)
-    paste0("<div style=\"text-align: justify;\">", body, "</div>")
+    paste0("<div>", body, "</div>")
 }
 
 .pl_html_list <- function(items, ordered = FALSE) {

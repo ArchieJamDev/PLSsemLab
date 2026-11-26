@@ -643,38 +643,6 @@ options:
     max: 3
     default: 1
 
-  - name: latentFill
-    title: Construct fill
-    type: List
-    options:
-      - title: jamovi theme
-        name: theme
-      - title: White
-        name: white
-      - title: Light blue
-        name: lightblue
-      - title: Light gray
-        name: grey90
-      - title: Light yellow
-        name: lightyellow
-    default: theme
-
-  - name: manifestFill
-    title: Indicator fill
-    type: List
-    options:
-      - title: jamovi theme
-        name: theme
-      - title: White
-        name: white
-      - title: Light blue
-        name: lightblue
-      - title: Light gray
-        name: grey90
-      - title: Light yellow
-        name: lightyellow
-    default: theme
-
   - name: edgeWidth
     title: Arrow width
     type: List
@@ -684,20 +652,6 @@ options:
       - title: Uniform
         name: uniform
     default: estimate
-
-  - name: edgeColor
-    title: Arrow color
-    type: List
-    options:
-      - title: jamovi theme
-        name: theme
-      - title: Black
-        name: black
-      - title: Dark gray
-        name: grey30
-      - title: Navy
-        name: navy
-    default: theme
 
   - name: nonsigDashed
     title: Non-significant paths dashed

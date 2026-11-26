@@ -10,14 +10,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #: R/texts.R
-msgid " × "
-msgstr " × "
-
-#: R/texts.R
-msgid "—"
-msgstr "—"
-
-#: R/texts.R
 msgid "—: the path is left out of the competing model. A path that changes markedly when another is removed signals overlap between the predictors."
 msgstr "—: la ruta queda fuera del modelo competidor. Una ruta que cambia mucho al quitar otra señala solapamiento entre los predictores."
 
@@ -242,7 +234,7 @@ msgid "5 or more: critical collinearity"
 msgstr "5 o más: colinealidad crítica"
 
 #: plssem/results/mgaSection/micom.columns.title
-msgid "5% quantile"
+msgid "5% Quantile"
 msgstr "Cuantil del 5%"
 
 #: R/texts.R
@@ -282,7 +274,7 @@ msgid "A specific indirect effect is the part of the effect of X on Y that trave
 msgstr "Un efecto indirecto específico es la parte del efecto de X sobre Y que pasa por uno o más mediadores: el producto de los coeficientes de ruta a lo largo de la cadena (para X → M → Y, a × b). La tabla de efectos directos, indirectos y totales de arriba suma todas las cadenas entre dos constructos; esta tabla las separa. Los productos de coeficientes no se distribuyen normalmente, así que su significación viene del intervalo bootstrap percentil, no de una prueba t (Preacher y Hayes, 2008; Nitzl et al., 2016, vea las referencias). Ejecute el bootstrap para obtener los intervalos y el tipo de mediación."
 
 #: plssem/options/showChoicesGuide.title plssem/results/choicesGuide.title
-msgid "About your choices"
+msgid "About Your Choices"
 msgstr "Acerca de sus elecciones"
 
 #: R/texts.R
@@ -314,7 +306,7 @@ msgid "Admissible"
 msgstr "Admisibles"
 
 #: plssem/results/mgaSection/mgaGroups.columns.title
-msgid "Admissible estimates"
+msgid "Admissible Estimates"
 msgstr "Estimaciones admisibles"
 
 #: R/texts.R
@@ -354,12 +346,8 @@ msgid "An interaction X × M asks whether the effect of X on the outcome depends
 msgstr "Una interacción X × M pregunta si el efecto de X sobre el resultado depende del moderador M. Su coeficiente es el cambio en ese efecto cuando M aumenta una desviación estándar. La tabla da el efecto simple de X en tres valores de M (una desviación estándar por debajo de la media, la media y una por encima), y el gráfico dibuja la misma idea dos veces: las pendientes simples (izquierda) y el análisis floodlight (derecha), el efecto simple en todo el rango observado de M con su intervalo bootstrap. Los puntos de Johnson-Neyman marcan dónde ese intervalo empieza o deja de incluir el 0. El primer constructo del término es el predictor y el segundo el moderador, en el orden en que se armó el término en el panel. Lectura errónea frecuente: concluir que hay moderación porque el efecto simple es significativo en un valor de M; la moderación es el coeficiente de la interacción mismo, y su intervalo debe excluir el 0."
 
 #: plssem/results/interpretation.title
-msgid "Applied interpretation"
+msgid "Applied Interpretation"
 msgstr "Interpretación aplicada"
-
-#: plssem/options/edgeColor.title
-msgid "Arrow color"
-msgstr "Color de las flechas"
 
 #: plssem/options/edgeWidth.title
 msgid "Arrow width"
@@ -426,19 +414,15 @@ msgid "Benchmark"
 msgstr "Referencia"
 
 #: plssem/results/predictSection/cvpat.columns.title
-msgid "Benchmark loss"
+msgid "Benchmark Loss"
 msgstr "Pérdida de la referencia"
 
 #: R/texts.R
 msgid "BIC (recommended)"
 msgstr "BIC (recomendado)"
 
-#: plssem/options/edgeColor/black.title
-msgid "Black"
-msgstr "Negro"
-
 #: plssem/results/bootSummary.columns.title
-msgid "Block size"
+msgid "Block Size"
 msgstr "Tamaño de bloque"
 
 #: R/texts.R plssem/options/mgaAdjust/bonferroni.title
@@ -454,7 +438,7 @@ msgid "Bootstrap (percentile intervals)"
 msgstr "Bootstrap (intervalos percentiles)"
 
 #: plssem/results/bootSummary.title
-msgid "Bootstrap resamples"
+msgid "Bootstrap Resamples"
 msgstr "Remuestras bootstrap"
 
 #: plssem/options/mgaBoot.title
@@ -464,10 +448,6 @@ msgstr "Remuestras bootstrap por grupo (PLS-MGA)"
 #: R/texts.R
 msgid "Bootstrap running: %d of %d resamples done. Changing any option stops it."
 msgstr "Bootstrap en curso: %d de %d réplicas hechas. Cambiar cualquier opción lo detiene."
-
-#: R/texts.R
-msgid "Bootstrap: %d resamples drawn, %d admissible and used; seed %d; drawn in blocks of %d (block k uses the seed + k - 1); %d s. Intervals are percentile intervals at %s%%."
-msgstr "Bootstrap: %d réplicas extraídas, %d admisibles y usadas; semilla %d; extraídas en bloques de %d (el bloque k usa la semilla + k - 1); %d s. Los intervalos son percentiles al %s%%."
 
 #: R/texts.R
 msgid "Bootstrap: %d resamples with seed %d; percentile intervals at %s%%. Each resample redraws the cases with replacement and re-estimates the model, so the spread of the estimates shows their sampling uncertainty. The seed makes the result reproducible: the same seed and resamples give the same intervals. Inadmissible resamples are dropped and counted in the bootstrap note. 2000 or more resamples are recommended for a final report (Hair et al., 2019, see references)."
@@ -482,11 +462,11 @@ msgid "both tests"
 msgstr "ambas pruebas"
 
 #: plssem/options/ncaBottleneck.title plssem/results/ncaSection/ncaBottlenecks.title
-msgid "Bottleneck tables"
+msgid "Bottleneck Tables"
 msgstr "Tablas de cuellos de botella"
 
 #: R/texts.R
-msgid "Bottlenecks for %s (%s, percentage of the range)"
+msgid "Bottlenecks for %s (%s, Percentage of the Range)"
 msgstr "Cuellos de botella para %s (%s, porcentaje del rango)"
 
 #: plssem/results/mgaSection/micom.columns.title
@@ -518,11 +498,11 @@ msgid "Ceiling line for the verdict"
 msgstr "Línea de techo para el veredicto"
 
 #: R/texts.R
-msgid "Ceiling lines: %s → %s"
+msgid "Ceiling Lines: %s → %s"
 msgstr "Líneas de techo: %s → %s"
 
 #: plssem/options/ncaPlots.title plssem/results/ncaSection/ncaPlots.title
-msgid "Ceiling plots"
+msgid "Ceiling Plots"
 msgstr "Gráficos de techo"
 
 #: plssem/options/innerScheme/centroid.title
@@ -570,7 +550,7 @@ msgid "Coefficients on the arrows"
 msgstr "Coeficientes sobre las flechas"
 
 #: plssem/results/measurementSection/vif.title
-msgid "Collinearity of formative indicators"
+msgid "Collinearity of Formative Indicators"
 msgstr "Colinealidad de los indicadores formativos"
 
 #: R/texts.R
@@ -582,7 +562,7 @@ msgid "Collinearity of formative indicators: VIF of 3 or more for %s. Their weig
 msgstr "Colinealidad de los indicadores formativos: VIF de 3 o más en %s. Sus pesos pueden ser inestables; interprételos con cuidado."
 
 #: plssem/results/structuralSection/vifStruct.title
-msgid "Collinearity of predictors (structural VIF)"
+msgid "Collinearity of Predictors (Structural VIF)"
 msgstr "Colinealidad de los predictores (VIF estructural)"
 
 #: R/texts.R
@@ -606,7 +586,7 @@ msgid "Competing"
 msgstr "Competidor"
 
 #: R/texts.R plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title
-msgid "Competing model"
+msgid "Competing Model"
 msgstr "Modelo competidor"
 
 #: R/texts.R
@@ -646,7 +626,7 @@ msgid "Condition"
 msgstr "Condición"
 
 #: plssem/options/ciLevel.title plssem/results/bootSummary.columns.title
-msgid "Confidence level"
+msgid "Confidence Level"
 msgstr "Nivel de confianza"
 
 #: R/texts.R
@@ -673,12 +653,8 @@ msgstr "Constructo"
 msgid "Construct 1"
 msgstr "Construct 1"
 
-#: plssem/options/latentFill.title
-msgid "Construct fill"
-msgstr "Relleno de los constructos"
-
 #: plssem/options/scoresOut.title plssem/results/scoresOut.title
-msgid "Construct scores"
+msgid "Construct Scores"
 msgstr "Puntuaciones de los constructos"
 
 #: plssem/options/latentSize.title
@@ -734,7 +710,7 @@ msgid "Criterion"
 msgstr "Criterio"
 
 #: plssem/results/fitSection/fit.columns.title
-msgid "Critical value"
+msgid "Critical Value"
 msgstr "Valor crítico"
 
 #: R/texts.R
@@ -770,7 +746,7 @@ msgid "Customer satisfaction index ECSI (n=250)"
 msgstr "Índice de satisfacción del cliente ECSI (n=250)"
 
 #: plssem/results/predictSection/cvpat.title
-msgid "CVPAT (does the model predict better than the benchmarks?)"
+msgid "CVPAT (Does the Model Predict Better Than the Benchmarks?)"
 msgstr "CVPAT (¿predice el modelo mejor que las referencias?)"
 
 #: R/texts.R
@@ -812,10 +788,6 @@ msgstr "CVPAT: no hay evidencia de que el modelo prediga mejor que %s (diferenci
 #: plssem/results/ncaSection/ncaTable.columns.title
 msgid "d"
 msgstr "d"
-
-#: plssem/options/edgeColor/grey30.title
-msgid "Dark gray"
-msgstr "Gris oscuro"
 
 #: R/texts.R
 msgid "Dashed lines: mean importance and mean performance of the constructs shown."
@@ -878,7 +850,7 @@ msgid "Direct-only: there is no mediation through this chain; the effect is dire
 msgstr "Solo directo: no hay mediación por esta cadena; el efecto es directo."
 
 #: plssem/results/structuralSection/effects.title
-msgid "Direct, indirect and total effects"
+msgid "Direct, Indirect and Total Effects"
 msgstr "Efectos directos, indirectos y totales"
 
 #: plssem/results/fitSection/fit.columns.title
@@ -886,7 +858,7 @@ msgid "Discrepancy"
 msgstr "Discrepancia"
 
 #: plssem/results/measurementSection/htmt.title plssem/results/plotsSection/htmtPlot.title
-msgid "Discriminant validity (HTMT)"
+msgid "Discriminant Validity (HTMT)"
 msgstr "Validez discriminante (HTMT)"
 
 #: R/texts.R
@@ -902,7 +874,7 @@ msgid "Discriminant validity in stage 2: HTMT of 0.85 or more in %s. The data ba
 msgstr "Validez discriminante en la etapa 2: HTMT de 0.85 o más en %s. Los datos apenas distinguen el constructo de orden superior de estos constructos."
 
 #: plssem/results/measurementSection/hocHtmt.title
-msgid "Discriminant validity of higher-order constructs (HTMT, stage 2)"
+msgid "Discriminant Validity of Higher-Order Constructs (HTMT, Stage 2)"
 msgstr "Validez discriminante de los constructos de orden superior (HTMT, etapa 2)"
 
 #: R/texts.R
@@ -970,11 +942,11 @@ msgid "Effect of %s on %s"
 msgstr "Efecto de %s sobre %s"
 
 #: plssem/results/ncaSection/ncaTable.columns.title
-msgid "Effect size"
+msgid "Effect Size"
 msgstr "Tamaño del efecto"
 
 #: plssem/results/structuralSection/f2.title
-msgid "Effect size (f²)"
+msgid "Effect Size (f²)"
 msgstr "Tamaño del efecto (f²)"
 
 #: R/texts.R
@@ -994,11 +966,11 @@ msgid "Equal"
 msgstr "Igual"
 
 #: plssem/results/reproducibilityCode.title
-msgid "Equivalent R code"
+msgid "Equivalent R Code"
 msgstr "Código R equivalente"
 
 #: plssem/results/predictSection/predict.columns.title
-msgid "Error skewness"
+msgid "Error Skewness"
 msgstr "Asimetría del error"
 
 #: R/texts.R
@@ -1042,7 +1014,7 @@ msgid "Every weight of the formative constructs is significant."
 msgstr "Todos los pesos de los constructos formativos son significativos."
 
 #: plssem/results/fitSection/fit.columns.title
-msgid "Exact fit"
+msgid "Exact Fit"
 msgstr "Ajuste exacto"
 
 #: plssem/options/missing/listwise.title
@@ -1054,7 +1026,7 @@ msgid "Exogenous"
 msgstr "Exógeno"
 
 #: plssem/results/structuralSection/r2.title
-msgid "Explained variance"
+msgid "Explained Variance"
 msgstr "Varianza explicada"
 
 #: plssem/options/predictBenchmark.title
@@ -1074,7 +1046,7 @@ msgid "Factorial"
 msgstr "Factorial"
 
 #: R/texts.R plssem/results/mgaSection/mga.columns.title
-msgid "First group"
+msgid "First Group"
 msgstr "Primer grupo"
 
 #: plssem/ui[1]/hocSupplier.label
@@ -1150,7 +1122,7 @@ msgid "Formative indicators: the largest VIF is %s (%s)."
 msgstr "Indicadores formativos: el VIF más alto es %s (%s)."
 
 #: plssem/options/fornellLarcker.title plssem/results/measurementSection/fornell.title
-msgid "Fornell-Larcker criterion"
+msgid "Fornell-Larcker Criterion"
 msgstr "Criterio de Fornell-Larcker"
 
 #: plssem/options/ipmaRange/data.title
@@ -1198,7 +1170,7 @@ msgid "Higher-order 2"
 msgstr "Higher-order 2"
 
 #: plssem/results/measurementSection/hocMeasurement.columns.title plssem/results/measurementSection/hocReliability.columns.title plssem/results/measurementSection/hocHtmt.columns.title
-msgid "Higher-order construct"
+msgid "Higher-Order Construct"
 msgstr "Constructo de orden superior"
 
 #: plssem/ui[1].label
@@ -1218,7 +1190,7 @@ msgid "Higher-order constructs (%s): disjoint two-stage approach (Sarstedt et al
 msgstr "Constructos de orden superior (%s): enfoque disjunto en dos etapas (Sarstedt et al., 2019). La etapa 1 estima cada constructo de primer orden, con cada constructo de orden superior reemplazado en el modelo estructural por sus constructos de orden inferior; en la etapa 2 las puntuaciones de la etapa 1 de las dimensiones miden el constructo de orden superior, y cada uno de los demás constructos conserva sus propios indicadores. Las tablas de medida de los constructos de primer orden vienen de la etapa 1; el modelo estructural y los constructos de orden superior, de la etapa 2. Con el bootstrap, ambas etapas se remuestrean juntas."
 
 #: plssem/results/measurementSection/hocMeasurement.title
-msgid "Higher-order constructs (stage 2)"
+msgid "Higher-Order Constructs (Stage 2)"
 msgstr "Constructos de orden superior (etapa 2)"
 
 #: R/texts.R
@@ -1242,11 +1214,11 @@ msgid "Holm"
 msgstr "Holm"
 
 #: plssem/results/structuralSection/moderationGuide.title
-msgid "How to read a moderation"
+msgid "How to Read a Moderation"
 msgstr "Cómo leer una moderación"
 
 #: plssem/results/measurementSection/htmtGuide.title
-msgid "How to read discriminant validity"
+msgid "How to Read Discriminant Validity"
 msgstr "Cómo leer la validez discriminante"
 
 #: plssem/options/showGuides.title
@@ -1254,59 +1226,59 @@ msgid "How to read each table"
 msgstr "Cómo leer cada tabla"
 
 #: plssem/results/structuralSection/structuralGuide.title
-msgid "How to read effect sizes, collinearity and effects"
+msgid "How to Read Effect Sizes, Collinearity and Effects"
 msgstr "Cómo leer los tamaños del efecto, la colinealidad y los efectos"
 
 #: plssem/results/measurementSection/hocGuide.title
-msgid "How to read higher-order constructs"
+msgid "How to Read Higher-Order Constructs"
 msgstr "Cómo leer los constructos de orden superior"
 
 #: plssem/results/measurementSection/measurementGuide.title
-msgid "How to read loadings and weights"
+msgid "How to Read Loadings and Weights"
 msgstr "Cómo leer las cargas y los pesos"
 
 #: plssem/results/predictSection/predictGuide.title
-msgid "How to read PLSpredict and CVPAT"
+msgid "How to Read PLSpredict and CVPAT"
 msgstr "Cómo leer PLSpredict y CVPAT"
 
 #: plssem/results/measurementSection/reliabilityGuide.title
-msgid "How to read reliability and convergent validity"
+msgid "How to Read Reliability and Convergent Validity"
 msgstr "Cómo leer la fiabilidad y la validez convergente"
 
 #: plssem/results/measurementSection/vifGuide.title
-msgid "How to read the collinearity of formative indicators"
+msgid "How to Read the Collinearity of Formative Indicators"
 msgstr "Cómo leer la colinealidad de los indicadores formativos"
 
 #: plssem/results/ipmaSection/ipmaGuide.title
-msgid "How to read the importance-performance map"
+msgid "How to Read the Importance-Performance Map"
 msgstr "Cómo leer el mapa importancia-desempeño"
 
 #: plssem/results/structuralSection/mediationGuide.title
-msgid "How to read the mediation analysis"
+msgid "How to Read the Mediation Analysis"
 msgstr "Cómo leer el análisis de mediación"
 
 #: plssem/results/compareSection/compareGuide.title
-msgid "How to read the model comparison"
+msgid "How to Read the Model Comparison"
 msgstr "Cómo leer la comparación de modelos"
 
 #: plssem/results/measurementSection/modelGuide.title
-msgid "How to read the model summary"
+msgid "How to Read the Model Summary"
 msgstr "Cómo leer el resumen del modelo"
 
 #: plssem/results/mgaSection/mgaGuide.title
-msgid "How to read the multigroup analysis"
+msgid "How to Read the Multigroup Analysis"
 msgstr "Cómo leer el análisis multigrupo"
 
 #: plssem/results/ncaSection/ncaGuide.title
-msgid "How to read the necessary condition analysis"
+msgid "How to Read the Necessary Condition Analysis"
 msgstr "Cómo leer el análisis de condición necesaria"
 
 #: plssem/results/fitSection/fitGuide.title
-msgid "How to read the overall fit test"
+msgid "How to Read the Overall Fit Test"
 msgstr "Cómo leer la prueba de ajuste global"
 
 #: plssem/results/structuralSection/pathsGuide.title
-msgid "How to read the path coefficients"
+msgid "How to Read the Path Coefficients"
 msgstr "Cómo leer los coeficientes de ruta"
 
 #: R/texts.R
@@ -1358,15 +1330,15 @@ msgid "Importance-Performance Map"
 msgstr "Mapa Importancia-Desempeño"
 
 #: plssem/options/ipma.title plssem/results/ipmaSection/ipmaTable.title
-msgid "Importance-performance map (IPMA)"
+msgid "Importance-Performance Map (IPMA)"
 msgstr "Mapa importancia-desempeño (IPMA)"
 
 #: R/texts.R
-msgid "Importance-performance map for %s"
+msgid "Importance-Performance Map for %s"
 msgstr "Mapa importancia-desempeño de %s"
 
 #: plssem/results/ipmaSection/ipmaPlots.title
-msgid "Importance-performance maps"
+msgid "Importance-Performance Maps"
 msgstr "Mapas importancia-desempeño"
 
 #: R/texts.R
@@ -1384,10 +1356,6 @@ msgstr "Mejorar primero (importante, desempeño bajo); efecto total no significa
 #: plssem/results/measurementSection/measurement.columns.title plssem/results/measurementSection/vif.columns.title plssem/results/predictSection/predict.columns.title
 msgid "Indicator"
 msgstr "Indicador"
-
-#: plssem/options/manifestFill.title
-msgid "Indicator fill"
-msgstr "Relleno de los indicadores"
 
 #: plssem/options/manifestSize.title
 msgid "Indicator size"
@@ -1426,7 +1394,7 @@ msgid "Indirect CI"
 msgstr "IC del indirecto"
 
 #: plssem/results/structuralSection/mediation.columns.title
-msgid "Indirect path"
+msgid "Indirect Path"
 msgstr "Ruta indirecta"
 
 #: R/texts.R
@@ -1518,16 +1486,8 @@ msgid "Jackknife (t intervals)"
 msgstr "Jackknife (intervalos t)"
 
 #: R/texts.R
-msgid "Jackknife: %d leave-one-out estimations, %d admissible and used; %d s. Intervals are jackknife t intervals at %s%% (estimate ± t × jackknife standard error)."
-msgstr "Jackknife: %d estimaciones dejando un caso fuera, %d admisibles y usadas; %d s. Los intervalos son intervalos t jackknife al %s%% (estimación ± t × error estándar jackknife)."
-
-#: R/texts.R
 msgid "Jackknife: one estimation per case left out, so the number of estimations is the sample size and no seed is needed."
 msgstr "Jackknife: una estimación por cada caso dejado fuera, así que el número de estimaciones es el tamaño de la muestra y no hace falta semilla."
-
-#: plssem/options/latentFill/theme.title plssem/options/manifestFill/theme.title plssem/options/edgeColor/theme.title
-msgid "jamovi theme"
-msgstr "Tema de jamovi"
 
 #: R/texts.R
 msgid "Keep up (important, high performance)"
@@ -1538,7 +1498,7 @@ msgid "Keep up (important, high performance); total effect not significant"
 msgstr "Mantener (importante, desempeño alto); efecto total no significativo"
 
 #: plssem/options/showKeySummary.title plssem/results/keySummary.title
-msgid "Key findings"
+msgid "Key Findings"
 msgstr "Hallazgos clave"
 
 #: R/texts.R
@@ -1593,18 +1553,6 @@ msgstr "Izquierda: resultado predicho según el predictor en tres valores del mo
 msgid "Level of the critical value"
 msgstr "Nivel del valor crítico"
 
-#: plssem/options/latentFill/lightblue.title plssem/options/manifestFill/lightblue.title
-msgid "Light blue"
-msgstr "Azul claro"
-
-#: plssem/options/latentFill/grey90.title plssem/options/manifestFill/grey90.title
-msgid "Light gray"
-msgstr "Gris claro"
-
-#: plssem/options/latentFill/lightyellow.title plssem/options/manifestFill/lightyellow.title
-msgid "Light yellow"
-msgstr "Amarillo claro"
-
 #: plssem/results/predictSection/predict.columns.title
 msgid "LM"
 msgstr "LM"
@@ -1626,7 +1574,7 @@ msgid "Loadings"
 msgstr "Cargas"
 
 #: plssem/results/measurementSection/measurement.title
-msgid "Loadings and weights"
+msgid "Loadings and Weights"
 msgstr "Cargas y pesos"
 
 #: R/texts.R
@@ -1634,7 +1582,7 @@ msgid "Loadings are the correlations between each indicator and its construct; w
 msgstr "Las cargas son las correlaciones entre cada indicador y su constructo; los pesos son la contribución de cada indicador a la puntuación del constructo. En los constructos reflectivos lea las cargas: valores de 0.708 o más significan que el constructo explica al menos la mitad de la varianza del indicador (Hair et al., 2019, ver referencias). En los formativos lea los pesos: muestran la contribución relativa de cada indicador, y un peso pequeño o negativo no es por sí solo motivo para quitar un indicador. Lectura errónea frecuente: juzgar los indicadores formativos por sus cargas como si fueran reflectivos."
 
 #: plssem/results/plotsSection/loadingsPlot.title
-msgid "Loadings of reflective indicators"
+msgid "Loadings of Reflective Indicators"
 msgstr "Cargas de los indicadores reflectivos"
 
 #: R/texts.R
@@ -1650,11 +1598,11 @@ msgid "Loadings of reflective indicators; dashed line at 0.708. Triangles: below
 msgstr "Cargas de los indicadores reflectivos; línea discontinua en 0.708. Triángulos: menores de 0.708."
 
 #: plssem/results/mgaSection/micom.columns.title
-msgid "Log variance ratio"
+msgid "Log Variance Ratio"
 msgstr "Log. de la razón de varianzas"
 
 #: plssem/results/predictSection/cvpat.columns.title
-msgid "Loss difference"
+msgid "Loss Difference"
 msgstr "Diferencia de pérdida"
 
 #: R/texts.R
@@ -1674,11 +1622,11 @@ msgid "Lower"
 msgstr "Inferior"
 
 #: plssem/results/predictSection/predict.columns.title
-msgid "Lower error"
+msgid "Lower Error"
 msgstr "Menor error"
 
 #: plssem/results/measurementSection/hocMeasurement.columns.title
-msgid "Lower-order construct"
+msgid "Lower-Order Construct"
 msgstr "Constructo de orden inferior"
 
 #: plssem/results/predictSection/predict.columns.superTitle
@@ -1690,7 +1638,7 @@ msgid "Main"
 msgstr "Principal"
 
 #: plssem/results/compareSection/compare.title
-msgid "Main and competing model"
+msgid "Main and Competing Model"
 msgstr "Modelo principal y competidor"
 
 #: R/texts.R
@@ -1698,7 +1646,7 @@ msgid "Main findings"
 msgstr "Hallazgos principales"
 
 #: plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title
-msgid "Main model"
+msgid "Main Model"
 msgstr "Modelo principal"
 
 #: R/texts.R
@@ -1738,11 +1686,11 @@ msgid "Mean"
 msgstr "Media"
 
 #: plssem/results/ipmaSection/ipmaTable.columns.title
-msgid "Mean (scale)"
+msgid "Mean (Scale)"
 msgstr "Media (escala)"
 
 #: plssem/results/mgaSection/micom.columns.title
-msgid "Mean difference"
+msgid "Mean Difference"
 msgstr "Diferencia de medias"
 
 #: R/texts.R
@@ -1758,11 +1706,11 @@ msgid "Measure"
 msgstr "Medida"
 
 #: plssem/results/mgaSection/micom.title
-msgid "Measurement invariance of composites (MICOM)"
+msgid "Measurement Invariance of Composites (MICOM)"
 msgstr "Invarianza de medida de los compuestos (MICOM)"
 
 #: plssem/options/mgcfa.title plssem/results/mgaSection/mgcfa.title
-msgid "Measurement invariance of the reflective constructs (MGCFA)"
+msgid "Measurement Invariance of the Reflective Constructs (MGCFA)"
 msgstr "Invarianza de medida de los constructos reflectivos (AFCMG)"
 
 #: R/texts.R plssem/results/measurementSection.title plssem/results/measurementSection/model.columns.title
@@ -1782,7 +1730,7 @@ msgid "Mediation"
 msgstr "Mediación"
 
 #: plssem/results/structuralSection/mediation.title
-msgid "Mediation (specific indirect effects)"
+msgid "Mediation (Specific Indirect Effects)"
 msgstr "Mediación (efectos indirectos específicos)"
 
 #: R/texts.R
@@ -1850,7 +1798,7 @@ msgid "Model"
 msgstr "Modelo"
 
 #: R/texts.R plssem/results/compareSection.title
-msgid "Model comparison"
+msgid "Model Comparison"
 msgstr "Comparación de modelos"
 
 #: R/texts.R
@@ -1862,7 +1810,7 @@ msgid "Model Fit"
 msgstr "Ajuste del Modelo"
 
 #: plssem/results/measurementSection/model.title
-msgid "Model summary"
+msgid "Model Summary"
 msgstr "Resumen del modelo"
 
 #: R/texts.R
@@ -1938,7 +1886,7 @@ msgid "Multivariate normality (Mardia): skewness b1 = %s (p %s), kurtosis b2 = %
 msgstr "Normalidad multivariada (Mardia): asimetría b1 = %s (p %s), curtosis b2 = %s (z = %s, p %s); los indicadores se alejan de la normalidad multivariada. Esto no afecta a las estimaciones PLS ni a los intervalos de remuestreo, pero es una razón para preferir ML robusta (MLR) en el AFC multigrupo y para leer con cuidado los intervalos de estadísticos asimétricos. Infórmelo, como recomiendan Cain et al. (2017)."
 
 #: plssem/results/measurementSection/mardia.title
-msgid "Multivariate normality of the indicators (Mardia)"
+msgid "Multivariate Normality of the Indicators (Mardia)"
 msgstr "Normalidad multivariada de los indicadores (Mardia)"
 
 #: R/texts.R
@@ -1968,10 +1916,6 @@ msgstr "N"
 #: R/texts.R
 msgid "NA"
 msgstr "NA"
-
-#: plssem/options/edgeColor/navy.title
-msgid "Navy"
-msgstr "Azul marino"
 
 #: plssem/results/ncaSection/ncaCombined.columns.title
 msgid "NCA d"
@@ -2018,7 +1962,7 @@ msgid "Necessary conditions (NCA, %3$s): %1$d of %2$d condition-outcome pairs (%
 msgstr "Condiciones necesarias (NCA, %3$s): %1$d de %2$d pares condición-resultado (%4$s)."
 
 #: plssem/results/ncaSection/ncaTable.title
-msgid "Necessary conditions (NCA)"
+msgid "Necessary Conditions (NCA)"
 msgstr "Condiciones necesarias (NCA)"
 
 #: R/texts.R
@@ -2362,7 +2306,7 @@ msgid "Ordinal (polychoric correlations)"
 msgstr "Ordinales (correlaciones policóricas)"
 
 #: R/texts.R plssem/results/predictSection.title
-msgid "Out-of-sample prediction"
+msgid "Out-of-Sample Prediction"
 msgstr "Predicción fuera de la muestra"
 
 #: plssem/results/structuralSection/paths.columns.title plssem/results/structuralSection/f2.columns.title plssem/results/structuralSection/vifStruct.columns.title plssem/results/structuralSection/effects.columns.title plssem/results/compareSection/compare.columns.title plssem/results/compareSection/comparePaths.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/ncaSection/ncaCombined.columns.title plssem/results/mgaSection/mga.columns.title
@@ -2370,7 +2314,7 @@ msgid "Outcome"
 msgstr "Resultado"
 
 #: plssem/results/ncaSection/ncaBottlenecks.template.columns.title
-msgid "Outcome level (%)"
+msgid "Outcome Level (%)"
 msgstr "Nivel del resultado (%)"
 
 #: R/texts.R
@@ -2382,11 +2326,11 @@ msgid "Overall fit: no discrepancy rejects exact fit of the estimated model (cri
 msgstr "Ajuste global: ninguna discrepancia rechaza el ajuste exacto del modelo estimado (valores críticos al %s%%; SRMR %s)."
 
 #: R/texts.R plssem/results/fitSection.title
-msgid "Overall model fit"
+msgid "Overall Model Fit"
 msgstr "Ajuste global del modelo"
 
 #: plssem/results/fitSection/fit.title
-msgid "Overall model fit (bootstrap test of exact fit)"
+msgid "Overall Model Fit (Bootstrap Test of Exact Fit)"
 msgstr "Ajuste global del modelo (prueba bootstrap de ajuste exacto)"
 
 #: plssem/results/measurementSection/mardia.columns.title plssem/results/structuralSection/paths.columns.title plssem/results/predictSection/cvpat.columns.title plssem/results/ncaSection/ncaTable.columns.title plssem/results/mgaSection/micom.columns.title plssem/results/mgaSection/mgcfa.columns.title
@@ -2394,19 +2338,19 @@ msgid "p"
 msgstr "p"
 
 #: plssem/results/fitSection/fit.columns.title
-msgid "p (bootstrap)"
+msgid "p (Bootstrap)"
 msgstr "p (bootstrap)"
 
 #: plssem/results/mgaSection/mga.columns.title
-msgid "p (permutation)"
+msgid "p (Permutation)"
 msgstr "p (permutación)"
 
 #: plssem/results/mgaSection/mga.columns.title
-msgid "p (two-sided)"
+msgid "p (Two-Sided)"
 msgstr "p (bilateral)"
 
 #: plssem/results/measurementSection/measurement.columns.title plssem/results/measurementSection/hocMeasurement.columns.title
-msgid "p (weight)"
+msgid "p (Weight)"
 msgstr "p (peso)"
 
 #: R/texts.R
@@ -2434,11 +2378,11 @@ msgid "Path"
 msgstr "Path"
 
 #: plssem/results/structuralSection/paths.title
-msgid "Path coefficients"
+msgid "Path Coefficients"
 msgstr "Coeficientes de ruta"
 
 #: plssem/results/compareSection/comparePaths.title
-msgid "Path coefficients of both models"
+msgid "Path Coefficients of Both Models"
 msgstr "Coeficientes de ruta de ambos modelos"
 
 #: R/texts.R
@@ -2462,11 +2406,11 @@ msgid "Path Diagram"
 msgstr "Diagrama de rutas"
 
 #: plssem/results/mgaSection/mga.title
-msgid "Path differences between groups"
+msgid "Path Differences Between Groups"
 msgstr "Diferencias de rutas entre grupos"
 
 #: plssem/results/ncaSection/ncaCombined.columns.title
-msgid "Path significant"
+msgid "Path Significant"
 msgstr "Ruta significativa"
 
 #: plssem/options/cvpatDrop.title
@@ -2534,11 +2478,11 @@ msgid "PLS has a lower prediction error than LM (RMSE, or MAE where the errors a
 msgstr "PLS tiene un error de predicción menor que LM (RMSE, o MAE donde los errores son asimétricos) en %d de %d indicadores: el modelo carece de capacidad predictiva frente a una regresión lineal (Shmueli et al., 2019)."
 
 #: plssem/results/predictSection/cvpat.columns.title
-msgid "PLS loss"
+msgid "PLS Loss"
 msgstr "Pérdida de PLS"
 
 #: plssem/results/predictSection/cvpat.columns.title
-msgid "PLS predicts better"
+msgid "PLS Predicts Better"
 msgstr "PLS predice mejor"
 
 #: plssem/results/mgaSection/mga.columns.superTitle
@@ -2566,7 +2510,7 @@ msgid "PLS-SEM Lab"
 msgstr "PLS-SEM Lab"
 
 #: plssem/results/predictSection/predict.title
-msgid "PLSpredict (out-of-sample prediction of the endogenous indicators)"
+msgid "PLSpredict (Out-of-Sample Prediction of the Endogenous Indicators)"
 msgstr "PLSpredict (predicción fuera de la muestra de los indicadores endógenos)"
 
 #: R/texts.R
@@ -2714,7 +2658,7 @@ msgid "reliability acceptable only in exploratory research"
 msgstr "fiabilidad aceptable solo en investigación exploratoria"
 
 #: plssem/results/measurementSection/reliability.title
-msgid "Reliability and convergent validity"
+msgid "Reliability and Convergent Validity"
 msgstr "Fiabilidad y validez convergente"
 
 #: R/texts.R
@@ -2726,7 +2670,7 @@ msgid "Reliability of a higher-order construct applies to reflective higher-orde
 msgstr "La fiabilidad de un constructo de orden superior se aplica a los de tipo reflectivo; los de este modelo son formativos, y su calidad se lee en los pesos y el VIF de sus dimensiones, en la tabla anterior."
 
 #: plssem/results/measurementSection/hocReliability.title
-msgid "Reliability of reflective higher-order constructs"
+msgid "Reliability of Reflective Higher-Order Constructs"
 msgstr "Fiabilidad de los constructos reflectivos de orden superior"
 
 #: R/texts.R
@@ -2882,7 +2826,7 @@ msgid "SE"
 msgstr "EE"
 
 #: R/texts.R plssem/results/mgaSection/mga.columns.title
-msgid "Second group"
+msgid "Second Group"
 msgstr "Segundo grupo"
 
 #: plssem/results/bootSummary.columns.title
@@ -2914,7 +2858,7 @@ msgid "Should-have only: %s. Raising these constructs raises the outcome on aver
 msgstr "Solo convenientes: %s. Elevar estos constructos eleva el resultado en promedio, pero ninguno es un cuello de botella."
 
 #: plssem/results/structuralSection/simpleSlopes.columns.title
-msgid "Simple effect"
+msgid "Simple Effect"
 msgstr "Efecto simple"
 
 #: plssem/results/structuralSection/simpleSlopes.columns.superTitle
@@ -2934,11 +2878,11 @@ msgid "Simple effect of the predictor at each value of the moderator: b(X) + b(X
 msgstr "Efecto simple del predictor en cada valor del moderador: b(X) + b(X × M) × M, con M en desviaciones estándar. Ejecute el bootstrap para obtener intervalos."
 
 #: plssem/results/structuralSection/simpleSlopes.title
-msgid "Simple effects (moderation)"
+msgid "Simple Effects (Moderation)"
 msgstr "Efectos simples (moderación)"
 
 #: R/texts.R
-msgid "Simple slopes"
+msgid "Simple Slopes"
 msgstr "Pendientes simples"
 
 #: package/datasets/Learning data, simulated (n=600).description
@@ -3034,7 +2978,7 @@ msgid "substantial"
 msgstr "sustancial"
 
 #: plssem/results/ncaSection/ncaCombined.title
-msgid "Sufficiency (PLS-SEM) and necessity (NCA)"
+msgid "Sufficiency (PLS-SEM) and Necessity (NCA)"
 msgstr "Suficiencia (PLS-SEM) y necesidad (NCA)"
 
 #: R/texts.R plssem/options/predictBenchmark/sumcorr.title
@@ -3202,22 +3146,6 @@ msgid "The model has interaction terms: chains through them (conditional indirec
 msgstr "El modelo tiene términos de interacción: las cadenas que pasan por ellos (efectos indirectos condicionales, mediación moderada) no se listan en esta versión."
 
 #: R/texts.R
-msgid "The model has no chain X → M → Y (a construct that is predicted and also predicts another), so there are no specific indirect effects."
-msgstr "El modelo no tiene ninguna cadena X → M → Y (un constructo que es predicho y a la vez predice a otro), así que no hay efectos indirectos específicos."
-
-#: R/texts.R
-msgid "The model has no formative construct, so there are no indicator VIFs: collinearity among indicators is a problem only for formative constructs."
-msgstr "El modelo no tiene constructos formativos, así que no hay VIF de indicadores: la colinealidad entre indicadores es un problema solo en los constructos formativos."
-
-#: R/texts.R
-msgid "The model has no interaction term, so there are no simple slopes. To test a moderation, add Predictor × Moderator to the predictors of a construct in the Structural Model box."
-msgstr "El modelo no tiene ningún término de interacción, así que no hay pendientes simples. Para probar una moderación, añada Predictor × Moderador a los predictores de un constructo en la caja Modelo estructural."
-
-#: R/texts.R
-msgid "The model has no reflective construct. Reliability, convergent validity and the Fornell-Larcker criterion apply only to reflective constructs; formative constructs are judged by their weights and VIF."
-msgstr "El modelo no tiene constructos reflectivos. La fiabilidad, la validez convergente y el criterio de Fornell-Larcker se aplican solo a constructos reflectivos; los formativos se valoran por sus pesos y su VIF."
-
-#: R/texts.R
 msgid "The model has no reflective constructs, so loadings are not used to judge indicator quality."
 msgstr "El modelo no tiene constructos reflectivos, así que las cargas no se usan para juzgar la calidad de los indicadores."
 
@@ -3301,14 +3229,6 @@ msgstr "La muestra es pequeña para la validación cruzada (%d casos por partici
 msgid "The saturated model is the same model here (your structural model relates every pair of constructs), so its test says the same."
 msgstr "Aquí el modelo saturado es el mismo modelo (su modelo estructural relaciona cada par de constructos), así que su prueba dice lo mismo."
 
-#: plssem/ui[8][0][5].label
-msgid "The seed is the one in the Bootstrap box; the range of the scale, the one in Importance-Performance Map."
-msgstr "La semilla es la de la caja Bootstrap; el rango de la escala, el de Mapa Importancia-Desempeño."
-
-#: plssem/ui[5][0][3].label plssem/ui[6][0][4].label plssem/ui[9][1][6].label
-msgid "The seed is the one in the Bootstrap box."
-msgstr "La semilla es la de la caja Bootstrap."
-
 #: R/texts.R
 msgid "The smallest group has %d cases: with groups of this size only large differences reach significance, so a path that does not differ significantly is not shown to be equal."
 msgstr "El grupo más pequeño tiene %d casos: con grupos de este tamaño solo las diferencias grandes alcanzan significación, así que una ruta que no difiere significativamente no queda demostrada como igual."
@@ -3345,10 +3265,6 @@ msgstr "No hay ningún par formado por un constructo reflectivo de orden superio
 msgid "These priorities are untested: without the bootstrap a construct can look important while its total effect does not differ from 0. Run the bootstrap before acting on them."
 msgstr "Estas prioridades no están probadas: sin el bootstrap un constructo puede parecer importante aunque su efecto total no difiera de 0. Ejecute el bootstrap antes de actuar sobre ellas."
 
-#: R/texts.R
-msgid "This model has no higher-order constructs, so the higher-order tables stay empty. To model one, add it in a Higher-Order Constructs box (reflective or formative) and move its dimensions into it."
-msgstr "Este modelo no tiene constructos de orden superior, así que las tablas de orden superior quedan vacías. Para modelar uno, añádalo en una caja de constructos de orden superior (reflectivos o formativos) y mueva a ella sus dimensiones."
-
 #: plssem/results/structuralSection/effects.columns.title
 msgid "Total"
 msgstr "Total"
@@ -3374,7 +3290,7 @@ msgid "Two-stage approach"
 msgstr "Enfoque de dos etapas"
 
 #: plssem/results/structuralSection/mediation.columns.title
-msgid "Type of mediation"
+msgid "Type of Mediation"
 msgstr "Tipo de mediación"
 
 #: R/texts.R
@@ -3398,7 +3314,7 @@ msgid "Upper"
 msgstr "Superior"
 
 #: plssem/results/measurementSection/htmt.columns.title plssem/results/measurementSection/hocHtmt.columns.title
-msgid "Upper bound"
+msgid "Upper Bound"
 msgstr "Límite superior"
 
 #: R/texts.R
@@ -3482,12 +3398,8 @@ msgid "Weighting approach: unit weights. Each composite is the standardized sum 
 msgstr "Enfoque de ponderación: pesos unitarios. Cada compuesto es la suma estandarizada de sus indicadores estandarizados (puntuaciones suma), así que todos los indicadores cuentan lo mismo. Es la referencia que indica si vale la pena estimar pesos: si PLS-PM da las mismas rutas, los indicadores son casi intercambiables. El IPMA, el NCA, ρA y los constructos de orden superior necesitan PLS-PM."
 
 #: R/texts.R
-msgid "What to do now"
+msgid "What to Do Now"
 msgstr "Qué hacer ahora"
-
-#: plssem/options/latentFill/white.title plssem/options/manifestFill/white.title
-msgid "White"
-msgstr "Blanco"
 
 #: R/texts.R
 msgid "Why there is no chi-square test, CFI or RMSEA: the ML chi-square test and the indices built on it (CFI, NFI, NNFI, IFI, RMSEA, GFI) belong to covariance-based SEM, where the model is estimated by maximum likelihood and the statistic follows a chi-square distribution under multivariate normality. PLS estimates are not maximum likelihood estimates, so the statistic does not follow that distribution, and its p-value and the indices derived from it have no known meaning here; the bootstrap test above needs neither normality nor a known distribution (Dijkstra & Henseler, 2015; Schuberth et al., 2023)."
@@ -3616,3 +3528,19 @@ msgstr "χ²"
 #: plssem/results/measurementSection/reliability.columns.title
 msgid "ω (CFA)"
 msgstr "ω (AFC)"
+
+#: plssem
+msgid "Random Seed"
+msgstr "Semilla aleatoria"
+
+#: plssem
+msgid "Used by the bootstrap, the model fit test, prediction (PLSpredict and CVPAT), multigroup analysis (MICOM and MGA) and the NCA permutations. The same seed gives the same results."
+msgstr "Lo usan el bootstrap, el test de ajuste global, la predicción (PLSpredict y CVPAT), el análisis multigrupo (MICOM y MGA) y las permutaciones de NCA. La misma semilla da los mismos resultados."
+
+#: plssem
+msgid "The range of the scores is the one of the Importance-Performance Map."
+msgstr "El rango de las puntuaciones es el del mapa de importancia-desempeño."
+
+#: plssem
+msgid "Elapsed time of this run: {seconds} s. It changes from one run to another and is not part of the result."
+msgstr "Tiempo de esta ejecución: {seconds} s. Cambia de una ejecución a otra y no forma parte del resultado."

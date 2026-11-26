@@ -319,32 +319,11 @@
 # options; theme: jamovi's theme (color[1] ink, fill[1] background, fill[2]
 # soft fill).
 # ES: Dibuja el diagrama (gráficos base, por qgraph).
-.pl_plot_sem <- function(state, opts, theme, width = 900, height = 600) {
-    p <- state$pars
-    if (!nrow(p)) return(FALSE)
-    ink <- theme$color[1]
-    soft <- theme$fill[2]
-    back <- theme$fill[1]
-    pick <- function(x, default) if (is.null(x) || identical(x, "theme")) default else x
-    edge_col <- pick(opts$edgeColor, ink)
-    m <- .pl_sem_model(state)
-    digits <- if (is.null(opts$edgeDigits)) 2 else as.integer(opts$edgeDigits)
-    labels <- formatC(p$est, format = "f", digits = digits)
-    labels[!is.na(p$sig) & p$sig] <- paste0(labels[!is.na(p$sig) & p$sig], "*")
-    if (isFALSE(opts$edgeLabels)) labels <- rep("", length(labels))
-    # Non-significant paths and weights are drawn dashed (semPlot draws
-    # "fixed" parameters with fixedStyle). The styles are line types only:
-    # semPlot reads any string with a digit as a line type, so a hex colour
-    # there would break the plot; the colour goes in edge.color.
-    # ES: Rutas y pesos no significativos van discontinuos.
-    dashed <- !is.na(p$sig) & !p$sig & !isFALSE(opts$nonsigDashed)
-    m@Pars$fixed <- dashed
-    xy <- cbind(state$x, state$y)
-    layout <- switch(if (is.null(opts$diagramLayout)) "treeLR" else opts$diagramLayout,
-                     treeLR = list(xy, 1), treeTB = list(cbind(state$x_tb, state$y_tb), 1),
-                     circle = list("circle2", 1), spring = list("spring", 1))
-    if (is.null(state$x)) layout[[1]] <- "tree2"
-    by_est <- !identical(opts$edgeWidth, "uniform")
+# Node sizes and the room left for the measurement labels, in pixels and in
+# qgraph units, with the layout coordinates. Split from .pl_plot_sem.
+# ES: Tamaños de los nodos y espacio para las etiquetas de medida, en píxeles
+# y en unidades de qgraph, con las coordenadas. Separado de .pl_plot_sem.
+.pl_sem_geometry <- function(state, opts, width, height) {
     # qgraph sizes nodes relative to the device diagonal (its Cent2Edge with
     # normalize = TRUE gives 0.00749 * sqrt(width^2 + height^2) px per size
     # unit); the defaults give boxes of about 70 x 24 px and ellipses of
@@ -381,6 +360,18 @@
         gap_px <- side_px - man_w / 2 - lat_w / 2
         meas_cex <- 0.9 * max(0.7, min(1, gap_px / 46))
     }
+    list(tb = tb, gx = gx, gy = gy, ppx = ppx, ppy = ppy, unit = unit,
+         lat_w = lat_w, lat_h = lat_h, man_w = man_w, man_h = man_h, meas_cex = meas_cex)
+}
+
+# Position of each coefficient label along its arrow: near the indicator for
+# measurement arrows, alternated for converging paths, near the predictor for
+# moderated paths. Split from .pl_plot_sem.
+# ES: Posición de la etiqueta de cada coeficiente a lo largo de su flecha.
+# Separado de .pl_plot_sem.
+.pl_sem_label_positions <- function(state, p, geom) {
+    tb <- geom$tb; gx <- geom$gx; gy <- geom$gy; ppx <- geom$ppx; ppy <- geom$ppy
+    man_w <- geom$man_w; man_h <- geom$man_h; lat_w <- geom$lat_w; lat_h <- geom$lat_h
     # Coefficients a little toward the indicator on measurement arrows
     # (where arrows converge on the construct the labels would pile up, and
     # right at the indicator they cover its box), midway on paths.
@@ -433,6 +424,46 @@
     mods <- if (is.null(state$mods)) data.frame() else state$mods
     for (j in seq_len(nrow(mods)))
         lab_pos[p$kind == "path" & p$lhs == mods$pred[j] & p$rhs == mods$out[j]] <- 0.3
+    lab_pos
+}
+
+
+# Draws the diagram (base graphics, through qgraph). opts: the analysis
+# options; theme: jamovi's theme (color[1] ink, fill[1] background, fill[2]
+# soft fill). Geometry and label positions are in .pl_sem_geometry() and
+# .pl_sem_label_positions().
+# ES: Dibuja el diagrama (gráficos base, por qgraph). La geometría y las
+# posiciones de etiqueta están en .pl_sem_geometry() y .pl_sem_label_positions().
+.pl_plot_sem <- function(state, opts, theme, width = 900, height = 600) {
+    p <- state$pars
+    if (!nrow(p)) return(FALSE)
+    ink <- theme$color[1]
+    soft <- theme$fill[2]
+    back <- theme$fill[1]
+    edge_col <- ink
+    m <- .pl_sem_model(state)
+    digits <- if (is.null(opts$edgeDigits)) 2 else as.integer(opts$edgeDigits)
+    labels <- formatC(p$est, format = "f", digits = digits)
+    labels[!is.na(p$sig) & p$sig] <- paste0(labels[!is.na(p$sig) & p$sig], "*")
+    if (isFALSE(opts$edgeLabels)) labels <- rep("", length(labels))
+    # Non-significant paths and weights are drawn dashed (semPlot draws
+    # "fixed" parameters with fixedStyle). The styles are line types only:
+    # semPlot reads any string with a digit as a line type, so a hex colour
+    # there would break the plot; the colour goes in edge.color.
+    # ES: Rutas y pesos no significativos van discontinuos.
+    dashed <- !is.na(p$sig) & !p$sig & !isFALSE(opts$nonsigDashed)
+    m@Pars$fixed <- dashed
+    xy <- cbind(state$x, state$y)
+    layout <- switch(if (is.null(opts$diagramLayout)) "treeLR" else opts$diagramLayout,
+                     treeLR = list(xy, 1), treeTB = list(cbind(state$x_tb, state$y_tb), 1),
+                     circle = list("circle2", 1), spring = list("spring", 1))
+    if (is.null(state$x)) layout[[1]] <- "tree2"
+    by_est <- !identical(opts$edgeWidth, "uniform")
+    geom <- .pl_sem_geometry(state, opts, width, height)
+    unit <- geom$unit; lat_w <- geom$lat_w; lat_h <- geom$lat_h
+    man_w <- geom$man_w; man_h <- geom$man_h; meas_cex <- geom$meas_cex
+    lab_pos <- .pl_sem_label_positions(state, p, geom)
+    mods <- if (is.null(state$mods)) data.frame() else state$mods
     g <- semPlot::semPaths(m, what = if (by_est) "est" else "paths", whatLabels = "est", edgeLabels = labels,
                       layout = layout[[1]], rotation = layout[[2]], curve = 0,
                       sizeLat = lat_w / unit, sizeLat2 = lat_h / unit,
@@ -442,7 +473,7 @@
                       edge.label.cex = (if (is.null(opts$edgeLabelSize)) 0.8 else opts$edgeLabelSize) *
                           ifelse(p$kind == "path", 1, meas_cex),
                       residuals = FALSE, intercepts = FALSE, thresholds = FALSE, exoCov = FALSE,
-                      color = list(lat = pick(opts$latentFill, soft), man = pick(opts$manifestFill, back)),
+                      color = list(lat = soft, man = back),
                       border.color = ink, label.color = ink, edge.color = edge_col,
                       edge.label.color = ink, edge.label.bg = back,
                       fixedStyle = 2, freeStyle = 1,

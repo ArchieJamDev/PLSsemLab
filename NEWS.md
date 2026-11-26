@@ -1,5 +1,25 @@
 # PLSsemLab 1.2.0
 
+* Changes requested in jamovi's review of 1.0.0:
+  * Sections the model does not use (higher-order constructs, mediation,
+    simple slopes, formative VIF) are hidden; a section that applies but
+    cannot be computed keeps its place and a notice.
+  * The random seed has its own box, which lists the analyses that use it.
+  * The Path Diagram box is inside Plots, next to the option that switches
+    the diagram on.
+  * Result headings use Title Case.
+  * The diagram follows jamovi's theme: the fixed colour options (construct
+    fill, indicator fill, arrow colour) are removed.
+  * Prose blocks carry no inline styles, and the equivalent R code is a
+    Preformatted item. If PDF export drops its line breaks, that is a jamovi
+    issue to report there.
+  * The bootstrap status is hidden when the bootstrap ends; the elapsed time
+    is a footnote of the bootstrap table, not a column.
+  * Separators are not translated, and the texts of the hidden notices are
+    removed from the catalogue.
+  * The diagram drawing and the prediction code are split into helper
+    functions; the drawing arguments are unchanged (checked on five models).
+
 * **Weighting approaches** (Estimation box): besides PLS-PM, GSCA
   (Hwang & Takane, 2004; GSCAm with consistent estimation), SUMCORR and
   MAXVAR (generalized canonical correlation; Kettenring, 1971), PCA and

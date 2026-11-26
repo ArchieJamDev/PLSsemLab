@@ -33,13 +33,14 @@ items:
     type: Html
 
   - name: keySummary
-    title: Key findings
+    title: Key Findings
     type: Html
     visible: (showKeySummary)
 
-  # Progress while resampling, then a record of what was done (resamples,
-  # admissible ones, seed, time).
-  # ES: Avance durante el remuestreo y luego el registro de lo hecho.
+  # Progress while resampling; hidden once the bootstrap is done, when the
+  # record is in bootSummary (the elapsed time is a footnote there).
+  # ES: Avance durante el remuestreo; se oculta al terminar, cuando el registro
+  # está en bootSummary (el tiempo transcurrido es una nota de esa tabla).
   - name: bootStatus
     title: Bootstrap
     type: Html
@@ -49,7 +50,7 @@ items:
   # tables, not numbers inside text).
   # ES: El mismo registro en números (tablas de resumen numéricas).
   - name: bootSummary
-    title: Bootstrap resamples
+    title: Bootstrap Resamples
     type: Table
     rows: 1
     visible: (bootstrap)
@@ -85,18 +86,15 @@ items:
         title: Seed
         type: integer
       - name: block
-        title: Block size
+        title: Block Size
         type: integer
       - name: level
-        title: Confidence level
+        title: Confidence Level
         type: number
         format: pc
-      - name: seconds
-        title: Seconds
-        type: number
 
   - name: choicesGuide
-    title: About your choices
+    title: About Your Choices
     type: Html
     visible: (showChoicesGuide)
 
@@ -104,18 +102,18 @@ items:
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: measurementSection
-    title: Measurement model
+    title: Measurement Model
     type: Group
     items:
       - name: modelGuide
-        title: How to read the model summary
+        title: How to Read the Model Summary
         type: Html
         visible: (showGuides)
 
       # One row per construct defined in the boxes (rows laid out in .init()).
       # ES: Una fila por constructo definido en las cajas (filas en .init()).
       - name: model
-        title: Model summary
+        title: Model Summary
         type: Table
         rows: 0
         refs:
@@ -138,7 +136,7 @@ items:
             title: Construct
             type: text
           - name: measurement
-            title: Measurement model
+            title: Measurement Model
             type: text
           - name: indicators
             title: Indicators
@@ -151,14 +149,14 @@ items:
             type: text
 
       - name: measurementGuide
-        title: How to read loadings and weights
+        title: How to Read Loadings and Weights
         type: Html
         visible: (showGuides)
 
       # One row per indicator (rows laid out in .init()).
       # ES: Una fila por indicador (filas en .init()).
       - name: measurement
-        title: Loadings and weights
+        title: Loadings and Weights
         type: Table
         rows: 0
         refs:
@@ -219,20 +217,20 @@ items:
             superTitle: Weight CI
             visible: (bootstrap)
           - name: weightP
-            title: p (weight)
+            title: p (Weight)
             type: number
             format: zto,pvalue
             visible: (bootstrap)
 
       - name: reliabilityGuide
-        title: How to read reliability and convergent validity
+        title: How to Read Reliability and Convergent Validity
         type: Html
         visible: (showGuides)
 
       # One row per reflective construct (rows laid out in .init()).
       # ES: Una fila por constructo reflectivo (filas en .init()).
       - name: reliability
-        title: Reliability and convergent validity
+        title: Reliability and Convergent Validity
         type: Table
         rows: 0
         refs:
@@ -304,7 +302,7 @@ items:
             type: text
 
       - name: mardia
-        title: Multivariate normality of the indicators (Mardia)
+        title: Multivariate Normality of the Indicators (Mardia)
         type: Table
         rows: 2
         visible: (mardia)
@@ -342,14 +340,14 @@ items:
             type: text
 
       - name: htmtGuide
-        title: How to read discriminant validity
+        title: How to Read Discriminant Validity
         type: Html
         visible: (showGuides)
 
       # One row per pair of reflective constructs (rows laid out in .init()).
       # ES: Una fila por par de constructos reflectivos (filas en .init()).
       - name: htmt
-        title: Discriminant validity (HTMT)
+        title: Discriminant Validity (HTMT)
         type: Table
         rows: 0
         refs:
@@ -386,7 +384,7 @@ items:
             title: HTMT
             type: number
           - name: htmtUpper
-            title: Upper bound
+            title: Upper Bound
             type: number
             superTitle: HTMT
             visible: (bootstrap)
@@ -401,7 +399,7 @@ items:
       # in .init()).
       # ES: Tabla cuadrada: una fila y una columna por constructo reflectivo.
       - name: fornell
-        title: Fornell-Larcker criterion
+        title: Fornell-Larcker Criterion
         type: Table
         rows: 0
         visible: (fornellLarcker)
@@ -427,14 +425,14 @@ items:
             type: text
 
       - name: vifGuide
-        title: How to read the collinearity of formative indicators
+        title: How to Read the Collinearity of Formative Indicators
         type: Html
         visible: (showGuides)
 
       # One row per indicator of a formative construct (rows laid out in .init()).
       # ES: Una fila por indicador de un constructo formativo.
       - name: vif
-        title: Collinearity of formative indicators
+        title: Collinearity of Formative Indicators
         type: Table
         rows: 0
         refs:
@@ -485,12 +483,12 @@ items:
       # out in .init(); hidden when the model has none.
       # ES: Constructos de orden superior (fase 4): medida en la etapa 2.
       - name: hocGuide
-        title: How to read higher-order constructs
+        title: How to Read Higher-Order Constructs
         type: Html
         visible: (showGuides)
 
       - name: hocMeasurement
-        title: Higher-order constructs (stage 2)
+        title: Higher-Order Constructs (Stage 2)
         type: Table
         rows: 0
         refs:
@@ -515,11 +513,11 @@ items:
           - ciLevel
         columns:
           - name: hoc
-            title: Higher-order construct
+            title: Higher-Order Construct
             type: text
             combineBelow: true
           - name: component
-            title: Lower-order construct
+            title: Lower-Order Construct
             type: text
           - name: loading
             title: Loading
@@ -548,7 +546,7 @@ items:
             superTitle: Weight CI
             visible: (bootstrap)
           - name: weightP
-            title: p (weight)
+            title: p (Weight)
             type: number
             format: zto,pvalue
             visible: (bootstrap)
@@ -570,7 +568,7 @@ items:
             type: text
 
       - name: hocReliability
-        title: Reliability of reflective higher-order constructs
+        title: Reliability of Reflective Higher-Order Constructs
         type: Table
         rows: 0
         refs:
@@ -594,7 +592,7 @@ items:
           - ciLevel
         columns:
           - name: hoc
-            title: Higher-order construct
+            title: Higher-Order Construct
             type: text
           - name: alpha
             title: Cronbach's α
@@ -634,7 +632,7 @@ items:
       # ES: HTMT de cada constructo de orden superior reflectivo con los otros
       # constructos reflectivos, en la etapa 2.
       - name: hocHtmt
-        title: Discriminant validity of higher-order constructs (HTMT, stage 2)
+        title: Discriminant Validity of Higher-Order Constructs (HTMT, Stage 2)
         type: Table
         rows: 0
         refs:
@@ -659,7 +657,7 @@ items:
           - ciLevel
         columns:
           - name: c1
-            title: Higher-order construct
+            title: Higher-Order Construct
             type: text
           - name: sep
             title: ''
@@ -671,7 +669,7 @@ items:
             title: HTMT
             type: number
           - name: htmtUpper
-            title: Upper bound
+            title: Upper Bound
             type: number
             superTitle: HTMT
             visible: (bootstrap)
@@ -686,18 +684,18 @@ items:
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: structuralSection
-    title: Structural model
+    title: Structural Model
     type: Group
     items:
       - name: pathsGuide
-        title: How to read the path coefficients
+        title: How to Read the Path Coefficients
         type: Html
         visible: (showGuides)
 
       # One row per structural path (rows laid out in .init()).
       # ES: Una fila por ruta estructural (filas en .init()).
       - name: paths
-        title: Path coefficients
+        title: Path Coefficients
         type: Table
         rows: 0
         refs:
@@ -761,7 +759,7 @@ items:
             visible: (bootstrap)
 
       - name: r2
-        title: Explained variance
+        title: Explained Variance
         type: Table
         rows: 0
         refs:
@@ -805,14 +803,14 @@ items:
             type: number
 
       - name: structuralGuide
-        title: How to read effect sizes, collinearity and effects
+        title: How to Read Effect Sizes, Collinearity and Effects
         type: Html
         visible: (showGuides)
 
       # One row per structural path (rows laid out in .init()).
       # ES: Una fila por ruta estructural (filas en .init()).
       - name: f2
-        title: Effect size (f²)
+        title: Effect Size (f²)
         type: Table
         rows: 0
         refs:
@@ -849,7 +847,7 @@ items:
       # One row per structural path (rows laid out in .init()).
       # ES: Una fila por ruta estructural (filas en .init()).
       - name: vifStruct
-        title: Collinearity of predictors (structural VIF)
+        title: Collinearity of Predictors (Structural VIF)
         type: Table
         rows: 0
         refs:
@@ -903,7 +901,7 @@ items:
       # ES: Una fila por par de constructos unidos por al menos una ruta,
       # directa o a través de otros constructos.
       - name: effects
-        title: Direct, indirect and total effects
+        title: Direct, Indirect and Total Effects
         type: Table
         rows: 0
         refs:
@@ -970,12 +968,12 @@ items:
       # ES: Mediación (fase 6): una fila por efecto indirecto específico, en
       # .init(); oculta si no hay cadenas.
       - name: mediationGuide
-        title: How to read the mediation analysis
+        title: How to Read the Mediation Analysis
         type: Html
         visible: (showGuides)
 
       - name: mediation
-        title: Mediation (specific indirect effects)
+        title: Mediation (Specific Indirect Effects)
         type: Table
         rows: 0
         refs:
@@ -1001,7 +999,7 @@ items:
           - ciLevel
         columns:
           - name: chain
-            title: Indirect path
+            title: Indirect Path
             type: text
           - name: indirect
             title: Indirect
@@ -1024,7 +1022,7 @@ items:
             title: Direct (X → Y)
             type: number
           - name: type
-            title: Type of mediation
+            title: Type of Mediation
             type: text
 
       # Moderation (phase 4): rows laid out in .init(), three per interaction;
@@ -1032,12 +1030,12 @@ items:
       # ES: Moderación (fase 4): tres filas por interacción, en .init(); oculta
       # si el modelo no tiene ninguna.
       - name: moderationGuide
-        title: How to read a moderation
+        title: How to Read a Moderation
         type: Html
         visible: (showGuides)
 
       - name: simpleSlopes
-        title: Simple effects (moderation)
+        title: Simple Effects (Moderation)
         type: Table
         rows: 0
         refs:
@@ -1073,7 +1071,7 @@ items:
             title: Moderator at
             type: text
           - name: slope
-            title: Simple effect
+            title: Simple Effect
             type: number
           - name: se
             title: SE
@@ -1123,7 +1121,7 @@ items:
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: fitSection
-    title: Overall model fit
+    title: Overall Model Fit
     type: Group
     visible: (fitTest)
     items:
@@ -1131,12 +1129,12 @@ items:
       # estimated and saturated model).
       # ES: Ajuste global (fase 5): filas en .init().
       - name: fitGuide
-        title: How to read the overall fit test
+        title: How to Read the Overall Fit Test
         type: Html
         visible: (showGuides && fitTest)
 
       - name: fit
-        title: Overall model fit (bootstrap test of exact fit)
+        title: Overall Model Fit (Bootstrap Test of Exact Fit)
         type: Table
         rows: 0
         visible: (fitTest)
@@ -1172,21 +1170,21 @@ items:
             title: Value
             type: number
           - name: critical
-            title: Critical value
+            title: Critical Value
             type: number
           - name: p
-            title: p (bootstrap)
+            title: p (Bootstrap)
             type: number
             format: zto,pvalue
           - name: decision
-            title: Exact fit
+            title: Exact Fit
             type: text
 
   # Section: Out-of-sample prediction. Groups give the report headings that tell the reader
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: predictSection
-    title: Out-of-sample prediction
+    title: Out-of-Sample Prediction
     type: Group
     visible: (predictRun)
     items:
@@ -1195,12 +1193,12 @@ items:
       # and each one, against IA and LM).
       # ES: Predicción fuera de la muestra (fase 6): filas en .init().
       - name: predictGuide
-        title: How to read PLSpredict and CVPAT
+        title: How to Read PLSpredict and CVPAT
         type: Html
         visible: (showGuides && predictRun)
 
       - name: predict
-        title: PLSpredict (out-of-sample prediction of the endogenous indicators)
+        title: PLSpredict (Out-of-Sample Prediction of the Endogenous Indicators)
         type: Table
         rows: 0
         visible: (predictRun)
@@ -1262,17 +1260,17 @@ items:
             superTitle: MAE
             visible: false
           - name: skew
-            title: Error skewness
+            title: Error Skewness
             type: number
           - name: metric
             title: Metric
             type: text
           - name: lower
-            title: Lower error
+            title: Lower Error
             type: text
 
       - name: cvpat
-        title: CVPAT (does the model predict better than the benchmarks?)
+        title: CVPAT (Does the Model Predict Better Than the Benchmarks?)
         type: Table
         rows: 0
         visible: (predictRun)
@@ -1305,13 +1303,13 @@ items:
             title: Benchmark
             type: text
           - name: lossPls
-            title: PLS loss
+            title: PLS Loss
             type: number
           - name: lossBench
-            title: Benchmark loss
+            title: Benchmark Loss
             type: number
           - name: diff
-            title: Loss difference
+            title: Loss Difference
             type: number
           - name: t
             title: t
@@ -1321,23 +1319,23 @@ items:
             type: number
             format: zto,pvalue
           - name: decision
-            title: PLS predicts better
+            title: PLS Predicts Better
             type: text
 
   # Section: comparison of the main and the competing model (1.2.0).
   # ES: Sección: comparación del modelo principal y el competidor (1.2.0).
   - name: compareSection
-    title: Model comparison
+    title: Model Comparison
     type: Group
     visible: (compareRun)
     items:
       - name: compareGuide
-        title: How to read the model comparison
+        title: How to Read the Model Comparison
         type: Html
         visible: (showGuides && compareRun)
 
       - name: compare
-        title: Main and competing model
+        title: Main and Competing Model
         type: Table
         rows: 0
         visible: (compareRun)
@@ -1366,17 +1364,17 @@ items:
             title: Criterion
             type: text
           - name: main
-            title: Main model
+            title: Main Model
             type: number
           - name: competing
-            title: Competing model
+            title: Competing Model
             type: number
           - name: preferred
             title: Preferred
             type: text
 
       - name: comparePaths
-        title: Path coefficients of both models
+        title: Path Coefficients of Both Models
         type: Table
         rows: 0
         visible: (compareRun)
@@ -1404,17 +1402,17 @@ items:
             title: Outcome
             type: text
           - name: main
-            title: Main model
+            title: Main Model
             type: number
           - name: competing
-            title: Competing model
+            title: Competing Model
             type: number
 
   # Section: Importance-performance map. Groups give the report headings that tell the reader
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: ipmaSection
-    title: Importance-performance map
+    title: Importance-Performance Map
     type: Group
     visible: (ipma)
     items:
@@ -1424,12 +1422,12 @@ items:
       # ES: Mapa importancia-desempeño (fase 6): filas en .init(); un mapa por
       # objetivo.
       - name: ipmaGuide
-        title: How to read the importance-performance map
+        title: How to Read the Importance-Performance Map
         type: Html
         visible: (showGuides && ipma)
 
       - name: ipmaTable
-        title: Importance-performance map (IPMA)
+        title: Importance-Performance Map (IPMA)
         type: Table
         rows: 0
         visible: (ipma)
@@ -1462,7 +1460,7 @@ items:
             title: Importance
             type: number
           - name: perfRaw
-            title: Mean (scale)
+            title: Mean (Scale)
             type: number
           - name: performance
             title: Performance (0-100)
@@ -1472,7 +1470,7 @@ items:
             type: text
 
       - name: ipmaPlots
-        title: Importance-performance maps
+        title: Importance-Performance Maps
         type: Array
         items: 0
         visible: (ipma)
@@ -1503,17 +1501,17 @@ items:
   # path to it.
   # ES: Sección: análisis de condición necesaria (1.1.0). Filas en .init().
   - name: ncaSection
-    title: Necessary condition analysis
+    title: Necessary Condition Analysis
     type: Group
     visible: (ncaRun)
     items:
       - name: ncaGuide
-        title: How to read the necessary condition analysis
+        title: How to Read the Necessary Condition Analysis
         type: Html
         visible: (showGuides && ncaRun)
 
       - name: ncaTable
-        title: Necessary conditions (NCA)
+        title: Necessary Conditions (NCA)
         type: Table
         rows: 0
         visible: (ncaRun)
@@ -1554,7 +1552,7 @@ items:
             title: d
             type: number
           - name: size
-            title: Effect size
+            title: Effect Size
             type: text
           - name: p
             title: p
@@ -1568,7 +1566,7 @@ items:
             type: text
 
       - name: ncaCombined
-        title: Sufficiency (PLS-SEM) and necessity (NCA)
+        title: Sufficiency (PLS-SEM) and Necessity (NCA)
         type: Table
         rows: 0
         visible: (ncaRun)
@@ -1609,7 +1607,7 @@ items:
             title: Path
             type: number
           - name: pathSig
-            title: Path significant
+            title: Path Significant
             type: text
           - name: d
             title: NCA d
@@ -1623,7 +1621,7 @@ items:
             type: text
 
       - name: ncaBottlenecks
-        title: Bottleneck tables
+        title: Bottleneck Tables
         type: Array
         items: 0
         visible: (ncaRun && ncaBottleneck)
@@ -1651,11 +1649,11 @@ items:
             - ncaCeiling
           columns:
             - name: level
-              title: Outcome level (%)
+              title: Outcome Level (%)
               type: integer
 
       - name: ncaPlots
-        title: Ceiling plots
+        title: Ceiling Plots
         type: Array
         items: 0
         visible: (ncaRun && ncaPlots)
@@ -1687,7 +1685,7 @@ items:
   # where each part starts.
   # ES: Sección con título: da al informe encabezados que ubican al lector.
   - name: mgaSection
-    title: Multigroup analysis
+    title: Multigroup Analysis
     type: Group
     visible: (mgaRun)
     items:
@@ -1697,7 +1695,7 @@ items:
       # ES: Análisis multigrupo (fase 7): filas en .init() a partir de los
       # niveles de la variable de agrupación.
       - name: mgaGuide
-        title: How to read the multigroup analysis
+        title: How to Read the Multigroup Analysis
         type: Html
         visible: (showGuides && mgaRun)
 
@@ -1731,11 +1729,11 @@ items:
             title: N
             type: integer
           - name: admissible
-            title: Admissible estimates
+            title: Admissible Estimates
             type: text
 
       - name: micom
-        title: Measurement invariance of composites (MICOM)
+        title: Measurement Invariance of Composites (MICOM)
         type: Table
         rows: 0
         visible: (mgaRun)
@@ -1771,7 +1769,7 @@ items:
             type: number
             superTitle: Step 2 (compositional)
           - name: c5
-            title: 5% quantile
+            title: 5% Quantile
             type: number
             superTitle: Step 2 (compositional)
           - name: pC
@@ -1780,7 +1778,7 @@ items:
             format: zto,pvalue
             superTitle: Step 2 (compositional)
           - name: meanDiff
-            title: Mean difference
+            title: Mean Difference
             type: number
             superTitle: Step 3 (means and variances)
           - name: pMean
@@ -1789,7 +1787,7 @@ items:
             format: zto,pvalue
             superTitle: Step 3 (means and variances)
           - name: logVar
-            title: Log variance ratio
+            title: Log Variance Ratio
             type: number
             superTitle: Step 3 (means and variances)
           - name: pVar
@@ -1802,7 +1800,7 @@ items:
             type: text
 
       - name: mgcfa
-        title: Measurement invariance of the reflective constructs (MGCFA)
+        title: Measurement Invariance of the Reflective Constructs (MGCFA)
         type: Table
         rows: 0
         visible: (mgaRun && mgcfa)
@@ -1881,7 +1879,7 @@ items:
             type: text
 
       - name: mga
-        title: Path differences between groups
+        title: Path Differences Between Groups
         type: Table
         rows: 0
         visible: (mgaRun)
@@ -1921,16 +1919,16 @@ items:
             title: Outcome
             type: text
           - name: est1
-            title: First group
+            title: First Group
             type: number
           - name: est2
-            title: Second group
+            title: Second Group
             type: number
           - name: diff
             title: Difference
             type: number
           - name: pPerm
-            title: p (permutation)
+            title: p (Permutation)
             type: number
             format: zto,pvalue
           - name: pOne
@@ -1938,7 +1936,7 @@ items:
             type: number
             superTitle: PLS-MGA
           - name: pHens
-            title: p (two-sided)
+            title: p (Two-Sided)
             type: number
             format: zto,pvalue
             superTitle: PLS-MGA
@@ -1955,7 +1953,7 @@ items:
     visible: (pathDiagram || loadingsPlot || htmtPlot)
     items:
       - name: pathDiagram
-        title: Path diagram
+        title: Path Diagram
         type: Image
         width: 700
         height: 460
@@ -1969,10 +1967,7 @@ items:
           - latentSize
           - manifestSize
           - nodeLabelSize
-          - latentFill
-          - manifestFill
           - edgeWidth
-          - edgeColor
           - nonsigDashed
           - edgeLabels
           - edgeLabelSize
@@ -1999,7 +1994,7 @@ items:
       # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
 
       - name: loadingsPlot
-        title: Loadings of reflective indicators
+        title: Loadings of Reflective Indicators
         type: Image
         width: 600
         height: 400
@@ -2028,7 +2023,7 @@ items:
       # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
 
       - name: htmtPlot
-        title: Discriminant validity (HTMT)
+        title: Discriminant Validity (HTMT)
         type: Image
         width: 520
         height: 420
@@ -2056,7 +2051,7 @@ items:
   # model or the data options change.
   # ES: Caché pequeña de resultados del bootstrap (patrón de MokkenLab).
   - name: scoresOut
-    title: Construct scores
+    title: Construct Scores
     type: Output
     measureType: continuous
     clearWith:
@@ -2164,7 +2159,7 @@ items:
       - bootSeed
 
   - name: interpretation
-    title: Applied interpretation
+    title: Applied Interpretation
     type: Html
 
   - name: reproducibility
@@ -2172,12 +2167,12 @@ items:
     type: Html
     visible: (showRepro)
 
-  # Html with <pre>, not Preformatted: jamovi's PDF export drops the line
-  # breaks of a Preformatted item.
-  # ES: Html con <pre>: la exportación a PDF de jamovi pierde los saltos de
-  # línea de un Preformatted.
+  # Preformatted, as jamovi shows any code. If the PDF export drops its line
+  # breaks, that is a jamovi issue (see the review note in NEWS.md).
+  # ES: Preformatted, como jamovi muestra cualquier código. Si la exportación a
+  # PDF pierde los saltos de línea, es un asunto de jamovi (ver NEWS.md).
   - name: reproducibilityCode
-    title: Equivalent R code
-    type: Html
+    title: Equivalent R Code
+    type: Preformatted
     visible: (showRepro)
 ...

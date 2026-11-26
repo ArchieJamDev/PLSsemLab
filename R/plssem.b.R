@@ -556,7 +556,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             nca <- if (self$options$ncaRun)
                 private$.fillNca(fit$value, model, d, blocks, paths, hocs, txt, t$path_tab, boot$summary) else NULL
             prd <- if (self$options$predictRun)
-                private$.prediction(fit$value, model, d, blocks, paths, hocs, admissible, txt) else NULL
+                private$.prediction(fit$value, model, d, e$prep$raw[, names(model$vmap), drop = FALSE], blocks, paths, hocs, admissible, txt) else NULL
             cmp <- if (self$options$compareRun)
                 private$.compareModels(fit$value, model, d, blocks, paths, hocs, txt) else NULL
             gv <- self$options$groupVar
@@ -1185,7 +1185,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # repetida. Categoría B: interacciones, orden superior, estimaciones
         # inadmisibles.
         # ---------------------------------------------------------------------
-        .prediction = function(fit, model, d, blocks, paths, hocs, admissible, txt) {
+        .prediction = function(fit, model, d, raw, blocks, paths, hocs, admissible, txt) {
             pt <- self$results$predictSection$predict
             ct <- self$results$predictSection$cvpat
             reason <- .pl_predict_reason(model, hocs, admissible)
@@ -1209,14 +1209,15 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             pm <- private$.predictModels(model, blocks, paths, hocs, d, txt, refit_with)
             drop <- pm$drop; alt_refit <- pm$alt_refit; alt_reason <- pm$alt_reason; alt_syntax <- pm$alt_syntax
             bench <- pm$bench; bench_refit <- pm$bench_refit; bench_reason <- pm$bench_reason
-            key <- list("plssem-predict-3", self$options$weightApproach, self$options$predictBenchmark, model$syntax, model$modes, d, self$options$estimator,
+            key <- list("plssem-predict-4", self$options$weightApproach, self$options$predictBenchmark, model$syntax, model$modes, d, raw, self$options$missing, self$options$estimator,
                         self$options$innerScheme, folds, reps, seed, alt_syntax,
                         tryCatch(as.character(utils::packageVersion("cSEM")), error = function(e) ""))
             res <- .pl_cached_bootstrap(self$results$predictCacheStore, key, function() {
                 t0 <- proc.time()[["elapsed"]]
                 r <- .pl_capture(local({
                     cv <- .pl_cv_residuals(fit, d, refit, folds, reps, seed, alt_refit = alt_refit,
-                                           checkpoint = function() private$.checkpoint(), bench_refit = bench_refit)
+                                           checkpoint = function() private$.checkpoint(), bench_refit = bench_refit,
+                                           raw = raw)
                     vinv <- stats::setNames(names(model$vmap), model$vmap)
                     endo <- unique(paths$to)
                     ind_of <- function(cn) {

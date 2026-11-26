@@ -39,13 +39,26 @@
     NULL
 }
 
+# Mean replacement inside one fold: the means come from the training cases
+# only and fill the missing values of both the training and the held-out cases.
+# ES: Reemplazo por la media dentro de un pliegue: las medias salen solo de los
+# casos de entrenamiento y rellenan los perdidos de entrenamiento y de prueba.
+.pl_fold_fill <- function(train, test) {
+    for (v in names(train)) {
+        m <- mean(train[[v]], na.rm = TRUE)
+        train[[v]][is.na(train[[v]])] <- m
+        test[[v]][is.na(test[[v]])] <- m
+    }
+    list(train = train, test = test)
+}
+
 # Cross-validated residuals. fit: the full-sample cSEM fit; refit(data)
 # estimates the same model on other data (alt_refit, optional, a competing
 # model for CVPAT). Returns, per repetition, n x p matrices (rows in the
 # order of the data) of residuals for PLS, LM, IA and ALT.
 # ES: Residuos de validación cruzada, por repetición, para PLS, LM, IA y ALT.
 .pl_cv_residuals <- function(fit, d, refit, folds, reps, seed, alt_refit = NULL,
-                             checkpoint = function() NULL, bench_refit = NULL) {
+                             checkpoint = function() NULL, bench_refit = NULL, raw = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
     ids <- rownames(d)
@@ -66,6 +79,16 @@
             te <- match(rownames(cv[[k]]), ids)
             train <- d[-te, , drop = FALSE]
             test <- d[te, , drop = FALSE]
+            # mean replacement (1.2.0 fix): each fold is filled with the means of
+            # its training cases only, so held-out cases do not feed their own
+            # imputation
+            # ES: reemplazo por la media (corrección 1.2.0): cada pliegue se rellena
+            # solo con las medias de sus casos de entrenamiento
+            if (!is.null(raw)) {
+                filled <- .pl_fold_fill(raw[-te, , drop = FALSE], raw[te, , drop = FALSE])
+                train <- filled$train
+                test <- filled$test
+            }
             fk <- refit(train)
             if (sum(cSEM::verify(fk)) != 0) inadmissible <- inadmissible + 1
             pk <- one(fk, test)

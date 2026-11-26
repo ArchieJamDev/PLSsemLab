@@ -1,5 +1,9 @@
 # PLSsemLab 1.2.0
 
+* Fixed: with mean replacement, out-of-sample prediction (PLSpredict and
+  CVPAT) filled the held-out cases with the means of the whole sample. Each
+  fold is now filled with the means of its training cases only. Results
+  with listwise deletion are unchanged.
 * Changes requested in jamovi's review of 1.0.0:
   * Sections the model does not use (higher-order constructs, mediation,
     simple slopes, formative VIF) are hidden; a section that applies but

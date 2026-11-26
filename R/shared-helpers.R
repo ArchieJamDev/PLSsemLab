@@ -470,11 +470,17 @@
     if (missing == "mean") {
         res$n_replaced <- sum(is.na(out))
         res$n_cases_replaced <- sum(incomplete)
+        # the data before replacement: cross-validation fills each fold from
+        # its training cases only (see .pl_fold_fill)
+        # ES: los datos antes del reemplazo: la validación cruzada rellena cada
+        # pliegue solo con sus casos de entrenamiento (ver .pl_fold_fill)
+        res$raw <- out
         for (v in names(out))
             out[[v]][is.na(out[[v]])] <- mean(out[[v]], na.rm = TRUE)
     } else {
         res$n_dropped <- sum(incomplete)
         out <- out[!incomplete, , drop = FALSE]
+        res$raw <- out
     }
     res$n_used <- nrow(out)
     if (res$n_used < 10)

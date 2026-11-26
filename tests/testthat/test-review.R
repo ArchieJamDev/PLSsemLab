@@ -65,3 +65,22 @@ test_that("the equivalent R code is plain text, not escaped HTML", {
     expect_false(grepl("<pre", code, fixed = TRUE))
     expect_match(code, "cSEM::csem", fixed = TRUE)
 })
+
+test_that("mean replacement fills each fold from its training cases only", {
+    fill <- get(".pl_fold_fill", envir = asNamespace("PLSsemLab"))
+    raw <- data.frame(a = c(1, NA, 3, NA, 5), b = c(2, 2, NA, 4, 6))
+    f <- fill(raw[1:3, ], raw[4:5, ])
+    # the training mean of a is (1 + 3) / 2 = 2, not the full-sample mean 3
+    # ES: la media de entrenamiento de a es (1 + 3) / 2 = 2, no la de toda la muestra
+    expect_equal(f$test$a, c(2, 5))
+    expect_equal(f$train$a, c(1, 2, 3))
+    expect_equal(f$train$b, c(2, 2, 2))
+    expect_equal(f$test$b, c(4, 6))
+})
+
+test_that("PLSpredict runs with mean replacement and missing values", {
+    d <- corpRepData()
+    d$comp_1[1:5] <- NA
+    a <- runPlssem(d, simpleModel(), missing = "mean", predictRun = TRUE, predictFolds = 5, predictReps = 1)
+    expect_gt(nrow(a$results$predictSection$predict$asDF), 0)
+})

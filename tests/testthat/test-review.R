@@ -40,16 +40,16 @@ test_that("the formative VIF table shows when the model has formative constructs
 test_that("the bootstrap record is the table, with the time as a footnote and no seconds column", {
     a <- runPlssem(corpRepData(), simpleModel(), bootstrap = TRUE, bootReps = 100, bootSeed = 7)
     bs <- a$results$bootSummary$asDF
-    expect_null(bs$seconds)
+    expect_false("seconds" %in% names(bs))
     expect_equal(bs$seed, 7)
     expect_false(a$results$bootStatus$visible)
 })
 
 test_that("the diagram takes its colours from jamovi's theme only", {
     a <- runPlssem(corpRepData(), simpleModel())
-    expect_null(a$options$latentFill)
-    expect_null(a$options$manifestFill)
-    expect_null(a$options$edgeColor)
+    expect_error(a$options$latentFill, "does not exist")
+    expect_error(a$options$manifestFill, "does not exist")
+    expect_error(a$options$edgeColor, "does not exist")
 })
 
 test_that("the prose blocks carry no inline styles", {

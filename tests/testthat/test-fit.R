@@ -42,7 +42,7 @@ test_that("overall fit equals cSEM::testOMF() for the estimated and the saturate
     # LOY ~ IMAG is left out: the two tests differ
     # ES: falta LOY ~ IMAG: las dos pruebas difieren
     expect_false(isTRUE(all.equal(tab$value[1:4], tab$value[5:8])))
-    expect_match(gsub("<[^>]+>", " ", a$results$interpretation$content), "Overall model fit")
+    expect_match(gsub("<[^>]+>", " ", a$results$interpretation$content), "Overall Model Fit")
     expect_match(a$results$keySummary$content, "Overall fit:")
 })
 

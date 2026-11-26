@@ -780,11 +780,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         `name`="level", 
                         `title`="Confidence Level", 
                         `type`="number", 
-                        `format`="pc"),
-                    list(
-                        `name`="seconds", 
-                        `title`="Seconds", 
-                        `type`="number"))))
+                        `format`="pc"))))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="choicesGuide",

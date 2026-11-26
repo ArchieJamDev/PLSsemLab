@@ -120,7 +120,7 @@ test_that("the NCA combined reading uses the bootstrap and the chosen ceiling", 
     tab <- a$results$ncaSection$ncaTable$asDF
     expect_equal(cb$d[cb$condition == "CUSA"], tab$d[tab$condition == "CUSA" & tab$ceiling == "CE-FDH"])
     html <- gsub("<[^>]+>", " ", a$results$interpretation$content)
-    expect_match(html, "Necessary condition analysis")
+    expect_match(html, "Necessary Condition Analysis")
     expect_match(html, "Must-have and should-have: CUSA")
 })
 

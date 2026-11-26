@@ -19,8 +19,8 @@ test_that("chains are found and typed (Zhao et al., 2010)", {
     paths <- data.frame(from = c("A", "A", "M", "M", "N", "A"), to = c("M", "N", "Y", "N", "Y", "Y"),
                         stringsAsFactors = FALSE)
     ch <- PLSsemLab:::.pl_mediation_chains(paths)
-    expect_setequal(ch$label, c("A → M → Y", "A → M → N", "A → N → Y",
-                                "A → M → N → Y", "M → N → Y"))
+    expect_setequal(ch$label, c("A \u2192 M \u2192 Y", "A \u2192 M \u2192 N", "A \u2192 N \u2192 Y",
+                                "A \u2192 M \u2192 N \u2192 Y", "M \u2192 N \u2192 Y"))
     type <- PLSsemLab:::.pl_mediation_type
     expect_equal(type(0.2, 0.1, 0.3, 0.3, 0.1, 0.5), "complementary")
     expect_equal(type(0.2, 0.1, 0.3, -0.3, -0.5, -0.1), "competitive")
@@ -36,12 +36,12 @@ test_that("a single chain reproduces cSEM's indirect effect and interval", {
     eff <- a$results$structuralSection$effects$asDF
     expect_equal(nrow(med), 2)
     for (x in c("COMP", "LIKE")) {
-        m <- med[med$chain == paste(x, "→ CUSA → CUSL"), ]
+        m <- med[med$chain == paste(x, "\u2192 CUSA \u2192 CUSL"), ]
         e <- eff[eff$from == x & eff$to == "CUSL", ]
         expect_equal(m$indirect, e$indirect, tolerance = 1e-10)
         expect_equal(c(m$lower, m$upper), c(e$indLower, e$indUpper), tolerance = 1e-6)
     }
-    expect_equal(med$type[med$chain == "LIKE → CUSA → CUSL"], "Complementary (partial)")
+    expect_equal(med$type[med$chain == "LIKE \u2192 CUSA \u2192 CUSL"], "Complementary (partial)")
     expect_match(a$results$keySummary$content, "Mediation: 2 of 2")
 })
 
@@ -66,7 +66,7 @@ test_that("mediation through a higher-order construct uses the stage-2 draws", {
     a$init(); a$run()
     med <- a$results$structuralSection$mediation$asDF
     eff <- a$results$structuralSection$effects$asDF
-    expect_equal(med$chain, "QUAL → SAT → LOY")
+    expect_equal(med$chain, "QUAL \u2192 SAT \u2192 LOY")
     e <- eff[eff$from == "QUAL" & eff$to == "LOY", ]
     expect_equal(med$indirect, e$indirect, tolerance = 1e-10)
     expect_equal(c(med$lower, med$upper), c(e$indLower, e$indUpper), tolerance = 1e-6)

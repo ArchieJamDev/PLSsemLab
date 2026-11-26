@@ -22,7 +22,7 @@
 # y de la ruta directa X -> Y.
 # -----------------------------------------------------------------------------
 
-.PL_ARROW <- " → "
+.PL_ARROW <- " \u2192 "
 
 # Every chain of two or more structural paths (interaction terms left out).
 # Returns a data.frame (from, to, via, label) with via the mediators joined

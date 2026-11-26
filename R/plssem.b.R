@@ -168,7 +168,11 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             }
             # A single reflective construct has no HTMT: that table stays with its notice.
             # ES: Con un solo constructo reflectivo no hay HTMT: esa tabla conserva su aviso.
-            if (length(refl) < 2)
+            # With no reflective construct, HTMT and reliability do not apply (hidden);
+            # with one, HTMT applies but cannot be computed: its table keeps a notice.
+            # ES: Sin constructos reflectivos, HTMT y fiabilidad no aplican (se ocultan);
+            # con uno, HTMT aplica pero no se puede calcular: su tabla conserva un aviso.
+            if (length(refl) == 1)
                 private$.notApply("measurementSection", "htmt", "na_htmt", list(length(refl)))
         },
 
@@ -192,6 +196,8 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             ms$hocHtmt$setVisible(has_hoc)
             ms$reliabilityGuide$setVisible(any(refl))
             ms$reliability$setVisible(any(refl))
+            ms$htmtGuide$setVisible(any(refl))
+            ms$htmt$setVisible(any(refl))
             ms$vifGuide$setVisible(any(formative))
             ms$vif$setVisible(any(formative))
             ss$mediationGuide$setVisible(has_chain)
@@ -556,7 +562,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             nca <- if (self$options$ncaRun)
                 private$.fillNca(fit$value, model, d, blocks, paths, hocs, txt, t$path_tab, boot$summary) else NULL
             prd <- if (self$options$predictRun)
-                private$.prediction(fit$value, model, d, e$prep$raw[, names(model$vmap), drop = FALSE], blocks, paths, hocs, admissible, txt) else NULL
+                private$.prediction(fit$value, model, d, private$.rawIndicators(e, model), blocks, paths, hocs, admissible, txt) else NULL
             cmp <- if (self$options$compareRun)
                 private$.compareModels(fit$value, model, d, blocks, paths, hocs, txt) else NULL
             gv <- self$options$groupVar
@@ -1185,6 +1191,18 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
         # repetida. Categoría B: interacciones, orden superior, estimaciones
         # inadmisibles.
         # ---------------------------------------------------------------------
+        # The indicators before mean replacement, under the internal names of d
+        # (see .estimate); NULL when the data had no replacement.
+        # ES: Los indicadores antes del reemplazo por la media, con los nombres
+        # internos de d (ver .estimate).
+        .rawIndicators = function(e, model) {
+            raw <- e$prep$raw
+            if (is.null(raw)) return(NULL)
+            raw <- raw[, names(model$vmap), drop = FALSE]
+            names(raw) <- unname(model$vmap)
+            raw
+        },
+
         .prediction = function(fit, model, d, raw, blocks, paths, hocs, admissible, txt) {
             pt <- self$results$predictSection$predict
             ct <- self$results$predictSection$cvpat
@@ -1693,7 +1711,7 @@ plssemClass <- if (requireNamespace("jmvcore", quietly = TRUE)) R6::R6Class(
             names_j <- vapply(seq_len(nrow(paths)), function(j)
                 paste(model$cmap[[paths$to[j]]], "~", model$cmap[[paths$from[j]]]), "")
             tab$j <- match(tab$name, names_j)
-            tab$label <- paste(paths$from[tab$j], "→", paths$to[tab$j])
+            tab$label <- paste(paths$from[tab$j], "\u2192", paths$to[tab$j])
             tab$comparison <- vapply(tab$pair, cmp_of, "")
             tab$l1 <- unname(mg$labels[tab$g1])
             tab$l2 <- unname(mg$labels[tab$g2])

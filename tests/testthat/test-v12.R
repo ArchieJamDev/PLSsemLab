@@ -109,7 +109,7 @@ test_that("Mardia's measures follow the definition (psych uses denominator n - 1
 })
 
 test_that("the model comparison equals cSEM's criteria of both models", {
-    x <- runPlssem(corpRepData(), simpleModel(), compareRun = TRUE, cvpatDrop = list("COMP → CUSL"))
+    x <- runPlssem(corpRepData(), simpleModel(), compareRun = TRUE, cvpatDrop = list("COMP \u2192 CUSL"))
     tab <- x$results$compareSection$compare$asDF
     r <- csemCorp("PLS-PM")
     alt <- cSEM::csem(r$d, "COMP <~ comp_1 + comp_2 + comp_3\nLIKE <~ like_1 + like_2 + like_3\nCUSA <~ cusa\nCUSL <~ cusl_1 + cusl_2 + cusl_3\nCUSA ~ COMP + LIKE\nCUSL ~ LIKE + CUSA",
@@ -138,7 +138,9 @@ test_that("the extra PLSpredict benchmark equals cSEM's benchmark on the same fo
     # la referencia los del modelo; su modo de validación cruzada sí la
     # aplica, así que la referencia es ese modo con la misma semilla.
     r <- csemCorp("PLS-PM")
-    ref <- withDefaultRng(cSEM::predict(r$fit, .benchmark = "GSCA", .cv_folds = 5, .r = 1, .seed = 2026))$Prediction_metrics
+    # cSEM warns about the GSCA benchmark (the module shows it as a notice); the reference call is silenced
+    # ES: cSEM avisa del benchmark GSCA (el módulo lo muestra como aviso); la llamada de referencia lo silencia
+    ref <- withDefaultRng(suppressWarnings(cSEM::predict(r$fit, .benchmark = "GSCA", .cv_folds = 5, .r = 1, .seed = 2026)))$Prediction_metrics
     x <- runPlssem(corpRepData(), simpleModel(), predictRun = TRUE, predictFolds = 5, predictReps = 1,
                    predictBenchmark = "gsca", bootSeed = 2026)
     pt <- x$results$predictSection$predict$asDF

@@ -2047,7 +2047,7 @@ plssemResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                                     `type`="text"),
                                 list(
                                     `name`="q2", 
-                                    `title`="Q\u00B2predict", 
+                                    `title`="Q\u00B2Predict", 
                                     `type`="number"),
                                 list(
                                     `name`="rmsePls", 

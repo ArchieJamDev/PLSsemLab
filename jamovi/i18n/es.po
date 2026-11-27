@@ -3544,3 +3544,6 @@ msgstr "El rango de las puntuaciones es el del mapa de importancia-desempeño."
 #: plssem
 msgid "Elapsed time of this run: {seconds} s. It changes from one run to another and is not part of the result."
 msgstr "Tiempo de esta ejecución: {seconds} s. Cambia de una ejecución a otra y no forma parte del resultado."
+
+msgid "Q²Predict"
+msgstr "Q²Predict"

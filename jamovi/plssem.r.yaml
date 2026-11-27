@@ -1231,7 +1231,7 @@ items:
             title: Indicator
             type: text
           - name: q2
-            title: Q²predict
+            title: Q²Predict
             type: number
           - name: rmsePls
             title: PLS

@@ -10,7 +10,7 @@ están en `experiments/design-v1/results/`.
 
 ## 1. Propósito y alcance
 
-PLSsemLab v1 será el primer módulo de PLS-SEM para jamovi y cumplirá desde
+PLSsemLab v1 será un módulo de PLS-SEM para jamovi, junto a CompositeSEM (que también usa cSEM), y cumplirá desde
 su primera versión seis requisitos (D1–D6) que un análisis PLS-SEM completo
 necesita y que suelen faltar o fallar en el software disponible: lo que se
 calcula pero no se muestra, lo que falla y cómo se interpreta.

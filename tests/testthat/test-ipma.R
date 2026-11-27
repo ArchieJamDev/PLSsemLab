@@ -39,6 +39,6 @@ test_that("IPMA warns without the bootstrap and tests importance with it", {
     a <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE)
     expect_true("sig" %in% names(a$results$ipmaSection$ipmaTable$notes))
     b <- runPlssem(corpRepData(), simpleModel(), ipma = TRUE, bootstrap = TRUE, bootReps = 100, bootSeed = 1)
-    expect_match(gsub("<[^>]+>", " ", b$results$interpretation$content), "Importance-performance map")
+    expect_match(gsub("<[^>]+>", " ", b$results$interpretation$content), "Importance-Performance Map")
     expect_false(grepl("These priorities are untested", b$results$interpretation$content, fixed = TRUE))
 })

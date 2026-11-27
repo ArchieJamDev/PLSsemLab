@@ -19,25 +19,48 @@ why, what it means and what to do next, in English and Spanish.
 - **Models built from boxes**, no syntax: reflective and formative
   constructs, structural paths, higher-order constructs and interactions,
   with a validator that explains each modeling mistake.
-- **Estimators:** PLS and consistent PLS (PLSc); continuous or ordinal
-  indicators (polychoric correlations).
+- **Estimators:** PLS and consistent PLS (PLSc), with the PLS-PM, GSCA,
+  SUMCORR, MAXVAR, PCA or unit-weight approaches; continuous or ordinal
+  indicators (polychoric correlations); Mardia's multivariate normality;
+  construct scores saved to the data set.
 - **Measurement model:** Cronbach's alpha, rho_A, rho_C, AVE, HTMT and HTMT2
   with bootstrap intervals, Fornell-Larcker, indicator VIF, loadings and
   weights.
 - **Structural model:** paths, R², f², VIF, direct, indirect and total
-  effects; bootstrap in blocks with intervals for every measure, cancellable
-  and with a visible seed; path diagram, loadings and HTMT plots.
+  effects; bootstrap in blocks (or jackknife) with intervals for every
+  measure, cancellable and with a visible seed; path diagram, loadings and
+  HTMT plots.
 - **Higher-order constructs** (disjoint two-stage approach by default; cSEM's
   second-order routine as an option) and **two-way interactions** with simple
   effects, floodlight and Johnson-Neyman.
 - **Overall model fit:** bootstrap test with SRMR, d_G, d_L and d_ML for the
   estimated and the saturated model, with decision and reading.
-- **Prediction and more:** PLSpredict, CVPAT (against the indicator average,
-  a linear model and a competing model), mediation with specific indirect
-  effects, and the importance-performance map (IPMA).
-- **Multigroup analysis:** MICOM (steps 1-3) and path differences
-  (permutation test and PLS-MGA).
+- **Prediction and more:** PLSpredict (with an extra benchmark from another
+  weighting approach), CVPAT (against the indicator average, a linear model,
+  a competing model and that benchmark), the side-by-side comparison of the
+  main and a competing model (BIC, GM and other criteria), mediation with
+  specific indirect effects, and the importance-performance map (IPMA).
+- **Necessary condition analysis (NCA)** combined with PLS-SEM: CE-FDH and
+  CR-FDH effect sizes with permutation tests, bottleneck tables, ceiling
+  plots and the combined must-have / should-have reading of each path.
+- **Multigroup analysis:** MICOM (steps 1-3), measurement invariance of the
+  reflective constructs as common factors (configural, metric and scalar
+  multigroup CFA with lavaan) and path differences (permutation test and
+  PLS-MGA).
 - **Reproducibility:** the equivalent R code of every analysis.
+
+## Compared with CompositeSEM
+
+The jamovi library already includes CompositeSEM, which also uses cSEM. On
+the same engine, PLSsemLab adds MICOM, CVPAT, the importance-performance map,
+f² and VIF for the structural paths, a reading guide and an interpretation
+for every result, Spanish and English, and the equivalent R code.
+
+Prediction figures can differ between the two modules for a known reason:
+PLSsemLab fits its linear benchmark (LM) with an intercept, as Hair et al.
+(2022) do, while the LM benchmark of cSEM's `predict()` has no intercept
+(regression through the origin), which inflates its errors. Compare the
+figures only against a benchmark with the same definition.
 
 ## Install
 
@@ -92,8 +115,8 @@ which dataset and model to use to try each option.
 If you use PLSsemLab, please cite it:
 
 > Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for partial
-> least squares structural equation modeling* (Version 1.0.1) [Computer
-> software]. Zenodo. https://doi.org/10.5281/zenodo.24341176
+> least squares structural equation modeling* (Version 1.1.0) [Computer
+> software]. Zenodo. https://doi.org/10.5281/zenodo.24471195
 
 The DOI https://doi.org/10.5281/zenodo.24259622 covers all versions and
 always resolves to the latest one.
@@ -112,12 +135,19 @@ guiada al estilo de AssumptionsLab, EGAnetLab y MokkenLab: cada resultado
 dice qué pasó, por qué, qué significa y qué hacer después, en español e
 inglés.
 
-**Qué hace:** modelos armados con cajas, sin sintaxis; PLS y PLS consistente;
+**Qué hace:** modelos armados con cajas, sin sintaxis; PLS y PLS consistente,
+con los enfoques de ponderación PLS-PM, GSCA, SUMCORR, MAXVAR, PCA o pesos
+unitarios; normalidad multivariada de Mardia; puntuaciones guardadas en los
+datos; bootstrap o jackknife; comparación lado a lado con un modelo
+competidor;
 fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
 bootstrap por bloques; constructos de orden superior e interacciones con
 pendientes simples y Johnson-Neyman; ajuste global por bootstrap (SRMR, d_G,
-d_L); PLSpredict, CVPAT, mediación, IPMA y análisis multigrupo (MICOM, PLS-MGA
-y prueba de permutación); y el código R equivalente de cada análisis.
+d_L); PLSpredict, CVPAT, mediación, IPMA, análisis de condición necesaria
+(NCA) combinado con PLS-SEM y análisis multigrupo (MICOM, invarianza
+configural, métrica y escalar de los constructos reflectivos con un AFC
+multigrupo, PLS-MGA y prueba de permutación); y el código R equivalente de
+cada análisis.
 
 **Instalación:** en Windows (jamovi 2.7.41), descargar
 `PLSsemLab_<versión>_win64.jmo` de la
@@ -132,9 +162,22 @@ tiene algo que mostrar. `data/README.md` indica la fuente, la licencia y qué
 conjunto usar para probar cada opción.
 
 **Cita:** Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for
-partial least squares structural equation modeling* (Versión 1.0.1)
-[Software]. Zenodo. https://doi.org/10.5281/zenodo.24341176 (el DOI
+partial least squares structural equation modeling* (Versión 1.1.0)
+[Software]. Zenodo. https://doi.org/10.5281/zenodo.24471195 (el DOI
 https://doi.org/10.5281/zenodo.24259622 abarca todas las versiones). Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
+
+## Frente a CompositeSEM
+
+La biblioteca de jamovi ya incluye CompositeSEM, que también usa cSEM. Sobre
+el mismo motor, PLSsemLab añade MICOM, CVPAT, el mapa de importancia-desempeño,
+f² y VIF de las rutas estructurales, una guía de lectura e interpretación de
+cada resultado, español e inglés, y el código R equivalente.
+
+Las cifras de predicción pueden diferir entre ambos módulos por una razón
+concreta: PLSsemLab ajusta su referencia lineal (LM) con intercepto, como
+hacen Hair et al. (2022), mientras que la referencia LM de `predict()` de cSEM
+no tiene intercepto (regresión por el origen), lo que infla sus errores.
+Compara las cifras solo con una referencia de la misma definición.
 
 ## License
 

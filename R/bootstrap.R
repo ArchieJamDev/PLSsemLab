@@ -185,9 +185,23 @@
 # flushes the results and checks for a restart there).
 # ES: Corre los bloques y llama a progress(hechas, total) después de cada
 # uno (quien llama envía los resultados y revisa si hay que reiniciar).
-.pl_run_bootstrap <- function(fit, funs, reps, seed, progress = NULL, tick = NULL) {
+.pl_run_bootstrap <- function(fit, funs, reps, seed, progress = NULL, tick = NULL, method = "bootstrap") {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
+    # Jackknife (1.2.0): one call, n leave-one-out estimations, no seed.
+    # ES: Jackknife (1.2.0): una llamada, n estimaciones dejando un caso
+    # fuera, sin semilla.
+    if (identical(method, "jackknife")) {
+        t0 <- Sys.time()
+        r <- .pl_capture(.pl_with_ticks(cSEM::resamplecSEMResults(fit, .resample_method = "jackknife", .user_funs = funs,
+                                                                  .handle_inadmissibles = "drop"), tick))
+        seconds <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
+        if (!is.null(progress)) progress(1, 1)
+        if (!is.null(r$error))
+            return(list(value = NULL, errors = r$error, warnings = r$warnings, seconds = seconds))
+        return(list(value = .pl_fix_signs(.pl_merge_blocks(list(r$value))), errors = character(0),
+                    warnings = unique(r$warnings), seconds = seconds))
+    }
     n_blocks <- ceiling(reps / .PL_BLOCK)
     objs <- list()
     errors <- character(0)
@@ -206,7 +220,7 @@
     seconds <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
     if (!length(objs))
         return(list(value = NULL, errors = unique(errors), warnings = unique(warnings), seconds = seconds))
-    list(value = .pl_merge_blocks(objs), errors = unique(errors), warnings = unique(warnings),
+    list(value = .pl_fix_signs(.pl_merge_blocks(objs)), errors = unique(errors), warnings = unique(warnings),
          seconds = seconds)
 }
 
@@ -236,6 +250,8 @@
 # ES: Todo lo que necesitan las tablas, calculado por cSEM a partir de las
 # réplicas combinadas: una lista pequeña (en caché), con nombres internos.
 .pl_boot_summary <- function(merged, level, spec) {
+    if (identical(merged$Information$Information_resample$Method, "jackknife"))
+        return(.pl_jack_summary(merged, level, spec))
     alpha <- 1 - level
     s <- cSEM::summarize(merged, .alpha = alpha, .ci = "CI_percentile")$Estimates
     inf <- cSEM::infer(merged, .quantity = c("sd", "CI_percentile"), .alpha = alpha)
@@ -316,6 +332,114 @@
     if (ncol(spec$pairs)) {
         h <- cSEM::infer(merged, .quantity = "CI_percentile", .alpha = 0.10)$HTMT$CI_percentile
         out$HTMT <- data.frame(name = apply(spec$pairs, 2, paste, collapse = "~"), upper = unname(h[2, ]),
+                               stringsAsFactors = FALSE)
+    }
+    out
+}
+
+# Jackknife standard error, sqrt((n - 1) / n * sum((theta_i - mean)^2)), and
+# the t interval theta +/- t(n - 1) * se (Efron & Tibshirani, 1993, ch. 11).
+# cSEM's own CI_standard_t subtracts mean(theta_i) - theta, the bootstrap
+# bias, which is not the jackknife bias (n - 1) (mean - theta); the module
+# reports the plain t interval. ES: Error estándar jackknife e intervalo t.
+.pl_jack <- function(draws, original, level) {
+    draws <- as.matrix(draws)
+    n <- colSums(is.finite(draws))
+    m <- colMeans(draws, na.rm = TRUE)
+    se <- sqrt((n - 1) / n * colSums(sweep(draws, 2, m)^2, na.rm = TRUE))
+    q <- stats::qt(1 - (1 - level) / 2, pmax(n - 1, 1))
+    t <- original / se
+    list(estimate = unname(original), se = unname(se), t = unname(t),
+         p = unname(2 * stats::pt(-abs(t), pmax(n - 1, 1))),
+         lower = unname(original - q * se), upper = unname(original + q * se),
+         upper_one = unname(original + stats::qt(0.95, pmax(n - 1, 1)) * se))
+}
+
+# One interval from the draws of a derived quantity (a specific indirect
+# effect, a simple effect): percentile for the bootstrap, jackknife t for
+# the jackknife. ES: Un intervalo a partir de las réplicas de una cantidad
+# derivada: percentil con bootstrap, t jackknife con jackknife.
+.pl_draw_interval <- function(draws, estimate, level, method = "bootstrap") {
+    draws <- draws[is.finite(draws)]
+    if (identical(method, "jackknife")) {
+        j <- .pl_jack(matrix(draws), estimate, level)
+        return(list(se = j$se, lower = j$lower, upper = j$upper))
+    }
+    a <- (1 - level) / 2
+    q <- stats::quantile(draws, c(a, 1 - a), names = FALSE)
+    list(se = stats::sd(draws), lower = q[1], upper = q[2])
+}
+
+# The summary of a jackknife run, with the same elements as
+# .pl_boot_summary() (1.2.0). ES: El resumen de una corrida jackknife, con
+# los mismos elementos que .pl_boot_summary() (1.2.0).
+.pl_jack_summary <- function(merged, level, spec) {
+    E <- merged$Estimates$Estimates_resample$Estimates1
+    stats_of <- function(q) if (is.null(E[[q]])) NULL else .pl_jack(E[[q]]$Resampled, E[[q]]$Original, level)
+    bounds <- function(q) {
+        j <- stats_of(q)
+        if (is.null(j)) return(NULL)
+        data.frame(name = names(E[[q]]$Original), estimate = j$estimate, se = j$se, t = j$t, p = j$p,
+                   lower = j$lower, upper = j$upper, stringsAsFactors = FALSE)
+    }
+    ci <- function(q, names) {
+        j <- stats_of(q)
+        if (is.null(j)) return(NULL)
+        data.frame(name = names, lower = j$lower, upper = j$upper, stringsAsFactors = FALSE)
+    }
+    out <- list(
+        method = "jackknife",
+        paths = if (is.null(spec$s2)) bounds("Path_estimates"),
+        loadings = bounds("Loading_estimates"),
+        weights = bounds("Weight_estimates"),
+        indirect = bounds("Indirect_effect"),
+        total = bounds("Total_effect"),
+        R2 = ci("R2", spec$r2names),
+        rhoC = if (length(spec$rint)) ci("rhoC", spec$rint),
+        AVE = if (length(spec$rint)) ci("AVE", spec$rint),
+        VIFB = if (length(spec$form_ids)) ci("VIFB", unlist(lapply(names(spec$form_ids), function(cc)
+            paste(cc, spec$form_ids[[cc]], sep = "~")))),
+        VIFS = if (length(spec$vifnames)) ci("VIFS", spec$vifnames),
+        path_draws = if (is.null(spec$s2)) {
+            m <- E$Path_estimates$Resampled
+            colnames(m) <- names(E$Path_estimates$Original)
+            m
+        },
+        admissible = merged$Information$Information_resample$Number_of_admissibles,
+        # one estimation per case (cSEM's Number_of_runs keeps the bootstrap
+        # default there)
+        # ES: una estimación por caso (Number_of_runs de cSEM conserva ahí el
+        # valor por defecto del bootstrap)
+        runs = merged$Information$Information_resample$Number_of_observations)
+    if (!is.null(spec$s2)) {
+        j <- stats_of("S2")
+        g <- spec$s2$group
+        all <- data.frame(name = spec$s2$names, estimate = spec$s2$original, se = j$se,
+                          t = spec$s2$original / j$se, p = 2 * stats::pt(-abs(spec$s2$original / j$se), out$runs - 1),
+                          lower = j$lower, upper = j$upper, stringsAsFactors = FALSE)
+        part <- function(x) all[g == x, , drop = FALSE]
+        out$paths <- part("path")
+        rs <- E$S2$Resampled
+        if (!is.null(rs)) {
+            out$path_draws <- rs[, g == "path", drop = FALSE]
+            colnames(out$path_draws) <- spec$s2$names[g == "path"]
+        }
+        out$total <- part("total")
+        out$indirect <- part("indirect")
+        out$R2 <- part("R2")[, c("name", "lower", "upper")]
+        out$VIFS <- part("VIFS")[, c("name", "lower", "upper")]
+        out$hoc_loadings <- part("hoc_loading")
+        out$hoc_weights <- part("hoc_weight")
+        out$hoc_vif <- part("hoc_vif")[, c("name", "lower", "upper")]
+        out$hoc_rhoC <- part("hoc_rhoC")[, c("name", "lower", "upper")]
+        out$hoc_ave <- part("hoc_ave")[, c("name", "lower", "upper")]
+        if (any(g == "hoc_htmt"))
+            out$hoc_htmt <- data.frame(name = spec$s2$names[g == "hoc_htmt"], upper = j$upper_one[g == "hoc_htmt"],
+                                       stringsAsFactors = FALSE)
+    }
+    if (ncol(spec$pairs)) {
+        j <- stats_of("HTMT")
+        out$HTMT <- data.frame(name = apply(spec$pairs, 2, paste, collapse = "~"), upper = j$upper_one,
                                stringsAsFactors = FALSE)
     }
     out

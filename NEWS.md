@@ -1,5 +1,99 @@
-# PLSsemLab (development version)
+# PLSsemLab 1.2.0
 
+* Fixed: with mean replacement, out-of-sample prediction (PLSpredict and
+  CVPAT) filled the held-out cases with the means of the whole sample. Each
+  fold is now filled with the means of its training cases only. Results
+  with listwise deletion are unchanged.
+* Changes requested in jamovi's review of 1.0.0:
+  * Sections the model does not use (higher-order constructs, mediation,
+    simple slopes, formative VIF) are hidden; a section that applies but
+    cannot be computed keeps its place and a notice.
+  * The random seed has its own box, which lists the analyses that use it.
+  * The Path Diagram box is inside Plots, next to the option that switches
+    the diagram on.
+  * Result headings use Title Case.
+  * The diagram follows jamovi's theme: the fixed colour options (construct
+    fill, indicator fill, arrow colour) are removed.
+  * Prose blocks carry no inline styles, and the equivalent R code is a
+    Preformatted item. If PDF export drops its line breaks, that is a jamovi
+    issue to report there.
+  * The bootstrap status is hidden when the bootstrap ends; the elapsed time
+    is a footnote of the bootstrap table, not a column.
+  * Separators are not translated, and the texts of the hidden notices are
+    removed from the catalogue.
+  * The diagram drawing and the prediction code are split into helper
+    functions; the drawing arguments are unchanged (checked on five models).
+
+* **Weighting approaches** (Estimation box): besides PLS-PM, GSCA
+  (Hwang & Takane, 2004; GSCAm with consistent estimation), SUMCORR and
+  MAXVAR (generalized canonical correlation; Kettenring, 1971), PCA and
+  unit weights (sum scores), through cSEM. Combinations cSEM cannot estimate
+  stop with the reason (consistent estimation other than PLS-PM or GSCA,
+  higher-order constructs outside PLS-PM, GSCA with interactions, PCA with
+  single-indicator constructs); rho_A, the IPMA and the NCA, defined for
+  PLS-PM weights, say so with a note. SSQCORR and MINVAR are left out: in
+  cSEM 0.7.1 they return weights with reversed signs. MAXVAR weights are
+  fixed only up to a common sign and cSEM does not correct it in the
+  resamples (about one draw in five reversed every loading): the module turns
+  each construct of each draw back to its original sign, and the multigroup
+  tests are not computed with MAXVAR.
+* **Jackknife** as an alternative to the bootstrap (Bootstrap box): one
+  estimation per case left out, t intervals from the jackknife standard
+  error (Efron & Tibshirani, 1993) for every quantity of the report,
+  including specific indirect effects, simple effects and the HTMT upper
+  bound. cSEM's own jackknife interval subtracts the bootstrap-style bias;
+  the module reports the plain t interval. The report explains that the
+  bootstrap remains the standard of PLS-SEM.
+* **Mardia's multivariate skewness and kurtosis** of the indicators
+  (Measurement Model box; Mardia, 1970; Cain et al., 2017).
+* **Construct scores saved to the data set** (Save box): the standardized
+  scores of the estimated model, one new column per construct.
+* **PLSpredict: extra benchmark**: the same model with another weighting
+  approach (PLS-PM, GSCA, SUMCORR, MAXVAR, PCA or unit weights),
+  cross-validated on the same folds, with RMSE and MAE columns and a
+  two-sided CVPAT row. cSEM 0.7.1's predict() with test data returns the
+  model's residuals as the benchmark's, so the module estimates the
+  benchmark itself; the values equal cSEM's cross-validation mode.
+* **Model comparison** (Prediction box, "Compare the main and the competing
+  model"): the main model and the competing model (without the paths left
+  out) side by side, with R², adjusted R², AIC, AICu, BIC, GM and HQ of each
+  structural equation, SRMR and both sets of path coefficients; the reading
+  follows BIC and GM (Sharma et al., 2019, 2021).
+* `validation/csem_equivalence.R` adds the new options (69 checks, 0 failed).
+
+# PLSsemLab 1.1.0
+
+* Necessary condition analysis (NCA) combined with PLS-SEM (Dul, 2016;
+  Richter et al., 2020, 2023), suggested by a user. A new
+  *Necessary Condition Analysis* box, with its own Run checkbox, tests every
+  construct with a direct path to an endogenous construct as a necessary
+  condition, on the unstandardized construct scores of the IPMA rescaled to
+  0-100 (same range of the scale). Tables: CE-FDH and CR-FDH effect sizes d
+  with Dul's benchmarks, permutation p values (Dul, van der Laan & Kuik,
+  2020; 10 000 permutations by default, the bootstrap's seed), accuracy and a
+  verdict (necessary when d >= 0.1 and p < .05); the combined reading with
+  the PLS-SEM paths (must-have, should-have, both or neither); bottleneck
+  tables per outcome; ceiling plots; interpretation, guide and the
+  equivalent R code. The module computes the NCA itself, because the NCA
+  package's peers come from an R loop that makes 10 000 permutations take
+  many minutes without a way to cancel them: here they take seconds and can
+  be cancelled. `validation/nca_equivalence.R` checks in CI that the scores,
+  effect sizes, accuracy, bottlenecks and p values (with the same
+  permutations) equal `NCA::nca_analysis()`. Not computable (with the reason)
+  with PLSc, interactions or higher-order constructs, as the IPMA.
+
+* Measurement invariance of the reflective constructs as common factors,
+  suggested by a user: in the *Multigroup Analysis* box, a
+  multigroup CFA with lavaan (configural, metric and scalar models; MLR by
+  default, ML as an option) next to MICOM. Each step is compared with the
+  previous one by the chi-square difference (scaled with MLR) and by the
+  change in CFI, RMSEA and SRMR, with Chen's (2007) limits; the configural
+  model is judged by CFI and SRMR (Hu & Bentler, 1999). The interpretation
+  reads MICOM (composites) and the MGCFA (common factors) together.
+  Reflective constructs with one indicator and formative constructs are left
+  out with a note; not computable with ordinal indicators in this version.
+  `validation/csem_equivalence.R` checks the table against direct lavaan
+  calls.
 * Ribbon menu icon for jamovi (`menuIcons` in `jamovi/0000.yaml`):
   `jamovi/icons/plssemlab.svg`, 74 x 44, jamovi's palette, strokes of 2-4
   units, plain SVG without metadata, mapped to the "PLS-SEM Lab" menu group.

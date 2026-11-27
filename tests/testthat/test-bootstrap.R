@@ -42,8 +42,11 @@ test_that("one block equals a direct cSEM bootstrap with the same seed", {
         expect_equal(p$lower[k], r[["CI_percentile.95%L"]], tolerance = 1e-10, info = key[k])
         expect_equal(p$upper[k], r[["CI_percentile.95%U"]], tolerance = 1e-10, info = key[k])
     }
-    expect_match(a$results$bootStatus$content, "150 resamples drawn")
-    expect_match(a$results$bootStatus$content, "seed 11")
+    # the record is the bootSummary table; the status is hidden once the run ends
+    # ES: el registro es la tabla bootSummary; el estado se oculta al terminar
+    expect_equal(a$results$bootSummary$asDF$drawn, 150)
+    expect_equal(a$results$bootSummary$asDF$seed, 11)
+    expect_false(a$results$bootStatus$visible)
 })
 
 test_that("several blocks equal the equivalent R code and stay close to one run", {

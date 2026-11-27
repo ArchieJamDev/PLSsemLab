@@ -93,7 +93,7 @@
     body <- paste0("<p>", .pl_html_escape(paragraphs), "</p>", collapse = "")
     if (!is.null(title))
         body <- paste0("<h3>", .pl_html_escape(title), "</h3>", body)
-    paste0("<div style=\"text-align: justify;\">", body, "</div>")
+    paste0("<div>", body, "</div>")
 }
 
 .pl_html_list <- function(items, ordered = FALSE) {
@@ -470,11 +470,17 @@
     if (missing == "mean") {
         res$n_replaced <- sum(is.na(out))
         res$n_cases_replaced <- sum(incomplete)
+        # the data before replacement: cross-validation fills each fold from
+        # its training cases only (see .pl_fold_fill)
+        # ES: los datos antes del reemplazo: la validación cruzada rellena cada
+        # pliegue solo con sus casos de entrenamiento (ver .pl_fold_fill)
+        res$raw <- out
         for (v in names(out))
             out[[v]][is.na(out[[v]])] <- mean(out[[v]], na.rm = TRUE)
     } else {
         res$n_dropped <- sum(incomplete)
         out <- out[!incomplete, , drop = FALSE]
+        res$raw <- out
     }
     res$n_used <- nrow(out)
     if (res$n_used < 10)

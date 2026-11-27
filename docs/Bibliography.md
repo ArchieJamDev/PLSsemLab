@@ -173,6 +173,100 @@ Ringle, C. M., & Sarstedt, M. (2016). Gain more insight from your PLS-SEM
 results: The importance-performance map analysis. *Industrial Management &
 Data Systems, 116*(9), 1865–1886. https://doi.org/10.1108/IMDS-10-2015-0449
 
+## Weighting approaches, resampling, normality and model selection (1.2.0)
+
+Cain, M. K., Zhang, Z., & Yuan, K.-H. (2017). Univariate and multivariate
+skewness and kurtosis for measuring nonnormality: Prevalence, influence and
+estimation. *Behavior Research Methods, 49*(5), 1716–1735.
+https://doi.org/10.3758/s13428-016-0814-1
+
+Efron, B., & Tibshirani, R. J. (1993). *An introduction to the bootstrap*.
+Chapman & Hall. https://doi.org/10.1201/9780429246593
+
+Hwang, H., & Takane, Y. (2004). Generalized structured component analysis.
+*Psychometrika, 69*(1), 81–99. https://doi.org/10.1007/BF02295841
+
+Hwang, H., Takane, Y., & Jung, K. (2017). Generalized structured component
+analysis with uniqueness terms for accommodating measurement error.
+*Frontiers in Psychology, 8*, 2137. https://doi.org/10.3389/fpsyg.2017.02137
+
+Kettenring, J. R. (1971). Canonical analysis of several sets of variables.
+*Biometrika, 58*(3), 433–451. https://doi.org/10.1093/biomet/58.3.433
+
+Mardia, K. V. (1970). Measures of multivariate skewness and kurtosis with
+applications. *Biometrika, 57*(3), 519–530.
+https://doi.org/10.1093/biomet/57.3.519
+
+Sharma, P. N., Sarstedt, M., Shmueli, G., Kim, K. H., & Thiele, K. O. (2019).
+PLS-based model selection: The role of alternative explanations in
+information systems research. *Journal of the Association for Information
+Systems, 20*(4), 346–397. https://doi.org/10.17705/1jais.00538
+
+Sharma, P. N., Shmueli, G., Sarstedt, M., Danks, N., & Ray, S. (2021).
+Prediction-oriented model selection in partial least squares path modeling.
+*Decision Sciences, 52*(3), 567–607. https://doi.org/10.1111/deci.12329
+
+## Measurement invariance of common factors (MGCFA)
+
+Chen, F. F. (2007). Sensitivity of goodness of fit indexes to lack of
+measurement invariance. *Structural Equation Modeling, 14*(3), 464–504.
+https://doi.org/10.1080/10705510701301834
+
+Cheung, G. W., & Rensvold, R. B. (2002). Evaluating goodness-of-fit indexes
+for testing measurement invariance. *Structural Equation Modeling, 9*(2),
+233–255. https://doi.org/10.1207/S15328007SEM0902_5
+
+Hu, L., & Bentler, P. M. (1999). Cutoff criteria for fit indexes in
+covariance structure analysis: Conventional criteria versus new
+alternatives. *Structural Equation Modeling, 6*(1), 1–55.
+https://doi.org/10.1080/10705519909540118
+
+Kenny, D. A., Kaniskan, B., & McCoach, D. B. (2015). The performance of
+RMSEA in models with small degrees of freedom. *Sociological Methods &
+Research, 44*(3), 486–507. https://doi.org/10.1177/0049124114543236
+
+Putnick, D. L., & Bornstein, M. H. (2016). Measurement invariance conventions
+and reporting: The state of the art and future directions for psychological
+research. *Developmental Review, 41*, 71–90.
+https://doi.org/10.1016/j.dr.2016.06.004
+
+Rosseel, Y. (2012). lavaan: An R package for structural equation modeling.
+*Journal of Statistical Software, 48*(2), 1–36.
+https://doi.org/10.18637/jss.v048.i02
+
+Satorra, A., & Bentler, P. M. (2001). A scaled difference chi-square test
+statistic for moment structure analysis. *Psychometrika, 66*(4), 507–514.
+https://doi.org/10.1007/BF02296192
+
+Vandenberg, R. J., & Lance, C. E. (2000). A review and synthesis of the
+measurement invariance literature: Suggestions, practices, and
+recommendations for organizational research. *Organizational Research
+Methods, 3*(1), 4–70. https://doi.org/10.1177/109442810031002
+
+## Necessary condition analysis
+
+Dul, J. (2016). Necessary condition analysis (NCA): Logic and methodology of
+"necessary but not sufficient" causality. *Organizational Research Methods,
+19*(1), 10–52. https://doi.org/10.1177/1094428115584005
+
+Dul, J. (2026). *NCA: Necessary condition analysis* (R package version
+5.1.0) [Computer software]. https://CRAN.R-project.org/package=NCA
+
+Dul, J., van der Laan, E., & Kuik, R. (2020). A statistical significance test
+for necessary condition analysis. *Organizational Research Methods, 23*(2),
+385–395. https://doi.org/10.1177/1094428118795272
+
+Richter, N. F., Hauff, S., Ringle, C. M., Sarstedt, M., Kolev, A. E., &
+Schubring, S. (2023). How to apply necessary condition analysis in PLS-SEM.
+In H. Latan, J. F. Hair, Jr., & R. Noonan (Eds.), *Partial least squares path
+modeling: Basic concepts, methodological issues and applications* (2nd ed.,
+pp. 267–297). Springer. https://doi.org/10.1007/978-3-031-37772-3_10
+
+Richter, N. F., Schubring, S., Hauff, S., Ringle, C. M., & Sarstedt, M.
+(2020). When predictors of outcomes are necessary: Guidelines for the
+combined use of PLS-SEM and NCA. *Industrial Management & Data Systems,
+120*(12), 2243–2267. https://doi.org/10.1108/IMDS-11-2019-0638
+
 ## Multigroup analysis
 
 Henseler, J., Ringle, C. M., & Sarstedt, M. (2016). Testing measurement

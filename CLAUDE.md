@@ -2,12 +2,16 @@
 
 PLSsemLab is a jamovi module for PLS-SEM by Arquímedes De León Chacón
 (Archie), part of his "Lab" suite: AssumptionsLab, EGAnetLab, MokkenLab,
-FiabilityLab (all at github.com/ArchieJamDev). Status: 1.0.1, submitted to
-the jamovi library (DOI of all versions 10.5281/zenodo.24259622).
+FiabilityLab (all at github.com/ArchieJamDev). Status: 1.0.1 submitted to
+the jamovi library (main stays at 1.0.1 until jamovi answers); 1.1.0 (NCA,
+MGCFA) released 2026-11-23 from branch v1.1-nca-invariance, DOI
+10.5281/zenodo.24471195 (all versions: 10.5281/zenodo.24259622); 1.2.0
+(weighting approaches, jackknife, Mardia, scores, benchmarks, model
+comparison) on branch v1.2-weights-compare.
 
 ## Goal of v1
 
-Be the first PLS-SEM module for jamovi and meet, from the first release, six
+Be a complete PLS-SEM module for jamovi and meet, from the first release, six
 requirements of a complete PLS-SEM analysis (priority = most requested by
 users first): D2 HTMT/VIF with bootstrap CI · D3 higher-order constructs and
 interactions · D4 bootstrap speed/robustness · D5 syntax errors and help ·
@@ -131,6 +135,38 @@ carry every rule below in full.
   testOMF() fails with it.
 - `jmc --prepare` deletes `inst/i18n/es.json`; rebuild it with
   `--i18n . --update`, fill `es.po`, then `--build . --skip-deps`.
+- NCA (1.1.0, R/nca.R) is computed by the module: NCA 5.1.0's `p_peers()`
+  loops in R (10 000 permutations of 3 conditions: >15 min, not
+  cancellable; the module: ~11 s with checkpoints). Same definitions as
+  `nca_analysis()` defaults; validated in `validation/nca_equivalence.R`.
+  Details: a single distinct peer gives CR-FDH effect 0 (not NaN); the
+  package's purity metrics draw random numbers, so its permutation offsets
+  differ from the module's for the same seed (validation traces `p_test`
+  for the offsets); permutations often rebuild the same peers, so effects
+  tie with the observed one exactly and the package's raw `>=` drops some
+  ties by rounding noise: the module counts ties within 1e-10; the
+  package's bottleneck table prints one decimal. Scores = IPMA scores
+  (W / sd(x), normalized, 0-100 with the IPMA range). NCA is not in
+  DESCRIPTION (jmc bundles Suggests into the .jmo); CI installs it for the
+  validation only.
+- MGCFA (1.1.0, R/invariance.R): lavaan configural/metric/scalar on the
+  reflective constructs with 2+ indicators; MLR default; configural judged
+  by CFI and SRMR (RMSEA inflates with few df), steps by Chen (2007).
+- Weighting approaches (1.2.0, R/weights.R): every csem() call goes through
+  `.pl_csem_args()`. cSEM 0.7.1: SSQCORR/MINVAR give reversed signs (left
+  out); MAXVAR flips all signs in ~20% of bootstrap draws and
+  `.sign_change_option` does nothing for it (`.pl_fix_signs()` corrects per
+  construct); doIPMA is PLS-PM only; GSCA has no nonlinear terms; PCA fails
+  with single-indicator constructs; MAXVAR + disattenuation is absurd.
+- Jackknife (1.2.0): cSEM's sd is the jackknife SE, but its
+  CI_standard_t subtracts mean - estimate (bootstrap bias); the module uses
+  estimate +/- t(n-1) SE. Number_of_runs keeps 499; use
+  Number_of_observations.
+- cSEM 0.7.1 `predict(.test_data = ...)` returns the target residuals as
+  the benchmark's (benchmark not applied); its CV mode applies it. The
+  module refits the benchmark approach on each training fold.
+- Keep private users' names out of the repository (credit only with their
+  consent).
 
 ## Working conventions
 

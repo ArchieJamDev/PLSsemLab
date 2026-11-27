@@ -90,10 +90,9 @@ noticesOf <- function(analysis) {
 
 # The equivalent R code as plain text (the output is Html with a <pre>).
 # ES: El código R equivalente como texto (la salida es Html con <pre>).
-reproCode <- function(a) {
-    code <- gsub("<[^>]+>", "", a$results$reproducibilityCode$content)
-    gsub("&gt;", ">", gsub("&lt;", "<", gsub("&amp;", "&", code, fixed = TRUE), fixed = TRUE), fixed = TRUE)
-}
+# The code is a Preformatted (plain text) result: it is returned as it is.
+# ES: El código es un resultado Preformatted (texto plano): se devuelve tal cual.
+reproCode <- function(a) a$results$reproducibilityCode$content
 
 # Runs a direct cSEM call with R's default random number generator, as the
 # module does (a direct cSEM bootstrap in an earlier test leaves

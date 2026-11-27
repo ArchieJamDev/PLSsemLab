@@ -272,11 +272,28 @@ children:
           - type: ComboBox
             name: estimator
           - type: ComboBox
+            name: weightApproach
+          - type: ComboBox
             name: innerScheme
+            enable: (weightApproach:pls)
           - type: ComboBox
             name: indicatorScale
           - type: ComboBox
             name: missing
+  - type: CollapseBox
+    label: Random Seed
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: TextBox
+            name: bootSeed
+            format: number
+            enable: (bootstrap || fitTest || predictRun || mgaRun || ncaRun)
+          - type: Label
+            label: Used by the bootstrap, the model fit test, prediction (PLSpredict and CVPAT), multigroup analysis (MICOM and MGA) and the NCA permutations. The same seed gives the same results.
   - type: CollapseBox
     label: Bootstrap
     collapsed: true
@@ -287,14 +304,13 @@ children:
         children:
           - type: CheckBox
             name: bootstrap
+          - type: ComboBox
+            name: resampleMethod
+            enable: (bootstrap)
           - type: TextBox
             name: bootReps
             format: number
-            enable: (bootstrap)
-          - type: TextBox
-            name: bootSeed
-            format: number
-            enable: (bootstrap || fitTest || predictRun || mgaRun)
+            enable: (bootstrap && resampleMethod:bootstrap)
           - type: TextBox
             name: ciLevel
             format: number
@@ -317,8 +333,6 @@ children:
             name: fitLevel
             format: number
             enable: (fitTest)
-          - type: Label
-            label: The seed is the one in the Bootstrap box.
   - type: CollapseBox
     label: Prediction
     collapsed: true
@@ -337,8 +351,11 @@ children:
             name: predictReps
             format: number
             enable: (predictRun)
-          - type: Label
-            label: The seed is the one in the Bootstrap box.
+          - type: ComboBox
+            name: predictBenchmark
+            enable: (predictRun)
+          - type: CheckBox
+            name: compareRun
       - type: Supplier
         label: Paths of the Model
         name: pathSupplier
@@ -350,14 +367,14 @@ children:
           change: './plssem.events::onChangeConstructSupplier'
         children:
           - type: TargetLayoutBox
-            label: Left Out of the Competing Model (CVPAT)
+            label: Left Out of the Competing Model
             children:
               - type: ListBox
                 name: cvpatDrop
                 height: small
                 isTarget: true
                 valueFilter: unique
-                enable: (predictRun)
+                enable: (predictRun || compareRun)
                 template:
                   type: TermLabel
   - type: CollapseBox
@@ -372,15 +389,40 @@ children:
             name: ipma
           - type: ComboBox
             name: ipmaRange
-            enable: (ipma)
+            enable: (ipma || ncaRun)
           - type: TextBox
             name: ipmaMin
             format: number
-            enable: (ipma && ipmaRange:manual)
+            enable: ((ipma || ncaRun) && ipmaRange:manual)
           - type: TextBox
             name: ipmaMax
             format: number
-            enable: (ipma && ipmaRange:manual)
+            enable: ((ipma || ncaRun) && ipmaRange:manual)
+  - type: CollapseBox
+    label: Necessary Condition Analysis
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: CheckBox
+            name: ncaRun
+          - type: TextBox
+            name: ncaPerm
+            format: number
+            enable: (ncaRun)
+          - type: ComboBox
+            name: ncaCeiling
+            enable: (ncaRun)
+          - type: CheckBox
+            name: ncaBottleneck
+            enable: (ncaRun)
+          - type: CheckBox
+            name: ncaPlots
+            enable: (ncaRun)
+          - type: Label
+            label: The range of the scores is the one of the Importance-Performance Map.
   - type: CollapseBox
     label: Multigroup Analysis
     collapsed: true
@@ -413,8 +455,12 @@ children:
           - type: ComboBox
             name: mgaAdjust
             enable: (mgaRun)
-          - type: Label
-            label: The seed is the one in the Bootstrap box.
+          - type: CheckBox
+            name: mgcfa
+            enable: (mgaRun)
+          - type: ComboBox
+            name: mgcfaEstimator
+            enable: (mgaRun && mgcfa)
   - type: CollapseBox
     label: Plots
     collapsed: true
@@ -431,101 +477,92 @@ children:
             name: htmtPlot
           - type: CheckBox
             name: moderationPlot
-  - type: CollapseBox
-    label: Path Diagram
-    collapsed: true
-    children:
-      - type: LayoutBox
-        margin: large
-        stretchFactor: 1
-        cell:
-          column: 0
-          row: 0
+      - type: CollapseBox
+        label: Path Diagram
+        collapsed: true
         children:
-          - type: Label
-            label: Layout
+          - type: LayoutBox
+            margin: large
+            stretchFactor: 1
+            cell:
+              column: 0
+              row: 0
             children:
-              - type: ComboBox
-                name: diagramLayout
-                enable: (pathDiagram)
-              - type: TextBox
-                name: diagramTitle
-                format: string
-                enable: (pathDiagram)
-              - type: CheckBox
-                name: diagramIndicators
-                enable: (pathDiagram)
-              - type: CheckBox
-                name: diagramCaption
-                enable: (pathDiagram)
-      - type: LayoutBox
-        margin: large
-        stretchFactor: 1
-        cell:
-          column: 0
-          row: 1
-        children:
-          - type: Label
-            label: Nodes and Labels
+              - type: Label
+                label: Layout
+                children:
+                  - type: ComboBox
+                    name: diagramLayout
+                    enable: (pathDiagram)
+                  - type: TextBox
+                    name: diagramTitle
+                    format: string
+                    enable: (pathDiagram)
+                  - type: CheckBox
+                    name: diagramIndicators
+                    enable: (pathDiagram)
+                  - type: CheckBox
+                    name: diagramCaption
+                    enable: (pathDiagram)
+          - type: LayoutBox
+            margin: large
+            stretchFactor: 1
+            cell:
+              column: 0
+              row: 1
             children:
-              - type: TextBox
-                name: latentSize
-                format: number
-                enable: (pathDiagram)
-              - type: TextBox
-                name: manifestSize
-                format: number
-                enable: (pathDiagram && diagramIndicators)
-              - type: TextBox
-                name: nodeLabelSize
-                format: number
-                enable: (pathDiagram)
-              - type: ComboBox
-                name: latentFill
-                enable: (pathDiagram)
-              - type: ComboBox
-                name: manifestFill
-                enable: (pathDiagram && diagramIndicators)
-      - type: LayoutBox
-        margin: large
-        stretchFactor: 1
-        cell:
-          column: 0
-          row: 2
-        children:
-          - type: Label
-            label: Arrows
+              - type: Label
+                label: Nodes and Labels
+                children:
+                  - type: TextBox
+                    name: latentSize
+                    format: number
+                    enable: (pathDiagram)
+                  - type: TextBox
+                    name: manifestSize
+                    format: number
+                    enable: (pathDiagram && diagramIndicators)
+                  - type: TextBox
+                    name: nodeLabelSize
+                    format: number
+                    enable: (pathDiagram)
+          - type: LayoutBox
+            margin: large
+            stretchFactor: 1
+            cell:
+              column: 0
+              row: 2
             children:
-              - type: ComboBox
-                name: edgeWidth
-                enable: (pathDiagram)
-              - type: ComboBox
-                name: edgeColor
-                enable: (pathDiagram)
-              - type: CheckBox
-                name: nonsigDashed
-                enable: (pathDiagram && bootstrap)
-      - type: LayoutBox
-        margin: large
-        stretchFactor: 1
-        cell:
-          column: 0
-          row: 3
-        children:
-          - type: Label
-            label: Coefficients
+              - type: Label
+                label: Arrows
+                children:
+                  - type: ComboBox
+                    name: edgeWidth
+                    enable: (pathDiagram)
+                  - type: CheckBox
+                    name: nonsigDashed
+                    enable: (pathDiagram && bootstrap)
+          - type: LayoutBox
+            margin: large
+            stretchFactor: 1
+            cell:
+              column: 0
+              row: 3
             children:
-              - type: CheckBox
-                name: edgeLabels
-                enable: (pathDiagram)
-              - type: TextBox
-                name: edgeLabelSize
-                format: number
-                enable: (pathDiagram && edgeLabels)
-              - type: TextBox
-                name: edgeDigits
-                format: number
-                enable: (pathDiagram && edgeLabels)
+              - type: Label
+                label: Coefficients
+                children:
+                  - type: CheckBox
+                    name: edgeLabels
+                    enable: (pathDiagram)
+                  - type: TextBox
+                    name: edgeLabelSize
+                    format: number
+                    enable: (pathDiagram && edgeLabels)
+                  - type: TextBox
+                    name: edgeDigits
+                    format: number
+                    enable: (pathDiagram && edgeLabels)
   - type: CollapseBox
     label: Measurement Model
     collapsed: true
@@ -538,6 +575,18 @@ children:
             name: omegaCfa
           - type: CheckBox
             name: fornellLarcker
+          - type: CheckBox
+            name: mardia
+  - type: CollapseBox
+    label: Save
+    collapsed: true
+    children:
+      - type: LayoutBox
+        margin: large
+        stretchFactor: 1
+        children:
+          - type: Output
+            name: scoresOut
   - type: CollapseBox
     label: Report Content
     collapsed: true

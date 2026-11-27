@@ -79,6 +79,18 @@ jobs:
       - name: Check the values published by Hair et al.
         run: Rscript validation/hair_published.R
 
+      # The NCA (1.1.0) is computed by the module itself; every number must
+      # equal the NCA package's. NCA is installed here only, not declared in
+      # DESCRIPTION, so jmc does not bundle it (and its plotting
+      # dependencies) in the .jmo.
+      # ES: El NCA (1.1.0) lo calcula el módulo; cada número debe ser igual
+      # al del paquete NCA, que se instala solo aquí (no en DESCRIPTION) para
+      # que jmc no lo empaquete en el .jmo.
+      - name: Check numerical equivalence with the NCA package
+        run: |
+          Rscript -e "install.packages('NCA', repos = 'https://cloud.r-project.org')"
+          Rscript validation/nca_equivalence.R
+
       - name: Keep the validation results
         if: always()
         uses: actions/upload-artifact@v4

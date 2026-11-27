@@ -12,6 +12,10 @@ on:
       tag:
         description: "Version tag, e.g. v0.7.5"
         required: true
+      jmo_from:
+        description: "Pre-release that holds the Windows .jmo"
+        required: false
+        default: "dev-build-windows"
 
 permissions:
   contents: write
@@ -28,7 +32,7 @@ jobs:
         run: |
           VER="${TAG#v}"
           grep -q "version: $VER" jamovi/0000.yaml || { echo "jamovi/0000.yaml is not $VER"; exit 1; }
-          gh release download dev-build-windows -p "PLSsemLab_${VER}_win64.jmo"
+          gh release download "${{ inputs.jmo_from }}" -p "PLSsemLab_${VER}_win64.jmo"
           gh release create "$TAG" "PLSsemLab_${VER}_win64.jmo" --target "$GITHUB_SHA" \
             --title "PLSsemLab $VER" --notes-file ".github/release-notes/$TAG.md"
       - name: Report the Zenodo DOI

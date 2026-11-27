@@ -164,7 +164,7 @@ test_that("the bootstrap record is also a numeric table", {
     expect_equal(bs$block, 200)
     expect_equal(bs$level, 0.95)
     expect_true(bs$admissible <= bs$drawn && bs$admissible > 0)
-    expect_match(a$results$bootStatus$content, paste(bs$admissible, "admissible"), fixed = TRUE)
+    expect_false(a$results$bootStatus$visible)  # the record is the table (jamovi review)
 })
 
 test_that("the caches stay small: entries and bytes are capped", {

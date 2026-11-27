@@ -39,13 +39,26 @@
     NULL
 }
 
+# Mean replacement inside one fold: the means come from the training cases
+# only and fill the missing values of both the training and the held-out cases.
+# ES: Reemplazo por la media dentro de un pliegue: las medias salen solo de los
+# casos de entrenamiento y rellenan los perdidos de entrenamiento y de prueba.
+.pl_fold_fill <- function(train, test) {
+    for (v in names(train)) {
+        m <- mean(train[[v]], na.rm = TRUE)
+        train[[v]][is.na(train[[v]])] <- m
+        test[[v]][is.na(test[[v]])] <- m
+    }
+    list(train = train, test = test)
+}
+
 # Cross-validated residuals. fit: the full-sample cSEM fit; refit(data)
 # estimates the same model on other data (alt_refit, optional, a competing
 # model for CVPAT). Returns, per repetition, n x p matrices (rows in the
 # order of the data) of residuals for PLS, LM, IA and ALT.
 # ES: Residuos de validación cruzada, por repetición, para PLS, LM, IA y ALT.
 .pl_cv_residuals <- function(fit, d, refit, folds, reps, seed, alt_refit = NULL,
-                             checkpoint = function() NULL) {
+                             checkpoint = function() NULL, bench_refit = NULL, raw = NULL) {
     restore_rng <- .pl_rng_guard()
     on.exit(restore_rng(), add = TRUE)
     ids <- rownames(d)
@@ -66,6 +79,16 @@
             te <- match(rownames(cv[[k]]), ids)
             train <- d[-te, , drop = FALSE]
             test <- d[te, , drop = FALSE]
+            # mean replacement (1.2.0 fix): each fold is filled with the means of
+            # its training cases only, so held-out cases do not feed their own
+            # imputation
+            # ES: reemplazo por la media (corrección 1.2.0): cada pliegue se rellena
+            # solo con las medias de sus casos de entrenamiento
+            if (!is.null(raw)) {
+                filled <- .pl_fold_fill(raw[-te, , drop = FALSE], raw[te, , drop = FALSE])
+                train <- filled$train
+                test <- filled$test
+            }
             fk <- refit(train)
             if (sum(cSEM::verify(fk)) != 0) inadmissible <- inadmissible + 1
             pk <- one(fk, test)
@@ -77,7 +100,16 @@
                 ak <- one(alt_refit(train), test)
                 alt <- ak$t[, colnames(pk$t), drop = FALSE]
             }
-            rows[[k]] <- list(te = te, t = pk$t, b = pk$b, ia = ia, alt = alt)
+            # extra benchmark (1.2.0): the same model with another
+            # weighting approach, on the same folds
+            # ES: referencia adicional (1.2.0): el mismo modelo con otro
+            # enfoque de ponderación, en los mismos pliegues
+            bm <- NULL
+            if (!is.null(bench_refit)) {
+                bk <- one(bench_refit(train), test)
+                bm <- bk$t[, colnames(pk$t), drop = FALSE]
+            }
+            rows[[k]] <- list(te = te, t = pk$t, b = pk$b, ia = ia, alt = alt, bm = bm)
         }
         te <- unlist(lapply(rows, `[[`, "te"))
         o <- order(te)
@@ -89,7 +121,7 @@
             colnames(m) <- colnames(rows[[1]]$t)
             m
         }
-        out[[r]] <- list(PLS = stack("t"), LM = stack("b"), IA = stack("ia"), ALT = stack("alt"))
+        out[[r]] <- list(PLS = stack("t"), LM = stack("b"), IA = stack("ia"), ALT = stack("alt"), BM = stack("bm"))
     }
     list(res = out, inadmissible = inadmissible, folds = folds, reps = reps, seed = seed)
 }
@@ -150,8 +182,13 @@
         mae_pls = colMeans(abs(x$PLS)), mae_lm = colMeans(abs(x$LM)),
         skew = skew(x$PLS),
         stringsAsFactors = FALSE))
+    if (!is.null(cv$res[[1]]$BM))
+        for (r in seq_along(per)) {
+            per[[r]]$rmse_bm <- sqrt(colMeans(cv$res[[r]]$BM^2))
+            per[[r]]$mae_bm <- colMeans(abs(cv$res[[r]]$BM))
+        }
     m <- per[[1]]
-    for (v in c("q2", "rmse_pls", "rmse_lm", "mae_pls", "mae_lm", "skew"))
+    for (v in intersect(c("q2", "rmse_pls", "rmse_lm", "mae_pls", "mae_lm", "skew", "rmse_bm", "mae_bm"), names(m)))
         m[[v]] <- rowMeans(sapply(per, `[[`, v))
     # The metric that compares PLS with LM (Shmueli et al., 2019): RMSE, or
     # MAE when the prediction errors are clearly asymmetric (|skewness| > 1,
@@ -195,7 +232,7 @@
     loss <- function(which, ind) {
         rowMeans(sapply(cv$res, function(x) rowMeans(x[[which]][, ind, drop = FALSE]^2)))
     }
-    benches <- c("IA", "LM", if (!is.null(cv$res[[1]]$ALT)) "ALT")
+    benches <- c("IA", "LM", if (!is.null(cv$res[[1]]$ALT)) "ALT", if (!is.null(cv$res[[1]]$BM)) "BM")
     rows <- list()
     for (g in names(groups)) for (b in benches) {
         lp <- loss("PLS", groups[[g]])
@@ -203,7 +240,9 @@
         D <- lp - lb
         n <- length(D)
         tt <- mean(D) / sqrt(stats::var(D) / n)
-        p <- if (b == "ALT") 2 * stats::pt(-abs(tt), n - 1) else stats::pt(tt, n - 1)
+        # two-sided against a competing model or another weighting approach
+        # ES: bilateral frente a un modelo competidor u otro enfoque
+        p <- if (b %in% c("ALT", "BM")) 2 * stats::pt(-abs(tt), n - 1) else stats::pt(tt, n - 1)
         rows[[length(rows) + 1]] <- data.frame(group = g, bench = b, loss_pls = mean(lp), loss_bench = mean(lb),
                                                diff = mean(D), t = tt, p = p, stringsAsFactors = FALSE)
     }
@@ -217,4 +256,42 @@
     labs <- paste(paths$from, "\u2192", paths$to)
     sel <- unique(unlist(lapply(terms, function(t) if (length(t) == 1) t else NULL)))
     paths[labs %in% sel, , drop = FALSE]
+}
+
+# Model comparison (1.2.0). Criteria per endogenous construct: R² and
+# adjusted R² (higher is better) and cSEM's information criteria of the
+# structural equations (lower is better): AIC, AICu, BIC, GM and HQ; Sharma
+# et al. (2019, 2021) recommend BIC and GM for choosing among PLS-SEM models.
+# SRMR of both models (NA when cSEM cannot compute it, e.g. with an
+# interaction). A construct the competing model leaves without predictors
+# has no criteria there (NA).
+# ES: Comparación de modelos (1.2.0). Criterios por constructo endógeno: R²
+# y R² ajustado (mayor es mejor) y los criterios de información de las
+# ecuaciones estructurales (menor es mejor): AIC, AICu, BIC, GM y HQ.
+.PL_COMPARE <- c("R2", "R2adj", "AIC", "AICu", "BIC", "GM", "HQ")
+
+.pl_compare <- function(fit1, fit2, cmap, endo) {
+    crit <- function(f) cSEM::calculateModelSelectionCriteria(f, .by_equation = TRUE, .only_structural = TRUE)
+    c1 <- crit(fit1)
+    c2 <- crit(fit2)
+    val <- function(f, cc, k, id) {
+        v <- switch(k, R2 = f$Estimates$R2[id], R2adj = f$Estimates$R2adj[id], cc[[k]][id])
+        if (is.null(v) || length(v) == 0) NA_real_ else unname(v)
+    }
+    rows <- list()
+    for (cn in endo) {
+        id <- cmap[[cn]]
+        for (k in .PL_COMPARE) {
+            a <- val(fit1, c1, k, id)
+            b <- val(fit2, c2, k, id)
+            higher <- k %in% c("R2", "R2adj")
+            pref <- if (is.na(a) || is.na(b)) NA_character_
+                    else if (isTRUE(all.equal(a, b))) "equal"
+                    else if ((a > b) == higher) "main" else "competing"
+            rows[[length(rows) + 1]] <- data.frame(construct = cn, criterion = k, main = a, competing = b,
+                                                   preferred = pref, stringsAsFactors = FALSE)
+        }
+    }
+    srmr <- function(f) tryCatch(unname(cSEM::calculateSRMR(f)), error = function(e) NA_real_)
+    list(table = do.call(rbind, rows), srmr = c(srmr(fit1), srmr(fit2)))
 }

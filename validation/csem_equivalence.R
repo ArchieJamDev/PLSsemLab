@@ -307,7 +307,7 @@ sc <- "8 simple, multigroup"
 dg <- corp
 dg$servicetype <- factor(dg$servicetype)
 a <- runModule(dg, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
-               groupVar = "servicetype", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, bootSeed = 11)
+               groupVar = "servicetype", mgaRun = TRUE, mgaPerm = 199, mgaBoot = 199, bootSeed = 11, mgcfa = TRUE)
 dd <- meanReplaced(dg[, c(corpVars, "servicetype")])
 dd$PLgroup <- sprintf("G%02d", as.integer(dd$servicetype))
 dd$servicetype <- NULL
@@ -327,6 +327,21 @@ record(sc, "path differences", dt$diff, mg$Chin$Test_statistic[[1]])
 record(sc, "permutation p", dt$pPerm, mg$Chin$P_value$none[[1]])
 record(sc, "PLS-MGA P(first <= second)", dt$pOne, mg$Henseler$P_value$none[[1]])
 record(sc, "PLS-MGA two-sided p = 2 min(P, 1 - P)", dt$pHens, pmin(1, 2 * pmin(dt$pOne, 1 - dt$pOne)))
+# Multigroup CFA of the reflective constructs with two or more indicators
+# (1.1.0), lavaan with MLR, written here by hand
+# ES: AFC multigrupo de los constructos reflectivos (1.1.0), lavaan con MLR
+cfaSyn <- "COMP =~ comp_1 + comp_2 + comp_3\nLIKE =~ like_1 + like_2 + like_3\nCUSL =~ cusl_1 + cusl_2 + cusl_3"
+cf <- lapply(list(character(0), "loadings", c("loadings", "intercepts")), function(eq)
+    lavaan::cfa(cfaSyn, data = dd, group = "PLgroup", estimator = "MLR", meanstructure = TRUE, group.equal = eq))
+ct <- tab(a, "mgaSection", "mgcfa")
+fmc <- sapply(cf, lavaan::fitMeasures, c("chisq.scaled", "df.scaled", "cfi.robust", "rmsea.robust", "srmr"))
+record(sc, "MGCFA scaled chi-square", ct$chisq, fmc["chisq.scaled", ])
+record(sc, "MGCFA df", ct$df, fmc["df.scaled", ])
+record(sc, "MGCFA robust CFI, robust RMSEA, SRMR", c(ct$cfi, ct$rmsea, ct$srmr),
+       c(fmc["cfi.robust", ], fmc["rmsea.robust", ], fmc["srmr", ]))
+record(sc, "MGCFA scaled chi-square differences",
+       ct$dchisq[2:3], c(lavaan::lavTestLRT(cf[[1]], cf[[2]])[["Chisq diff"]][2],
+                         lavaan::lavTestLRT(cf[[2]], cf[[3]])[["Chisq diff"]][2]))
 
 # -----------------------------------------------------------------------------
 # 9. Higher-order construct, disjoint two-stage approach (Sarstedt et al.,
@@ -384,6 +399,70 @@ f2t <- tab(a, "structuralSection", "f2")
 record(sc, "f2 with the interaction term", f2t$f2,
        mapply(function(fr, to) cSEM::calculatef2(fi)[to, fr], sub(" × ", ".", f2t$from, fixed = TRUE), f2t$to))
 record(sc, "R2", tab(a, "structuralSection", "r2")$r2, fi$Estimates$R2["LOY"])
+
+# -----------------------------------------------------------------------------
+# 11. Version 1.2.0: weighting approaches (GSCA, unit weights), jackknife
+# intervals, Mardia's measures, the comparison with a competing model and the
+# extra PLSpredict benchmark, against direct calls.
+# ES: 11. Versión 1.2.0: enfoques de ponderación, intervalos jackknife,
+# medidas de Mardia, comparación con un modelo competidor y referencia
+# adicional de PLSpredict, frente a llamadas directas.
+# -----------------------------------------------------------------------------
+for (ap in c("gsca", "unit")) {
+    sc <- sprintf("11 simple, weighting approach %s", ap)
+    a <- runModule(corp, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
+                   weightApproach = ap)
+    f <- cSEM::csem(corpMean, syntaxSimple, .approach_weights = if (ap == "gsca") "GSCA" else "unit", .disattenuate = FALSE)
+    pt <- tab(a, "structuralSection", "paths")
+    record(sc, "path coefficients", pt$estimate, mapply(function(fr, to) f$Estimates$Path_estimates[to, fr], pt$from, pt$to))
+    lt <- tab(a, "measurementSection", "measurement")
+    record(sc, "loadings", lt$loading, mapply(function(cn, v) f$Estimates$Loading_estimates[cn, v], lt$construct, lt$indicator))
+}
+sc <- "11 simple, jackknife"
+a <- runModule(corp, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
+               bootstrap = TRUE, resampleMethod = "jackknife")
+f <- cSEM::csem(corpMean, syntaxSimple, .PLS_modes = modesSimple, .disattenuate = FALSE)
+j <- quiet(cSEM::resamplecSEMResults(f, .resample_method = "jackknife"))
+pt <- tab(a, "structuralSection", "paths")
+record(sc, "jackknife SE of the paths = cSEM's sd", pt$se, unname(cSEM::infer(j, .quantity = "sd")$Path_estimates$sd))
+pe <- j$Estimates$Estimates_resample$Estimates1$Path_estimates
+nj <- nrow(pe$Resampled)
+record(sc, "t interval: estimate - t(n - 1) SE", pt$lower,
+       unname(pe$Original - stats::qt(0.975, nj - 1) * cSEM::infer(j, .quantity = "sd")$Path_estimates$sd))
+sc <- "11 simple, Mardia"
+a <- runModule(corp, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean", mardia = TRUE)
+mt <- tab(a, "measurementSection", "mardia")
+X <- corpMean[, c(paste0("comp_", 1:3), paste0("like_", 1:3), "cusa", paste0("cusl_", 1:3))]
+ps <- psych::mardia(X, plot = FALSE)
+nm <- nrow(X)
+record(sc, "b1 and b2 (psych::mardia, denominator n - 1, rescaled)", mt$value * ((nm - 1) / nm)^c(3, 2), c(ps$b1p, ps$b2p))
+sc <- "11 simple, model comparison"
+a <- runModule(corp, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
+               compareRun = TRUE, cvpatDrop = list("COMP \u2192 CUSL"))
+ct <- tab(a, "compareSection", "compare")
+f2 <- cSEM::csem(corpMean, sub("CUSL ~ COMP + LIKE + CUSA", "CUSL ~ LIKE + CUSA", syntaxSimple, fixed = TRUE),
+                 .PLS_modes = modesSimple, .disattenuate = FALSE)
+c1 <- cSEM::calculateModelSelectionCriteria(f, .by_equation = TRUE, .only_structural = TRUE)
+c2 <- cSEM::calculateModelSelectionCriteria(f2, .by_equation = TRUE, .only_structural = TRUE)
+k <- ct$construct == "CUSL" & grepl("^(BIC|GM)", ct$criterion)
+record(sc, "BIC and GM of CUSL, main model", ct$main[k], c(c1$BIC["CUSL"], c1$GM["CUSL"]))
+record(sc, "BIC and GM of CUSL, competing model", as.numeric(ct$competing[k]), c(c2$BIC["CUSL"], c2$GM["CUSL"]))
+record(sc, "SRMR of both models", c(ct$main[ct$criterion == "SRMR"], as.numeric(ct$competing[ct$criterion == "SRMR"])),
+       c(cSEM::calculateSRMR(f), cSEM::calculateSRMR(f2)))
+sc <- "11 simple, PLSpredict GSCA benchmark"
+# Same data as cSEM (corpMean, no missing values): since 1.2.0 the module fills each
+# fold from its training means, so the raw data with NAs would not be comparable.
+# ES: Mismos datos que cSEM (corpMean, sin NA): desde 1.2.0 el módulo imputa cada
+# partición con las medias de su entrenamiento, así que los datos con NA no son comparables.
+a <- runModule(corpMean, reflective = reflSimple, formative = list(), structural = structSimple, missing = "mean",
+               predictRun = TRUE, predictFolds = 5, predictReps = 1, predictBenchmark = "gsca", bootSeed = 2026)
+pr <- tab(a, "predictSection", "predict")
+# cSEM 0.7.1 applies the benchmark only in its cross-validation mode
+# (with .test_data it returns the target residuals as the benchmark's)
+# ES: cSEM 0.7.1 aplica la referencia solo en su modo de validación cruzada
+ref <- withDefaultRng(quiet(cSEM::predict(f, .benchmark = "GSCA", .cv_folds = 5, .r = 1, .seed = 2026)))$Prediction_metrics
+record(sc, "RMSE and MAE of the GSCA benchmark", c(pr$rmseBench, pr$maeBench),
+       c(ref$RMSE_benchmark[match(pr$indicator, ref$Name)], ref$MAE_benchmark[match(pr$indicator, ref$Name)]), tol = 1e-8)
 
 # -----------------------------------------------------------------------------
 # Results.

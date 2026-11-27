@@ -108,13 +108,20 @@ test_that("a single-indicator construct keeps its row, marked as not computable"
     expect_true(all(is.finite(h$htmt)))
 })
 
-test_that("tables that do not apply stay in place with a notice", {
+test_that("tables the model does not use are hidden; ones that apply keep their place", {
     a <- runPlssem(corpRepData(), simpleModel())
-    expect_true(a$results$measurementSection$vif$visible)
-    expect_match(notApplyNotice(a, "measurementSection", "vif"), "no formative construct")
-    expect_match(notApplyNotice(a, "measurementSection", "hocMeasurement"), "no higher-order constructs")
-    expect_match(notApplyNotice(a, "structuralSection", "simpleSlopes"), "no interaction term")
+    # not used by this model: hidden, no notice (jamovi review)
+    # ES: no usadas por este modelo: ocultas, sin aviso (revisión de jamovi)
+    expect_false(a$results$measurementSection$vif$visible)
+    expect_false(a$results$measurementSection$hocMeasurement$visible)
+    expect_false(a$results$structuralSection$simpleSlopes$visible)
+    expect_null(notApplyNotice(a, "measurementSection", "vif"))
+    expect_null(notApplyNotice(a, "measurementSection", "hocMeasurement"))
+    expect_null(notApplyNotice(a, "structuralSection", "simpleSlopes"))
+    # applies to the model: kept, and no notice when it can be computed
+    # ES: aplica al modelo: se conserva, y sin aviso si se puede calcular
     expect_null(notApplyNotice(a, "measurementSection", "htmt"))
+    expect_true(a$results$structuralSection$mediation$visible)
     expect_null(notApplyNotice(a, "structuralSection", "mediation"))
     expect_false(a$results$measurementSection$fornell$visible)
     expect_true(a$results$measurementSection$htmt$visible)
@@ -143,11 +150,14 @@ test_that("a model without reflective constructs explains why there is no reliab
               formative = list(block("QUAL", paste0("qual_", 1:8)), block("PERF", paste0("perf_", 1:5))),
               structural = list(srow("PERF", "QUAL"), srow("QUAL")))
     a <- runPlssem(corpRepData(), m)
-    expect_true(a$results$measurementSection$reliability$visible)
-    expect_match(notApplyNotice(a, "measurementSection", "reliability"), "no reflective construct")
-    expect_match(notApplyNotice(a, "measurementSection", "htmt"), "this model has 0")
-    expect_match(notApplyNotice(a, "structuralSection", "mediation"), "no chain")
-    expect_true(any(grepl("no reflective constructs", noticesOf(a))))
+    # reliability and HTMT do not apply: hidden, no notice (jamovi review)
+    # ES: fiabilidad y HTMT no aplican: ocultas, sin aviso (revisión de jamovi)
+    expect_false(a$results$measurementSection$reliability$visible)
+    expect_false(a$results$measurementSection$htmt$visible)
+    expect_null(notApplyNotice(a, "measurementSection", "reliability"))
+    expect_null(notApplyNotice(a, "measurementSection", "htmt"))
+    expect_false(a$results$structuralSection$mediation$visible)
+    expect_null(notApplyNotice(a, "structuralSection", "mediation"))
     expect_equal(nrow(a$results$measurementSection$vif$asDF), 13)
     # the plots that do not apply also stay, with a notice
     # ES: los gráficos que no aplican también se quedan, con un aviso

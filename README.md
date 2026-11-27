@@ -8,11 +8,37 @@
 # PLSsemLab
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24259622.svg)](https://doi.org/10.5281/zenodo.24259622)
+[![Release](https://img.shields.io/github/v/release/ArchieJamDev/PLSsemLab?label=release&color=4A86E0)](https://github.com/ArchieJamDev/PLSsemLab/releases/latest)
 
 A jamovi module for partial least squares structural equation modeling
 (PLS-SEM) with the cSEM R package, with guided interpretation in the style
 of AssumptionsLab, EGAnetLab and MokkenLab: every result says what happened,
 why, what it means and what to do next, in English and Spanish.
+
+<p align="center">
+  <img src="docs/screenshots/demo.gif" width="100%" alt="PLSsemLab demo">
+</p>
+
+<details>
+<summary><strong>Screenshots</strong></summary>
+
+<p align="center">
+  <img src="docs/screenshots/model-boxes.png" width="90%" alt="Model built from boxes, with the findings">
+</p>
+<p align="center">
+  <img src="docs/screenshots/measurement-higher-order.png" width="90%" alt="Higher-order constructs and measurement model table">
+</p>
+<p align="center">
+  <img src="docs/screenshots/estimation-prediction.png" width="90%" alt="Estimation, bootstrap, model fit, prediction and ceiling plots">
+</p>
+<p align="center">
+  <img src="docs/screenshots/structural-ipma-nca.png" width="90%" alt="Path diagram, importance-performance map, NCA and multigroup options">
+</p>
+<p align="center">
+  <img src="docs/screenshots/diagram-loadings.png" width="90%" alt="Path diagram layout and loadings plot">
+</p>
+
+</details>
 
 ## What it does
 
@@ -53,8 +79,8 @@ why, what it means and what to do next, in English and Spanish.
 
 The jamovi library already includes CompositeSEM, which also uses cSEM. On
 the same engine, PLSsemLab adds MICOM, CVPAT, the importance-performance map,
-f² and VIF for the structural paths, a reading guide and an interpretation
-for every result, Spanish and English, and the equivalent R code.
+a reading guide and an interpretation
+for every result, in Spanish and English, and the equivalent R code.
 
 Prediction figures can differ between the two modules for a known reason:
 PLSsemLab fits its linear benchmark (LM) with an intercept, as Hair et al.
@@ -116,10 +142,10 @@ If you use PLSsemLab, please cite it:
 
 > Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for partial
 > least squares structural equation modeling* (Version 1.2.0) [Computer
-> software]. Zenodo. https://doi.org/10.5281/zenodo.24585551
+> software]. Zenodo. https://doi.org/10.5281/zenodo.24259622
 
-The DOI https://doi.org/10.5281/zenodo.24259622 covers all versions and
-always resolves to the latest one.
+That is the general DOI: it covers all versions and always resolves to the
+latest one. For the exact 1.2.0 record, use https://doi.org/10.5281/zenodo.24585551.
 
 The metadata are also in `CITATION.cff` (GitHub's *Cite this repository*
 button). Please cite cSEM and the methods you
@@ -139,8 +165,7 @@ inglés.
 con los enfoques de ponderación PLS-PM, GSCA, SUMCORR, MAXVAR, PCA o pesos
 unitarios; normalidad multivariada de Mardia; puntuaciones guardadas en los
 datos; bootstrap o jackknife; comparación lado a lado con un modelo
-competidor;
-fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
+competidor; fiabilidad y validez (HTMT con intervalos bootstrap); modelo estructural con
 bootstrap por bloques; constructos de orden superior e interacciones con
 pendientes simples y Johnson-Neyman; ajuste global por bootstrap (SRMR, d_G,
 d_L); PLSpredict, CVPAT, mediación, IPMA, análisis de condición necesaria
@@ -163,15 +188,16 @@ conjunto usar para probar cada opción.
 
 **Cita:** Chacón Chacón, A. D. L. (2026). *PLSsemLab: A jamovi module for
 partial least squares structural equation modeling* (Versión 1.2.0)
-[Software]. Zenodo. https://doi.org/10.5281/zenodo.24585551 (el DOI
-https://doi.org/10.5281/zenodo.24259622 abarca todas las versiones). Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
+[Software]. Zenodo. https://doi.org/10.5281/zenodo.24259622 (DOI general: abarca
+todas las versiones y siempre apunta a la última). Para el registro exacto de la
+1.2.0: https://doi.org/10.5281/zenodo.24585551. Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
 
 ## Frente a CompositeSEM
 
 La biblioteca de jamovi ya incluye CompositeSEM, que también usa cSEM. Sobre
 el mismo motor, PLSsemLab añade MICOM, CVPAT, el mapa de importancia-desempeño,
-f² y VIF de las rutas estructurales, una guía de lectura e interpretación de
-cada resultado, español e inglés, y el código R equivalente.
+una guía de lectura e interpretación de
+cada resultado, en español e inglés, y el código R equivalente.
 
 Las cifras de predicción pueden diferir entre ambos módulos por una razón
 concreta: PLSsemLab ajusta su referencia lineal (LM) con intercepto, como

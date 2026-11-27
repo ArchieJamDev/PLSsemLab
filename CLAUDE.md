@@ -5,7 +5,7 @@ PLSsemLab is a jamovi module for PLS-SEM by Arquímedes De León Chacón
 FiabilityLab (all at github.com/ArchieJamDev). Status: 1.0.1 submitted to
 the jamovi library (main stays at 1.0.1 until jamovi answers); 1.1.0 (NCA,
 MGCFA) released 2026-11-23 from branch v1.1-nca-invariance, DOI
-10.5281/zenodo.24471195 (all versions: 10.5281/zenodo.24259622); 1.2.0
+10.5281/zenodo.24585551 (all versions: 10.5281/zenodo.24259622); 1.2.0
 (weighting approaches, jackknife, Mardia, scores, benchmarks, model
 comparison) on branch v1.2-weights-compare.
 

@@ -5,10 +5,15 @@
   </picture>
 </p>
 
-# PLSsemLab
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24259622.svg)](https://doi.org/10.5281/zenodo.24259622)
-[![Release](https://img.shields.io/github/v/release/ArchieJamDev/PLSsemLab?label=release&color=4A86E0)](https://github.com/ArchieJamDev/PLSsemLab/releases/latest)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+  <a href="https://github.com/ArchieJamDev/PLSsemLab/releases"><img src="https://img.shields.io/github/v/release/ArchieJamDev/PLSsemLab?label=release&color=4A86E0" alt="Release"></a>
+  <a href="https://doi.org/10.5281/zenodo.24259622"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.24259622.svg" alt="DOI (all versions, resolves to the latest)"></a>
+  <img src="https://img.shields.io/badge/cSEM-%E2%89%A5%200.7.1-E6AC40" alt="cSEM ≥ 0.7.1">
+  <img src="https://img.shields.io/badge/jamovi-%E2%89%A5%201.0.8-4A86E0" alt="jamovi ≥ 1.0.8">
+  <a href="https://github.com/ArchieJamDev/PLSsemLab/actions/workflows/jamovi-check.yml"><img src="https://github.com/ArchieJamDev/PLSsemLab/actions/workflows/jamovi-check.yml/badge.svg" alt="CI"></a>
+  <img src="https://komarev.com/ghpvc/?username=ArchieJamDev-PLSsemLab&label=views&color=lightgrey&style=flat" alt="Views">
+</p>
 
 A jamovi module for partial least squares structural equation modeling
 (PLS-SEM) with the cSEM R package, with guided interpretation: every result says what happened,

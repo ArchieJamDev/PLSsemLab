@@ -7,6 +7,9 @@
 name: Regenerate jamovi wrappers (Windows)
 
 on:
+  push:
+    branches: [ v1.2-weights-compare ]
+    paths: [ 'jamovi/**', '.github/workflows/regen-wrappers.yml' ]
   workflow_dispatch:
     inputs:
       r_version:
@@ -71,7 +74,7 @@ jobs:
       # se sube como parche para revisar y confirmar en local; el flujo no envía nada.
       - name: Regenerate the wrappers
         run: |
-          node "$RUNNER_TEMP/jmc/index.js" --prepare . --home 'C:\fakejam' --assume-app-version "${{ inputs.app_version }}"
+          node "$RUNNER_TEMP/jmc/index.js" --prepare . --home 'C:\fakejam' --assume-app-version "${{ inputs.app_version || '2.7.41' }}"
           git status --short
           git diff > "$RUNNER_TEMP/wrappers.patch"
           mkdir -p out && cp "$RUNNER_TEMP/wrappers.patch" out/ && cp R/plssem.h.R R/00jmv.R out/ 2>/dev/null || true

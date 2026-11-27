@@ -11,8 +11,7 @@
 [![Release](https://img.shields.io/github/v/release/ArchieJamDev/PLSsemLab?label=release&color=4A86E0)](https://github.com/ArchieJamDev/PLSsemLab/releases/latest)
 
 A jamovi module for partial least squares structural equation modeling
-(PLS-SEM) with the cSEM R package, with guided interpretation in the style
-of AssumptionsLab, EGAnetLab and MokkenLab: every result says what happened,
+(PLS-SEM) with the cSEM R package, with guided interpretation: every result says what happened,
 why, what it means and what to do next, in English and Spanish.
 
 <p align="center">
@@ -74,19 +73,6 @@ why, what it means and what to do next, in English and Spanish.
   multigroup CFA with lavaan) and path differences (permutation test and
   PLS-MGA).
 - **Reproducibility:** the equivalent R code of every analysis.
-
-## Compared with CompositeSEM
-
-The jamovi library already includes CompositeSEM, which also uses cSEM. On
-the same engine, PLSsemLab adds MICOM, CVPAT, the importance-performance map,
-a reading guide and an interpretation
-for every result, in Spanish and English, and the equivalent R code.
-
-Prediction figures can differ between the two modules for a known reason:
-PLSsemLab fits its linear benchmark (LM) with an intercept, as Hair et al.
-(2022) do, while the LM benchmark of cSEM's `predict()` has no intercept
-(regression through the origin), which inflates its errors. Compare the
-figures only against a benchmark with the same definition.
 
 ## Install
 
@@ -156,8 +142,7 @@ report as listed in `docs/Bibliography.md`.
 # PLSsemLab (ES)
 
 Un módulo de jamovi para modelos de ecuaciones estructurales por mínimos
-cuadrados parciales (PLS-SEM) con el paquete cSEM de R, con interpretación
-guiada al estilo de AssumptionsLab, EGAnetLab y MokkenLab: cada resultado
+cuadrados parciales (PLS-SEM) con el paquete cSEM de R, con interpretación guiada: cada resultado
 dice qué pasó, por qué, qué significa y qué hacer después, en español e
 inglés.
 
@@ -191,19 +176,6 @@ partial least squares structural equation modeling* (Versión 1.2.0)
 [Software]. Zenodo. https://doi.org/10.5281/zenodo.24259622 (DOI general: abarca
 todas las versiones y siempre apunta a la última). Para el registro exacto de la
 1.2.0: https://doi.org/10.5281/zenodo.24585551. Cite también cSEM y los métodos que reporte según `docs/Bibliography.md`.
-
-## Frente a CompositeSEM
-
-La biblioteca de jamovi ya incluye CompositeSEM, que también usa cSEM. Sobre
-el mismo motor, PLSsemLab añade MICOM, CVPAT, el mapa de importancia-desempeño,
-una guía de lectura e interpretación de
-cada resultado, en español e inglés, y el código R equivalente.
-
-Las cifras de predicción pueden diferir entre ambos módulos por una razón
-concreta: PLSsemLab ajusta su referencia lineal (LM) con intercepto, como
-hacen Hair et al. (2022), mientras que la referencia LM de `predict()` de cSEM
-no tiene intercepto (regresión por el origen), lo que infla sus errores.
-Compara las cifras solo con una referencia de la misma definición.
 
 ## License
 

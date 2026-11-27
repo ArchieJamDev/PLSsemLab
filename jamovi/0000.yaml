@@ -9,9 +9,10 @@ maintainer: Arquímedes De León Chacón Chacón <arquimedeschacon@gmail.com>
 date: '2026-11-18'
 type: R
 description: >
-  PLSsemLab brings partial least squares structural equation modeling (PLS-SEM)
-  to jamovi with the cSEM package and pairs every result with evidence-based
-  methodological guidance, interpretation and educational support. The model is
+  PLSsemLab offers partial least squares structural equation modeling (PLS-SEM)
+  with the cSEM package, alongside CompositeSEM, and adds MICOM, CVPAT, the
+  importance-performance map, f² and evidence-based guidance and interpretation
+  for every result. The model is
   built from boxes, never typed: reflective and formative constructs with their
   indicators, and for each construct the constructs that predict it. The model
   is checked before estimation, with messages that name the construct or

@@ -22,7 +22,7 @@ on:
         default: '2.7.27'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   regenerate:
@@ -67,8 +67,7 @@ jobs:
           Get-ChildItem C:\fakejam\Frameworks\R\bin\x64\R.exe
 
       # Runs the compiler's prepare step only: it regenerates the jamovi wrappers
-      # (R/plssem.h.R, R/00jmv.R) from the .a/.r/.u yaml. The result is uploaded as a
-      # patch to review and commit locally; nothing is pushed by the workflow.
+      # (R/plssem.h.R, R/00jmv.R) from the .a/.r/.u yaml and commits them to the branch.
       # ES: Ejecuta solo el paso de preparación del compilador: regenera los
       # envoltorios de jamovi (R/plssem.h.R, R/00jmv.R) desde los yaml. El resultado
       # se sube como parche para revisar y confirmar en local; el flujo no envía nada.
@@ -76,9 +75,19 @@ jobs:
         run: |
           node "$RUNNER_TEMP/jmc/index.js" --prepare . --home 'C:\fakejam' --assume-app-version "${{ inputs.app_version || '2.7.41' }}"
           git status --short
-          git diff > "$RUNNER_TEMP/wrappers.patch"
-          mkdir -p out && cp "$RUNNER_TEMP/wrappers.patch" out/ && cp R/plssem.h.R R/00jmv.R out/ 2>/dev/null || true
-          wc -l "$RUNNER_TEMP/wrappers.patch"
+          mkdir -p out && cp R/plssem.h.R R/00jmv.R out/
+          # commit the regenerated wrappers to the branch only when they change
+          # ES: confirma los envoltorios regenerados en la rama solo si cambian
+          if git diff --quiet -- R/plssem.h.R R/00jmv.R; then
+            echo "wrappers unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git checkout -B "$GITHUB_REF_NAME"
+            git add R/plssem.h.R R/00jmv.R
+            git commit -m "Regenerate jamovi wrappers with the jamovi compiler (prepare step)"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
 
       - name: Upload the wrappers
         uses: actions/upload-artifact@v4

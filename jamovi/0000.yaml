@@ -10,9 +10,9 @@ date: '2026-11-18'
 type: R
 description: >
   PLSsemLab offers partial least squares structural equation modeling (PLS-SEM)
-  with the cSEM package, alongside CompositeSEM, and adds MICOM, CVPAT, the
-  importance-performance map, f² and evidence-based guidance and interpretation
-  for every result. The model is
+  with the cSEM package: the measurement and structural models, f², MICOM, CVPAT,
+  the importance-performance map, necessary condition analysis and evidence-based
+  guidance and interpretation for every result. The model is
   built from boxes, never typed: reflective and formative constructs with their
   indicators, and for each construct the constructs that predict it. The model
   is checked before estimation, with messages that name the construct or

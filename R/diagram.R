@@ -147,28 +147,69 @@
                            row_off = 1.5, row_extra = 1.8, min_body = 1.5, layer = 1.6) {
     x <- stats::setNames(rep(0, nrow(vars)), vars$name)
     y <- x
+    sides <- .pl_sem_sides(nodes, simple, node, pars)
+    body <- vapply(sides, function(sd) max(min_body, gap * length(sd$left), gap * length(sd$right)), 0)
+    order_y <- stats::setNames(rep(0, nrow(nodes)), nodes$label)
+    col_x <- .pl_sem_column_x(nodes, sides, side, step, layer)
+    lay_of <- stats::setNames(nodes$layer, nodes$label)
+    for (l in sort(unique(nodes$layer))) {
+        idx <- .pl_sem_column_order(which(nodes$layer == l), l, nodes, simple, order_y)
+        extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) row_extra else 0, 0)
+        total <- sum(body[nodes$label[idx]] + extra) + 0.8 * (length(idx) - 1)
+        place <- .pl_sem_column_top(idx, l, nodes, simple, lay_of, order_y, body, extra, total)
+        top <- place$top
+        for (j in seq_along(idx)) {
+            cl <- nodes$label[idx[j]]
+            sd <- sides[[cl]]
+            nm <- node[[cl]]
+            above <- if (place$row_above[j]) extra[[j]] else 0
+            cy <- top - above - body[[cl]] / 2
+            cx <- col_x[[as.character(l)]]
+            x[[nm]] <- cx
+            y[[nm]] <- cy
+            order_y[[cl]] <- cy
+            p <- .pl_sem_set_side(x, y, sd$left, cx - side, cy, gap)
+            x <- p$x; y <- p$y
+            p <- .pl_sem_set_side(x, y, sd$right, cx + side, cy, gap)
+            x <- p$x; y <- p$y
+            if (length(sd$top)) {
+                x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * step
+                y[sd$top] <- cy + if (place$row_above[j]) row_off else -row_off
+            }
+            top <- top - body[[cl]] - extra[[j]] - 0.8
+        }
+    }
+    x <- .pl_sem_slide_rows(x, y, node, nodes, sides, simple, step)
+    list(x = unname(x), y = unname(y))
+}
+
+# The indicators of each construct, by side: left (exogenous), right (terminal)
+# or top (endogenous with predictors); an endogenous formative construct keeps
+# its indicators off the incoming paths too.
+# ES: Los indicadores de cada constructo, por lado: izquierda (exógeno), derecha
+# (terminal) o arriba (endógeno con predictores); un formativo endógeno también
+# saca sus indicadores de las rutas que llegan.
+.pl_sem_sides <- function(nodes, simple, node, pars) {
     sides <- lapply(nodes$label, function(cl) {
         nm <- node[[cl]]
         into <- pars$lhs[pars$rhs == nm & pars$kind == "weight"]
         outof <- pars$rhs[pars$lhs == nm & pars$kind == "loading"]
         exo <- !(cl %in% simple$to)
         term <- !(cl %in% simple$from)
-        # an endogenous formative construct keeps its indicators off the
-        # incoming paths too: row above if it predicts, column right if not
-        # ES: un formativo endógeno también saca sus indicadores de las rutas
-        # que llegan: fila arriba si predice, columna a la derecha si no
         own <- c(into, outof)
         list(left = if (exo) own else character(0), right = if (!exo && term) own else character(0),
              top = if (!exo && !term) own else character(0))
     })
     names(sides) <- nodes$label
-    body <- vapply(sides, function(sd) max(min_body, gap * length(sd$left), gap * length(sd$right)), 0)
-    order_y <- stats::setNames(rep(0, nrow(nodes)), nodes$label)
-    # Column positions: each column is as wide as what it holds (indicator
-    # columns at the sides, rows above or below), plus `layer` between
-    # columns for the path labels.
-    # ES: Cada columna es tan ancha como lo que contiene, más `layer` entre
-    # columnas para las etiquetas de las rutas.
+    sides
+}
+
+# Column positions: each column is as wide as what it holds (indicator columns
+# at the sides, rows above or below), plus `layer` between columns for the path
+# labels.
+# ES: Cada columna es tan ancha como lo que contiene (indicadores a los lados,
+# filas arriba o abajo), más `layer` entre columnas para las etiquetas de las rutas.
+.pl_sem_column_x <- function(nodes, sides, side, step, layer) {
     layers <- sort(unique(nodes$layer))
     ext <- function(l, which) {
         cls <- nodes$label[nodes$layer == l]
@@ -179,93 +220,79 @@
     col_x <- stats::setNames(numeric(length(layers)), layers)
     for (k in seq_along(layers)[-1])
         col_x[k] <- col_x[k - 1] + ext(layers[k - 1], "right") + layer + ext(layers[k], "left")
-    for (l in layers) {
-        idx <- which(nodes$layer == l)
-        if (l > 0) {
-            key <- vapply(nodes$label[idx], function(cl) {
-                pr <- simple$from[simple$to == cl]
-                if (length(pr)) mean(order_y[pr]) else 0
-            }, 0)
-            idx <- idx[order(-key)]
-        } else {
-            # first column: constructs that feed the same constructs stay
-            # together (e.g. the dimensions of a higher-order construct), so
-            # no other path runs between them
-            # ES: primera columna: los constructos que alimentan a los mismos
-            # quedan juntos (p. ej. las dimensiones de un constructo de orden
-            # superior), para que ninguna otra ruta pase entre ellos
-            succ <- vapply(nodes$label[idx], function(cl) paste(sort(simple$to[simple$from == cl]), collapse = "|"), "")
-            idx <- idx[order(match(succ, unique(succ)))]
-        }
-        idx <- c(idx[nodes$type[idx] != "interaction"], idx[nodes$type[idx] == "interaction"])
-        # the first construct of a column gets its row of indicators above,
-        # the others below, so the rows stay outside the column
-        # ES: el primer constructo de la columna lleva su fila arriba, los
-        # demás abajo
-        row_above <- seq_along(idx) == 1
-        extra <- vapply(nodes$label[idx], function(cl) if (length(sides[[cl]]$top)) row_extra else 0, 0)
-        total <- sum(body[nodes$label[idx]] + extra) + 0.8 * (length(idx) - 1)
-        top <- total / 2
-        # A path that skips this column (e.g. Qual -> Loy over Trust) runs
-        # near the middle: the column moves down and its rows go below, so
-        # the path passes above instead of through the indicators.
-        # ES: Una ruta que salta esta columna pasa por el centro: la columna
-        # baja y sus filas van abajo, para que la ruta pase por encima.
-        lay_of <- stats::setNames(nodes$layer, nodes$label)
-        skip <- lay_of[simple$from] < l & lay_of[simple$to] > l
-        # In a column crossed by a skipping path, a lone construct sits at
-        # the mean height of its predictors (e.g. a higher-order construct
-        # between its dimensions), unless the skipping path starts near that
-        # height; otherwise the column moves down (below).
-        # ES: En una columna cruzada por una ruta que la salta, un constructo
-        # solo va a la altura media de sus predictores (p. ej. un constructo
-        # de orden superior entre sus dimensiones), salvo que esa ruta salga
-        # cerca de esa altura; si no, la columna baja (abajo).
-        pr <- if (l > 0 && length(idx) == 1) simple$from[simple$to == nodes$label[idx]] else character(0)
-        centred <- FALSE
-        if (any(skip) && length(pr) && all(lay_of[pr] < l)) {
-            want <- mean(order_y[pr])
-            near <- any(abs(order_y[simple$from[skip]] - want) < body[[nodes$label[idx]]] / 2 + 0.8)
-            if (!near) {
-                top <- want + body[[nodes$label[idx]]] / 2 + (if (row_above[1]) extra[[1]] else 0)
-                centred <- TRUE
-            }
-        }
-        if (any(skip) && !centred) {
-            row_above <- rep(FALSE, length(idx))
-            top <- total / 2 - 1.4
-        }
-        for (j in seq_along(idx)) {
-            cl <- nodes$label[idx[j]]
-            sd <- sides[[cl]]
-            nm <- node[[cl]]
-            above <- if (row_above[j]) extra[[j]] else 0
-            cy <- top - above - body[[cl]] / 2
-            cx <- col_x[[as.character(l)]]
-            x[[nm]] <- cx
-            y[[nm]] <- cy
-            order_y[[cl]] <- cy
-            col <- function(v, xx) if (length(v)) {
-                x[v] <<- xx
-                y[v] <<- cy + rev(seq_along(v) - (length(v) + 1) / 2) * gap
-            }
-            col(sd$left, cx - side)
-            col(sd$right, cx + side)
-            if (length(sd$top)) {
-                x[sd$top] <- cx + (seq_along(sd$top) - (length(sd$top) + 1) / 2) * step
-                y[sd$top] <- cy + if (row_above[j]) row_off else -row_off
-            }
-            top <- top - body[[cl]] - extra[[j]] - 0.8
+    col_x
+}
+
+# Order of the constructs in a column: by the height of their predictors; in
+# the first column, constructs that feed the same constructs stay together (e.g.
+# the dimensions of a higher-order construct), so no other path runs between
+# them. Interaction terms go last.
+# ES: Orden de los constructos de una columna: por la altura de sus predictores;
+# en la primera, los que alimentan a los mismos constructos quedan juntos (p. ej.
+# las dimensiones de un constructo de orden superior). Los términos de interacción van al final.
+.pl_sem_column_order <- function(idx, l, nodes, simple, order_y) {
+    if (l > 0) {
+        key <- vapply(nodes$label[idx], function(cl) {
+            pr <- simple$from[simple$to == cl]
+            if (length(pr)) mean(order_y[pr]) else 0
+        }, 0)
+        idx <- idx[order(-key)]
+    } else {
+        succ <- vapply(nodes$label[idx], function(cl) paste(sort(simple$to[simple$from == cl]), collapse = "|"), "")
+        idx <- idx[order(match(succ, unique(succ)))]
+    }
+    c(idx[nodes$type[idx] != "interaction"], idx[nodes$type[idx] == "interaction"])
+}
+
+# Height of the first construct of a column. The first construct gets its row
+# of indicators above, the others below. A path that skips the column (e.g. Qual
+# -> Loy over Trust) runs near the middle: the column moves down and its rows go
+# below, so the path passes above. In a column crossed by a skipping path, a lone
+# construct sits at the mean height of its predictors, unless that path starts
+# near that height.
+# ES: Altura de la columna. El primer constructo lleva su fila arriba, los demás
+# abajo. Una ruta que salta la columna pasa por el centro: la columna baja y sus
+# filas van abajo, para que la ruta pase por encima. En una columna cruzada por una
+# ruta que la salta, un constructo solo va a la altura media de sus predictores,
+# salvo que esa ruta salga cerca de esa altura.
+.pl_sem_column_top <- function(idx, l, nodes, simple, lay_of, order_y, body, extra, total) {
+    row_above <- seq_along(idx) == 1
+    top <- total / 2
+    skip <- lay_of[simple$from] < l & lay_of[simple$to] > l
+    pr <- if (l > 0 && length(idx) == 1) simple$from[simple$to == nodes$label[idx]] else character(0)
+    centred <- FALSE
+    if (any(skip) && length(pr) && all(lay_of[pr] < l)) {
+        want <- mean(order_y[pr])
+        near <- any(abs(order_y[simple$from[skip]] - want) < body[[nodes$label[idx]]] / 2 + 0.8)
+        if (!near) {
+            top <- want + body[[nodes$label[idx]]] / 2 + (if (row_above[1]) extra[[1]] else 0)
+            centred <- TRUE
         }
     }
-    # A row of indicators can still lie on a path that arrives from a lower
-    # or higher construct (e.g. Like -> Qual under Qual's row): slide each
-    # row sideways to the nearest place that no path and no construct
-    # touches, keeping its height.
-    # ES: Una fila de indicadores aún puede quedar sobre una ruta que llega
-    # desde un constructo más bajo o más alto (p. ej. Like -> Qual bajo la
-    # fila de Qual): cada fila se desliza al lugar más cercano que ninguna
-    # ruta ni constructo toque, sin cambiar su altura.
+    if (any(skip) && !centred) {
+        row_above <- rep(FALSE, length(idx))
+        top <- total / 2 - 1.4
+    }
+    list(top = top, row_above = row_above)
+}
+
+# Puts the indicators of one side of a construct in a vertical stack.
+# ES: Coloca los indicadores de un lado de un constructo en una columna vertical.
+.pl_sem_set_side <- function(x, y, v, xx, cy, gap) {
+    if (length(v)) {
+        x[v] <- xx
+        y[v] <- cy + rev(seq_along(v) - (length(v) + 1) / 2) * gap
+    }
+    list(x = x, y = y)
+}
+
+# A row of indicators can still lie on a path that arrives from a lower or
+# higher construct (e.g. Like -> Qual under Qual's row): each row slides sideways
+# to the nearest place that no path and no construct touches, keeping its height.
+# ES: Una fila de indicadores aún puede quedar sobre una ruta que llega desde un
+# constructo más bajo o más alto: cada fila se desliza al lugar más cercano que
+# ninguna ruta ni constructo toque, sin cambiar su altura.
+.pl_sem_slide_rows <- function(x, y, node, nodes, sides, simple, step) {
     seg <- simple[simple$from %in% names(node) & simple$to %in% names(node), , drop = FALSE]
     sx <- cbind(x[unlist(node[seg$from])], x[unlist(node[seg$to])])
     sy <- cbind(y[unlist(node[seg$from])], y[unlist(node[seg$to])])
@@ -291,7 +318,7 @@
         cost <- vapply(shifts, function(s) hits(x[[nm]] + base + s, y[v], nm), 0)
         if (cost[1] > 0 && min(cost) < cost[1]) x[v] <- x[[nm]] + base + shifts[which.min(cost)]
     }
-    list(x = unname(x), y = unname(y))
+    x
 }
 
 # A semPlotModel from the state; slots are filled by name so that a semPlot

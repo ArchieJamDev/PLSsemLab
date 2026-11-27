@@ -1,0 +1,84 @@
+# Regenerates the jamovi wrapper files (R/plssem.h.R, R/00jmv.R) with the
+# jamovi compiler on Windows, using the same stand-in jamovi home as the .jmo
+# build. Run it after changing a .a.yaml, .r.yaml or .u.yaml file.
+# ES: Regenera los archivos envoltorio de jamovi (R/plssem.h.R, R/00jmv.R) con el
+# compilador de jamovi en Windows, con el mismo jamovi sustituto que el build del
+# .jmo. Ejecútalo tras cambiar un archivo .a.yaml, .r.yaml o .u.yaml.
+name: Regenerate jamovi wrappers (Windows)
+
+on:
+  workflow_dispatch:
+    inputs:
+      r_version:
+        description: 'R version of the target jamovi (jamovi 2.7.x uses 4.5.0)'
+        required: false
+        default: '4.5.0'
+      app_version:
+        description: 'jamovi version to declare'
+        required: false
+        default: '2.7.27'
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ inputs.r_version }}
+          use-public-rspm: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # What jamovi already ships stays out of the .jmo: install it in R's
+      # own library, which the compiler is told about (--rlibs).
+      # ES: Lo que jamovi ya trae queda fuera del .jmo: se instala en la
+      # biblioteca del R, que se le indica al compilador (--rlibs).
+      - name: Install jamovi's base packages and the compiler
+        run: |
+          Rscript -e "install.packages(c('jmvcore', 'R6', 'lavaan', 'ggplot2', 'rlang', 'semPlot', 'patchwork', 'testthat'), repos = c('https://repo.jamovi.org', 'https://cloud.r-project.org'), type = 'binary')"
+          git clone --depth 1 https://github.com/jamovi/jamovi-compiler.git "$RUNNER_TEMP/jmc"
+          cd "$RUNNER_TEMP/jmc" && npm install --omit=dev --silent
+
+      - name: Stand-in jamovi home
+        shell: pwsh
+        run: |
+          $rhome = (& Rscript -e "cat(normalizePath(R.home(), winslash = '/'))" | Out-String).Trim()
+          Write-Host "R home: $rhome"
+          New-Item -ItemType Directory -Force -Path C:\fakejam\bin, C:\fakejam\Frameworks | Out-Null
+          Copy-Item (Get-Command node).Source C:\fakejam\bin\jamovi.exe
+          New-Item -ItemType Junction -Path C:\fakejam\Frameworks\R -Target $rhome | Out-Null
+          Get-ChildItem C:\fakejam\Frameworks\R\bin\x64\R.exe
+
+      # Runs the compiler's prepare step only: it regenerates the jamovi wrappers
+      # (R/plssem.h.R, R/00jmv.R) from the .a/.r/.u yaml. The result is uploaded as a
+      # patch to review and commit locally; nothing is pushed by the workflow.
+      # ES: Ejecuta solo el paso de preparación del compilador: regenera los
+      # envoltorios de jamovi (R/plssem.h.R, R/00jmv.R) desde los yaml. El resultado
+      # se sube como parche para revisar y confirmar en local; el flujo no envía nada.
+      - name: Regenerate the wrappers
+        run: |
+          node "$RUNNER_TEMP/jmc/index.js" --prepare . --home 'C:\fakejam' --assume-app-version "${{ inputs.app_version }}"
+          git status --short
+          git diff > "$RUNNER_TEMP/wrappers.patch"
+          mkdir -p out && cp "$RUNNER_TEMP/wrappers.patch" out/ && cp R/plssem.h.R R/00jmv.R out/ 2>/dev/null || true
+          wc -l "$RUNNER_TEMP/wrappers.patch"
+
+      - name: Upload the wrappers
+        uses: actions/upload-artifact@v4
+        with:
+          name: jamovi-wrappers
+          path: out/
